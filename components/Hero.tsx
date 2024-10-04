@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 
 export default function Hero() {
   return (
-    <section className="items-center gap-4 px-8 py-20 md:grid md:grid-cols-[4fr_3fr] md:px-12 md:py-36">
+    <section className="items-center gap-4 px-8 py-16 md:grid md:grid-cols-[4fr_3fr] md:px-12 md:py-32">
       <div className="flex flex-col items-start gap-y-4">
         <h1 className="text-3xl font-bold md:text-5xl">
           Your All-in-One Solution for a Seamless Learning Experience
