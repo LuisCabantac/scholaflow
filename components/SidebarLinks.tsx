@@ -26,7 +26,7 @@ export default function SidebarLinks({
         <li>
           <Link
             href="/user/dashboard"
-            className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/dashboard") ? activeLinkStyle : inactiveLinkStyle}`}
+            className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/dashboard") ? activeLinkStyle : inactiveLinkStyle}`}
             onClick={handleSidebarExpand}
           >
             <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -43,7 +43,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/user/announcements"
-                className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/announcements") ? activeLinkStyle : inactiveLinkStyle}`}
+                className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/announcements") ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={handleSidebarExpand}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -56,7 +56,7 @@ export default function SidebarLinks({
               <li>
                 <Link
                   href="/user/admin"
-                  className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/admin") ? activeLinkStyle : inactiveLinkStyle}`}
+                  className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/admin") ? activeLinkStyle : inactiveLinkStyle}`}
                   onClick={handleSidebarExpand}
                 >
                   <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -78,7 +78,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/user/calendar"
-                className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/calendar") ? activeLinkStyle : inactiveLinkStyle}`}
+                className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/calendar") ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={handleSidebarExpand}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -94,7 +94,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/user/classroom"
-                className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:md:pl-4 md:pr-0 ${pathname.includes("/user/classroom") ? activeLinkStyle : inactiveLinkStyle} `}
+                className={`sidebar__links md flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/classroom") ? activeLinkStyle : inactiveLinkStyle} `}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
                   <path d="M8 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v11a1 1 0 01-1 1" />
@@ -106,7 +106,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/user/grades"
-                className={`sidebar__links flex items-center justify-start gap-2 rounded-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/grades") ? activeLinkStyle : inactiveLinkStyle} `}
+                className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/grades") ? activeLinkStyle : inactiveLinkStyle} `}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
                   <path d="M19 21c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14zM9.553 9.658l4 2 1.553-3.105 1.789.895-2.447 4.895-4-2-1.553 3.105-1.789-.895 2.447-4.895z" />
@@ -119,18 +119,16 @@ export default function SidebarLinks({
         <li className="border-t-2 border-[#d6e0fd] pt-3">
           <Link
             href="/user/profile"
-            className={`sidebar__links flex items-center gap-2 rounded-t-md py-3 pl-2 pr-4 transition-all hover:bg-[#c7d2f1] md:pl-4 md:pr-0 ${pathname.includes("/user/profile") ? activeLinkStyle : inactiveLinkStyle} `}
+            className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/profile") ? activeLinkStyle : inactiveLinkStyle} `}
           >
-            <div className="flex items-center gap-2">
-              <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                />
-              </svg>
-              <span className="text-base transition-all">Profile</span>
-            </div>
+            <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+              />
+            </svg>
+            <span className="text-base transition-all">Profile</span>
           </Link>
         </li>
         <li>

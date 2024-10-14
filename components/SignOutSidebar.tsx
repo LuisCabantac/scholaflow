@@ -12,7 +12,7 @@ export default function SignOutSidebar({
   return (
     <form action={signOutAction}>
       <button
-        className={`sidebar__links flex w-full items-center justify-start gap-2 rounded-md py-3 pl-[0.6rem] transition-all hover:bg-[#c7d2f1] md:pl-[1.10rem] ${pathname === "/help" ? activeLinkStyle : inactiveLinkStyle} `}
+        className={`sidebar__links flex w-full items-center justify-start gap-2 rounded-md py-3 pl-[1.10rem] transition-all hover:bg-[#c7d2f1] ${pathname === "/signout" ? activeLinkStyle : inactiveLinkStyle} `}
       >
         <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
           <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />

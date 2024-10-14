@@ -15,7 +15,7 @@ export default async function layout({
   const session = await auth();
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden">
       <Provider>
         {session && <Sidebar session={hasUser(session) ? session : null} />}
         <main className="h-full w-full overflow-auto px-5 py-5 md:px-8">
