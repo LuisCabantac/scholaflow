@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <section className="flex items-center justify-center px-8 py-[10rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-16">
+    <section className="flex items-center justify-center px-8 py-[10rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-12">
       <div className="relative mx-0 my-auto w-0 md:w-[70%]">
         <Image
           src={signInPageImage}
