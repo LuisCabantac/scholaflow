@@ -25,6 +25,17 @@ export async function getUserEmail(email: string) {
   return data;
 }
 
+export async function getPosts(school: string, levels: string) {
+  const { data } = await supabase
+    .from("announcements")
+    .select("*")
+    .eq("school", school)
+    .eq("levels", levels)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
 export async function getPostById(id: string) {
   const { data } = await supabase
     .from("announcements")
