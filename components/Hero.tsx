@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import landingPageImage1 from "@/public/landing_page/landing-page-1.svg";
+
 import Button from "@/components/Button";
 
 export default function Hero() {
@@ -18,7 +19,9 @@ export default function Hero() {
           both students and educators. Let&apos;s make learning effortless and
           effective together.
         </p>
-        <Button>Get started</Button>
+        <Button href="/user/dashboard" type="primary">
+          Get started
+        </Button>
       </div>
       <div className="relative w-full">
         <Image
