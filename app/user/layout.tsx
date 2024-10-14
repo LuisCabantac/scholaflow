@@ -17,9 +17,9 @@ export default async function layout({
   return (
     <div className="flex">
       <Provider>
-        <Sidebar session={hasUser(session) ? session : null} />
+        {session && <Sidebar session={hasUser(session) ? session : null} />}
         <main className="h-full w-full overflow-auto px-5 py-5 md:px-8">
-          <Header />
+          {session && <Header />}
           {children}
         </main>
       </Provider>
