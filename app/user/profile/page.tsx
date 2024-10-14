@@ -3,44 +3,19 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { getUser } from "@/lib/data-service";
 
-function handleFullName(fullName: string) {
-  const nameParts = fullName.trim().split(/\s+/);
-  let firstName, lastName, middleName;
-
-  if (nameParts.length === 1) {
-    firstName = nameParts[0];
-    lastName = "";
-    middleName = "";
-  } else if (nameParts.length === 2) {
-    firstName = nameParts[0];
-    lastName = nameParts[1];
-    middleName = "";
-  } else {
-    firstName = nameParts.slice(0, -2).join(" ");
-    lastName = nameParts[nameParts.length - 1];
-    middleName = nameParts[nameParts.length - 2];
-  }
-
-  return {
-    firstName,
-    middleName: middleName || "",
-    lastName,
-  };
-}
-
 export default async function Page() {
   const session = await auth();
   const userEmail = session?.user?.email ?? "";
   const {
-    role,
-    email: currentUserEmail,
+    // role,
+    // email: currentUserEmail,
     fullName,
-    password,
-    school,
-    course,
-    gender,
+    // password,
+    // school,
+    // course,
+    // gender,
     avatar,
-    updatedProfile,
+    // updatedProfile,
   } = await getUser(userEmail);
 
   return (

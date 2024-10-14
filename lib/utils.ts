@@ -31,3 +31,35 @@ export function formatDate(createdAt: string): string {
     return format(date, "MMMM d 'at' h:mm a");
   }
 }
+
+export function handleFullName(fullName: string) {
+  const nameParts = fullName.trim().split(/\s+/);
+  let firstName, lastName, middleName;
+
+  if (nameParts.length === 1) {
+    firstName = nameParts[0];
+    lastName = "";
+    middleName = "";
+  } else if (nameParts.length === 2) {
+    firstName = nameParts[0];
+    lastName = nameParts[1];
+    middleName = "";
+  } else {
+    firstName = nameParts.slice(0, -2).join(" ");
+    lastName = nameParts[nameParts.length - 1];
+    middleName = nameParts[nameParts.length - 2];
+  }
+
+  return {
+    firstName,
+    middleName: middleName || "",
+    lastName,
+  };
+}
+
+export function capitalizeFirstLetter(str: string) {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}

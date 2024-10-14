@@ -1,17 +1,10 @@
-import { ILevels } from "@/app/user/announcements/page";
-
-function capitalizeFirstLetter(str: string) {
-  return str
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+// import { ILevels } from "@/app/user/announcements/page";
 
 export default function LevelsOption({
-  allLevels,
+  // allLevels,
   defaultValue,
 }: {
-  allLevels?: ILevels[];
+  // allLevels?: ILevels[];
   defaultValue?: string;
 }) {
   return (
