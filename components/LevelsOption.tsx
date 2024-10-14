@@ -1,10 +1,12 @@
-// import { ILevels } from "@/app/user/announcements/page";
+import { ILevels } from "@/app/user/announcements/page";
+
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 export default function LevelsOption({
-  // allLevels,
+  allLevels,
   defaultValue,
 }: {
-  // allLevels?: ILevels[];
+  allLevels?: ILevels[];
   defaultValue?: string;
 }) {
   return (
@@ -15,11 +17,12 @@ export default function LevelsOption({
       defaultValue={defaultValue ? defaultValue : "all levels"}
     >
       <option value="all levels">All Levels</option>
-      {/* {allLevels.map((level) => (
-        <option key={level.id} value={level.level}>
-          {capitalizeFirstLetter(level.level)}
-        </option>
-      ))} */}
+      {allLevels &&
+        allLevels.map((level) => (
+          <option key={level.id} value={level.level}>
+            {capitalizeFirstLetter(level.level)}
+          </option>
+        ))}
     </select>
   );
 }
