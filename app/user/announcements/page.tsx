@@ -36,27 +36,18 @@ export default async function Page() {
     await deletePost(postId);
   }
 
-  if (
-    session.user.verified &&
-    (session.user.role === "student" ||
-      session.user.role === "teacher" ||
-      session.user.role === "admin")
-  )
-    return (
-      <section>
-        <AnnouncementSection
-          role={session.user.role}
-          hasSchool={hasSchool}
-          allLevels={allLevels as ILevels[]}
-          handleGetPosts={handleGetPosts}
-          handleDeletePosts={handleDeletePosts}
-        />
-      </section>
-    );
+  if (!session.user.verified && session.user.role === "guest")
+    return redirect("/");
 
   return (
-    <div className="flex h-[20rem] items-center justify-center text-xl font-bold">
-      Please contact your school to be able to access this page.
-    </div>
+    <section>
+      <AnnouncementSection
+        role={session.user.role}
+        hasSchool={hasSchool}
+        allLevels={allLevels as ILevels[]}
+        handleGetPosts={handleGetPosts}
+        handleDeletePosts={handleDeletePosts}
+      />
+    </section>
   );
 }

@@ -91,29 +91,33 @@ export default function SidebarLinks({
                 <span className="text-base transition-all">Calendar</span>
               </Link>
             </li>
-            <li>
-              <Link
-                href="/user/classroom"
-                className={`sidebar__links md flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/classroom") ? activeLinkStyle : inactiveLinkStyle} `}
-              >
-                <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
-                  <path d="M8 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v11a1 1 0 01-1 1" />
-                  <path d="M12 16 H16 A1 1 0 0 1 17 17 V18 A1 1 0 0 1 16 19 H12 A1 1 0 0 1 11 18 V17 A1 1 0 0 1 12 16 z" />
-                </svg>
-                <span className="text-base transition-all">Classroom</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/user/grades"
-                className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/grades") ? activeLinkStyle : inactiveLinkStyle} `}
-              >
-                <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
-                  <path d="M19 21c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14zM9.553 9.658l4 2 1.553-3.105 1.789.895-2.447 4.895-4-2-1.553 3.105-1.789-.895 2.447-4.895z" />
-                </svg>
-                <span className="text-base transition-all">Grades</span>
-              </Link>
-            </li>
+            {role === "student" || role === "teacher" ? (
+              <>
+                <li>
+                  <Link
+                    href="/user/classroom"
+                    className={`sidebar__links md flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/classroom") ? activeLinkStyle : inactiveLinkStyle} `}
+                  >
+                    <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
+                      <path d="M8 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v11a1 1 0 01-1 1" />
+                      <path d="M12 16 H16 A1 1 0 0 1 17 17 V18 A1 1 0 0 1 16 19 H12 A1 1 0 0 1 11 18 V17 A1 1 0 0 1 12 16 z" />
+                    </svg>
+                    <span className="text-base transition-all">Classroom</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/user/grades"
+                    className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/grades") ? activeLinkStyle : inactiveLinkStyle} `}
+                  >
+                    <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
+                      <path d="M19 21c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14zM9.553 9.658l4 2 1.553-3.105 1.789.895-2.447 4.895-4-2-1.553 3.105-1.789-.895 2.447-4.895z" />
+                    </svg>
+                    <span className="text-base transition-all">Grades</span>
+                  </Link>
+                </li>
+              </>
+            ) : null}
           </>
         )}
         <li className="border-t-2 border-[#d6e0fd] pt-3">
