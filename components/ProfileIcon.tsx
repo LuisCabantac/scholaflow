@@ -23,10 +23,6 @@ export default function ProfileIcon({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  function handleSetIsClose(): void {
-    setIsOpen(false);
-  }
-
   return (
     <div className="relative">
       <div
@@ -43,10 +39,7 @@ export default function ProfileIcon({
         </div>
       </div>
       {isOpen ? (
-        <ul
-          className="absolute right-0 top-[1rem] z-10 flex translate-y-6 transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 text-sm shadow-md transition duration-500 ease-in-out md:text-base"
-          onPointerLeave={handleSetIsClose}
-        >
+        <ul className="absolute right-0 top-[1rem] z-10 flex translate-y-6 transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 text-sm shadow-md transition duration-500 ease-in-out md:text-base">
           <div className="mb-2 flex cursor-default flex-col items-start gap-2 px-2">
             <div className="flex gap-2 pb-2">
               <li className="relative h-10 w-10">
@@ -85,6 +78,7 @@ export default function ProfileIcon({
             <Link
               href="/user/profile"
               className="flex gap-[0.6rem] rounded-md px-[0.4rem] py-2 text-sm transition-colors hover:bg-[#c7d2f1]"
+              onClick={() => setIsOpen(!isOpen)}
             >
               <svg viewBox="0 0 24 24" className="size-5 fill-[#5c7cfa]">
                 <path
@@ -100,6 +94,7 @@ export default function ProfileIcon({
             <Link
               href="/user/dashboard"
               className="flex gap-[0.6rem] rounded-md px-[0.4rem] py-2 text-sm transition-colors hover:bg-[#c7d2f1]"
+              onClick={() => setIsOpen(!isOpen)}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -118,7 +113,7 @@ export default function ProfileIcon({
               <span>Dashboard</span>
             </Link>
           </li>
-          <li>
+          <li onClick={() => setIsOpen(!isOpen)}>
             <SignOutButton />
           </li>
         </ul>
