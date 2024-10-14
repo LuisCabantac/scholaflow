@@ -1,6 +1,12 @@
-import DashboardCard from "@/components/DashboardCard";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+import DashboardCard from "@/components/DashboardCard";
+import { auth } from "@/lib/auth";
+
+export default async function Page() {
+  const session = await auth();
+  if (!session) return redirect("/signin");
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <DashboardCard title="Announcements">

@@ -1,17 +1,14 @@
-import { auth, ISession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+import { auth } from "@/lib/auth";
+import { hasUser } from "@/lib/utils";
 
 export default async function Page() {
   const session = await auth();
 
-  if (
-    (session as ISession).user.role === "admin" &&
-    (session as ISession).user.verified
-  )
-    return <div>HELLO ADMIN</div>;
+  if (!hasUser(session)) return redirect("/signin");
 
-  return (
-    <div className="flex h-[20rem] items-center justify-center text-xl font-bold">
-      You are not authorized to view this page!
-    </div>
-  );
+  if (session.user.role !== "admin") return redirect("/user/dashboard");
+
+  return <div>HELLO ADMIN</div>;
 }

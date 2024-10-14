@@ -2,18 +2,24 @@ import { Metadata } from "next";
 import Image from "next/image";
 
 import signInPageImage from "@/public/landing_page/login-page.svg";
+import { auth } from "@/lib/auth";
 
 import Logo from "@/components/Logo";
 import SignInForm from "@/components/SignInForm";
 import SignInGoogleButton from "@/components/SignInGoogleButton";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Sign in",
 };
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+
+  if (session) return redirect("/user/dashboard");
+
   return (
-    <section className="flex items-center justify-center px-8 py-[10rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-12">
+    <section className="flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-16">
       <div className="relative mx-0 my-auto w-0 md:w-[70%]">
         <Image
           src={signInPageImage}

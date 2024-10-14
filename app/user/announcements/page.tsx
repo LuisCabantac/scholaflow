@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import { getAllLevels, getPosts, getUser } from "@/lib/data-service";
@@ -16,11 +18,7 @@ export default async function Page() {
   const session = await auth();
 
   if (!hasUser(session)) {
-    return (
-      <div className="flex h-[20rem] items-center justify-center text-xl font-bold">
-        You must be logged in.
-      </div>
-    );
+    return redirect("/signin");
   }
 
   const { school: hasSchool } = await getUser(session.user.email);

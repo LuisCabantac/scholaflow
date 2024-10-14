@@ -1,10 +1,14 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { getUser } from "@/lib/data-service";
 
 export default async function Page() {
   const session = await auth();
+
+  if (!session) return redirect("/signin");
+
   const userEmail = session?.user?.email ?? "";
   const {
     // role,
