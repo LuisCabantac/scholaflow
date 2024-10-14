@@ -2,12 +2,12 @@ import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 import { auth } from "@/lib/auth";
+import { hasUser } from "@/lib/utils";
 import { updatePost } from "@/lib/announcements-actions";
 import { getPostById } from "@/lib/data-service";
 
 import Button from "@/components/Button";
 import LevelsOption from "@/components/LevelsOption";
-import { hasUser } from "@/lib/utils";
 
 export default async function Page({ params }: { params: Params }) {
   const session = await auth();

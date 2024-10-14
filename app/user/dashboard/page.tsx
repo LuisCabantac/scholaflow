@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
-import DashboardCard from "@/components/DashboardCard";
 import { auth } from "@/lib/auth";
+
+import DashboardCard from "@/components/DashboardCard";
 
 export default async function Page() {
   const session = await auth();

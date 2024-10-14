@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import signInPageImage from "@/public/landing_page/login-page.svg";
 import { auth } from "@/lib/auth";
@@ -7,7 +8,6 @@ import { auth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 import SignInForm from "@/components/SignInForm";
 import SignInGoogleButton from "@/components/SignInGoogleButton";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Sign in",
