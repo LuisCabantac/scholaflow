@@ -32,13 +32,13 @@ export default async function Page() {
   const session = await auth();
   const userEmail = session?.user?.email ?? "";
   const {
-    role,
+    // role,
     email: currentUserEmail,
     fullName,
-    password,
-    school,
-    course,
-    gender,
+    // password,
+    // school,
+    // course,
+    // gender,
     avatar,
     updatedProfile,
   } = await getUser(userEmail);

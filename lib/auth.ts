@@ -68,7 +68,7 @@ const authConfig = {
     authorized({ auth }: { auth: ISession | null }) {
       return !!auth?.user;
     },
-    async signIn({ user, account }) {
+    async signIn({ user }) {
       try {
         const existingUser = await getUser(user.email);
 
@@ -86,7 +86,7 @@ const authConfig = {
         return false;
       }
     },
-    async jwt({ token, user, session }) {
+    async jwt({ token, user }) {
       if (user) token.role = user.role;
       return token;
     },
