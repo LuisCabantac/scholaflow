@@ -20,7 +20,7 @@ export default function Sidebar({ session }: { session: ISession | null }) {
       <aside
         className={`fixed h-screen overflow-hidden ${sidebarExpand ? "w-[18rem] translate-x-0 px-4" : "w-0 -translate-x-full"} left-0 top-0 z-30 border-r-2 border-[#d6e0fd] bg-[#dbe4ff] pt-6 transition-transform ease-in-out md:static md:block md:w-[18rem] md:translate-x-0 md:px-[0.88rem]`}
       >
-        <div className="flex items-center justify-between pl-2 md:pl-4">
+        <div className="flex items-center justify-between pl-4">
           <Logo />
           <button onClick={handleSidebarExpand} className="inline md:hidden">
             <svg
