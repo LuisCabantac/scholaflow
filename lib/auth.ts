@@ -1,9 +1,11 @@
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import NextAuth, { Session, User } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
+import { AdapterUser } from "next-auth/adapters";
 
-import { createUser } from "./auth-actions";
-import { getSchool, getUser } from "./data-service";
+import { createUser } from "@/lib/auth-actions";
+import { getSchool, getUser } from "@/lib/data-service";
 
 export interface ISession {
   user: {
@@ -27,32 +29,37 @@ export interface ISchool {
   schoolLogo: string;
 }
 
-interface ICredentials {
+// interface ICredentials {
+//   email: string;
+//   password: string;
+// }
+
+interface IUser extends User {
+  id: string;
+  name: string;
   email: string;
-  password?: string;
+  image: string;
+  role?: "student" | "teacher" | "admin";
 }
 
 const authConfig = {
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   providers: [
     CredentialsProvider({
-      async authorize(credentials: ICredentials) {
-        if (credentials === null) return null;
-        const user = await getUser(credentials?.email);
-        if (user) {
-          const isMatch = user.password === credentials.password;
-
-          if (isMatch) {
-            return user;
-          } else {
-            return null;
-          }
-        } else return null;
+      async authorize(credentials: Partial<Record<string, unknown>>) {
+        if (!credentials.email) return null;
+        const email = credentials.email as string;
+        const user = await getUser(email);
+        if (user && user.password === credentials.password) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
-    Google({
+    GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
       authorization: {
@@ -65,14 +72,10 @@ const authConfig = {
     }),
   ],
   callbacks: {
-    authorized({ auth }: { auth: ISession | null }) {
-      return !!auth?.user;
-    },
-    async signIn({ user }) {
+    async signIn({ user }: { user: User | AdapterUser }) {
       try {
-        const existingUser = await getUser(user.email);
-
-        if (!existingUser)
+        const existingUser = await getUser((user as IUser).email);
+        if (!existingUser) {
           await createUser({
             email: user.email,
             fullName: user.name,
@@ -80,39 +83,35 @@ const authConfig = {
             role: "student",
             emailVerified: true,
           });
-
+        }
         return true;
       } catch {
         return false;
       }
     },
-    async jwt({ token, user }) {
-      if (user) token.role = user.role;
+    async jwt({ token, user }: { token: JWT; user?: User | AdapterUser }) {
+      if (user) token.role = (user as IUser).role;
       return token;
     },
-    async session({ session }: { session: ISession }) {
-      const user = await getUser(session.user.email);
+    async session({ session }: { session: Session }) {
+      const user = await getUser((session as ISession).user.email);
       const school = await getSchool(user.school);
-
       const schoolName =
         Array.isArray(school) && school.length > 0
           ? (school as ISchool[])[0].schoolName
           : null;
-
-      session.user.id = user.id;
-      session.user.name = user.fullName;
-      session.user.image = user.avatar;
-      session.user.role = user.role;
-      session.user.school = user.school;
-      session.user.schoolName = schoolName;
-      session.user.verified = user.verified;
-
+      (session as ISession).user.id = user.id;
+      (session as ISession).user.name = user.fullName;
+      (session as ISession).user.image = user.avatar;
+      (session as ISession).user.role = user.role;
+      (session as ISession).user.school = user.school;
+      (session as ISession).user.schoolName = schoolName;
+      (session as ISession).user.verified = user.verified;
       return session;
     },
   },
   pages: {
     signIn: "/signin",
-    signOut: "/signout",
   },
 };
 
