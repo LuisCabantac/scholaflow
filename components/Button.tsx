@@ -24,7 +24,7 @@ export default function Button({
 }) {
   const { pending } = useFormStatus();
 
-  if (href)
+  if (href && !pending)
     return (
       <Link
         href={href}
@@ -32,6 +32,17 @@ export default function Button({
       >
         {children}
       </Link>
+    );
+
+  if (href && pending)
+    return (
+      <button
+        className={`${type === "primary" ? primaryStyle : secondaryStyle} ${pending && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors md:gap-2`}
+        type="submit"
+        disabled={pending}
+      >
+        {children}
+      </button>
     );
 
   if (onClick)
