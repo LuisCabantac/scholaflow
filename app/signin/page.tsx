@@ -19,7 +19,7 @@ export default async function Page() {
   if (session) return redirect("/user/dashboard");
 
   return (
-    <section className="flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-16">
+    <section className="flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[60%_40%] md:p-24">
       <div className="relative mx-0 my-auto w-0 md:w-[70%]">
         <Image
           src={signInPageImage}
