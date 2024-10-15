@@ -15,11 +15,13 @@ export default function Button({
   type,
   href,
   onClick,
+  isLoading,
   children,
 }: {
   type: string;
   href?: string;
   onClick?: () => void;
+  isLoading?: boolean;
   children: React.ReactNode;
 }) {
   const { pending } = useFormStatus();
@@ -49,8 +51,8 @@ export default function Button({
     return (
       <button
         onClick={onClick}
-        className={`${type === "primary" ? primaryStyle : secondaryStyle} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors disabled:cursor-not-allowed md:gap-2`}
-        disabled={pending}
+        className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors disabled:cursor-not-allowed md:gap-2`}
+        disabled={isLoading}
       >
         {children}
       </button>
@@ -58,11 +60,11 @@ export default function Button({
 
   return (
     <button
-      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${pending && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors md:gap-2`}
+      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "px-[2.3rem] py-[0.85rem] disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors md:gap-2`}
       type="submit"
-      disabled={pending}
+      disabled={isLoading}
     >
-      {pending ? <SpinnerMini /> : children}
+      {isLoading ? <SpinnerMini /> : children}
     </button>
   );
 }
