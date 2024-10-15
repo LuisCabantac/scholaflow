@@ -1,5 +1,6 @@
 "use client";
 
+import { useOptimistic } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
 import { IPosts } from "@/components/AnnouncementSection";
@@ -18,14 +19,32 @@ export default function AnnouncementPosts({
   isLoading: boolean;
   mutate: UseMutateFunction<void, Error, string, unknown>;
 }) {
+  const [optimisticPosts, optimisticDelete] = useOptimistic(
+    posts,
+    (curPost, postId) => {
+      return curPost?.filter((post) => post.id !== postId);
+    },
+  );
+
+  function handlePostDelete(id: string) {
+    optimisticDelete(id);
+    mutate(id);
+  }
+
   if (isLoading) return <AnnouncementLoading />;
 
-  if (!posts || posts.length <= 0) return <NoAnnouncement />;
+  if (!optimisticPosts || optimisticPosts.length <= 0)
+    return <NoAnnouncement />;
 
   return (
     <ul className="flex flex-col items-center justify-center gap-4">
-      {posts.map((post) => (
-        <PostCard post={post} mutate={mutate} key={post.id} role={role} />
+      {optimisticPosts.map((post) => (
+        <PostCard
+          post={post}
+          mutate={handlePostDelete}
+          key={post.id}
+          role={role}
+        />
       ))}
     </ul>
   );

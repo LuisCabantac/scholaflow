@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { UseMutateFunction } from "@tanstack/react-query";
 
 import { formatDate } from "@/lib/utils";
 
@@ -15,7 +14,7 @@ export default function PostCard({
   role,
 }: {
   post: IPosts;
-  mutate: UseMutateFunction<void, Error, string, unknown>;
+  mutate: (id: string) => void;
   role: string;
 }) {
   const [ellipsis, setEllipsis] = useState(false);
