@@ -6,6 +6,7 @@ import { hasUser } from "@/lib/utils";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { Toaster } from "react-hot-toast";
 
 export default async function layout({
   children,
@@ -23,6 +24,20 @@ export default async function layout({
           {children}
         </main>
       </Provider>
+      <Toaster
+        position="top-center"
+        gutter={12}
+        toastOptions={{
+          success: { duration: 3000 },
+          error: { duration: 5000 },
+          style: {
+            color: "#5c7cfa",
+            backgroundColor: "#f3f6ff",
+            fontWeight: 500,
+            padding: "0.75rem 1.25rem",
+          },
+        }}
+      />
     </div>
   );
 }
