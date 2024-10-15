@@ -3,7 +3,10 @@ import { signOutAction } from "@/lib/auth-actions";
 export default function SignOutButton() {
   return (
     <form action={signOutAction}>
-      <button className="signout__button flex w-full gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-[#c7d2f1]">
+      <button
+        className="signout__button flex w-full gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-[#c7d2f1]"
+        type="submit"
+      >
         <svg
           viewBox="0 0 24 24"
           strokeWidth={2}

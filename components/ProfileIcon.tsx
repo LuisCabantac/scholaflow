@@ -113,7 +113,7 @@ export default function ProfileIcon({
               <span>Dashboard</span>
             </Link>
           </li>
-          <li onClick={() => setIsOpen(!isOpen)}>
+          <li>
             <SignOutButton />
           </li>
         </ul>
