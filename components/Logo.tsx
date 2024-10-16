@@ -16,7 +16,7 @@ export default function Logo() {
         <Image src={scholaflowLogo} alt="logo" fill className="object-cover" />
       </div>
       <p
-        className={`${quicksand.className} cursor-default text-xl font-semibold text-[#22317c] md:text-2xl`}
+        className={`${quicksand.className} cursor-default text-xl font-bold text-[#22317c] md:text-2xl`}
       >
         ScholaFlow
       </p>
