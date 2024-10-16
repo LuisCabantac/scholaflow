@@ -8,11 +8,11 @@ import { hasUser } from "@/lib/utils";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 
-export default async function layout({
+export default async function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const session = await auth();
 
   return (

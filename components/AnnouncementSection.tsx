@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import { ILevels } from "@/app/user/announcements/page";
 
@@ -9,7 +10,6 @@ import Button from "@/components/Button";
 import Filter from "@/components/Filter";
 import AnnouncementForm from "@/components/AnnouncementForm";
 import AnnouncementPosts from "@/components/AnnouncementPosts";
-import toast from "react-hot-toast";
 
 export interface IPosts {
   id: string;
