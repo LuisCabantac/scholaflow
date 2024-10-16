@@ -9,6 +9,7 @@ import Button from "@/components/Button";
 import Filter from "@/components/Filter";
 import AnnouncementForm from "@/components/AnnouncementForm";
 import AnnouncementPosts from "@/components/AnnouncementPosts";
+import toast from "react-hot-toast";
 
 export interface IPosts {
   id: string;
@@ -51,10 +52,13 @@ export default function AnnouncementSection({
   const { mutate } = useMutation({
     mutationFn: handleDeletePosts,
     onSuccess: () => {
+      toast.success("Your post has been removed.");
+
       queryClient.invalidateQueries({
         queryKey: [filter],
       });
     },
+    onError: (err) => toast.error(err.message),
   });
 
   function handleShowAnnouncementForm() {

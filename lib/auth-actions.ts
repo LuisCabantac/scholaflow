@@ -19,11 +19,11 @@ export async function signInCredentialsAction(formData: FormData) {
   if (user) {
     if (user.password === password) {
       await signIn("credentials", {
-        email: formData.get("email"),
-        password: formData.get("password"),
-        redirectTo: "/user/dashboard",
-        // redirectTo: `/${user.school !== null ? "user/dashboard" : "getting-started"}`,
+        email,
+        password,
+        redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
       });
+      return false;
     } else {
       return true;
     }
@@ -32,7 +32,7 @@ export async function signInCredentialsAction(formData: FormData) {
 
 export async function signInGoogleAction() {
   await signIn("google", {
-    redirectTo: "/user/dashboard",
+    redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
   });
 }
 

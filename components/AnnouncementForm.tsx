@@ -1,10 +1,12 @@
-import { useFormStatus } from "react-dom";
+"use client";
 
 import { ILevels } from "@/app/user/announcements/page";
 import { createPost } from "@/lib/announcements-actions";
 
 import Button from "@/components/Button";
 import LevelsOption from "@/components/LevelsOption";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AnnouncementForm({
   handleShowAnnouncementForm,
@@ -13,23 +15,37 @@ export default function AnnouncementForm({
   handleShowAnnouncementForm: () => void;
   allLevels: ILevels[];
 }) {
-  const { pending } = useFormStatus();
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleCreatePost(event: React.FormEvent) {
+    event.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(event.target as HTMLFormElement);
+    const { success, message } = await createPost(formData);
+    if (success) {
+      setIsLoading(false);
+      toast.success(message);
+      handleShowAnnouncementForm();
+    } else toast.error(message);
+  }
 
   return (
     <form
       className="rounded-md border-2 border-[#dbe4ff] p-4"
-      action={createPost}
+      onSubmit={handleCreatePost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-4">
         <h3 className="text-lg font-medium md:text-xl">Create post</h3>
         <div>
           <div className="flex gap-2">
-            {!pending ? (
+            {!isLoading && (
               <Button type="secondary" onClick={handleShowAnnouncementForm}>
                 Cancel
               </Button>
-            ) : null}
-            <Button type="primary">Publish</Button>
+            )}
+            <Button type="primary" isLoading={isLoading}>
+              Publish
+            </Button>
           </div>
         </div>
       </div>
@@ -37,6 +53,7 @@ export default function AnnouncementForm({
         <div className="grid gap-2">
           <label className="text-sm font-medium md:text-base">Title</label>
           <input
+            disabled={isLoading}
             required
             type="text"
             name="title"
@@ -48,13 +65,14 @@ export default function AnnouncementForm({
           <label className="text-sm font-medium md:text-base">
             School Level
           </label>
-          <LevelsOption allLevels={allLevels} />
+          <LevelsOption allLevels={allLevels} isLoading={isLoading} />
         </div>
         <div className="grid gap-2">
           <label className="text-sm font-medium md:text-base">
             Description
           </label>
           <textarea
+            disabled={isLoading}
             required
             name="description"
             className="h-[10rem] resize-none rounded-md border-2 bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
@@ -65,6 +83,7 @@ export default function AnnouncementForm({
         <div className="grid gap-2">
           <label className="text-sm font-medium md:text-base">Image</label>
           <input
+            disabled={isLoading}
             type="file"
             name="image"
             accept=".jpg, .jpeg, .png"

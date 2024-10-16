@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 import { updatePost } from "@/lib/announcements-actions";
 
 import Button from "@/components/Button";
@@ -16,19 +20,38 @@ export default function AnnouncementUpdateForm({
   description: string;
   levels: string;
 }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleEditPost(event: React.FormEvent) {
+    event.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(event.target as HTMLFormElement);
+    const { success, message } = await updatePost(formData);
+    if (success) {
+      setIsLoading(false);
+      toast.success(message);
+      router.push("/user/announcements");
+    } else toast.error(message);
+  }
+
   return (
     <form
       className="mt-5 rounded-md border-2 border-[#dbe4ff] p-4"
-      action={updatePost}
+      onSubmit={handleEditPost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-4">
         <h3 className="text-xl font-medium">&quot;{title}&quot;</h3>
         <div>
           <div className="flex gap-2">
-            <Button type="secondary" href="/user/announcements">
-              Cancel
+            {!isLoading && (
+              <Button type="secondary" href="/user/announcements">
+                Cancel
+              </Button>
+            )}
+            <Button type="primary" isLoading={isLoading}>
+              Update
             </Button>
-            <Button type="primary">Update</Button>
           </div>
         </div>
       </div>
@@ -37,6 +60,7 @@ export default function AnnouncementUpdateForm({
           <input type="text" value={id} hidden name="id" />
           <label className="font-medium">Title</label>
           <input
+            disabled={isLoading}
             required
             type="text"
             name="title"
@@ -47,11 +71,12 @@ export default function AnnouncementUpdateForm({
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="font-medium">School Level</label>
-          <LevelsOption defaultValue={levels} />
+          <LevelsOption defaultValue={levels} isLoading={isLoading} />
         </div>
         <div className="grid gap-2">
           <label className="font-medium">Description</label>
           <textarea
+            disabled={isLoading}
             required
             name="description"
             defaultValue={description}

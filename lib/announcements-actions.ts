@@ -1,11 +1,11 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { auth, ISchool } from "./auth";
-import { getPostById, getSchool } from "./data-service";
-import { supabase } from "./supabase";
 import { revalidatePath } from "next/cache";
-import { extractImagePath, hasUser } from "./utils";
+
+import { supabase } from "@/lib/supabase";
+import { auth, ISchool } from "@/lib/auth";
+import { getPostById, getSchool } from "@/lib/data-service";
+import { extractImagePath, hasUser } from "@/lib/utils";
 
 export interface IImage {
   size: number;
@@ -43,11 +43,17 @@ export async function createPost(formData: FormData) {
   const session = await auth();
 
   if (!hasUser(session)) {
-    throw new Error("You must be logged in to create a post");
+    return {
+      success: false,
+      message: "You must be logged in to create a post.",
+    };
   }
 
   if (session.user.role === "student" || session.user.role === "teacher") {
-    throw new Error("You must be a school admin to create a post");
+    return {
+      success: false,
+      message: "You must be a school admin to create a post.",
+    };
   }
 
   const school = await getSchool(session.user.school);
@@ -73,28 +79,34 @@ export async function createPost(formData: FormData) {
   const { error } = await supabase.from("announcements").insert([newPost]);
 
   if (error) {
-    throw new Error("Post could not be created");
+    return { success: false, message: error.message };
   }
 
   revalidatePath("/user/announcements");
 
-  redirect("/user/announcements");
+  return { success: true, message: "Your post has been published!" };
 }
 
 export async function updatePost(formData: FormData) {
   const id = formData.get("id") as string;
 
   const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  if (!hasUser(session))
+    return { success: false, message: "You must be logged in." };
 
   if (session.user.role !== "admin")
-    throw new Error("You need be an admin to edit this post.");
+    return {
+      success: false,
+      message: "You need be an admin to edit this post.",
+    };
 
   const { title, levels, description, school } = await getPostById(id);
   if (session.user.school !== school)
-    throw new Error(
-      "You need be an admin of this school to be able to edit this post.",
-    );
+    return {
+      success: false,
+      message:
+        "You need be an admin of this school to be able to edit this post.",
+    };
 
   const updatePost = {
     title: formData.get("title") as string,
@@ -115,13 +127,17 @@ export async function updatePost(formData: FormData) {
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) return { success: false, message: error.message };
+
+    revalidatePath(`/user/announcements/edit/${id}`);
+    revalidatePath("/user/announcements");
+    return { success: true, message: "Post updated successfully!" };
   }
 
-  revalidatePath(`/user/announcements/edit/${id}`);
-  revalidatePath("/user/announcements");
-
-  redirect("/user/announcements");
+  return {
+    success: true,
+    message: "No changes detected, post remains the same.",
+  };
 }
 
 export async function deletePost(postId: string) {

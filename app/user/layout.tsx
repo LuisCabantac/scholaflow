@@ -1,4 +1,5 @@
 import React from "react";
+import { Toaster } from "react-hot-toast";
 
 import Provider from "@/app/Provider";
 import { auth } from "@/lib/auth";
@@ -6,7 +7,6 @@ import { hasUser } from "@/lib/utils";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "react-hot-toast";
 
 export default async function layout({
   children,
