@@ -1,5 +1,5 @@
 import React from "react";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 
 import Provider from "@/app/Provider";
 import { auth } from "@/lib/auth";
@@ -22,22 +22,22 @@ export default async function layout({
         <main className="h-full w-full overflow-auto px-5 py-5 md:px-8">
           {session && <Header />}
           {children}
+          {/* <Toaster
+            position="top-center"
+            gutter={12}
+            toastOptions={{
+              success: { duration: 3000 },
+              error: { duration: 5000 },
+              style: {
+                color: "#5c7cfa",
+                backgroundColor: "#f3f6ff",
+                fontWeight: 500,
+                padding: "0.75rem 1.25rem",
+              },
+            }}
+          /> */}
         </main>
       </Provider>
-      <Toaster
-        position="top-center"
-        gutter={12}
-        toastOptions={{
-          success: { duration: 3000 },
-          error: { duration: 5000 },
-          style: {
-            color: "#5c7cfa",
-            backgroundColor: "#f3f6ff",
-            fontWeight: 500,
-            padding: "0.75rem 1.25rem",
-          },
-        }}
-      />
     </div>
   );
 }
