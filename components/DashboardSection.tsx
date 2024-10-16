@@ -29,7 +29,7 @@ export default function DashboardSection() {
   }, [isHydrated, toastMessage, searchParams, router]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid gap-4 md:grid-cols-2">
       <DashboardCard title="Announcements">
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus dicta
