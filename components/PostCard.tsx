@@ -1,23 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { formatDate } from "@/lib/utils";
 
 import { IPosts } from "@/components/AnnouncementSection";
+import ConfirmationScreen from "@/components/ConfirmationScreen";
 
 export default function PostCard({
   post,
-  mutate,
   role,
+  mutate,
 }: {
   post: IPosts;
-  mutate: (id: string) => void;
   role: string;
+  mutate: (id: string) => void;
 }) {
   const [ellipsis, setEllipsis] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   function handleSetEllipsis() {
     setEllipsis(!ellipsis);
@@ -25,6 +27,10 @@ export default function PostCard({
 
   function handleCloseEllipsis() {
     setEllipsis(false);
+  }
+
+  function handleShowConfirmation() {
+    setShowConfirmation(!showConfirmation);
   }
 
   return (
@@ -82,7 +88,7 @@ export default function PostCard({
                 </svg>
               </button>
               {ellipsis && (
-                <div className="absolute right-0 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] px-3 py-3 font-medium shadow-md">
+                <div className="absolute right-0 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md">
                   <Link
                     href={`/user/announcements/edit/${post.id}`}
                     className="flex items-center gap-1 rounded-md text-sm text-[#4c6ef5] hover:text-[#364fc7] md:text-base"
@@ -104,7 +110,7 @@ export default function PostCard({
                     <span>Edit post</span>
                   </Link>
                   <button
-                    onClick={() => mutate(post.id)}
+                    onClick={handleShowConfirmation}
                     className="flex items-center gap-1 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a] md:text-base"
                   >
                     <svg
@@ -126,6 +132,15 @@ export default function PostCard({
                 </div>
               )}
             </div>
+            {showConfirmation && (
+              <ConfirmationScreen
+                type="delete"
+                handleCancel={handleShowConfirmation}
+                handleAction={() => mutate(post.id)}
+              >
+                Are you sure you want to delete this post?
+              </ConfirmationScreen>
+            )}
           </div>
         )}
       </div>
