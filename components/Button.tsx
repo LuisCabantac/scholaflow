@@ -14,12 +14,14 @@ const secondaryStyle: string =
 export default function Button({
   type,
   href,
+  bg,
   onClick,
   isLoading,
   children,
 }: {
   type: string;
   href?: string;
+  bg?: string;
   onClick?: () => void;
   isLoading?: boolean;
   children: React.ReactNode;
@@ -51,7 +53,7 @@ export default function Button({
     return (
       <button
         onClick={onClick}
-        className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors disabled:cursor-not-allowed md:gap-2`}
+        className={`${bg && type === "primary" ? `${bg} px-5 py-3 text-[#edf2ff]` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors disabled:cursor-not-allowed md:gap-2`}
         disabled={isLoading}
       >
         {children}
@@ -60,7 +62,7 @@ export default function Button({
 
   return (
     <button
-      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "px-[2.3rem] py-[0.85rem] disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors md:gap-2`}
+      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "px-[2.25rem] py-[0.85rem] disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold transition-colors md:gap-2`}
       type="submit"
       disabled={isLoading}
     >
