@@ -58,9 +58,9 @@ export default function SignInForm() {
         />
         {error ? (
           <p className="text-xs text-[#f03e3e]">
-            Your password is incorrect or this account doesn&apos;t exist.
-            Please check your password or sign up. If you have an account try to
-            sign in with google and add/change your password.
+            Your password is incorrect, or this account doesn&apos;t exist.
+            Please check your password or sign up. If you have an account, try
+            signing in with Google to add or change your password.
           </p>
         ) : null}
       </div>
