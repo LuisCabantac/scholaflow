@@ -15,7 +15,7 @@ export default function SignInSignUpButton({
 
   return (
     <button
-      className="flex w-full items-center justify-center rounded-md bg-[#22317c] px-5 py-3 text-sm font-semibold text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#192563]"
+      className={`${pending || isLoading ? "py-[0.8rem]" : ""} flex w-full items-center justify-center rounded-md bg-[#22317c] px-5 py-3 text-sm font-semibold text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#192563]`}
       disabled={pending}
     >
       <span>{pending || isLoading ? <SpinnerMini /> : children}</span>
