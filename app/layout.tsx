@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Be_Vietnam_Pro } from "next/font/google";
 
 import "@/styles/globals.css";
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Your All-in-One Solution for a Seamless Learning Experience",
 };
 
-const poppins = Poppins({
+const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
   display: "swap",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
+        className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
       >
         {children}
       </body>
