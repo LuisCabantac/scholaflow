@@ -85,7 +85,7 @@ export default function PostCard({
                 <div className="absolute right-0 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] px-3 py-3 font-medium shadow-md">
                   <Link
                     href={`/user/announcements/edit/${post.id}`}
-                    className="flex items-center gap-1 rounded-md text-[#4c6ef5] hover:text-[#364fc7]"
+                    className="flex items-center gap-1 rounded-md text-sm text-[#4c6ef5] hover:text-[#364fc7] md:text-base"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@ export default function PostCard({
                   </Link>
                   <button
                     onClick={() => mutate(post.id)}
-                    className="flex items-center gap-1 rounded-md text-[#f03e3e] hover:text-[#c92a2a]"
+                    className="flex items-center gap-1 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a] md:text-base"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
