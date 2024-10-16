@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { Nunito_Sans } from "next/font/google";
+import { Quicksand } from "next/font/google";
 
 import { FontType } from "@/app/layout";
 import scholaflowLogo from "@/public/scholaflow_logo.png";
 
-const nunitoSans: FontType = Nunito_Sans({
+const quicksand: FontType = Quicksand({
   subsets: ["latin"],
   display: "swap",
 });
@@ -16,7 +16,7 @@ export default function Logo() {
         <Image src={scholaflowLogo} alt="logo" fill className="object-cover" />
       </div>
       <p
-        className={`${nunitoSans.className} cursor-default text-xl font-bold text-[#22317c] md:text-2xl`}
+        className={`${quicksand.className} cursor-default text-xl font-bold text-[#22317c] md:text-2xl`}
       >
         ScholaFlow
       </p>
