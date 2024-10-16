@@ -23,23 +23,24 @@ export default function SidebarLinks({
   return (
     <ul className="mt-6 grid gap-32 font-medium">
       <div className="flex flex-col gap-3">
-        <li>
-          <Link
-            href="/user/dashboard"
-            className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/dashboard") ? activeLinkStyle : inactiveLinkStyle}`}
-            onClick={handleSidebarExpand}
-          >
-            <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
-              <path d="M4 3 H9 A1 1 0 0 1 10 4 V11 A1 1 0 0 1 9 12 H4 A1 1 0 0 1 3 11 V4 A1 1 0 0 1 4 3 z" />
-              <path d="M15 3 H20 A1 1 0 0 1 21 4 V7 A1 1 0 0 1 20 8 H15 A1 1 0 0 1 14 7 V4 A1 1 0 0 1 15 3 z" />
-              <path d="M15 12 H20 A1 1 0 0 1 21 13 V20 A1 1 0 0 1 20 21 H15 A1 1 0 0 1 14 20 V13 A1 1 0 0 1 15 12 z" />
-              <path d="M4 16 H9 A1 1 0 0 1 10 17 V20 A1 1 0 0 1 9 21 H4 A1 1 0 0 1 3 20 V17 A1 1 0 0 1 4 16 z" />
-            </svg>
-            <span className="text-base transition-all">Dashboard</span>
-          </Link>
-        </li>
         {verified && (
           <>
+            <li>
+              <Link
+                href="/user/dashboard"
+                className={`sidebar__links flex items-center gap-2 rounded-md py-3 pl-4 pr-4 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/dashboard") ? activeLinkStyle : inactiveLinkStyle}`}
+                onClick={handleSidebarExpand}
+              >
+                <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
+                  <path d="M4 3 H9 A1 1 0 0 1 10 4 V11 A1 1 0 0 1 9 12 H4 A1 1 0 0 1 3 11 V4 A1 1 0 0 1 4 3 z" />
+                  <path d="M15 3 H20 A1 1 0 0 1 21 4 V7 A1 1 0 0 1 20 8 H15 A1 1 0 0 1 14 7 V4 A1 1 0 0 1 15 3 z" />
+                  <path d="M15 12 H20 A1 1 0 0 1 21 13 V20 A1 1 0 0 1 20 21 H15 A1 1 0 0 1 14 20 V13 A1 1 0 0 1 15 12 z" />
+                  <path d="M4 16 H9 A1 1 0 0 1 10 17 V20 A1 1 0 0 1 9 21 H4 A1 1 0 0 1 3 20 V17 A1 1 0 0 1 4 16 z" />
+                </svg>
+                <span className="text-base transition-all">Dashboard</span>
+              </Link>
+            </li>
+
             <li>
               <Link
                 href="/user/announcements"
