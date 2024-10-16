@@ -5,12 +5,15 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 export default function LevelsOption({
   allLevels,
   defaultValue,
+  isLoading,
 }: {
   allLevels?: ILevels[];
   defaultValue?: string;
+  isLoading: boolean;
 }) {
   return (
     <select
+      disabled={isLoading}
       required
       name="levels"
       className="level__select cursor-pointer rounded-md bg-[#ced8f7] px-4 py-2 text-sm md:px-5 md:py-3 md:text-base"
