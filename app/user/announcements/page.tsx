@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getAllLevels, getPosts, getUser } from "@/lib/data-service";
+import { getAllLevels, getPosts } from "@/lib/data-service";
 import { deletePost } from "@/lib/announcements-actions";
 
 import AnnouncementSection from "@/components/AnnouncementSection";
@@ -21,13 +21,11 @@ export default async function Page() {
     return redirect("/signin");
   }
 
-  const { school: hasSchool } = await getUser(session.user.email);
+  const allLevels = await getAllLevels();
 
-  const allLevels = await getAllLevels(hasSchool);
-
-  async function handleGetPosts(school: string, levels: string) {
+  async function handleGetPosts(levels: string) {
     "use server";
-    const data = await getPosts(school, levels);
+    const data = await getPosts(levels);
     return data;
   }
 
@@ -43,7 +41,6 @@ export default async function Page() {
     <section>
       <AnnouncementSection
         role={session.user.role}
-        hasSchool={hasSchool}
         allLevels={allLevels as ILevels[]}
         handleGetPosts={handleGetPosts}
         handleDeletePosts={handleDeletePosts}
