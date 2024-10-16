@@ -52,7 +52,9 @@ export default function AnnouncementForm({
       </div>
       <div className="flex flex-col justify-start gap-3 px-2 py-4">
         <div className="grid gap-2">
-          <label className="text-sm font-medium md:text-base">Title</label>
+          <label className="text-sm font-medium md:text-base">
+            Title <span className="text-red-400">*</span>
+          </label>
           <input
             disabled={isLoading}
             required
@@ -74,7 +76,6 @@ export default function AnnouncementForm({
           </label>
           <textarea
             disabled={isLoading}
-            required
             name="description"
             className="h-[10rem] resize-none rounded-md border-2 bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
             placeholder="Add a description..."
