@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 import "@/styles/globals.css";
 
@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   description: "Your All-in-One Solution for a Seamless Learning Experience",
 };
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export interface FontType {
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${plusJakartaSans.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
+        className={`${poppins.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
       >
         {children}
       </body>
