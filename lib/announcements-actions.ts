@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import { supabase } from "@/lib/supabase";
-import { auth, ISchool } from "@/lib/auth";
-import { getPostById, getSchool } from "@/lib/data-service";
+import { auth } from "@/lib/auth";
+import { getPostById } from "@/lib/data-service";
 import { extractImagePath, hasUser } from "@/lib/utils";
 
 export interface IImage {
@@ -14,11 +14,11 @@ export interface IImage {
   lastModified: number;
 }
 
-export async function uploadImage(image: File, school: string) {
+export async function uploadImage(image: File) {
   if (image.name !== "undefined") {
     const { data: imageData, error } = await supabase.storage
       .from("images")
-      .upload(`${Date.now()}_${school.split(" ").join("_")}`, image, {
+      .upload(`${Date.now()}`, image, {
         cacheControl: "3600",
         upsert: false,
       });
@@ -49,27 +49,19 @@ export async function createPost(formData: FormData) {
     };
   }
 
-  if (session.user.role === "student" || session.user.role === "teacher") {
+  if (session.user.role !== "admin") {
     return {
       success: false,
       message: "You must be a school admin to create a post.",
     };
   }
 
-  const school = await getSchool(session.user.school);
-
   const image = formData.get("image");
-  const postImage =
-    image instanceof File
-      ? await uploadImage(image, session.user.schoolName ?? "")
-      : null;
+  const postImage = image instanceof File ? await uploadImage(image) : null;
 
   const newPost = {
     author: session.user.id,
     authorName: session.user.name,
-    school: session.user.school,
-    schoolName: session.user.schoolName,
-    schoolAvatar: (school as ISchool[])[0].schoolLogo,
     title: formData.get("title"),
     description: formData.get("description"),
     levels: formData.get("levels"),
@@ -100,13 +92,7 @@ export async function updatePost(formData: FormData) {
       message: "You need be an admin to edit this post.",
     };
 
-  const { title, levels, description, school } = await getPostById(id);
-  if (session.user.school !== school)
-    return {
-      success: false,
-      message:
-        "You need be an admin of this school to be able to edit this post.",
-    };
+  const { title, levels, description } = await getPostById(id);
 
   const updatePost = {
     title: formData.get("title") as string,
@@ -147,11 +133,7 @@ export async function deletePost(postId: string) {
   if (session.user.role !== "admin")
     throw new Error("You need be an admin to delete this post.");
 
-  const { school, image } = await getPostById(postId);
-  if (session.user.school !== school)
-    throw new Error(
-      "You need be an admin of this school to be able to delete this post.",
-    );
+  const { image } = await getPostById(postId);
 
   if (image !== null) {
     const path = extractImagePath(image);

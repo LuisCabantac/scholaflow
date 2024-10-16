@@ -1,32 +1,23 @@
 import NextAuth, { Session, User } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 import { createUser } from "@/lib/auth-actions";
-import { getSchool, getUser } from "@/lib/data-service";
+import { getUser } from "@/lib/data-service";
 
 export interface ISession {
   user: {
     id: string;
     name: string;
     email: string;
-    school: string;
     schoolName: string | null;
     image: string;
     verified: boolean;
     role: "guest" | "student" | "teacher" | "admin";
   };
   expires: string;
-}
-
-export interface ISchool {
-  schoolId: string;
-  created_at: string;
-  schoolName: string;
-  location: string;
-  schoolLogo: string;
 }
 
 // interface ICredentials {
@@ -95,17 +86,12 @@ const authConfig = {
     },
     async session({ session }: { session: Session }) {
       const user = await getUser((session as ISession).user.email);
-      const school = await getSchool(user.school);
-      const schoolName =
-        Array.isArray(school) && school.length > 0
-          ? (school as ISchool[])[0].schoolName
-          : null;
+
       (session as ISession).user.id = user.id;
       (session as ISession).user.name = user.fullName;
       (session as ISession).user.image = user.avatar;
       (session as ISession).user.role = user.role;
-      (session as ISession).user.school = user.school;
-      (session as ISession).user.schoolName = schoolName;
+      (session as ISession).user.schoolName = user.schoolName;
       (session as ISession).user.verified = user.verified;
       return session;
     },

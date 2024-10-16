@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "./auth";
+import { auth, signIn, signOut } from "./auth";
 import { getUser, getUserEmail, getVerificationToken } from "./data-service";
 import { supabase } from "./supabase";
 
@@ -31,6 +31,8 @@ export async function signInCredentialsAction(formData: FormData) {
 }
 
 export async function signInGoogleAction() {
+  const session = await auth();
+  console.log(session);
   await signIn("google", {
     redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
   });

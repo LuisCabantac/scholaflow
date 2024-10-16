@@ -29,15 +29,13 @@ export interface IPosts {
 
 export default function AnnouncementSection({
   role,
-  hasSchool,
   allLevels,
   handleGetPosts,
   handleDeletePosts,
 }: {
   role: string;
-  hasSchool: string | null;
   allLevels: ILevels[];
-  handleGetPosts: (school: string, levels: string) => Promise<IPosts[] | null>;
+  handleGetPosts: (levels: string) => Promise<IPosts[] | null>;
   handleDeletePosts: (postId: string) => Promise<void>;
 }) {
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
@@ -45,8 +43,8 @@ export default function AnnouncementSection({
   const queryClient = useQueryClient();
 
   const { data: posts, isLoading } = useQuery({
-    queryKey: [filter, hasSchool],
-    queryFn: () => handleGetPosts(hasSchool || "", filter),
+    queryKey: [filter],
+    queryFn: () => handleGetPosts(filter),
   });
 
   const { mutate } = useMutation({
@@ -58,7 +56,7 @@ export default function AnnouncementSection({
         queryKey: [filter],
       });
     },
-    onError: (err) => toast.error(err.message),
+    onError: (error) => toast.error(error.message),
   });
 
   function handleShowAnnouncementForm() {
@@ -75,7 +73,7 @@ export default function AnnouncementSection({
         <>
           <div className="flex items-center justify-between pb-4">
             <Filter handleFilter={handleFilter} />
-            {role === "admin" && hasSchool ? (
+            {role === "admin" ? (
               <Button type="primary" onClick={handleShowAnnouncementForm}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
