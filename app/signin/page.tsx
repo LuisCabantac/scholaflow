@@ -19,7 +19,7 @@ export default async function Page() {
   if (session) return redirect("/user/dashboard");
 
   return (
-    <section className="flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[60%_40%] md:p-24">
+    <section className="flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[60%_40%] md:px-24 md:py-24">
       <div className="relative mx-0 my-auto w-0 md:w-[70%]">
         <Image
           src={signInPageImage}
@@ -27,7 +27,7 @@ export default async function Page() {
           className="object-cover"
         />
       </div>
-      <div className="flex flex-col justify-center gap-y-10">
+      <div className="flex w-full flex-col justify-center gap-10">
         <Logo />
         <h2 className="text-3xl font-bold md:text-4xl">Welcome back!</h2>
         <div className="grid gap-3">
