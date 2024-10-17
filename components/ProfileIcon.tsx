@@ -56,7 +56,7 @@ export default function ProfileIcon({
               </div>
             </div>
             <div className="grid w-full gap-2 border-t-2 border-[#d6e0fd] pt-2">
-              <li className="flex items-center justify-center rounded-md bg-[#354164] px-2 py-1 text-xs font-medium uppercase text-[#d6e0fd]">
+              <li className="flex items-center justify-center rounded-md bg-[#354164] p-2 text-xs font-medium uppercase text-[#d6e0fd]">
                 {role}
               </li>
               {school && (
