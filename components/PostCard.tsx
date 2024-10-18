@@ -35,7 +35,7 @@ export default function PostCard({
 
   return (
     <li
-      className="relative flex w-full flex-col gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4"
+      className="relative flex w-full flex-col gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
       id={post.id}
       onMouseLeave={handleCloseEllipsis}
     >
@@ -61,7 +61,7 @@ export default function PostCard({
                 {formatDate(post.created_at)}
               </p>
               {post.updatedPost && (
-                <p className="rounded-full bg-[#616572] px-3 py-1 text-xs text-[#f3f6ff]">
+                <p className="rounded-full bg-[#616572] px-2 py-1 text-xs text-[#f3f6ff] md:px-3">
                   Updated
                 </p>
               )}
@@ -69,7 +69,7 @@ export default function PostCard({
           </div>
         </div>
         {role === "admin" && (
-          <div className="absolute right-4 top-4">
+          <div className="absolute right-3 top-3 md:right-4 md:top-4">
             <div className="relative">
               <button onClick={handleSetEllipsis}>
                 <svg
@@ -83,7 +83,7 @@ export default function PostCard({
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
                   />
                 </svg>
               </button>
