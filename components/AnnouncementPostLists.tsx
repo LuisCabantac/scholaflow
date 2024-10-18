@@ -8,7 +8,7 @@ import AnnouncementLoading from "@/components/AnnouncementLoading";
 import PostCard from "@/components/PostCard";
 import NoAnnouncement from "@/components/NoAnnouncement";
 
-export default function AnnouncementPosts({
+export default function AnnouncementPostLists({
   role,
   posts,
   isLoading,
@@ -33,7 +33,7 @@ export default function AnnouncementPosts({
 
   if (isLoading) return <AnnouncementLoading />;
 
-  if (!optimisticPosts || optimisticPosts.length <= 0)
+  if (!optimisticPosts || optimisticPosts.length === 0)
     return <NoAnnouncement />;
 
   return (

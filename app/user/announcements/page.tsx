@@ -42,8 +42,8 @@ export default async function Page() {
       <AnnouncementSection
         role={session.user.role}
         allLevels={allLevels as ILevels[]}
-        handleGetPosts={handleGetPosts}
-        handleDeletePosts={handleDeletePosts}
+        onGetPosts={handleGetPosts}
+        onDeletePosts={handleDeletePosts}
       />
     </section>
   );

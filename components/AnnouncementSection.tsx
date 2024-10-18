@@ -9,7 +9,7 @@ import { ILevels } from "@/app/user/announcements/page";
 import Button from "@/components/Button";
 import Filter from "@/components/Filter";
 import AnnouncementForm from "@/components/AnnouncementForm";
-import AnnouncementPosts from "@/components/AnnouncementPosts";
+import AnnouncementPostLists from "@/components/AnnouncementPostLists";
 
 export interface IPosts {
   id: string;
@@ -30,13 +30,13 @@ export interface IPosts {
 export default function AnnouncementSection({
   role,
   allLevels,
-  handleGetPosts,
-  handleDeletePosts,
+  onGetPosts,
+  onDeletePosts,
 }: {
   role: string;
   allLevels: ILevels[];
-  handleGetPosts: (levels: string) => Promise<IPosts[] | null>;
-  handleDeletePosts: (postId: string) => Promise<void>;
+  onGetPosts: (levels: string) => Promise<IPosts[] | null>;
+  onDeletePosts: (postId: string) => Promise<void>;
 }) {
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
   const [filter, setFilter] = useState("all levels");
@@ -44,11 +44,11 @@ export default function AnnouncementSection({
 
   const { data: posts, isLoading } = useQuery({
     queryKey: [filter],
-    queryFn: () => handleGetPosts(filter),
+    queryFn: () => onGetPosts(filter),
   });
 
   const { mutate } = useMutation({
-    mutationFn: handleDeletePosts,
+    mutationFn: onDeletePosts,
     onSuccess: () => {
       toast.success("Your post has been removed.");
 
@@ -94,7 +94,7 @@ export default function AnnouncementSection({
             ) : null}
           </div>
 
-          <AnnouncementPosts
+          <AnnouncementPostLists
             role={role}
             posts={posts}
             isLoading={isLoading}
