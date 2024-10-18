@@ -57,7 +57,7 @@ export default function ProfileIcon({
             </div>
             <div className="grid w-full gap-2 border-t-2 border-[#d6e0fd] pt-2">
               <li
-                className={`role flex items-center justify-center rounded-full border-2 ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"} p-2 text-xs font-semibold uppercase`}
+                className={`role flex items-center justify-center rounded-full border-2 ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"} p-1 text-[0.65rem] font-semibold uppercase md:p-2 md:text-xs`}
               >
                 {role}
               </li>
