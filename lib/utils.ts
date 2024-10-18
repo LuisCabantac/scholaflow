@@ -63,3 +63,19 @@ export function capitalizeFirstLetter(str: string) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export const generateClassCode = (): string =>
+  Array.from(
+    { length: 7 },
+    () =>
+      "abcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random() * 36)],
+  ).join("");
+
+export function getLastRouteName(url: string) {
+  const segments = url.split("/").filter(Boolean);
+  const lastSegment = segments[segments.length - 1];
+
+  return lastSegment
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}

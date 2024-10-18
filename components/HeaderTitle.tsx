@@ -2,14 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-function getLastRouteName(url: string) {
-  const segments = url.split("/").filter(Boolean);
-  const lastSegment = segments[segments.length - 1];
-
-  return lastSegment
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-}
+import { getLastRouteName } from "@/lib/utils";
 
 export default function HeaderTitle() {
   const pathname = usePathname();
