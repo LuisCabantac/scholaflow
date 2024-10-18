@@ -77,13 +77,22 @@ export default function AnnouncementUpdateForm({
           <label className="font-medium">Description</label>
           <textarea
             disabled={isLoading}
-            required
             name="description"
             defaultValue={description}
             className="h-[10rem] w-full resize-none rounded-md border-2 bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
             placeholder="Edit description..."
             maxLength={255}
           ></textarea>
+        </div>
+        <div className="grid gap-2">
+          <label className="text-sm font-medium md:text-base">Image</label>
+          <input
+            disabled={isLoading}
+            type="file"
+            name="image"
+            accept=".jpg, .jpeg, .png"
+            className="text-sm file:cursor-pointer file:rounded-md file:border-none file:bg-[#ced8f7] file:px-5 file:py-3 md:text-base"
+          />
         </div>
       </div>
     </form>

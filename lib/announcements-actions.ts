@@ -92,19 +92,24 @@ export async function updatePost(formData: FormData) {
       message: "You need be an admin to edit this post.",
     };
 
+  const image = formData.get("image");
+  const postImage = image instanceof File ? await uploadImage(image) : null;
+
   const { title, levels, description } = await getPostById(id);
 
   const updatePost = {
     title: formData.get("title") as string,
     levels: formData.get("levels") as string,
     description: formData.get("description") as string,
+    image: postImage?.publicUrl,
     updatedPost: true,
   };
 
   if (
     title !== updatePost.title ||
     levels !== updatePost.levels ||
-    description !== updatePost.description
+    description !== updatePost.description ||
+    postImage
   ) {
     const { error } = await supabase
       .from("announcements")
