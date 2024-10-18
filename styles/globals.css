@@ -96,4 +96,28 @@
     align-items: center;
     z-index: 1000;
   }
+
+  .role.admin {
+    background-color: #ebecf0;
+    color: #354164;
+    border-color: #354164;
+  }
+
+  .role.teacher {
+    background-color: #d3f9d8;
+    color: #2f9e44;
+    border-color: #2f9e44;
+  }
+
+  .role.student {
+    background-color: #d0ebff;
+    color: #1c7ed6;
+    border-color: #1c7ed6;
+  }
+
+  .role.guest {
+    background-color: #f1f3f5;
+    color: #495057;
+    border-color: #495057;
+  }
 }
