@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { checkEmail, checkVerificationToken } from "@/lib/auth-actions";
-import SignInSignUpButton from "@/components/SignInSignUpButton";
+import SignInSignUpButton from "@/components/SignInCredentialsButton";
 
 const fullNameRegex =
   /^[A-Za-z]+([' -]?[A-Za-z]+)* [A-Za-z]+([' -]?[A-Za-z]+)*$/;

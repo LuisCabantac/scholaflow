@@ -4,7 +4,7 @@ import React from "react";
 import { useFormStatus } from "react-dom";
 import SpinnerMini from "@/components/SpinnerMini";
 
-export default function SignInSignUpButton({
+export default function SignInCredentialsButton({
   isLoading,
   children,
 }: {
