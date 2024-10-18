@@ -61,7 +61,7 @@ export default function PostCard({
                 {formatDate(post.created_at)}
               </p>
               {post.updatedPost && (
-                <p className="rounded-md bg-[#616572] p-1 text-xs text-[#f3f6ff]">
+                <p className="rounded-full bg-[#616572] px-3 py-1 text-xs text-[#f3f6ff]">
                   Updated
                 </p>
               )}
