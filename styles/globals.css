@@ -97,6 +97,10 @@
     z-index: 1000;
   }
 
+  .password__input:focus + .show__password {
+    border-color: #384689;
+  }
+
   .role.admin {
     background-color: #ebecf0;
     color: #354164;
