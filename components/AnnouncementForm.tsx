@@ -60,7 +60,7 @@ export default function AnnouncementForm({
             required
             type="text"
             name="title"
-            className="w-full rounded-md border-2 bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
+            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
             placeholder="Add a title..."
           />
         </div>
@@ -77,7 +77,7 @@ export default function AnnouncementForm({
           <textarea
             disabled={isLoading}
             name="description"
-            className="h-[10rem] resize-none rounded-md border-2 bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
+            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3"
             placeholder="Add a description..."
             maxLength={255}
           ></textarea>

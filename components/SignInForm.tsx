@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { signInCredentialsAction } from "@/lib/auth-actions";
 
@@ -24,7 +24,8 @@ export default function SignInForm() {
     setIsLoading(false);
   }
 
-  function handleShowPassword() {
+  function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
     setShowPassword(!showPassword);
   }
 
@@ -40,7 +41,7 @@ export default function SignInForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
-          className={`rounded-md border-2 bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
+          className={`rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setValidEmail(emailRegex.test(event.target.value))
           }
@@ -57,22 +58,21 @@ export default function SignInForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-0 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-0 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValidPassword(event.target.value.length >= 8 ? true : false)
             }
           />
           <button
             onClick={handleShowPassword}
-            className={`show__password rounded-r-md border-y-2 border-r-2 py-3 pr-5 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`show__password rounded-r-md border-y-2 border-r-2 border-[#bec2cc] py-3 pr-5 focus:outline-0 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
-              stroke="currentColor"
-              className="size-6"
+              className="size-6 stroke-[#bec2cc]"
             >
               <path
                 strokeLinecap="round"

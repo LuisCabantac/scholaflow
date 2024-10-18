@@ -65,7 +65,7 @@ export default function AnnouncementUpdateForm({
             type="text"
             name="title"
             defaultValue={title}
-            className="rounded-md border-2 bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
+            className="rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
             placeholder="Edit title..."
           />
         </div>
@@ -79,7 +79,7 @@ export default function AnnouncementUpdateForm({
             disabled={isLoading}
             name="description"
             defaultValue={description}
-            className="h-[10rem] w-full resize-none rounded-md border-2 bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
+            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
             placeholder="Edit description..."
             maxLength={255}
           ></textarea>
