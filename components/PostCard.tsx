@@ -145,8 +145,8 @@ export default function PostCard({
         )}
       </div>
 
-      <div className="text-base md:text-lg">
-        <h4 className="font-semibold">{post.title}</h4>
+      <div>
+        <h4 className="font-bold">{post.title}</h4>
         <p>{post.description}</p>
       </div>
       {post.image && (
