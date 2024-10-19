@@ -1,6 +1,6 @@
 export default function AnnouncementLoading() {
   return (
-    <ul className="grid gap-4">
+    <ul className="grid gap-3 md:gap-4">
       <li className="flex w-full flex-col gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
         <div className="flex gap-2">
           <div className="h-12 w-12 rounded-full bg-[#dbe4ff] md:h-16 md:w-16"></div>
