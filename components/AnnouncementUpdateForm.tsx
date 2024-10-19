@@ -93,13 +93,15 @@ export default function AnnouncementUpdateForm({
         </div>
         <div className="grid gap-2">
           <label className="text-sm font-medium md:text-base">Image</label>
-          <input
-            disabled={isLoading}
-            type="file"
-            name="image"
-            accept=".jpg, .jpeg, .png"
-            className="text-sm file:cursor-pointer file:rounded-md file:border-none file:bg-[#ced8f7] file:px-5 file:py-3 md:text-base"
-          />
+          <div className="relative">
+            <input
+              disabled={isLoading}
+              type="file"
+              name="image"
+              accept=".jpg, .jpeg, .png"
+              className="image__input text-sm file:cursor-pointer file:rounded-md file:border-none file:bg-[#ced8f7] file:py-3 file:pr-5 md:text-base"
+            />
+          </div>
         </div>
       </div>
     </form>
