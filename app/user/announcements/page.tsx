@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getAllLevels, getPosts } from "@/lib/data-service";
+import { getAllLevels, getAllPosts, getPosts } from "@/lib/data-service";
 import { deletePost } from "@/lib/announcements-actions";
 
 import AnnouncementSection from "@/components/AnnouncementSection";
@@ -25,6 +25,11 @@ export default async function Page() {
 
   async function handleGetPosts(levels: string) {
     "use server";
+    if (levels === "all levels") {
+      const data = await getAllPosts();
+      return data;
+    }
+
     const data = await getPosts(levels);
     return data;
   }

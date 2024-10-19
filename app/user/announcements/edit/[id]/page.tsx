@@ -3,7 +3,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getPostById } from "@/lib/data-service";
+import { getAllLevels, getPostById } from "@/lib/data-service";
 
 import AnnouncementUpdateForm from "@/components/AnnouncementUpdateForm";
 
@@ -17,12 +17,15 @@ export default async function Page({ params }: { params: Params }) {
 
   const { title, description, levels } = await getPostById(id);
 
+  const allLevels = await getAllLevels();
+
   return (
     <AnnouncementUpdateForm
       id={id}
       title={title}
       description={description}
       levels={levels}
+      options={allLevels}
     />
   );
 }

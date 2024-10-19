@@ -34,7 +34,7 @@ export default function AnnouncementSection({
   onDeletePosts,
 }: {
   role: string;
-  allLevels: ILevels[];
+  allLevels: ILevels[] | null;
   onGetPosts: (levels: string) => Promise<IPosts[] | null>;
   onDeletePosts: (postId: string) => Promise<void>;
 }) {
@@ -72,7 +72,7 @@ export default function AnnouncementSection({
       {!showAnnouncementForm ? (
         <>
           <div className="flex items-center justify-between pb-4">
-            <Filter handleFilter={handleFilter} />
+            <Filter options={allLevels} handleFilter={handleFilter} />
             {role === "admin" ? (
               <Button type="primary" onClick={handleShowAnnouncementForm}>
                 <svg

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { updatePost } from "@/lib/announcements-actions";
+import { ILevels } from "@/app/user/announcements/page";
 
 import Button from "@/components/Button";
 import LevelsOption from "@/components/LevelsOption";
@@ -14,11 +15,13 @@ export default function AnnouncementUpdateForm({
   title,
   description,
   levels,
+  options,
 }: {
   id: string;
   title: string;
   description: string;
   levels: string;
+  options: ILevels[] | null;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +74,11 @@ export default function AnnouncementUpdateForm({
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="font-medium">School Level</label>
-          <LevelsOption defaultValue={levels} isLoading={isLoading} />
+          <LevelsOption
+            options={options}
+            defaultValue={levels}
+            isLoading={isLoading}
+          />
         </div>
         <div className="grid gap-2">
           <label className="font-medium">Description</label>
