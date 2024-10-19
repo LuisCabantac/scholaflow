@@ -25,6 +25,15 @@ export async function getUserEmail(email: string) {
   return data;
 }
 
+export async function getAllPosts() {
+  const { data } = await supabase
+    .from("announcements")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
 export async function getPosts(levels: string) {
   const { data } = await supabase
     .from("announcements")
@@ -47,6 +56,32 @@ export async function getPostById(id: string) {
 
 export async function getAllLevels() {
   const { data } = await supabase.from("levels").select("*");
+
+  return data;
+}
+
+export async function getClassByTeacherId(id: string) {
+  const { data } = await supabase
+    .from("classroom")
+    .select("*")
+    .eq("teacherId", id)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getClassNameByClassId(id: string) {
+  const { data } = await supabase
+    .from("classroom")
+    .select("className")
+    .eq("id", id)
+    .single();
+
+  return data;
+}
+
+export async function getClassByClassId(id: string) {
+  const { data } = await supabase.from("classroom").select("*").eq("id", id);
 
   return data;
 }
