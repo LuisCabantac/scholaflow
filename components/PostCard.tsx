@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/utils";
 
 import { IPosts } from "@/components/AnnouncementSection";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
+import EmblaCarousel from "@/components/EmblaCarousel";
 
 export default function PostCard({
   post,
@@ -88,7 +89,7 @@ export default function PostCard({
                 </svg>
               </button>
               {ellipsis && (
-                <div className="absolute right-0 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md">
+                <div className="absolute right-0 z-20 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md">
                   <Link
                     href={`/user/announcements/edit/${post.id}`}
                     className="flex items-center gap-1 rounded-md text-sm text-[#4c6ef5] hover:text-[#364fc7] md:text-base"
@@ -149,16 +150,9 @@ export default function PostCard({
         <h4 className="font-bold">{post.title}</h4>
         <p>{post.description}</p>
       </div>
-      {post.image && (
-        <Image
-          src={post.image}
-          alt={post.title || "school's logo"}
-          width={0}
-          height={0}
-          sizes="100%"
-          className="h-full w-full rounded-md object-cover"
-        />
-      )}
+      {post.image && post.image.length > 0 ? (
+        <EmblaCarousel slides={post.image} />
+      ) : null}
     </li>
   );
 }
