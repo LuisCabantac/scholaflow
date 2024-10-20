@@ -60,7 +60,14 @@ export async function createPost(formData: FormData) {
   const postImage = Array.isArray(image)
     ? await Promise.all(
         image.map(async (img) => {
-          if (img instanceof File && img.name !== "undefined" && img.size > 0) {
+          if (
+            img instanceof File &&
+            img.name !== "undefined" &&
+            img.size > 0 &&
+            (img.type.includes("image/jpeg") ||
+              img.type.includes("image/jpg") ||
+              img.type.includes("image/png"))
+          ) {
             return await uploadImage(img);
           } else {
             return null;
