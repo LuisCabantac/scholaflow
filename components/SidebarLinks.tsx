@@ -21,7 +21,7 @@ export default function SidebarLinks({
   const { handleSidebarExpand } = useSidebar();
 
   return (
-    <ul className="mt-6 grid gap-32 font-medium">
+    <ul className="mt-8 grid gap-32 font-medium md:mt-6">
       <div className="flex flex-col gap-3">
         {verified && (
           <>
