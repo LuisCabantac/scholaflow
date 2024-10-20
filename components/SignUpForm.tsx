@@ -28,7 +28,6 @@ export default function SignUpForm() {
     );
     setEmailExist(data.type === "email" && !data.success.status);
     const verified = await checkVerificationToken(formData);
-    console.log(verified);
 
     if (emailVerificationSent && verified) {
       // await signUpAction(formData);

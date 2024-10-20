@@ -25,8 +25,6 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
-  console.log(slides.length);
-
   return (
     <section className="embla relative">
       <div className="embla__viewport" ref={emblaRef}>
