@@ -70,7 +70,7 @@ export default function AnnouncementForm({
             required
             type="text"
             name="title"
-            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3 md:text-base"
+            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a title..."
             disabled={isLoading}
           />
@@ -85,7 +85,7 @@ export default function AnnouncementForm({
           </label>
           <textarea
             name="description"
-            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3 md:text-base"
+            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a description..."
             maxLength={255}
             disabled={isLoading}
@@ -109,7 +109,7 @@ export default function AnnouncementForm({
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
-                className="size-6 stroke-[#bec2cc]"
+                className={`size-6 ${imagePreviews.length > 0 ? "stroke-[#384689]" : "stroke-[#bec2cc]"}`}
               >
                 <path
                   strokeLinecap="round"
@@ -119,7 +119,7 @@ export default function AnnouncementForm({
               </svg>
 
               {imagePreviews.length > 0 ? (
-                <span className="text-[#a7abb6]">
+                <span className="text-[#384689]">
                   {imagePreviews.length} file
                   {imagePreviews.length > 1 ? "s" : ""} chosen
                 </span>
@@ -127,7 +127,9 @@ export default function AnnouncementForm({
                 <span className="text-[#a7abb6]">No chosen file</span>
               )}
 
-              <span className="mt-1 text-xs text-[#bec2cc] md:text-sm">
+              <span
+                className={`${imagePreviews.length > 0 ? "text-[#384689]" : "text-[#bec2cc]"} mt-1 text-xs md:text-sm`}
+              >
                 Drag and drop files here or click to select
               </span>
             </label>

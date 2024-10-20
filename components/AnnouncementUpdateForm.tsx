@@ -81,7 +81,7 @@ export default function AnnouncementUpdateForm({
             type="text"
             name="title"
             defaultValue={title}
-            className="rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
+            className="rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-none"
             placeholder="Edit title..."
           />
         </div>
@@ -101,7 +101,7 @@ export default function AnnouncementUpdateForm({
             disabled={isLoading}
             name="description"
             defaultValue={description}
-            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689]"
+            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-none"
             placeholder="Edit description..."
             maxLength={255}
           ></textarea>
@@ -125,7 +125,7 @@ export default function AnnouncementUpdateForm({
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
-                className="size-6 stroke-[#bec2cc]"
+                className={`size-6 ${imagePreviews.length > 0 ? "stroke-[#384689]" : "stroke-[#bec2cc]"}`}
               >
                 <path
                   strokeLinecap="round"
@@ -135,7 +135,7 @@ export default function AnnouncementUpdateForm({
               </svg>
 
               {imagePreviews.length > 0 ? (
-                <span className="text-[#a7abb6]">
+                <span className="text-[#384689]">
                   {imagePreviews.length} file
                   {imagePreviews.length > 1 ? "s" : ""} chosen
                 </span>
@@ -143,7 +143,9 @@ export default function AnnouncementUpdateForm({
                 <span className="text-[#a7abb6]">No chosen file</span>
               )}
 
-              <span className="mt-1 text-xs text-[#bec2cc] md:text-sm">
+              <span
+                className={`${imagePreviews.length > 0 ? "text-[#384689]" : "text-[#bec2cc]"} mt-1 text-xs md:text-sm`}
+              >
                 Drag and drop files here or click to select
               </span>
             </label>
