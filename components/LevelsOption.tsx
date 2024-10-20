@@ -12,12 +12,12 @@ export default function LevelsOption({
   isLoading: boolean;
 }) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <select
         disabled={isLoading}
         required
         name="levels"
-        className="level__select cursor-pointer rounded-md bg-[#ced8f7] py-2 pr-4 text-sm md:py-3 md:pr-5 md:text-base"
+        className="level__select w-full cursor-pointer rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:outline-2 focus:outline-[#384689] md:px-5 md:py-3 md:text-base"
         defaultValue={defaultValue || "all levels"}
       >
         <option defaultValue={defaultValue}>All Levels</option>

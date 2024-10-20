@@ -16,7 +16,7 @@ export interface IPosts {
   author: string;
   created_at: string;
   description: string;
-  image: string | null;
+  image: string[] | null;
   linkUrl: string | null;
   school: string;
   schoolAvatar: string;

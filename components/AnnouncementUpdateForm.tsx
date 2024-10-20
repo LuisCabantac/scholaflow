@@ -25,6 +25,17 @@ export default function AnnouncementUpdateForm({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPreviews = Array.from(files).map((file) =>
+        URL.createObjectURL(file),
+      );
+      setImagePreviews(newPreviews);
+    }
+  };
 
   async function handleEditPost(event: React.FormEvent) {
     event.preventDefault();
@@ -40,13 +51,13 @@ export default function AnnouncementUpdateForm({
 
   return (
     <form
-      className="mt-5 rounded-md border-2 border-[#dbe4ff] p-4"
+      className="rounded-md border-2 border-[#dbe4ff] p-3 md:p-4"
       onSubmit={handleEditPost}
     >
-      <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-4">
-        <h3 className="text-xl font-medium">&quot;{title}&quot;</h3>
+      <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
+        <h3 className="text-lg font-medium md:text-xl">&quot;{title}&quot;</h3>
         <div>
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2">
             {!isLoading && (
               <Button type="secondary" href="/user/announcements">
                 Cancel
@@ -58,10 +69,12 @@ export default function AnnouncementUpdateForm({
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-start gap-3 px-2 py-4">
-        <div className="grid gap-2">
+      <div className="flex flex-col justify-start gap-3 px-2 py-3 md:py-4">
+        <div className="grid gap-1 md:gap-2">
           <input type="text" value={id} hidden name="id" />
-          <label className="font-medium">Title</label>
+          <label className="text-xs font-medium md:text-sm">
+            Title <span className="text-red-400">*</span>
+          </label>
           <input
             disabled={isLoading}
             required
@@ -73,15 +86,17 @@ export default function AnnouncementUpdateForm({
           />
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
-          <label className="font-medium">School Level</label>
+          <label className="text-xs font-medium md:text-sm">School Level</label>
           <LevelsOption
             options={options}
             defaultValue={levels}
             isLoading={isLoading}
           />
         </div>
-        <div className="grid gap-2">
-          <label className="font-medium">Description</label>
+        <div className="grid gap-1 md:gap-2">
+          <label className="text-xs font-medium md:text-sm">
+            Description (optional)
+          </label>
           <textarea
             disabled={isLoading}
             name="description"
@@ -91,16 +106,47 @@ export default function AnnouncementUpdateForm({
             maxLength={255}
           ></textarea>
         </div>
-        <div className="grid gap-2">
-          <label className="text-sm font-medium md:text-base">Image</label>
-          <div className="relative">
-            <input
-              disabled={isLoading}
-              type="file"
-              name="image"
-              accept=".jpg, .jpeg, .png"
-              className="image__input text-sm file:cursor-pointer file:rounded-md file:border-none file:bg-[#ced8f7] file:py-3 file:pr-5 md:text-base"
-            />
+
+        <div className="grid gap-1 md:gap-2">
+          <label className="text-xs font-medium md:text-sm">Update image</label>
+          <div className="w-full">
+            <label className="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-[#bec2cc] text-center">
+              <input
+                type="file"
+                name="image"
+                accept=".jpg, .jpeg, .png"
+                multiple
+                disabled={isLoading}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                className="size-6 stroke-[#bec2cc]"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                />
+              </svg>
+
+              {imagePreviews.length > 0 ? (
+                <span className="text-[#a7abb6]">
+                  {imagePreviews.length} file
+                  {imagePreviews.length > 1 ? "s" : ""} chosen
+                </span>
+              ) : (
+                <span className="text-[#a7abb6]">No chosen file</span>
+              )}
+
+              <span className="mt-1 text-xs text-[#bec2cc] md:text-sm">
+                Drag and drop files here or click to select
+              </span>
+            </label>
           </div>
         </div>
       </div>
