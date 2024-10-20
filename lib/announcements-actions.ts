@@ -32,8 +32,8 @@ export async function uploadImage(image: File) {
   }
 }
 
-export async function deleteImage(bucket: string, fileName: string) {
-  const { error } = await supabase.storage.from(bucket).remove([fileName]);
+export async function deleteImage(bucket: string, fileName: string[]) {
+  const { error } = await supabase.storage.from(bucket).remove(fileName);
 
   if (error)
     throw new Error(`${fileName} cannot be deleted from the ${bucket} bucket`);
@@ -56,8 +56,18 @@ export async function createPost(formData: FormData) {
     };
   }
 
-  const image = formData.get("image");
-  const postImage = image instanceof File ? await uploadImage(image) : null;
+  const image = formData.getAll("image");
+  const postImage = Array.isArray(image)
+    ? await Promise.all(
+        image.map(async (img) => {
+          if (img instanceof File && img.name !== "undefined" && img.size > 0) {
+            return await uploadImage(img);
+          } else {
+            return null;
+          }
+        }),
+      ).then((results) => results.filter((url) => url !== null))
+    : [];
 
   const newPost = {
     author: session.user.id,
@@ -65,7 +75,7 @@ export async function createPost(formData: FormData) {
     title: formData.get("title"),
     description: formData.get("description"),
     levels: formData.get("levels"),
-    image: postImage?.publicUrl,
+    image: postImage?.map((img) => img?.publicUrl),
   };
 
   const { error } = await supabase.from("announcements").insert([newPost]);
@@ -92,16 +102,35 @@ export async function updatePost(formData: FormData) {
       message: "You need be an admin to edit this post.",
     };
 
-  const image = formData.get("image");
-  const postImage = image instanceof File ? await uploadImage(image) : null;
+  const {
+    title,
+    levels,
+    description,
+    image: existingImages,
+  } = await getPostById(id);
 
-  const { title, levels, description } = await getPostById(id);
+  const image = formData.getAll("image");
+
+  const postImage = Array.isArray(image)
+    ? await Promise.all(
+        image.map(async (img) => {
+          if (img instanceof File && img.name !== "undefined" && img.size > 0) {
+            return await uploadImage(img);
+          } else {
+            return null;
+          }
+        }),
+      ).then((results) => results.filter((url) => url !== null))
+    : [];
 
   const updatePost = {
     title: formData.get("title") as string,
     levels: formData.get("levels") as string,
     description: formData.get("description") as string,
-    image: postImage?.publicUrl,
+    image:
+      postImage.length > 0
+        ? existingImages.concat(postImage?.map((img) => img?.publicUrl))
+        : existingImages,
     updatedPost: true,
   };
 
@@ -109,7 +138,7 @@ export async function updatePost(formData: FormData) {
     title !== updatePost.title ||
     levels !== updatePost.levels ||
     description !== updatePost.description ||
-    postImage
+    postImage.length > 0
   ) {
     const { error } = await supabase
       .from("announcements")
@@ -140,8 +169,8 @@ export async function deletePost(postId: string) {
 
   const { image } = await getPostById(postId);
 
-  if (image !== null) {
-    const path = extractImagePath(image);
+  if (image.length > 0) {
+    const path = image.map((img: string) => extractImagePath(img));
     await deleteImage("images", path);
   }
 
