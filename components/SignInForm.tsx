@@ -41,7 +41,7 @@ export default function SignInForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
-          className={`rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:outline-2 focus:outline-[#384689] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
+          className={`rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-none ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setValidEmail(emailRegex.test(event.target.value))
           }
@@ -58,7 +58,7 @@ export default function SignInForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-0 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#bec2cc] bg-[#edf2ff] px-5 py-3 focus:border-[#384689] focus:outline-none ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValidPassword(event.target.value.length >= 8 ? true : false)
             }
