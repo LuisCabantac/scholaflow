@@ -22,7 +22,7 @@ export default function PostCard({
   const [ellipsis, setEllipsis] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  function handleSetEllipsis() {
+  function handleEllipsis() {
     setEllipsis(!ellipsis);
   }
 
@@ -72,7 +72,7 @@ export default function PostCard({
         {role === "admin" && (
           <div className="absolute right-3 top-3 md:right-4 md:top-4">
             <div className="relative">
-              <button onClick={handleSetEllipsis}>
+              <button onClick={handleEllipsis}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

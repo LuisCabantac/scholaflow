@@ -1,8 +1,12 @@
 "use server";
 
-import { auth, signIn, signOut } from "./auth";
-import { getUser, getUserEmail, getVerificationToken } from "./data-service";
-import { supabase } from "./supabase";
+import { signIn, signOut } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import {
+  getUser,
+  getUserEmail,
+  getVerificationToken,
+} from "@/lib/data-service";
 
 interface ICheckToken {
   id: string;
@@ -31,8 +35,6 @@ export async function signInCredentialsAction(formData: FormData) {
 }
 
 export async function signInGoogleAction() {
-  const session = await auth();
-  console.log(session);
   await signIn("google", {
     redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
   });
