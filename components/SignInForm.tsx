@@ -15,8 +15,11 @@ export default function SignInForm() {
   const [validPassword, setValidPassword] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [honeyPot, setHoneyPot] = useState("");
+
   async function handleSignInAction(event: React.FormEvent) {
     event.preventDefault();
+    if (honeyPot) return;
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
     const data = await signInCredentialsAction(formData);
@@ -95,6 +98,15 @@ export default function SignInForm() {
               )}
             </svg>
           </button>
+          <div className="hidden">
+            <label htmlFor="verify__name">Verify your name</label>
+            <input
+              type="text"
+              id="verify__name"
+              name="verify__name"
+              onChange={(event) => setHoneyPot(event.target.value)}
+            />
+          </div>
         </div>
         {error ? (
           <p className="text-xs text-[#f03e3e]">
