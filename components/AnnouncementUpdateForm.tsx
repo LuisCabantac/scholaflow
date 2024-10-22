@@ -46,7 +46,10 @@ export default function AnnouncementUpdateForm({
       setIsLoading(false);
       toast.success(message);
       router.push("/user/announcements");
-    } else toast.error(message);
+    } else {
+      setIsLoading(false);
+      toast.error(message);
+    }
   }
 
   return (
@@ -88,6 +91,7 @@ export default function AnnouncementUpdateForm({
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-xs font-medium md:text-sm">School Level</label>
           <LevelsOption
+            type="post"
             options={options}
             defaultValue={levels}
             isLoading={isLoading}

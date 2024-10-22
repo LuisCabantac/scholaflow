@@ -38,7 +38,10 @@ export default function AnnouncementForm({
       setIsLoading(false);
       toast.success(message);
       handleShowAnnouncementForm();
-    } else toast.error(message);
+    } else {
+      setIsLoading(false);
+      toast.error(message);
+    }
   }
 
   return (
@@ -77,7 +80,7 @@ export default function AnnouncementForm({
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-xs font-medium md:text-sm">School Level</label>
-          <LevelsOption options={allLevels} isLoading={isLoading} />
+          <LevelsOption type="post" options={allLevels} isLoading={isLoading} />
         </div>
         <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">
