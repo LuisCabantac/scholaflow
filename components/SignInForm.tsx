@@ -32,7 +32,7 @@ export default function SignInForm() {
   return (
     <form className="grid gap-3" onSubmit={handleSignInAction}>
       <div className="grid gap-2">
-        <label className="font-medium">
+        <label className="text-xs font-medium md:text-sm">
           Email <span className="text-red-400">*</span>
         </label>
         <input
@@ -48,7 +48,7 @@ export default function SignInForm() {
         />
       </div>
       <div className="mb-2 grid gap-2">
-        <label className="font-medium">
+        <label className="text-xs font-medium md:text-sm">
           Password <span className="text-red-400">*</span>
         </label>
         <div className="flex">
