@@ -64,6 +64,7 @@ export default function SignInForm() {
             }
           />
           <button
+            type="button"
             onClick={handleShowPassword}
             className={`show__password rounded-r-md border-y-2 border-r-2 border-[#bec2cc] py-3 pr-5 focus:outline-0 ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
           >
