@@ -46,7 +46,7 @@ export default function AnnouncementForm({
 
   return (
     <form
-      className="rounded-md border-2 border-[#dbe4ff] p-3 md:p-4"
+      className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
       onSubmit={handleCreatePost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
@@ -73,7 +73,7 @@ export default function AnnouncementForm({
             required
             type="text"
             name="title"
-            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a title..."
             disabled={isLoading}
           />
@@ -88,7 +88,7 @@ export default function AnnouncementForm({
           </label>
           <textarea
             name="description"
-            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#edf2ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a description..."
             maxLength={255}
             disabled={isLoading}
