@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 
+import Provider from "./Provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
       >
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
