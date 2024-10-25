@@ -16,9 +16,11 @@ export interface IImage {
 
 export async function uploadImage(image: File) {
   if (image.name !== "undefined") {
+    const fileExtension = image.name.split(".").pop();
+
     const { data: imageData, error } = await supabase.storage
       .from("images")
-      .upload(`${Date.now()}`, image, {
+      .upload(`${Date.now()}.${fileExtension}`, image, {
         cacheControl: "3600",
         upsert: false,
       });
@@ -176,7 +178,7 @@ export async function deletePost(postId: string) {
 
   const { image } = await getPostById(postId);
 
-  if (image.length > 0) {
+  if (image.length) {
     const path = image.map((img: string) => extractImagePath(img));
     await deleteImage("images", path);
   }
