@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ILevels } from "@/app/user/announcements/page";
 
-import Button from "@/components/Button";
-import Filter from "@/components/Filter";
+import FilterLevelPosts from "@/components/FilterLevelPosts";
 import AnnouncementForm from "@/components/AnnouncementForm";
 import AnnouncementPostLists from "@/components/AnnouncementPostLists";
 
@@ -38,13 +39,13 @@ export default function AnnouncementSection({
   onGetPosts: (levels: string) => Promise<IPosts[] | null>;
   onDeletePosts: (postId: string) => Promise<void>;
 }) {
-  const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
-  const [filter, setFilter] = useState("all levels");
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
 
   const { data: posts, isLoading } = useQuery({
-    queryKey: [filter],
-    queryFn: () => onGetPosts(filter),
+    queryKey: [searchParams.get("filter") ?? "all-levels"],
+    queryFn: () => onGetPosts(searchParams.get("filter") ?? "all-levels"),
   });
 
   const { mutate } = useMutation({
@@ -53,7 +54,7 @@ export default function AnnouncementSection({
       toast.success("Your post has been removed.");
 
       queryClient.invalidateQueries({
-        queryKey: [filter],
+        queryKey: [searchParams.get("filter") ?? "all-levels"],
       });
     },
     onError: (error) => toast.error(error.message),
@@ -63,50 +64,44 @@ export default function AnnouncementSection({
     if (role === "admin") setShowAnnouncementForm(!showAnnouncementForm);
   }
 
-  function handleFilter(event: React.ChangeEvent<HTMLSelectElement>) {
-    setFilter(event.target.value.toLowerCase());
-  }
-
   return (
-    <>
-      {!showAnnouncementForm ? (
-        <>
-          <div className="flex items-center justify-between pb-4">
-            <Filter options={allLevels} handleFilter={handleFilter} />
-            {role === "admin" ? (
-              <Button type="primary" onClick={handleShowAnnouncementForm}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-4 md:size-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                <span>Create post</span>
-              </Button>
-            ) : null}
-          </div>
-
+    <section>
+      {showAnnouncementForm ? (
+        <AnnouncementForm
+          handleShowAnnouncementForm={handleShowAnnouncementForm}
+          allLevels={allLevels}
+        />
+      ) : (
+        <div className="grid gap-4">
+          <FilterLevelPosts options={allLevels} />
+          {role === "admin" && (
+            <div
+              className="flex cursor-pointer items-center gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
+              onClick={handleShowAnnouncementForm}
+            >
+              <div className="relative h-9 w-9 flex-shrink-0 rounded-full md:h-12 md:w-12">
+                <Image
+                  src={
+                    "https://crmqyyyvgsrwlpuibjbg.supabase.co/storage/v1/object/public/avatars/school-avatar.jpg?t=2024-10-22T05%3A25%3A48.476Z"
+                  }
+                  fill
+                  alt="image"
+                  className="rounded-full"
+                />
+              </div>
+              <p className="text-sm text-[#616572] md:text-base">
+                Announce something...
+              </p>
+            </div>
+          )}
           <AnnouncementPostLists
             role={role}
             posts={posts}
             isLoading={isLoading}
             mutate={mutate}
           />
-        </>
-      ) : (
-        <AnnouncementForm
-          handleShowAnnouncementForm={handleShowAnnouncementForm}
-          allLevels={allLevels}
-        />
+        </div>
       )}
-    </>
+    </section>
   );
 }
