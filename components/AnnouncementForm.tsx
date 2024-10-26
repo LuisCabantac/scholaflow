@@ -73,7 +73,7 @@ export default function AnnouncementForm({
             required
             type="text"
             name="title"
-            className="w-full rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+            className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a title..."
             disabled={isLoading}
           />
@@ -83,12 +83,10 @@ export default function AnnouncementForm({
           <LevelsOption type="post" options={allLevels} isLoading={isLoading} />
         </div>
         <div className="grid gap-1 md:gap-2">
-          <label className="text-xs font-medium md:text-sm">
-            Description (optional)
-          </label>
+          <label className="text-xs font-medium md:text-sm">Description</label>
           <textarea
             name="description"
-            className="h-[10rem] resize-none rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+            className="h-[10rem] resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
             placeholder="Add a description..."
             maxLength={255}
             disabled={isLoading}
@@ -97,7 +95,7 @@ export default function AnnouncementForm({
         <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">Image</label>
           <div className="w-full">
-            <label className="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-[#bec2cc] text-center">
+            <label className="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-[#dbe4ff] text-center">
               <input
                 type="file"
                 name="image"
@@ -112,7 +110,7 @@ export default function AnnouncementForm({
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
-                className={`size-6 ${imagePreviews.length > 0 ? "stroke-[#384689]" : "stroke-[#bec2cc]"}`}
+                className={`size-6 ${imagePreviews.length > 0 ? "stroke-[#384689]" : "stroke-[#616572]"}`}
               >
                 <path
                   strokeLinecap="round"
@@ -127,11 +125,11 @@ export default function AnnouncementForm({
                   {imagePreviews.length > 1 ? "s" : ""} chosen
                 </span>
               ) : (
-                <span className="text-[#a7abb6]">No chosen file</span>
+                <span className="text-[#616572]">No chosen file</span>
               )}
 
               <span
-                className={`${imagePreviews.length > 0 ? "text-[#384689]" : "text-[#bec2cc]"} mt-1 text-xs md:text-sm`}
+                className={`${imagePreviews.length > 0 ? "text-[#384689]" : "text-[#616572]"} mt-1 text-xs md:text-sm`}
               >
                 Drag and drop files here or click to select
               </span>
