@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
+
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
+
 import Button from "@/components/Button";
 
 export default function ConfirmationScreen({
@@ -12,10 +15,20 @@ export default function ConfirmationScreen({
   handleCancel: () => void;
   handleAction: () => void;
 }) {
+  const { useClickOutsideHandler } = useClickOutside();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useClickOutsideHandler(wrapperRef, () => {
+    handleCancel();
+  });
+
   return (
-    <div className="delete__confirmation__container">
+    <div className="confirmation__container">
       <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
-        <div className="grid gap-2 rounded-md bg-[#f3f6ff] p-4">
+        <div
+          className="grid gap-2 rounded-md bg-[#f3f6ff] p-4"
+          ref={wrapperRef}
+        >
           <div className="flex gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +36,7 @@ export default function ConfirmationScreen({
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className="size-6"
+              className="size-6 flex-shrink-0"
             >
               <path
                 strokeLinecap="round"
