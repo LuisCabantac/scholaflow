@@ -9,7 +9,7 @@ import SpinnerMini from "@/components/SpinnerMini";
 const primaryStyle: string =
   "bg-[#22317c] text-[#edf2ff] hover:bg-[#384689] px-5 py-3";
 const secondaryStyle: string =
-  "border-[#ced8f7] border-2 text-[#22317c] disabled:bg-[#c5cde6] hover:border-[#c2cef1] hover:bg-[#ced8f7] px-[1.12rem] py-[0.65rem]";
+  "text-[#22317c] border-[#dbe4ff] border-2 disabled:bg-[#c5cde6] bg-[#e1e7f5] hover:bg-[#d9dfee] px-[1.12rem] py-[0.65rem]";
 
 export default function Button({
   type,
