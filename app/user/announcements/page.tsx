@@ -25,7 +25,7 @@ export default async function Page() {
 
   async function handleGetPosts(levels: string) {
     "use server";
-    if (levels === "all levels") {
+    if (levels === "all-levels") {
       const data = await getAllPosts();
       return data;
     }
@@ -43,13 +43,11 @@ export default async function Page() {
     return redirect("/");
 
   return (
-    <section>
-      <AnnouncementSection
-        role={session.user.role}
-        allLevels={allLevels as ILevels[]}
-        onGetPosts={handleGetPosts}
-        onDeletePosts={handleDeletePosts}
-      />
-    </section>
+    <AnnouncementSection
+      role={session.user.role}
+      allLevels={allLevels as ILevels[]}
+      onGetPosts={handleGetPosts}
+      onDeletePosts={handleDeletePosts}
+    />
   );
 }
