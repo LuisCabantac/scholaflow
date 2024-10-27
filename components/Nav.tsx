@@ -10,13 +10,13 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
 
   if (!showButton)
     return (
-      <nav className="flex items-center justify-between px-5 py-5 md:px-10 md:pb-5 md:pt-[1.6rem]">
+      <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:pb-5 md:pt-[1.6rem]">
         <Logo />
       </nav>
     );
 
   return (
-    <nav className="flex items-center justify-between px-5 py-5 md:px-10 md:py-5">
+    <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:py-5">
       <Logo />
       {hasUser(session) ? (
         <ProfileIcon
