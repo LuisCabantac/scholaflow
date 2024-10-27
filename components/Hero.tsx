@@ -1,31 +1,28 @@
-import Image from "next/image";
-
-import landingPageImage1 from "@/public/landing_page/landing-page-1.svg";
-
 import Button from "@/components/Button";
 
 export default function Hero() {
   return (
-    <section className="items-center gap-4 px-6 py-24 md:grid md:grid-cols-[4fr_3fr] md:px-12 md:py-24">
-      <div className="flex flex-col items-start gap-4">
-        <h1 className="text-3xl font-bold md:text-5xl">
-          Your All-in-One Solution for a Seamless Learning Experience
-        </h1>
-        <p>
-          Virtual classrooms and essential tools, all in one. Make learning
-          easier.
-        </p>
-        <Button href="/user/dashboard" type="primary">
-          Get started
-        </Button>
-      </div>
-      <div className="relative w-full pt-4 md:pt-0">
-        <Image
-          src={landingPageImage1}
-          alt="road to knowledge"
-          className="object-cover"
-        />
-      </div>
-    </section>
+    <div className="absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.3),rgba(255,255,255,0))]">
+      <section className="flex items-center justify-center gap-4 px-4 py-44 text-center md:px-48 md:py-48">
+        <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
+          <h1 className="bg-gradient-to-br from-[#1a1c1f] to-[#474c50] bg-clip-text text-3xl font-semibold md:text-6xl">
+            Your School&apos;s All-in-One Learning Platform
+          </h1>
+          <p className="px-8 text-center text-sm md:text-lg">
+            Virtual classrooms, essential tools, and everything you need for
+            learning, all in one place. Simplify your school day and make
+            learning easier.
+          </p>
+          <div className="flex items-center gap-2">
+            <Button href="/user/dashboard" type="primary">
+              Get started
+            </Button>
+            <Button href="#" type="secondary">
+              View features
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
