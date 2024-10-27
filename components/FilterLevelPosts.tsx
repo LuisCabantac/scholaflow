@@ -27,7 +27,7 @@ export default function FilterLevelPosts({
   return (
     <div className="flex items-start">
       <div
-        className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md border-2 border-[#dbe4ff] px-[1.12rem] py-[0.65rem] text-sm font-medium md:gap-2"
+        className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md py-[0.65rem] text-base font-medium md:gap-2 md:py-2 md:text-lg"
         onClick={handleShowFilterDropdown}
         ref={filterWrapperRef}
       >
@@ -35,7 +35,7 @@ export default function FilterLevelPosts({
           <span>
             {searchParams.get("filter") === null ||
             searchParams.get("filter") === "all-levels"
-              ? "All"
+              ? "All posts"
               : `${searchParams
                   .get("filter")
                   ?.split("-")
@@ -65,7 +65,7 @@ export default function FilterLevelPosts({
               href="/user/announcements?filter=all-levels"
               className={`${searchParams.get("filter") === "all-levels" || searchParams.get("filter") === null ? "bg-[#c7d2f1] hover:bg-[#c7d2f1]" : "hover:bg-[#d8e0f5]"} block w-full rounded-md p-2 text-left`}
             >
-              All
+              All posts
             </Link>
           </li>
           {options?.map((option) => (
