@@ -6,6 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { createUser } from "@/lib/auth-actions";
 import { getUser } from "@/lib/data-service";
+import { generatePassword } from "./utils";
 
 export interface ISession {
   user: {
@@ -73,6 +74,7 @@ const authConfig = {
             avatar: user.image,
             role: "guest",
             emailVerified: true,
+            password: generatePassword(8),
           });
         }
         return true;

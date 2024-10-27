@@ -66,7 +66,7 @@ export function capitalizeFirstLetter(str: string) {
 
 export const generateClassCode = (): string =>
   Array.from(
-    { length: 7 },
+    { length: 8 },
     () =>
       "abcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random() * 36)],
   ).join("");
@@ -78,4 +78,13 @@ export function getLastRouteName(url: string) {
   return lastSegment
     .replace(/-/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function generatePassword(length: number = 8) {
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from(
+    crypto.getRandomValues(new Uint8Array(length)),
+    (value) => charset[value % charset.length],
+  ).join("");
 }
