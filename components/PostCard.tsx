@@ -181,10 +181,11 @@ export default function PostCard({
             {showConfirmation && (
               <ConfirmationScreen
                 type="delete"
+                btnLabel="Delete"
                 handleCancel={handleShowConfirmation}
                 handleAction={() => mutate(post.id)}
               >
-                Are you sure you want to unenroll this post?
+                Are you sure you want to delete this post?
               </ConfirmationScreen>
             )}
           </div>
