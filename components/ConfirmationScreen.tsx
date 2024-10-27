@@ -6,11 +6,13 @@ import Button from "@/components/Button";
 
 export default function ConfirmationScreen({
   type,
+  btnLabel,
   children,
   handleCancel,
   handleAction,
 }: {
-  type: "delete" | "confirm";
+  type: "delete" | string;
+  btnLabel: string;
   children: React.ReactNode;
   handleCancel: () => void;
   handleAction: () => void;
@@ -55,7 +57,7 @@ export default function ConfirmationScreen({
               bg={`${type === "delete" ? "bg-[#f03e3e] hover:bg-[#c92a2a]" : ""}`}
               onClick={handleAction}
             >
-              {type === "delete" ? "Delete" : "Confirm"}
+              {btnLabel}
             </Button>
           </div>
         </div>
