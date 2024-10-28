@@ -67,30 +67,20 @@ export default function AnnouncementForm({
       <div className="flex flex-col justify-start gap-3 px-2 py-3 md:py-4">
         <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">
-            Title <span className="text-red-400">*</span>
+            Caption <span className="text-red-400">*</span>
           </label>
-          <input
+          <textarea
             required
-            type="text"
-            name="title"
-            className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
-            placeholder="Add a title..."
+            name="caption"
             disabled={isLoading}
-          />
+            className="h-[10rem] resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+            placeholder="Add a caption..."
+            maxLength={255}
+          ></textarea>
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-xs font-medium md:text-sm">School Level</label>
           <LevelsOption type="post" options={allLevels} isLoading={isLoading} />
-        </div>
-        <div className="grid gap-1 md:gap-2">
-          <label className="text-xs font-medium md:text-sm">Description</label>
-          <textarea
-            name="description"
-            className="h-[10rem] resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
-            placeholder="Add a description..."
-            maxLength={255}
-            disabled={isLoading}
-          ></textarea>
         </div>
         <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">Image</label>
@@ -101,9 +91,9 @@ export default function AnnouncementForm({
                 name="image"
                 accept=".jpg, .jpeg, .png"
                 multiple
-                className="hidden"
                 disabled={isLoading}
                 onChange={handleFileChange}
+                className="hidden disabled:cursor-not-allowed"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"

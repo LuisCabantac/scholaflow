@@ -12,14 +12,12 @@ import LevelsOption from "@/components/LevelsOption";
 
 export default function AnnouncementUpdateForm({
   id,
-  title,
-  description,
+  caption,
   levels,
   options,
 }: {
   id: string;
-  title: string;
-  description: string;
+  caption: string;
   levels: string;
   options: ILevels[] | null;
 }) {
@@ -58,7 +56,9 @@ export default function AnnouncementUpdateForm({
       onSubmit={handleEditPost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
-        <h3 className="text-lg font-medium md:text-xl">&quot;{title}&quot;</h3>
+        <h3 className="text-lg font-medium md:text-xl">
+          &quot;{caption.slice(0, 25).concat("...")}&quot;
+        </h3>
         <div>
           <div className="flex gap-1 md:gap-2">
             {!isLoading && (
@@ -73,20 +73,20 @@ export default function AnnouncementUpdateForm({
         </div>
       </div>
       <div className="flex flex-col justify-start gap-3 px-2 py-3 md:py-4">
+        <input type="text" value={id} hidden name="id" />
         <div className="grid gap-1 md:gap-2">
-          <input type="text" value={id} hidden name="id" />
           <label className="text-xs font-medium md:text-sm">
-            Title <span className="text-red-400">*</span>
+            Caption <span className="text-red-400">*</span>
           </label>
-          <input
-            disabled={isLoading}
+          <textarea
             required
-            type="text"
-            name="title"
-            defaultValue={title}
-            className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
-            placeholder="Edit title..."
-          />
+            name="caption"
+            disabled={isLoading}
+            defaultValue={caption}
+            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+            placeholder="Edit caption..."
+            maxLength={255}
+          ></textarea>
         </div>
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-xs font-medium md:text-sm">School Level</label>
@@ -98,18 +98,6 @@ export default function AnnouncementUpdateForm({
           />
         </div>
         <div className="grid gap-1 md:gap-2">
-          <label className="text-xs font-medium md:text-sm">Description</label>
-          <textarea
-            disabled={isLoading}
-            name="description"
-            defaultValue={description}
-            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
-            placeholder="Edit description..."
-            maxLength={255}
-          ></textarea>
-        </div>
-
-        <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">Update image</label>
           <div className="w-full">
             <label className="relative flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-[#dbe4ff] text-center">
@@ -120,7 +108,7 @@ export default function AnnouncementUpdateForm({
                 multiple
                 disabled={isLoading}
                 onChange={handleFileChange}
-                className="hidden"
+                className="hidden disabled:cursor-not-allowed"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"

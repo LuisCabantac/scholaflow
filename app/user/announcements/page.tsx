@@ -17,9 +17,10 @@ export interface ILevels {
 export default async function Page() {
   const session = await auth();
 
-  if (!hasUser(session)) {
-    return redirect("/signin");
-  }
+  if (!hasUser(session)) return redirect("/signin");
+
+  if (!session.user.verified && session.user.role === "guest")
+    return redirect("/");
 
   const allLevels = await getAllLevels();
 
@@ -38,9 +39,6 @@ export default async function Page() {
     "use server";
     await deletePost(postId);
   }
-
-  if (!session.user.verified && session.user.role === "guest")
-    return redirect("/");
 
   return (
     <AnnouncementSection

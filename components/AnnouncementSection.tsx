@@ -16,7 +16,7 @@ export interface IPosts {
   id: string;
   author: string;
   created_at: string;
-  description: string;
+  caption: string;
   image: string[] | null;
   linkUrl: string | null;
   school: string;
@@ -24,7 +24,6 @@ export interface IPosts {
   schoolName: string | null;
   authorName: string | null;
   levels: string;
-  title: string;
   updatedPost: boolean;
 }
 

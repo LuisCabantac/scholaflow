@@ -15,15 +15,14 @@ export default async function Page({ params }: { params: Params }) {
 
   const { id } = params;
 
-  const { title, description, levels } = await getPostById(id);
+  const { caption, levels } = await getPostById(id);
 
   const allLevels = await getAllLevels();
 
   return (
     <AnnouncementUpdateForm
       id={id}
-      title={title}
-      description={description}
+      caption={caption}
       levels={levels}
       options={allLevels}
     />

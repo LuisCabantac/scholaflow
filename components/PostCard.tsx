@@ -40,62 +40,58 @@ export default function PostCard({
 
   return (
     <li
-      className="relative flex w-full flex-col gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
+      className="relative grid w-full grid-cols-[2.5rem_1fr] gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:grid-cols-[3rem_1fr] md:p-4"
       id={post.id}
     >
-      <div className="flex justify-between">
+      <div className="relative h-10 w-10 md:h-12 md:w-12">
+        <Image
+          src={post.schoolAvatar}
+          alt={post.schoolName || "school's logo"}
+          fill
+          className="rounded-full"
+        />
+      </div>
+      <div>
         <div className="flex gap-2">
-          <div className="relative h-12 w-12 md:h-16 md:w-16">
-            <Image
-              src={post.schoolAvatar}
-              alt={post.schoolName || "school's logo"}
-              fill
-              className="rounded-full"
-            />
-          </div>
           <div>
-            <p className="text-wrap pr-4 text-sm font-semibold md:text-base">
-              {post.schoolName}
-            </p>
-
-            <p className="text-xs text-[#616572] md:text-sm">
-              Author: {post.authorName}
-            </p>
-
             <div className="flex items-center gap-2">
-              <p className="text-xs text-[#616572] md:text-sm">
-                {formatDate(post.created_at)}
+              <p className="text-wrap text-sm font-semibold md:text-base">
+                {post.schoolName}
               </p>
               {post.updatedPost && (
-                <p className="rounded-md bg-[#616572] px-2 py-1 text-xs text-[#f3f6ff]">
+                <p className="rounded-md text-xs italic text-[#616572]">
                   Updated
                 </p>
               )}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <p className="text-xs text-[#616572] md:text-sm">
+                Author: {post.authorName}
+              </p>
               <p>&bull;</p>
+              <p className="text-xs text-[#616572] md:text-sm">
+                {formatDate(post.created_at)}
+              </p>
+              {post.levels !== "all-levels" && <p>&bull;</p>}
               <div className="relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  className="size-5 stroke-[#616572]"
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
-                >
-                  {post.levels === "all-levels" ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
-                    />
-                  ) : (
+                {post.levels !== "all-levels" ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    className="size-5 stroke-[#616572]"
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
                     />
-                  )}
-                </svg>
+                  </svg>
+                ) : null}
                 {showTooltip && post.levels !== "all-levels" && (
                   <div className="absolute -top-8 text-nowrap rounded-md bg-[rgba(33,37,41,0.616)] px-2 py-1 text-xs text-[#fff]">
                     <p>
@@ -190,15 +186,12 @@ export default function PostCard({
             )}
           </div>
         )}
-      </div>
 
-      <div>
-        <h4 className="font-bold text-[#474a53]">{post.title}</h4>
-        <p className="text-[#616572]">{post.description}</p>
+        <p className={`pt-1 text-[#474a53] ${post?.image?.length && "pb-2"}`}>
+          {post.caption}
+        </p>
+        {post?.image?.length ? <EmblaCarousel slides={post.image} /> : null}
       </div>
-      {post.image && post.image.length ? (
-        <EmblaCarousel slides={post.image} />
-      ) : null}
     </li>
   );
 }

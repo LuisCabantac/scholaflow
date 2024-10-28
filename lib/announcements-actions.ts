@@ -81,8 +81,7 @@ export async function createPost(formData: FormData) {
   const newPost = {
     author: session.user.id,
     authorName: session.user.name,
-    title: formData.get("title"),
-    description: formData.get("description"),
+    caption: formData.get("caption"),
     levels: formData.get("levels"),
     image: postImage?.map((img) => img?.publicUrl),
   };
@@ -111,12 +110,7 @@ export async function updatePost(formData: FormData) {
       message: "You need be an admin to edit this post.",
     };
 
-  const {
-    title,
-    levels,
-    description,
-    image: existingImages,
-  } = await getPostById(id);
+  const { levels, caption, image: existingImages } = await getPostById(id);
 
   const image = formData.getAll("image");
 
@@ -133,9 +127,8 @@ export async function updatePost(formData: FormData) {
     : [];
 
   const updatePost = {
-    title: formData.get("title") as string,
+    caption: formData.get("caption") as string,
     levels: formData.get("levels") as string,
-    description: formData.get("description") as string,
     image:
       postImage.length > 0
         ? existingImages.concat(postImage?.map((img) => img?.publicUrl))
@@ -144,9 +137,8 @@ export async function updatePost(formData: FormData) {
   };
 
   if (
-    title !== updatePost.title ||
+    caption !== updatePost.caption ||
     levels !== updatePost.levels ||
-    description !== updatePost.description ||
     postImage.length > 0
   ) {
     const { error } = await supabase
