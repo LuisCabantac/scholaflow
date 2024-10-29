@@ -7,7 +7,6 @@ import { hasUser } from "@/lib/utils";
 
 import userManage from "@/public/app/user_management.svg";
 import programManage from "@/public/app/program_management.svg";
-import classManage from "@/public/app/class_management.svg";
 
 export default async function Page() {
   const session = await auth();
@@ -40,18 +39,6 @@ export default async function Page() {
             <Image src={programManage} alt="program management" />
           </div>
           <span>Manage programs and courses for all levels.</span>
-        </Link>
-      </div>
-      <div className="grid gap-2">
-        <h2 className="text-lg font-medium md:text-xl">Class Management</h2>
-        <Link
-          href="/user/admin/class-management"
-          className="flex items-center gap-8 rounded-md border-2 bg-[#f3f6ff] p-4 md:text-lg"
-        >
-          <div className="relative w-[10rem]">
-            <Image src={classManage} alt="class management" />
-          </div>
-          <span>Organize class sections</span>
         </Link>
       </div>
     </section>
