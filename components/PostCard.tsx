@@ -40,7 +40,7 @@ export default function PostCard({
 
   return (
     <li
-      className="relative grid w-full grid-cols-[2.5rem_1fr] gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:grid-cols-[3rem_1fr] md:p-4"
+      className="relative grid w-full grid-cols-[2.5rem_1fr] gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:grid-cols-[3rem_1fr] md:p-4"
       id={post.id}
     >
       <div className="relative h-10 w-10 md:h-12 md:w-12">
@@ -187,7 +187,7 @@ export default function PostCard({
           </div>
         )}
 
-        <p className={`pt-1 text-[#474a53] ${post?.image?.length && "pb-2"}`}>
+        <p className={`pt-1 ${post?.image?.length && "pb-2"}`}>
           {post.caption}
         </p>
         {post?.image?.length ? <EmblaCarousel slides={post.image} /> : null}
