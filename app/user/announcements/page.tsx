@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getAllLevels, getAllPosts, getPosts } from "@/lib/data-service";
+import { getAllLevels, getAllPosts, getPostsByLevel } from "@/lib/data-service";
 import { deletePost } from "@/lib/announcements-actions";
 
 import AnnouncementSection from "@/components/AnnouncementSection";
@@ -31,7 +31,7 @@ export default async function Page() {
       return data;
     }
 
-    const data = await getPosts(levels);
+    const data = await getPostsByLevel(levels);
     return data;
   }
 
