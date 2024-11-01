@@ -5,8 +5,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { createUser } from "@/lib/auth-actions";
-import { getUser } from "@/lib/data-service";
-import { generatePassword } from "./utils";
+import { getUser, getUserByEmail } from "@/lib/data-service";
+import { generatePassword } from "@/lib/utils";
 
 export interface ISession {
   user: {
@@ -20,11 +20,6 @@ export interface ISession {
   };
   expires: string;
 }
-
-// interface ICredentials {
-//   email: string;
-//   password: string;
-// }
 
 interface IUser extends User {
   id: string;
@@ -43,7 +38,7 @@ const authConfig = {
       async authorize(credentials: Partial<Record<string, unknown>>) {
         if (!credentials.email) return null;
         const email = credentials.email as string;
-        const user = await getUser(email);
+        const user = await getUserByEmail(email);
         if (user && user.password === credentials.password) {
           return user;
         } else {
@@ -66,7 +61,7 @@ const authConfig = {
   callbacks: {
     async signIn({ user }: { user: User | AdapterUser }) {
       try {
-        const existingUser = await getUser((user as IUser).email);
+        const existingUser = await getUserByEmail((user as IUser).email);
         if (!existingUser) {
           await createUser({
             email: user.email,
