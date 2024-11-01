@@ -12,7 +12,7 @@ import FilterLevelPosts from "@/components/FilterLevelPosts";
 import AnnouncementForm from "@/components/AnnouncementForm";
 import AnnouncementPostLists from "@/components/AnnouncementPostLists";
 
-export interface IPosts {
+export interface IPost {
   id: string;
   author: string;
   created_at: string;
@@ -35,7 +35,7 @@ export default function AnnouncementSection({
 }: {
   role: string;
   allLevels: ILevels[] | null;
-  onGetPosts: (levels: string) => Promise<IPosts[] | null>;
+  onGetPosts: (levels: string) => Promise<IPost[] | null>;
   onDeletePosts: (postId: string) => Promise<void>;
 }) {
   const queryClient = useQueryClient();

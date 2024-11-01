@@ -7,7 +7,7 @@ import Link from "next/link";
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import { IPosts } from "@/components/AnnouncementSection";
+import { IPost } from "@/components/AnnouncementSection";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import EmblaCarousel from "@/components/EmblaCarousel";
 
@@ -16,7 +16,7 @@ export default function PostCard({
   role,
   mutate,
 }: {
-  post: IPosts;
+  post: IPost;
   role: string;
   mutate: (id: string) => void;
 }) {

@@ -1,9 +1,12 @@
+import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
   createVerificationToken,
   deleteVerificationToken,
 } from "@/lib/auth-actions";
 import { IUser } from "@/components/UserManagementSection";
+import { IPost } from "@/components/AnnouncementSection";
+import { ILevels } from "@/app/user/announcements/page";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -35,7 +38,11 @@ export async function getUserByEmail(email: string): Promise<IUser | null> {
   return data;
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(): Promise<IPost[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase
     .from("announcements")
     .select("*")
@@ -44,7 +51,11 @@ export async function getAllPosts() {
   return data;
 }
 
-export async function getPosts(levels: string) {
+export async function getPostsByLevel(levels: string): Promise<IPost[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase
     .from("announcements")
     .select("*")
@@ -54,7 +65,11 @@ export async function getPosts(levels: string) {
   return data;
 }
 
-export async function getPostById(id: string) {
+export async function getPostById(id: string): Promise<IPost | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase
     .from("announcements")
     .select("*")
@@ -64,7 +79,11 @@ export async function getPostById(id: string) {
   return data;
 }
 
-export async function getAllLevels() {
+export async function getAllLevels(): Promise<ILevels[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase.from("levels").select("*");
 
   return data;

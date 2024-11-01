@@ -3,7 +3,7 @@
 import { useOptimistic } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
-import { IPosts } from "@/components/AnnouncementSection";
+import { IPost } from "@/components/AnnouncementSection";
 import AnnouncementLoading from "@/components/AnnouncementLoading";
 import PostCard from "@/components/PostCard";
 import NoAnnouncement from "@/components/NoAnnouncement";
@@ -15,7 +15,7 @@ export default function AnnouncementPostLists({
   mutate,
 }: {
   role: string;
-  posts: IPosts[] | null | undefined;
+  posts: IPost[] | null | undefined;
   isLoading: boolean;
   mutate: UseMutateFunction<void, Error, string, unknown>;
 }) {
@@ -33,8 +33,7 @@ export default function AnnouncementPostLists({
 
   if (isLoading) return <AnnouncementLoading />;
 
-  if (!optimisticPosts || optimisticPosts.length === 0)
-    return <NoAnnouncement />;
+  if (!optimisticPosts || !optimisticPosts.length) return <NoAnnouncement />;
 
   return (
     <ul className="flex flex-col items-center justify-center gap-4">
