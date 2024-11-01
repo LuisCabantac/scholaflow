@@ -2,11 +2,7 @@
 
 import { signIn, signOut } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import {
-  getUser,
-  getUserEmail,
-  getVerificationToken,
-} from "@/lib/data-service";
+import { getUserByEmail, getVerificationToken } from "@/lib/data-service";
 
 interface ICheckToken {
   id: string;
@@ -19,7 +15,7 @@ export async function signInCredentialsAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const user = await getUser(email);
+  const user = await getUserByEmail(email);
   if (user) {
     if (user.password === password) {
       await signIn("credentials", {
@@ -57,11 +53,12 @@ export async function createUser(newGuest: object) {
 export async function checkEmail(formData: FormData) {
   const email = formData.get("email") as string;
 
-  const user = await getUserEmail(email);
+  const user = await getUserByEmail(email);
   if (!user) {
+    //These two are for the otp signup feature
     // const verificationToken = await generateVerificationToken(email);
-
     // await sendVerificationEmail(email, verificationToken[0].token);
+
     return {
       type: "verification",
       success: {
