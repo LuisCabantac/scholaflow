@@ -19,13 +19,17 @@ export default async function Page({ params }: { params: Params }) {
 
   if (!post) return redirect("/user/announcements");
 
+  const { caption, levels, image, links } = post;
+
   const allLevels = await getAllLevels();
 
   return (
     <AnnouncementUpdateForm
       id={id}
-      caption={post.caption}
-      levels={post.levels}
+      caption={caption}
+      levels={levels}
+      images={image}
+      links={links}
       options={allLevels}
     />
   );
