@@ -259,4 +259,15 @@
   .embla__dot--selected:after {
     box-shadow: inset 0 0 0 0.2rem var(--text-body);
   }
+  .input__file__label:has(.input__file:disabled) {
+    cursor: not-allowed;
+  }
+
+  .comment__form:has(.comment__textarea:disabled) {
+    cursor: not-allowed;
+  }
+
+  .comment__form:has(.comment__textarea:focus) {
+    border-color: #384689;
+  }
 }
