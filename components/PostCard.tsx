@@ -196,10 +196,9 @@ export default function PostCard({
           </div>
         )}
 
-        <p className="mb-2 mt-1">{post.caption}</p>
+        <p className="mt-1">{post.caption}</p>
         {post.links.length ? (
-          <div className="mb-2 grid gap-1">
-            <p className="font-medium">Attachments</p>
+          <div className="mt-1 grid gap-1">
             <ul
               className={`grid gap-[2px] font-medium ${post.links.length > 1 && "md:grid-cols-2"}`}
             >
