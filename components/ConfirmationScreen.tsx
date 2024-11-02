@@ -7,12 +7,14 @@ import Button from "@/components/Button";
 export default function ConfirmationScreen({
   type,
   btnLabel,
+  isLoading,
   children,
   handleCancel,
   handleAction,
 }: {
   type: "delete" | string;
   btnLabel: string;
+  isLoading: boolean;
   children: React.ReactNode;
   handleCancel: () => void;
   handleAction: () => void;
@@ -20,9 +22,13 @@ export default function ConfirmationScreen({
   const { useClickOutsideHandler } = useClickOutside();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useClickOutsideHandler(wrapperRef, () => {
-    handleCancel();
-  });
+  useClickOutsideHandler(
+    wrapperRef,
+    () => {
+      handleCancel();
+    },
+    isLoading,
+  );
 
   return (
     <div className="confirmation__container">
@@ -49,13 +55,16 @@ export default function ConfirmationScreen({
             <p className="font-medium">{children}</p>
           </div>
           <div className="flex items-center justify-end gap-2">
-            <Button type="secondary" onClick={handleCancel}>
-              Cancel
-            </Button>
+            {!isLoading && (
+              <Button type="secondary" onClick={handleCancel}>
+                Cancel
+              </Button>
+            )}
             <Button
               type="primary"
               bg={`${type === "delete" ? "bg-[#f03e3e] hover:bg-[#c92a2a]" : ""}`}
               onClick={handleAction}
+              isLoading={isLoading}
             >
               {btnLabel}
             </Button>
