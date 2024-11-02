@@ -11,13 +11,15 @@ import NoAnnouncement from "@/components/NoAnnouncement";
 export default function AnnouncementPostLists({
   role,
   posts,
-  isLoading,
-  mutate,
+  postsIsPending,
+  deletePostIsPending,
+  handleDeletePost,
 }: {
   role: string;
   posts: IPost[] | null | undefined;
-  isLoading: boolean;
-  mutate: UseMutateFunction<void, Error, string, unknown>;
+  postsIsPending: boolean;
+  deletePostIsPending: boolean;
+  handleDeletePost: UseMutateFunction<void, Error, string, unknown>;
 }) {
   const [optimisticPosts, optimisticDelete] = useOptimistic(
     posts,
@@ -28,10 +30,10 @@ export default function AnnouncementPostLists({
 
   function handlePostDelete(id: string) {
     optimisticDelete(id);
-    mutate(id);
+    handleDeletePost(id);
   }
 
-  if (isLoading) return <AnnouncementLoading />;
+  if (postsIsPending) return <AnnouncementLoading />;
 
   if (!optimisticPosts || !optimisticPosts.length) return <NoAnnouncement />;
 
@@ -39,10 +41,11 @@ export default function AnnouncementPostLists({
     <ul className="flex flex-col items-center justify-center gap-4">
       {optimisticPosts.map((post) => (
         <PostCard
-          post={post}
-          mutate={handlePostDelete}
-          key={post.id}
           role={role}
+          post={post}
+          onPostDelete={handlePostDelete}
+          deletePostIsPending={deletePostIsPending}
+          key={post.id}
         />
       ))}
     </ul>

@@ -1,11 +1,13 @@
 "use server";
 
+import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { supabase } from "@/lib/supabase";
 import { auth } from "@/lib/auth";
 import { getPostById } from "@/lib/data-service";
-import { extractImagePath, hasUser } from "@/lib/utils";
+import { arraysAreEqual, extractImagePath, hasUser } from "@/lib/utils";
 
 export interface IImage {
   size: number;
@@ -14,42 +16,41 @@ export interface IImage {
   lastModified: number;
 }
 
-export async function uploadImage(image: File) {
-  if (image.name !== "undefined") {
-    const fileExtension = image.name.split(".").pop();
-
+export async function uploadImage(file: File) {
+  if (file.name !== "undefined") {
+    const [name, extension] = file.name.split(/\.(?=[^\.]+$)/);
     const { data: imageData, error } = await supabase.storage
-      .from("images")
-      .upload(`${Date.now()}.${fileExtension}`, image, {
+      .from("announcements")
+      .upload(`${name}_${uuidv4()}.${extension}`, file, {
         cacheControl: "3600",
         upsert: false,
       });
 
     if (error) throw new Error(error.message);
 
-    const { data } = supabase.storage
-      .from("images")
-      .getPublicUrl(imageData.path);
-    return data;
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("announcements").getPublicUrl(imageData.path);
+    return publicUrl;
   }
 }
 
-export async function deleteImage(bucket: string, fileName: string[]) {
-  const { error } = await supabase.storage.from(bucket).remove(fileName);
+export async function deleteFileFromBucket(
+  bucketName: string,
+  filePath: string[],
+) {
+  const { error } = await supabase.storage.from(bucketName).remove(filePath);
 
   if (error)
-    throw new Error(`${fileName} cannot be deleted from the ${bucket} bucket`);
+    throw new Error(
+      `${filePath} cannot be deleted from the ${bucketName} bucket`,
+    );
 }
 
 export async function createPost(formData: FormData) {
   const session = await auth();
 
-  if (!hasUser(session)) {
-    return {
-      success: false,
-      message: "You must be logged in to create a post.",
-    };
-  }
+  if (!hasUser(session)) return redirect("/signin");
 
   if (session.user.role !== "admin") {
     return {
@@ -58,19 +59,12 @@ export async function createPost(formData: FormData) {
     };
   }
 
-  const image = formData.getAll("image");
-  const postImage = Array.isArray(image)
+  const images = formData.getAll("attachments");
+  const postImage = Array.isArray(images)
     ? await Promise.all(
-        image.map(async (img) => {
-          if (
-            img instanceof File &&
-            img.name !== "undefined" &&
-            img.size > 0 &&
-            (img.type.includes("image/jpeg") ||
-              img.type.includes("image/jpg") ||
-              img.type.includes("image/png"))
-          ) {
-            return await uploadImage(img);
+        images.map(async (attachment) => {
+          if (attachment instanceof File && attachment.name !== "undefined") {
+            return await uploadImage(attachment);
           } else {
             return null;
           }
@@ -83,7 +77,8 @@ export async function createPost(formData: FormData) {
     authorName: session.user.name,
     caption: formData.get("caption"),
     levels: formData.get("levels"),
-    image: postImage?.map((img) => img?.publicUrl),
+    image: postImage,
+    links: formData.getAll("links"),
   };
 
   const { error } = await supabase.from("announcements").insert([newPost]);
@@ -97,12 +92,15 @@ export async function createPost(formData: FormData) {
   return { success: true, message: "Your post has been published!" };
 }
 
-export async function updatePost(formData: FormData) {
-  const id = formData.get("id") as string;
-
+export async function updatePost(
+  currentUrlLinks: string[],
+  currentAttachments: string[],
+  formData: FormData,
+) {
   const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  if (!hasUser(session)) return redirect("/signin");
+
+  const postId = formData.get("postId") as string;
 
   if (session.user.role !== "admin")
     return {
@@ -110,69 +108,101 @@ export async function updatePost(formData: FormData) {
       message: "You need be an admin to edit this post.",
     };
 
-  const { levels, caption, image: existingImages } = await getPostById(id);
+  const post = await getPostById(postId);
 
-  const image = formData.getAll("image");
+  if (!post)
+    return {
+      success: false,
+      message: "This post does not exist.",
+    };
 
-  const postImage = Array.isArray(image)
-    ? await Promise.all(
-        image.map(async (img) => {
-          if (img instanceof File && img.name !== "undefined" && img.size > 0) {
-            return await uploadImage(img);
-          } else {
-            return null;
-          }
-        }),
-      ).then((results) => results.filter((url) => url !== null))
-    : [];
+  const { levels, caption, image: existingImages, links: existingLinks } = post;
 
-  const updatePost = {
-    caption: formData.get("caption") as string,
-    levels: formData.get("levels") as string,
-    image:
-      postImage.length > 0
-        ? existingImages.concat(postImage?.map((img) => img?.publicUrl))
-        : existingImages,
-    updatedPost: true,
-  };
+  const newAttachments = formData.getAll("newAttachments");
+  const newUrlLinks = formData.getAll("newUrlLinks");
+  const newCaption = formData.get("caption");
+  const newLevels = formData.get("levels");
 
   if (
-    caption !== updatePost.caption ||
-    levels !== updatePost.levels ||
-    postImage.length > 0
+    caption !== newCaption ||
+    levels !== newLevels ||
+    newAttachments.length ||
+    newUrlLinks.length ||
+    arraysAreEqual(currentAttachments, existingImages) === false ||
+    arraysAreEqual(currentUrlLinks, existingLinks) === false
   ) {
+    const removedAttachments = post.image.filter(
+      (attachment) => !currentAttachments.includes(attachment),
+    );
+    if (removedAttachments.length) {
+      const filePath = removedAttachments.map((img: string) =>
+        extractImagePath(img),
+      );
+      await deleteFileFromBucket("announcements", filePath);
+    }
+
+    const postImages = Array.isArray(newAttachments)
+      ? await Promise.all(
+          newAttachments.map(async (attachment) => {
+            if (
+              attachment instanceof File &&
+              attachment.name !== "undefined" &&
+              attachment.size > 0
+            ) {
+              return await uploadImage(attachment);
+            } else {
+              return null;
+            }
+          }),
+        ).then((results) => results.filter((url) => url !== null))
+      : [];
+
+    const updatePost = {
+      caption: formData.get("caption") as string,
+      levels: formData.get("levels") as string,
+      image: postImages.concat(currentAttachments),
+      links: newUrlLinks.concat(currentUrlLinks),
+      updatedPost: true,
+    };
+
     const { error } = await supabase
       .from("announcements")
       .update(updatePost)
-      .eq("id", id)
-      .select()
-      .single();
+      .eq("id", postId);
 
     if (error) return { success: false, message: error.message };
 
-    revalidatePath(`/user/announcements/edit/${id}`);
+    revalidatePath(`/user/announcements/edit/${postId}`);
     revalidatePath("/user/announcements");
     return { success: true, message: "Post updated successfully!" };
   }
 
   return {
     success: true,
-    message: "No changes detected, post remains the same.",
+    message: "No changes were made to the post.",
   };
 }
 
 export async function deletePost(postId: string) {
   const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  if (!hasUser(session)) return redirect("/signin");
 
   if (session.user.role !== "admin")
     throw new Error("You need be an admin to delete this post.");
 
-  const { image } = await getPostById(postId);
+  const post = await getPostById(postId);
+
+  if (!post)
+    return {
+      success: false,
+      message: "This post does not exist.",
+    };
+
+  const { image } = post;
 
   if (image.length) {
-    const path = image.map((img: string) => extractImagePath(img));
-    await deleteImage("images", path);
+    const filePath = image.map((img: string) => extractImagePath(img));
+    await deleteFileFromBucket("announcements", filePath);
   }
 
   const { error } = await supabase

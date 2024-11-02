@@ -10,15 +10,18 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { IPost } from "@/components/AnnouncementSection";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import EmblaCarousel from "@/components/EmblaCarousel";
+import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 
 export default function PostCard({
   post,
   role,
-  mutate,
+  onPostDelete,
+  deletePostIsPending,
 }: {
   post: IPost;
   role: string;
-  mutate: (id: string) => void;
+  onPostDelete: (id: string) => void;
+  deletePostIsPending: boolean;
 }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -26,17 +29,22 @@ export default function PostCard({
   const [ellipsis, setEllipsis] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  function handleEllipsis() {
+  function handleToggleEllipsis() {
     setEllipsis(!ellipsis);
   }
 
-  function handleShowConfirmation() {
+  function handleToggleShowConfirmation() {
     setShowConfirmation(!showConfirmation);
+    handleToggleEllipsis();
   }
 
-  useClickOutsideHandler(wrapperRef, () => {
-    setEllipsis(false);
-  });
+  useClickOutsideHandler(
+    wrapperRef,
+    () => {
+      setEllipsis(false);
+    },
+    false,
+  );
 
   return (
     <li
@@ -113,7 +121,7 @@ export default function PostCard({
             ref={wrapperRef}
           >
             <div className="relative">
-              <button onClick={handleEllipsis}>
+              <button onClick={handleToggleEllipsis}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -153,7 +161,7 @@ export default function PostCard({
                   <span>Edit post</span>
                 </Link>
                 <button
-                  onClick={handleShowConfirmation}
+                  onClick={handleToggleShowConfirmation}
                   className="flex items-center gap-1 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a] md:text-base"
                 >
                   <svg
@@ -178,8 +186,9 @@ export default function PostCard({
               <ConfirmationScreen
                 type="delete"
                 btnLabel="Delete"
-                handleCancel={handleShowConfirmation}
-                handleAction={() => mutate(post.id)}
+                isLoading={deletePostIsPending}
+                handleCancel={handleToggleShowConfirmation}
+                handleAction={() => onPostDelete(post.id)}
               >
                 Are you sure you want to delete this post?
               </ConfirmationScreen>
@@ -187,9 +196,25 @@ export default function PostCard({
           </div>
         )}
 
-        <p className={`pt-1 ${post?.image?.length && "pb-2"}`}>
-          {post.caption}
-        </p>
+        <p className="mb-2 mt-1">{post.caption}</p>
+        {post.links.length ? (
+          <div className="mb-2 grid gap-1">
+            <p className="font-medium">Attachments</p>
+            <ul
+              className={`grid gap-[2px] font-medium ${post.links.length > 1 && "md:grid-cols-2"}`}
+            >
+              {post.links.map((url, index) => (
+                <AttachmentLinkCard
+                  key={url}
+                  link={url}
+                  index={index}
+                  location="stream"
+                  attachmentAmount={post.links.length}
+                />
+              ))}
+            </ul>
+          </div>
+        ) : null}
         {post?.image?.length ? <EmblaCarousel slides={post.image} /> : null}
       </div>
     </li>

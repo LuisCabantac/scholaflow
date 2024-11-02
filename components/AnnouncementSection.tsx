@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ILevels } from "@/app/user/announcements/page";
 
 import FilterLevelPosts from "@/components/FilterLevelPosts";
-import AnnouncementForm from "@/components/AnnouncementForm";
+import AnnouncementCreateForm from "@/components/AnnouncementCreateForm";
 import AnnouncementPostLists from "@/components/AnnouncementPostLists";
 
 export interface IPost {
@@ -17,12 +17,12 @@ export interface IPost {
   author: string;
   created_at: string;
   caption: string;
-  image: string[] | null;
-  linkUrl: string | null;
+  image: string[];
+  links: string[];
   school: string;
   schoolAvatar: string;
-  schoolName: string | null;
-  authorName: string | null;
+  schoolName: string;
+  authorName: string;
   levels: string;
   updatedPost: boolean;
 }
@@ -42,12 +42,12 @@ export default function AnnouncementSection({
   const searchParams = useSearchParams();
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
 
-  const { data: posts, isLoading } = useQuery({
+  const { data: posts, isPending: postsIsPending } = useQuery({
     queryKey: [searchParams.get("filter") ?? "all-levels"],
     queryFn: () => onGetPosts(searchParams.get("filter") ?? "all-levels"),
   });
 
-  const { mutate } = useMutation({
+  const { mutate: deletePost, isPending: deletePostIsPending } = useMutation({
     mutationFn: onDeletePosts,
     onSuccess: () => {
       toast.success("Your post has been removed.");
@@ -59,15 +59,15 @@ export default function AnnouncementSection({
     onError: (error) => toast.error(error.message),
   });
 
-  function handleShowAnnouncementForm() {
+  function handleToggleShowAnnouncementForm() {
     if (role === "admin") setShowAnnouncementForm(!showAnnouncementForm);
   }
 
   return (
     <section>
       {showAnnouncementForm ? (
-        <AnnouncementForm
-          handleShowAnnouncementForm={handleShowAnnouncementForm}
+        <AnnouncementCreateForm
+          handleToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
           allLevels={allLevels}
         />
       ) : (
@@ -76,7 +76,7 @@ export default function AnnouncementSection({
           {role === "admin" && (
             <div
               className="flex cursor-pointer items-center gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
-              onClick={handleShowAnnouncementForm}
+              onClick={handleToggleShowAnnouncementForm}
             >
               <div className="relative h-9 w-9 flex-shrink-0 rounded-full md:h-12 md:w-12">
                 <Image
@@ -96,8 +96,9 @@ export default function AnnouncementSection({
           <AnnouncementPostLists
             role={role}
             posts={posts}
-            isLoading={isLoading}
-            mutate={mutate}
+            postsIsPending={postsIsPending}
+            handleDeletePost={deletePost}
+            deletePostIsPending={deletePostIsPending}
           />
         </div>
       )}
