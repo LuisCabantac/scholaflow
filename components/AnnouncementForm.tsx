@@ -39,7 +39,7 @@ export default function AnnouncementForm({
   const [newUrlLinks, setNewUrlLinks] = useState<string[]>([]);
   const [url, setUrl] = useState<string>("");
 
-  async function handleEditPost(event: React.FormEvent) {
+  async function handleSubmitPost(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
@@ -144,7 +144,7 @@ export default function AnnouncementForm({
   return (
     <form
       className="rounded-md border-2 border-[#dbe4ff] p-3 md:p-4"
-      onSubmit={handleEditPost}
+      onSubmit={handleSubmitPost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
         <h3 className="text-lg font-medium md:text-xl">
