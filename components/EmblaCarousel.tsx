@@ -26,7 +26,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <section className="embla relative">
+    <section className="embla relative mt-2">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((img) => (
