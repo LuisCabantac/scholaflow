@@ -10,6 +10,10 @@ export function extractImagePath(url: string): string {
   const match = url.match(/\/([^\/]+)$/);
   return match ? match[1] : "";
 }
+export function arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((value, index) => value === arr2[index]);
+}
 
 export const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
