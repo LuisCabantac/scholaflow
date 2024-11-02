@@ -1,56 +1,86 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import toast from "react-hot-toast";
-
 import { ILevels } from "@/app/user/announcements/page";
-import { createPost } from "@/lib/announcements-actions";
-
-import Button from "@/components/Button";
-import LevelsOption from "@/components/LevelsOption";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { IPost } from "./AnnouncementSection";
+import Button from "./Button";
 import AttachmentLinkCard from "./AttachmentLinkCard";
 import AttachmentFileCard from "./AttachmentFileCard";
+import LevelsOption from "./LevelsOption";
+import toast from "react-hot-toast";
+import { createPost, updatePost } from "@/lib/announcements-actions";
+import { useRef, useState } from "react";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { useRouter } from "next/navigation";
 
-export default function AnnouncementCreateForm({
-  allLevels,
-  handleToggleShowAnnouncementForm,
+export default function AnnouncementForm({
+  type,
+  post,
+  options,
+  onToggleShowAnnouncementForm,
 }: {
-  allLevels: ILevels[] | null;
-  handleToggleShowAnnouncementForm: () => void;
+  type: "create" | "edit";
+  post?: IPost;
+  options: ILevels[] | null;
+  onToggleShowAnnouncementForm?: () => void;
 }) {
+  const router = useRouter();
   const { useClickOutsideHandler } = useClickOutside();
   const addLinkModalWrapperRef = useRef<HTMLDivElement>(null);
   const [showAddLinkModal, setShowAddLinkModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentAttachments, setCurrentAttachments] = useState<string[]>(
+    post?.image ?? [],
+  );
   const [attachmentNames, setAttachmentNames] = useState<string[]>([]);
-  const [postAttachments, setPostAttachments] = useState<File[]>([]);
-  const [urlLinks, setUrlLinks] = useState<string[]>([]);
+  const [newAttachments, setNewAttachments] = useState<File[]>([]);
+  const [currentUrlLinks, setCurrentUrlLinks] = useState<string[]>(
+    post?.links ?? [],
+  );
+  const [newUrlLinks, setNewUrlLinks] = useState<string[]>([]);
   const [url, setUrl] = useState<string>("");
 
-  async function handleCreatePost(event: React.FormEvent) {
+  async function handleEditPost(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
-    urlLinks.forEach((link) => formData.append("links", link));
-    postAttachments.forEach((attachment) =>
+    newUrlLinks.forEach((link) => formData.append("links", link));
+    newAttachments.forEach((attachment) =>
       formData.append("attachments", attachment),
     );
-    const { success, message } = await createPost(formData);
-    if (success) {
-      setIsLoading(false);
-      toast.success(message);
-      handleToggleShowAnnouncementForm();
-    } else {
-      setIsLoading(false);
-      toast.error(message);
+
+    if (type === "create") {
+      const { success, message } = await createPost(formData);
+      if (success) {
+        setIsLoading(false);
+        toast.success(message);
+        onToggleShowAnnouncementForm?.();
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    }
+
+    if (type === "edit") {
+      const { success, message } = await updatePost(
+        currentUrlLinks,
+        currentAttachments,
+        formData,
+      );
+      if (success) {
+        setIsLoading(false);
+        toast.success(message);
+        router.push("/user/announcements");
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
     }
   }
 
-  function handleSetPostAttachment(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setPostAttachments((prevFiles) => [...prevFiles, ...files]);
+      setNewAttachments((prevFiles) => [...prevFiles, ...files]);
     }
   }
 
@@ -64,25 +94,37 @@ export default function AnnouncementCreateForm({
     }
   }
 
-  function handleRemoveAttachment(index: number) {
-    setPostAttachments((prevFiles) =>
-      prevFiles.filter((curFile, i: number) => i !== index),
-    );
-    setAttachmentNames((prevFiles) =>
-      prevFiles.filter((curFile, i: number) => i !== index),
+  function handleRemoveCurrentAttachment(index: number) {
+    setCurrentAttachments((prevFiles) =>
+      prevFiles.filter((_, i: number) => i !== index),
     );
   }
 
-  function handleSetUrlLinks(url: string) {
+  function handleRemoveNewAttachment(index: number) {
+    setNewAttachments((prevFiles) =>
+      prevFiles.filter((_, i: number) => i !== index),
+    );
+    setAttachmentNames((prevFiles) =>
+      prevFiles.filter((_, i: number) => i !== index),
+    );
+  }
+
+  function handleSetNewUrlLinks(url: string) {
     if (url) {
-      setUrlLinks([...urlLinks, url]);
+      setNewUrlLinks([...newUrlLinks, url]);
       setUrl("");
       handleToggleShowAddLinkModal();
     }
   }
 
-  function handleRemoveUrl(index: number) {
-    setUrlLinks((prevFiles) =>
+  function handleRemoveNewUrl(index: number) {
+    setNewUrlLinks((prevFiles) =>
+      prevFiles.filter((curlLink, i: number) => i !== index),
+    );
+  }
+
+  function handleRemoveCurrentUrl(index: number) {
+    setCurrentUrlLinks((prevFiles) =>
       prevFiles.filter((curlLink, i: number) => i !== index),
     );
   }
@@ -101,16 +143,32 @@ export default function AnnouncementCreateForm({
 
   return (
     <form
-      className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
-      onSubmit={handleCreatePost}
+      className="rounded-md border-2 border-[#dbe4ff] p-3 md:p-4"
+      onSubmit={handleEditPost}
     >
       <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
-        <h3 className="text-lg font-medium md:text-xl">Create post</h3>
+        <h3 className="text-lg font-medium md:text-xl">
+          {type === "edit" && post
+            ? `Edit post: "${
+                post.caption.length > 25
+                  ? post.caption.slice(0, 25).concat("...")
+                  : post.caption
+              }"`
+            : "Create post"}
+        </h3>
       </div>
+
       <div className="flex flex-col justify-start gap-3 px-2 py-3 md:py-4">
+        <input type="text" value={post?.id ?? ""} hidden name="postId" />
+
         <div className="flex flex-col items-start justify-start gap-2">
           <label className="text-xs font-medium md:text-sm">School Level</label>
-          <LevelsOption type="post" options={allLevels} isLoading={isLoading} />
+          <LevelsOption
+            type="post"
+            options={options}
+            defaultValue={post?.levels ?? "all-levels"}
+            isLoading={isLoading}
+          />
         </div>
         <div className="grid gap-1 md:gap-2">
           <label className="text-xs font-medium md:text-sm">
@@ -120,8 +178,9 @@ export default function AnnouncementCreateForm({
             required
             name="caption"
             disabled={isLoading}
-            className="h-[10rem] resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
-            placeholder="Add a caption..."
+            defaultValue={post?.caption ?? ""}
+            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+            placeholder="Edit caption..."
             maxLength={255}
           ></textarea>
         </div>
@@ -135,7 +194,7 @@ export default function AnnouncementCreateForm({
               disabled={isLoading}
               onChange={(event) => {
                 handleAttachmentNameChange(event);
-                handleSetPostAttachment(event);
+                handleSetNewAttachment(event);
               }}
             />
             <svg
@@ -148,12 +207,13 @@ export default function AnnouncementCreateForm({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
               />
             </svg>
             <p className="text-xs font-medium md:text-sm">Upload files</p>
           </label>
-          <label>
+
+          <label className="flex gap-1">
             <button
               onClick={handleToggleShowAddLinkModal}
               className="flex gap-1"
@@ -171,7 +231,7 @@ export default function AnnouncementCreateForm({
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                  d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
                 />
               </svg>
               <p className="text-xs font-medium md:text-sm">Add links</p>
@@ -204,7 +264,7 @@ export default function AnnouncementCreateForm({
                     </Button>
                     <Button
                       type="primary"
-                      onClick={() => handleSetUrlLinks(url)}
+                      onClick={() => handleSetNewUrlLinks(url)}
                     >
                       Add
                     </Button>
@@ -215,7 +275,7 @@ export default function AnnouncementCreateForm({
           )}
         </div>
         <div className="grid gap-1 md:gap-2">
-          {attachmentNames.length ? (
+          {currentAttachments.length || attachmentNames.length ? (
             <label className="text-xs font-medium md:text-sm">Images</label>
           ) : null}
           <ul className="grid gap-2">
@@ -227,7 +287,20 @@ export default function AnnouncementCreateForm({
                     type="newFile"
                     location="form"
                     isLoading={isLoading}
-                    onRemoveAttachment={handleRemoveAttachment}
+                    onRemoveAttachment={handleRemoveNewAttachment}
+                    key={file}
+                  />
+                ))
+              : null}
+            {currentAttachments.length
+              ? currentAttachments.map((file, index) => (
+                  <AttachmentFileCard
+                    file={file}
+                    index={index}
+                    type="curFile"
+                    location="form"
+                    isLoading={isLoading}
+                    onRemoveAttachment={handleRemoveCurrentAttachment}
                     key={file}
                   />
                 ))
@@ -235,32 +308,49 @@ export default function AnnouncementCreateForm({
           </ul>
         </div>
         <div className="grid gap-1 md:gap-2">
-          {urlLinks.length ? (
+          {currentUrlLinks.length || newUrlLinks.length ? (
             <label className="text-xs font-medium md:text-sm">Links</label>
           ) : null}
           <ul className="grid gap-2">
-            {urlLinks.length
-              ? urlLinks.map((url, index) => (
+            {newUrlLinks.length
+              ? newUrlLinks.map((link, index) => (
                   <AttachmentLinkCard
-                    key={url}
-                    link={url}
+                    link={link}
                     index={index}
                     location="form"
                     isLoading={isLoading}
-                    onRemoveAttachment={handleRemoveUrl}
+                    onRemoveAttachment={handleRemoveNewUrl}
+                    key={link}
+                  />
+                ))
+              : null}
+            {currentUrlLinks.length
+              ? currentUrlLinks.map((link, index) => (
+                  <AttachmentLinkCard
+                    link={link}
+                    index={index}
+                    location="form"
+                    isLoading={isLoading}
+                    onRemoveAttachment={handleRemoveCurrentUrl}
+                    key={link}
                   />
                 ))
               : null}
           </ul>
         </div>
         <div className="mt-2 flex items-center justify-end gap-1 md:gap-2">
-          {!isLoading && (
-            <Button type="secondary" onClick={handleToggleShowAnnouncementForm}>
+          {!isLoading && type === "edit" && (
+            <Button type="secondary" href="/user/announcements">
+              Cancel
+            </Button>
+          )}
+          {!isLoading && type === "create" && (
+            <Button type="secondary" onClick={onToggleShowAnnouncementForm}>
               Cancel
             </Button>
           )}
           <Button type="primary" isLoading={isLoading}>
-            Publish
+            {type === "edit" ? "Update" : "Publish"}
           </Button>
         </div>
       </div>

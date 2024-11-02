@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ILevels } from "@/app/user/announcements/page";
 
 import FilterLevelPosts from "@/components/FilterLevelPosts";
-import AnnouncementCreateForm from "@/components/AnnouncementCreateForm";
+import AnnouncementForm from "@/components/AnnouncementForm";
 import AnnouncementPostLists from "@/components/AnnouncementPostLists";
 
 export interface IPost {
@@ -66,9 +66,10 @@ export default function AnnouncementSection({
   return (
     <section>
       {showAnnouncementForm ? (
-        <AnnouncementCreateForm
-          handleToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
-          allLevels={allLevels}
+        <AnnouncementForm
+          type="create"
+          options={allLevels}
+          onToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
         />
       ) : (
         <div className="grid gap-4">

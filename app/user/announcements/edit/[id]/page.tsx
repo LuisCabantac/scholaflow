@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import { getAllLevels, getPostById } from "@/lib/data-service";
 
-import AnnouncementUpdateForm from "@/components/AnnouncementUpdateForm";
+import AnnouncementForm from "@/components/AnnouncementForm";
 
 export default async function Page({ params }: { params: Params }) {
   const session = await auth();
@@ -19,18 +19,7 @@ export default async function Page({ params }: { params: Params }) {
 
   if (!post) return redirect("/user/announcements");
 
-  const { caption, levels, image, links } = post;
-
   const allLevels = await getAllLevels();
 
-  return (
-    <AnnouncementUpdateForm
-      id={id}
-      caption={caption}
-      levels={levels}
-      images={image}
-      links={links}
-      options={allLevels}
-    />
-  );
+  return <AnnouncementForm type="edit" post={post} options={allLevels} />;
 }
