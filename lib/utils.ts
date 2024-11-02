@@ -15,6 +15,13 @@ export function arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
   return arr1.every((value, index) => value === arr2[index]);
 }
 
+export function removeUUIDFromFilename(filename: string): string {
+  return filename.replace(
+    /_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(?=\.\w+$)/,
+    "",
+  );
+}
+
 export const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
