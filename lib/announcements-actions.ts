@@ -118,8 +118,8 @@ export async function updatePost(
 
   const { levels, caption, image: existingImages, links: existingLinks } = post;
 
-  const newAttachments = formData.getAll("newAttachments");
-  const newUrlLinks = formData.getAll("newUrlLinks");
+  const newAttachments = formData.getAll("attachments");
+  const newUrlLinks = formData.getAll("links");
   const newCaption = formData.get("caption");
   const newLevels = formData.get("levels");
 
