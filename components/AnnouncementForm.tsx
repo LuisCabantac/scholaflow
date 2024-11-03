@@ -151,7 +151,7 @@ export default function AnnouncementForm({
       <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-6">
         <h3 className="text-lg font-medium md:text-xl">
           {type === "edit" && post
-            ? `Edit post: "${
+            ? `"${
                 post.caption.length > 25
                   ? post.caption.slice(0, 25).concat("...")
                   : post.caption
@@ -182,7 +182,7 @@ export default function AnnouncementForm({
             disabled={isLoading}
             defaultValue={post?.caption ?? ""}
             className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
-            placeholder="Edit caption..."
+            placeholder={`${type === "edit" ? "Edit" : "Add a"} caption...`}
             maxLength={255}
           ></textarea>
         </div>
