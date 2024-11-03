@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-[#33383d] antialiased`}
+        className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-[#474c50] antialiased`}
       >
         <Provider>{children}</Provider>
       </body>

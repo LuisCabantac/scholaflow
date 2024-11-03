@@ -6,7 +6,7 @@ export default function Hero() {
       <section className="flex items-center justify-center gap-4 px-4 py-44 text-center md:px-48 md:py-[9rem]">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
           <div className="grid gap-6">
-            <h1 className="bg-gradient-to-br from-[#1a1c1f] to-[#474c50] bg-clip-text text-3xl font-semibold md:text-6xl">
+            <h1 className="text-3xl font-semibold md:text-6xl">
               Your School&apos;s All-in-One Learning Platform
             </h1>
             <p className="px-8 text-center text-sm md:text-lg">
