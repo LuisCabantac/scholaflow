@@ -27,19 +27,23 @@ export default function ProfileIcon({
   const { useClickOutsideHandler } = useClickOutside();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  function handleIsOpenPopover() {
+  function handleToggleOpenPopover() {
     setIsOpenPopover(!isOpenPopover);
   }
 
-  useClickOutsideHandler(wrapperRef, () => {
-    setIsOpenPopover(false);
-  });
+  useClickOutsideHandler(
+    wrapperRef,
+    () => {
+      setIsOpenPopover(false);
+    },
+    false,
+  );
 
   return (
     <div className="relative" ref={wrapperRef}>
       <div
         className="profile__icon flex cursor-pointer items-center gap-2 rounded-md transition-colors"
-        onClick={handleIsOpenPopover}
+        onClick={handleToggleOpenPopover}
       >
         <div className="relative h-10 w-10 cursor-pointer rounded-full border-2 transition-all">
           <Image
@@ -88,7 +92,7 @@ export default function ProfileIcon({
           <Link
             href="/user/profile"
             className="flex gap-[0.6rem] rounded-md p-2 text-sm transition-colors hover:bg-[#c7d2f1]"
-            onClick={handleIsOpenPopover}
+            onClick={handleToggleOpenPopover}
           >
             <svg viewBox="0 0 24 24" className="size-5 fill-[#5c7cfa]">
               <path
@@ -104,7 +108,7 @@ export default function ProfileIcon({
           <Link
             href="/user/dashboard"
             className="flex gap-[0.6rem] rounded-md p-2 text-sm transition-colors hover:bg-[#c7d2f1]"
-            onClick={handleIsOpenPopover}
+            onClick={handleToggleOpenPopover}
           >
             <svg
               viewBox="0 0 24 24"
