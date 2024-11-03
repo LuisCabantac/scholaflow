@@ -27,14 +27,9 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
           school={session.user.schoolName}
         />
       ) : (
-        <div className="flex gap-2">
-          <Button href="/signin" type="primary">
-            Sign in
-          </Button>
-          {/* <Button href="/signup" type="primary">
-            Sign up
-          </Button> */}
-        </div>
+        <Button href="/signin" type="primary">
+          Sign in
+        </Button>
       )}
     </nav>
   );
