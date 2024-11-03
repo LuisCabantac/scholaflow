@@ -138,6 +138,7 @@ export default function PostCard({
                 </svg>
               </button>
               <EllipsisPopover
+                showEdit={true}
                 showEllipsis={ellipsis}
                 editLink={`/user/announcements/edit/${post.id}`}
                 onShowConfirmationScreen={handleToggleShowConfirmation}
