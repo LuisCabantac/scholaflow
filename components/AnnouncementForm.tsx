@@ -204,7 +204,7 @@ export default function AnnouncementForm({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
-              className="size-5 stroke-[#616572]"
+              className="size-4 stroke-[#616572] md:size-5"
             >
               <path
                 strokeLinecap="round"
@@ -228,7 +228,7 @@ export default function AnnouncementForm({
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="size-5 stroke-[#616572]"
+                className="size-4 stroke-[#616572] md:size-5"
               >
                 <path
                   strokeLinecap="round"
