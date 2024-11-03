@@ -23,7 +23,7 @@ export default function LevelsOption({
         disabled={isLoading}
         required
         name="levels"
-        className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+        className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
         defaultValue={defaultValue || "all-levels"}
         onChange={handleChange || (() => {})}
       >
