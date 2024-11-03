@@ -13,22 +13,26 @@ export default function FilterLevelPosts({
 }) {
   const searchParams = useSearchParams();
   const { useClickOutsideHandler } = useClickOutside();
+  const filterWrapperRef = useRef<HTMLDivElement>(null);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
-  function handleShowFilterDropdown() {
+  function handleToggleShowFilterDropdown() {
     setShowFilterDropdown(!showFilterDropdown);
   }
 
-  const filterWrapperRef = useRef<HTMLDivElement>(null);
-  useClickOutsideHandler(filterWrapperRef, () => {
-    setShowFilterDropdown(false);
-  });
+  useClickOutsideHandler(
+    filterWrapperRef,
+    () => {
+      setShowFilterDropdown(false);
+    },
+    false,
+  );
 
   return (
     <div className="flex items-start">
       <div
         className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md py-[0.65rem] text-base font-medium md:gap-2 md:py-2 md:text-lg"
-        onClick={handleShowFilterDropdown}
+        onClick={handleToggleShowFilterDropdown}
         ref={filterWrapperRef}
       >
         <div className="flex items-center gap-2 md:gap-4">
