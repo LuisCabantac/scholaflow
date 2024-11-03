@@ -1,16 +1,18 @@
 "use client";
 
-import { ILevels } from "@/app/user/announcements/page";
-import { IPost } from "./AnnouncementSection";
-import Button from "./Button";
-import AttachmentLinkCard from "./AttachmentLinkCard";
-import AttachmentFileCard from "./AttachmentFileCard";
-import LevelsOption from "./LevelsOption";
-import toast from "react-hot-toast";
-import { createPost, updatePost } from "@/lib/announcements-actions";
 import { useRef, useState } from "react";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
+import { createPost, updatePost } from "@/lib/announcements-actions";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { ILevels } from "@/app/user/announcements/page";
+
+import { IPost } from "@/components/AnnouncementSection";
+import Button from "@/components/Button";
+import AttachmentLinkCard from "@/components/AttachmentLinkCard";
+import AttachmentFileCard from "@/components/AttachmentFileCard";
+import LevelsOption from "@/components/LevelsOption";
 
 export default function AnnouncementForm({
   type,
@@ -143,10 +145,10 @@ export default function AnnouncementForm({
 
   return (
     <form
-      className="rounded-md border-2 border-[#dbe4ff] p-3 md:p-4"
+      className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
       onSubmit={handleSubmitPost}
     >
-      <div className="flex items-center justify-between border-b-2 border-[#dbe4ff] px-2 pb-3 md:pb-4">
+      <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-6">
         <h3 className="text-lg font-medium md:text-xl">
           {type === "edit" && post
             ? `Edit post: "${
@@ -158,7 +160,7 @@ export default function AnnouncementForm({
         </h3>
       </div>
 
-      <div className="flex flex-col justify-start gap-3 px-2 py-3 md:py-4">
+      <div className="flex flex-col justify-start gap-3 px-4 pb-4 md:px-6 md:pb-6">
         <input type="text" value={post?.id ?? ""} hidden name="postId" />
 
         <div className="flex flex-col items-start justify-start gap-2">
@@ -170,7 +172,7 @@ export default function AnnouncementForm({
             isLoading={isLoading}
           />
         </div>
-        <div className="grid gap-1 md:gap-2">
+        <div className="grid gap-2">
           <label className="text-xs font-medium md:text-sm">
             Caption <span className="text-red-400">*</span>
           </label>
@@ -255,7 +257,7 @@ export default function AnnouncementForm({
                       onChange={(event) => setUrl(event.target.value)}
                     />
                   </div>
-                  <div className="flex justify-end gap-1">
+                  <div className="flex justify-end gap-2">
                     <Button
                       type="secondary"
                       onClick={handleToggleShowAddLinkModal}
@@ -338,7 +340,7 @@ export default function AnnouncementForm({
               : null}
           </ul>
         </div>
-        <div className="mt-2 flex items-center justify-end gap-1 md:gap-2">
+        <div className="mt-2 flex items-center justify-end gap-2">
           {!isLoading && type === "edit" && (
             <Button type="secondary" href="/user/announcements">
               Cancel
