@@ -23,7 +23,7 @@ export default function AnnouncementForm({
   type: "create" | "edit";
   post?: IPost;
   options: ILevels[] | null;
-  onToggleShowAnnouncementForm?: () => void;
+  onToggleShowAnnouncementForm: () => void;
 }) {
   const router = useRouter();
   const { useClickOutsideHandler } = useClickOutside();
