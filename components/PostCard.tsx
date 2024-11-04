@@ -157,7 +157,7 @@ export default function PostCard({
             </div>
           </div>
         )}
-        <p className="mt-1">{post.caption}</p>
+        <p className="mt-1 whitespace-pre-line">{post.caption}</p>
         {post.links.length ? (
           <div className="mt-1 grid gap-1">
             <ul
