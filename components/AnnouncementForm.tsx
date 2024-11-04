@@ -50,33 +50,15 @@ export default function AnnouncementForm({
       formData.append("attachments", attachment),
     );
 
-    if (type === "create") {
-      const { success, message } = await createPost(formData);
-      if (success) {
-        setIsLoading(false);
-        toast.success(message);
-        onToggleShowAnnouncementForm?.();
-      } else {
-        setIsLoading(false);
-        toast.error(message);
-      }
-    }
+    const { success, message } = await (type === "create"
+      ? createPost(formData)
+      : updatePost(currentUrlLinks, currentAttachments, formData));
 
-    if (type === "edit") {
-      const { success, message } = await updatePost(
-        currentUrlLinks,
-        currentAttachments,
-        formData,
-      );
+        setIsLoading(false);
       if (success) {
-        setIsLoading(false);
         toast.success(message);
-        router.push("/user/announcements");
-      } else {
-        setIsLoading(false);
-        toast.error(message);
-      }
-    }
+      onToggleShowAnnouncementForm();
+    } else toast.error(message);
   }
 
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
