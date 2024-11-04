@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { createPost, updatePost } from "@/lib/announcements-actions";
@@ -25,7 +24,6 @@ export default function AnnouncementForm({
   options: ILevels[] | null;
   onToggleShowAnnouncementForm: () => void;
 }) {
-  const router = useRouter();
   const { useClickOutsideHandler } = useClickOutside();
   const addLinkModalWrapperRef = useRef<HTMLDivElement>(null);
   const [showAddLinkModal, setShowAddLinkModal] = useState(false);
@@ -54,9 +52,9 @@ export default function AnnouncementForm({
       ? createPost(formData)
       : updatePost(currentUrlLinks, currentAttachments, formData));
 
-        setIsLoading(false);
-      if (success) {
-        toast.success(message);
+    setIsLoading(false);
+    if (success) {
+      toast.success(message);
       onToggleShowAnnouncementForm();
     } else toast.error(message);
   }
@@ -127,10 +125,10 @@ export default function AnnouncementForm({
 
   return (
     <form
-      className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
+      className="h-full w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
       onSubmit={handleSubmitPost}
     >
-      <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-6">
+      <div className="flex items-center justify-between px-4 py-4">
         <h3 className="text-lg font-medium md:text-xl">
           {type === "edit" && post
             ? `"${
@@ -142,7 +140,7 @@ export default function AnnouncementForm({
         </h3>
       </div>
 
-      <div className="flex flex-col justify-start gap-3 px-4 pb-4 md:px-6 md:pb-6">
+      <div className="flex flex-col justify-start gap-3 px-4 pb-4">
         <input type="text" value={post?.id ?? ""} hidden name="postId" />
 
         <div className="flex flex-col items-start justify-start gap-2">
@@ -163,7 +161,7 @@ export default function AnnouncementForm({
             name="caption"
             disabled={isLoading}
             defaultValue={post?.caption ?? ""}
-            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+            className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:h-[8rem]"
             placeholder={`${type === "edit" ? "Edit" : "Add a"} caption...`}
             maxLength={255}
           ></textarea>
@@ -237,6 +235,11 @@ export default function AnnouncementForm({
                       required
                       value={url}
                       onChange={(event) => setUrl(event.target.value)}
+                      onKeyDown={(event) =>
+                        event.key === "Enter" &&
+                        showAddLinkModal &&
+                        handleSetNewUrlLinks(url)
+                      }
                     />
                   </div>
                   <div className="flex justify-end gap-2">
@@ -258,11 +261,11 @@ export default function AnnouncementForm({
             </div>
           )}
         </div>
-        <div className="grid gap-1 md:gap-2">
+        <div className="grid gap-2">
           {currentAttachments.length || attachmentNames.length ? (
             <label className="text-xs font-medium md:text-sm">Images</label>
           ) : null}
-          <ul className="grid gap-2">
+          <ul className="grid max-h-20 gap-1 overflow-y-auto">
             {attachmentNames.length
               ? attachmentNames.map((file, index) => (
                   <AttachmentFileCard
@@ -291,11 +294,11 @@ export default function AnnouncementForm({
               : null}
           </ul>
         </div>
-        <div className="grid gap-1 md:gap-2">
+        <div className="grid gap-2">
           {currentUrlLinks.length || newUrlLinks.length ? (
             <label className="text-xs font-medium md:text-sm">Links</label>
           ) : null}
-          <ul className="grid gap-2">
+          <ul className="grid max-h-20 gap-1 overflow-y-auto">
             {newUrlLinks.length
               ? newUrlLinks.map((link, index) => (
                   <AttachmentLinkCard
@@ -323,12 +326,7 @@ export default function AnnouncementForm({
           </ul>
         </div>
         <div className="mt-2 flex items-center justify-end gap-2">
-          {!isLoading && type === "edit" && (
-            <Button type="secondary" href="/user/announcements">
-              Cancel
-            </Button>
-          )}
-          {!isLoading && type === "create" && (
+          {!isLoading && (
             <Button type="secondary" onClick={onToggleShowAnnouncementForm}>
               Cancel
             </Button>

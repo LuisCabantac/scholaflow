@@ -5,21 +5,25 @@ import Image from "next/image";
 
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { ILevels } from "@/app/user/announcements/page";
 
 import { IPost } from "@/components/AnnouncementSection";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import EmblaCarousel from "@/components/EmblaCarousel";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import EllipsisPopover from "@/components/EllipsisPopover";
+import AnnouncementForm from "@/components/AnnouncementForm";
 
 export default function PostCard({
   post,
   role,
+  options,
   onPostDelete,
   deletePostIsPending,
 }: {
   post: IPost;
   role: string;
+  options: ILevels[] | null;
   onPostDelete: (id: string) => void;
   deletePostIsPending: boolean;
 }) {
@@ -28,6 +32,7 @@ export default function PostCard({
   const { useClickOutsideHandler } = useClickOutside();
   const [ellipsis, setEllipsis] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
 
   function handleToggleEllipsis() {
     setEllipsis(!ellipsis);
@@ -36,6 +41,10 @@ export default function PostCard({
   function handleToggleShowConfirmation() {
     setShowConfirmation(!showConfirmation);
     handleToggleEllipsis();
+  }
+
+  function handleToggleShowAnnouncementForm() {
+    if (role === "admin") setShowAnnouncementForm(!showAnnouncementForm);
   }
 
   useClickOutsideHandler(
@@ -62,16 +71,9 @@ export default function PostCard({
       <div>
         <div className="flex gap-2">
           <div>
-            <div className="flex items-center gap-2">
-              <p className="text-wrap text-sm font-semibold md:text-base">
-                {post.schoolName}
-              </p>
-              {post.updatedPost && (
-                <p className="rounded-md text-xs italic text-[#616572]">
-                  Updated
-                </p>
-              )}
-            </div>
+            <p className="text-wrap text-sm font-semibold md:text-base">
+              {post.schoolName}
+            </p>
 
             <div className="flex items-center gap-1">
               <p className="text-xs text-[#616572] md:text-sm">
@@ -156,6 +158,7 @@ export default function PostCard({
               <EllipsisPopover
                 showEdit={true}
                 showEllipsis={ellipsis}
+                onShowEditModal={handleToggleShowAnnouncementForm}
                 editLink={`/user/announcements/edit/${post.id}`}
                 onShowConfirmationScreen={handleToggleShowConfirmation}
               />
@@ -193,6 +196,18 @@ export default function PostCard({
         ) : null}
         {post?.image?.length ? <EmblaCarousel slides={post.image} /> : null}
       </div>
+      {showAnnouncementForm && (
+        <div className="confirmation__container">
+          <div className="flex w-[90%] items-center justify-center md:w-[80%]">
+            <AnnouncementForm
+              type="edit"
+              post={post}
+              options={options}
+              onToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
+            />
+          </div>
+        </div>
+      )}
     </li>
   );
 }

@@ -65,42 +65,46 @@ export default function AnnouncementSection({
 
   return (
     <section>
-      {showAnnouncementForm ? (
-        <AnnouncementForm
-          type="create"
-          options={allLevels}
-          onToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
-        />
-      ) : (
-        <div className="grid gap-4">
-          <FilterLevelPosts options={allLevels} />
-          {role === "admin" && (
-            <div
-              className="flex cursor-pointer items-center gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
-              onClick={handleToggleShowAnnouncementForm}
-            >
-              <div className="relative h-9 w-9 flex-shrink-0 rounded-full md:h-12 md:w-12">
-                <Image
-                  src={
-                    "https://crmqyyyvgsrwlpuibjbg.supabase.co/storage/v1/object/public/avatars/school-avatar.jpg?t=2024-10-22T05%3A25%3A48.476Z"
-                  }
-                  fill
-                  alt="image"
-                  className="rounded-full"
-                />
-              </div>
-              <p className="text-sm text-[#616572] md:text-base">
-                Announce something...
-              </p>
+      <div className="grid gap-4">
+        <FilterLevelPosts options={allLevels} />
+        {role === "admin" && (
+          <div
+            className="flex cursor-pointer items-center gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4"
+            onClick={handleToggleShowAnnouncementForm}
+          >
+            <div className="relative h-9 w-9 flex-shrink-0 rounded-full md:h-12 md:w-12">
+              <Image
+                src={
+                  "https://crmqyyyvgsrwlpuibjbg.supabase.co/storage/v1/object/public/avatars/school-avatar.jpg?t=2024-10-22T05%3A25%3A48.476Z"
+                }
+                fill
+                alt="image"
+                className="rounded-full"
+              />
             </div>
-          )}
-          <AnnouncementPostLists
-            role={role}
-            posts={posts}
-            postsIsPending={postsIsPending}
-            handleDeletePost={deletePost}
-            deletePostIsPending={deletePostIsPending}
-          />
+            <p className="text-sm text-[#616572] md:text-base">
+              Announce something...
+            </p>
+          </div>
+        )}
+        <AnnouncementPostLists
+          role={role}
+          posts={posts}
+          options={allLevels}
+          postsIsPending={postsIsPending}
+          handleDeletePost={deletePost}
+          deletePostIsPending={deletePostIsPending}
+        />
+      </div>
+      {showAnnouncementForm && (
+        <div className="confirmation__container">
+          <div className="flex w-[90%] items-center justify-center md:w-[80%]">
+            <AnnouncementForm
+              type="create"
+              options={allLevels}
+              onToggleShowAnnouncementForm={handleToggleShowAnnouncementForm}
+            />
+          </div>
         </div>
       )}
     </section>
