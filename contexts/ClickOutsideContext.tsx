@@ -6,6 +6,7 @@ interface SidebarType {
   useClickOutsideHandler: (
     ref: RefObject<HTMLElement>,
     onClickOutside: () => void,
+    isLoading: boolean,
   ) => void;
 }
 
@@ -19,10 +20,15 @@ function ClickOutsideProvider({ children }: { children: React.ReactNode }) {
   function useClickOutsideHandler(
     ref: RefObject<HTMLElement>,
     onClickOutside: () => void,
+    isLoading: boolean,
   ) {
     useEffect(() => {
       function handleClickOutside(event: MouseEvent) {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
+        if (
+          ref.current &&
+          !ref.current.contains(event.target as Node) &&
+          !isLoading
+        ) {
           onClickOutside();
         }
       }
@@ -31,7 +37,7 @@ function ClickOutsideProvider({ children }: { children: React.ReactNode }) {
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
-    }, [ref, onClickOutside]);
+    }, [ref, onClickOutside, isLoading]);
   }
 
   return (
