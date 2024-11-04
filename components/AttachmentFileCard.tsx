@@ -23,7 +23,7 @@ export default function AttachmentFileCard({
       <a
         href={file}
         target="_blank"
-        className="md:p4 flex w-full items-center justify-between p-3"
+        className="flex w-full items-center justify-between p-3 md:p-4"
         download
       >
         <div className="flex items-center gap-2">
