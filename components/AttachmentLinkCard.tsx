@@ -25,7 +25,7 @@ export default function AttachmentLinkCard({
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
-            className="size-5 stroke-[#616572]"
+            className="size-4 stroke-[#616572] md:size-5"
           >
             <path
               strokeLinecap="round"
@@ -34,7 +34,9 @@ export default function AttachmentLinkCard({
             />
           </svg>
 
-          <p>{link.length > 20 ? link.slice(0, 20).concat("...") : link}</p>
+          <p className="text-sm md:text-base">
+            {link.length > 20 ? link.slice(0, 20).concat("...") : link}
+          </p>
         </div>
         <div>
           <svg
@@ -42,7 +44,7 @@ export default function AttachmentLinkCard({
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
-            className="size-5 stroke-[#22317c]"
+            className="size-4 stroke-[#22317c] md:size-5"
           >
             <path
               strokeLinecap="round"
@@ -64,7 +66,7 @@ export default function AttachmentLinkCard({
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="size-5 stroke-[#f03e3e] hover:stroke-[#c92a2a]"
+            className="size-4 stroke-[#f03e3e] hover:stroke-[#c92a2a] md:size-5"
           >
             <path
               strokeLinecap="round"
