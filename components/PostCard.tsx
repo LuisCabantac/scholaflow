@@ -33,6 +33,7 @@ export default function PostCard({
   const [ellipsis, setEllipsis] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
+  const [seeMore, setSeeMore] = useState(false);
 
   function handleToggleEllipsis() {
     setEllipsis(!ellipsis);
@@ -45,6 +46,10 @@ export default function PostCard({
 
   function handleToggleShowAnnouncementForm() {
     if (role === "admin") setShowAnnouncementForm(!showAnnouncementForm);
+  }
+
+  function handleToggleSeeMore() {
+    setSeeMore(!seeMore);
   }
 
   useClickOutsideHandler(
@@ -176,7 +181,29 @@ export default function PostCard({
             </div>
           </div>
         )}
-        <p className="mt-1 whitespace-pre-line">{post.caption}</p>
+        <p className="mt-1 hidden whitespace-pre-line md:block">
+          {post.caption}
+        </p>
+        {seeMore ? (
+          <p className="mt-1 block whitespace-pre-line md:hidden">
+            {post.caption}
+          </p>
+        ) : (
+          <p className="mt-1 block whitespace-pre-line md:hidden">
+            {post.caption.length > 80
+              ? post.caption.slice(0, 80).concat("...")
+              : post.caption}
+            {post.caption.length > 80 && (
+              <span
+                className="cursor-pointer text-[#616572]"
+                onClick={handleToggleSeeMore}
+              >
+                {" "}
+                See more
+              </span>
+            )}
+          </p>
+        )}
         {post.links.length ? (
           <div className="mt-1 grid gap-1">
             <ul
