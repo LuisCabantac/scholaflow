@@ -1,16 +1,14 @@
-import Link from "next/link";
-
 export default function EllipsisPopover({
-  editLink,
   showEdit,
   deleteLabel,
   showEllipsis,
+  onShowEditForm,
   onShowConfirmationScreen,
 }: {
-  editLink: string;
   showEdit: boolean;
   deleteLabel?: string;
   showEllipsis: boolean;
+  onShowEditForm?: () => void;
   onShowConfirmationScreen: () => void;
 }) {
   return (
@@ -18,26 +16,29 @@ export default function EllipsisPopover({
       className={`${showEllipsis ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-2 z-20 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md transition-all ease-in-out`}
     >
       {showEdit && (
-        <Link
-          href={editLink}
-          className="flex items-center gap-1 rounded-md text-sm text-[#4c6ef5] hover:text-[#364fc7] md:text-base"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="size-4"
+        <div>
+          <button
+            type="button"
+            className="flex w-full items-center gap-1 rounded-md text-sm text-[#4c6ef5] hover:text-[#364fc7] md:text-base"
+            onClick={onShowEditForm}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-            />
-          </svg>
-          <span>Edit</span>
-        </Link>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+            <span>Edit</span>
+          </button>
+        </div>
       )}
       <button
         onClick={onShowConfirmationScreen}

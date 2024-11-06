@@ -163,8 +163,7 @@ export default function PostCard({
               <EllipsisPopover
                 showEdit={true}
                 showEllipsis={ellipsis}
-                onShowEditModal={handleToggleShowAnnouncementForm}
-                editLink={`/user/announcements/edit/${post.id}`}
+                onShowEditForm={handleToggleShowAnnouncementForm}
                 onShowConfirmationScreen={handleToggleShowConfirmation}
               />
               {showConfirmation && (
