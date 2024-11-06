@@ -38,6 +38,40 @@ export async function getUserByEmail(email: string): Promise<IUser | null> {
   return data;
 }
 
+export async function getAllUser() {
+  const session = await auth();
+
+  if (!hasUser(session))
+    return { success: false, message: "Error getting all users", data: null };
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error)
+    return { success: false, message: "Error getting all users", data: null };
+
+  return { success: true, message: "Fetch success", data };
+}
+
+export async function getUsersFilter(name: string) {
+  const session = await auth();
+
+  if (!hasUser(session))
+    return { success: false, message: "Error getting all users", data: null };
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .ilike("fullName", `%${name}%`);
+
+  if (error)
+    return { success: false, message: "Error getting all users", data: null };
+
+  return { success: true, message: "Fetch success", data };
+}
+
 export async function getAllPosts(): Promise<IPost[] | null> {
   const session = await auth();
 
