@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
+import Linkify from "react-linkify";
 
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
@@ -59,6 +60,20 @@ export default function PostCard({
     },
     false,
   );
+
+  function captionLinksDecorator(href: string, text: string, key: number) {
+    return (
+      <a
+        href={href}
+        key={key}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "#5c7cfa", textDecoration: "underline" }}
+      >
+        {text}
+      </a>
+    );
+  }
 
   return (
     <li
@@ -180,29 +195,31 @@ export default function PostCard({
             </div>
           </div>
         )}
-        <p className="mt-1 hidden whitespace-pre-line md:block">
-          {post.caption}
-        </p>
-        {seeMore ? (
-          <p className="mt-1 block whitespace-pre-line md:hidden">
+        <Linkify componentDecorator={captionLinksDecorator}>
+          <p className="mt-1 hidden whitespace-pre-line md:block">
             {post.caption}
           </p>
-        ) : (
-          <p className="mt-1 block whitespace-pre-line md:hidden">
-            {post.caption.length > 80
-              ? post.caption.slice(0, 80).concat("...")
-              : post.caption}
-            {post.caption.length > 80 && (
-              <span
-                className="cursor-pointer text-[#616572]"
-                onClick={handleToggleSeeMore}
-              >
-                {" "}
-                See more
-              </span>
-            )}
-          </p>
-        )}
+          {seeMore ? (
+            <p className="mt-1 block whitespace-pre-line md:hidden">
+              {post.caption}
+            </p>
+          ) : (
+            <p className="mt-1 block whitespace-pre-line md:hidden">
+              {post.caption.length > 80
+                ? post.caption.slice(0, 80).concat("...")
+                : post.caption}
+              {post.caption.length > 80 && (
+                <span
+                  className="cursor-pointer text-[#616572]"
+                  onClick={handleToggleSeeMore}
+                >
+                  {" "}
+                  See more
+                </span>
+              )}
+            </p>
+          )}
+        </Linkify>
         {post.links.length ? (
           <div className="mt-1 grid gap-1">
             <ul
