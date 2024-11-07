@@ -41,7 +41,7 @@ export default function Button({
   if (href && pending)
     return (
       <button
-        className={`${type === "primary" ? primaryStyle : secondaryStyle} ${pending && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors md:gap-2`}
+        className={`${type === "primary" ? primaryStyle : secondaryStyle} ${pending && "disabled:cursor-not-allowed"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors md:gap-2`}
         type="submit"
         disabled={pending}
       >
@@ -54,7 +54,7 @@ export default function Button({
     return (
       <button
         onClick={onClick}
-        className={`${bg && type === "primary" ? `${bg} px-5 py-3 text-[#edf2ff]` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors disabled:cursor-not-allowed md:gap-2`}
+        className={`${bg && type === "primary" ? `${bg} px-5 py-3 text-[#edf2ff]` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-not-allowed"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors disabled:cursor-not-allowed md:gap-2`}
         disabled={isLoading}
       >
         {isLoading && <SpinnerMini />}
@@ -64,7 +64,7 @@ export default function Button({
 
   return (
     <button
-      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "disabled:cursor-wait"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors md:gap-2`}
+      className={`${type === "primary" ? primaryStyle : secondaryStyle} ${isLoading && "disabled:cursor-not-allowed"} flex items-center gap-1 rounded-md text-sm font-semibold shadow-sm transition-colors md:gap-2`}
       type="submit"
       disabled={isLoading}
     >
