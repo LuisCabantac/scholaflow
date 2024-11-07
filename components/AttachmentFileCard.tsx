@@ -42,7 +42,7 @@ export default function AttachmentFileCard({
           </svg>
 
           {type === "curFile" ? (
-            <p>
+            <p className="text-sm md:text-base">
               {getFileNameFromAttachments(removeUUIDFromFilename(file)).length >
               15
                 ? getFileNameFromAttachments(removeUUIDFromFilename(file))
