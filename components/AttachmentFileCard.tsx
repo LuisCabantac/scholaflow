@@ -44,15 +44,15 @@ export default function AttachmentFileCard({
           {type === "curFile" ? (
             <p>
               {getFileNameFromAttachments(removeUUIDFromFilename(file)).length >
-              20
+              15
                 ? getFileNameFromAttachments(removeUUIDFromFilename(file))
-                    .slice(0, 20)
+                    .slice(0, 15)
                     .concat("...")
                 : getFileNameFromAttachments(removeUUIDFromFilename(file))}
             </p>
           ) : (
             <p className="text-sm md:text-base">
-              {file.length > 20 ? file.slice(0, 20).concat("...") : file}
+              {file.length > 15 ? file.slice(0, 15).concat("...") : file}
             </p>
           )}
         </div>

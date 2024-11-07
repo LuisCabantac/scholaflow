@@ -35,7 +35,7 @@ export default function AttachmentLinkCard({
           </svg>
 
           <p className="text-sm md:text-base">
-            {link.length > 20 ? link.slice(0, 20).concat("...") : link}
+            {link.length > 15 ? link.slice(0, 15).concat("...") : link}
           </p>
         </div>
         <div>
