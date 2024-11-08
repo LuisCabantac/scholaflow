@@ -21,7 +21,7 @@ export async function signInCredentialsAction(formData: FormData) {
       await signIn("credentials", {
         email,
         password,
-        redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
+        redirectTo: "/user/classroom?toast=Signed+in+successfully!",
       });
       return false;
     } else {
@@ -32,7 +32,7 @@ export async function signInCredentialsAction(formData: FormData) {
 
 export async function signInGoogleAction() {
   await signIn("google", {
-    redirectTo: "/user/dashboard?toast=Signed+in+successfully!",
+    redirectTo: "/user/classroom?toast=Signed+in+successfully!",
   });
 }
 
@@ -40,8 +40,8 @@ export async function signOutAction() {
   await signOut({ redirectTo: "/" });
 }
 
-export async function createUser(newGuest: object) {
-  const { data, error } = await supabase.from("users").insert([newGuest]);
+export async function createUser(newUser: object) {
+  const { data, error } = await supabase.from("users").insert([newUser]);
 
   if (error) {
     throw new Error("User could not be created");

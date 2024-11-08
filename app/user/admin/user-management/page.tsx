@@ -14,7 +14,7 @@ export default async function Page() {
 
   if (!hasUser(session)) redirect("/signin");
 
-  if (session.user.role !== "admin") redirect("/user/dashboard");
+  if (session.user.role !== "admin") redirect("/user/classroom");
 
   const allLevels = await getAllLevels();
 

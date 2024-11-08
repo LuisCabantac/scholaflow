@@ -13,7 +13,7 @@ export default async function Page() {
 
   if (!hasUser(session)) return redirect("/signin");
 
-  if (session.user.role !== "admin") return redirect("/user/dashboard");
+  if (session.user.role !== "admin") return redirect("/user/classroom");
 
   return (
     <section className="grid gap-4">

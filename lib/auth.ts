@@ -16,7 +16,7 @@ export interface ISession {
     schoolName: string | null;
     image: string;
     verified: boolean;
-    role: "guest" | "student" | "teacher" | "admin";
+    role: "student" | "teacher" | "admin";
   };
   expires: string;
 }
@@ -26,7 +26,7 @@ interface IUser extends User {
   name: string;
   email: string;
   image: string;
-  role?: "guest" | "student" | "teacher" | "admin";
+  role?: "student" | "teacher" | "admin";
 }
 
 const authConfig = {
@@ -67,7 +67,7 @@ const authConfig = {
             email: user.email,
             fullName: user.name,
             avatar: user.image,
-            role: "guest",
+            role: "student",
             emailVerified: true,
             password: generatePassword(8),
           });

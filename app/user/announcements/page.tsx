@@ -19,9 +19,6 @@ export default async function Page() {
 
   if (!hasUser(session)) return redirect("/signin");
 
-  if (!session.user.verified && session.user.role === "guest")
-    return redirect("/");
-
   const allLevels = await getAllLevels();
 
   async function handleGetPosts(levels: string) {

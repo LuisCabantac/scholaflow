@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { hasUser } from "@/lib/utils";
 
-export async function createGuestUser(newGuest: object) {
+export async function createUser(newGuest: object) {
   const session = await auth();
   if (!hasUser(session))
     return { success: false, message: "You must be logged in." };
