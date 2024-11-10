@@ -4,8 +4,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ILevels } from "@/app/user/announcements/page";
-
 import UserLists from "@/components/UserLists";
 import Button from "@/components/Button";
 import UserListLoading from "@/components/UserListsLoading";
@@ -39,14 +37,13 @@ export interface IUser {
 export default function UserManagementSection({
   id,
   role,
-  allLevels,
   onGetUsers,
   onDeleteUser,
   onCheckEmail,
 }: {
   id: string;
   role: string;
-  allLevels: ILevels[];
+
   onGetUsers: (
     name: string,
   ) => Promise<
@@ -151,7 +148,6 @@ export default function UserManagementSection({
         <AddUserForm
           onShowAddUserForm={handleToggleShowAddUserForm}
           onCheckEmail={onCheckEmail}
-          allLevels={allLevels}
         />
       )}
     </>

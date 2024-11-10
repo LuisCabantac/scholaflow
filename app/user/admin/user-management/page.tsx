@@ -3,9 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import { checkEmail } from "@/lib/auth-actions";
-import { getAllLevels, getAllUser, getUsersFilter } from "@/lib/data-service";
+import { getAllUser, getUsersFilter } from "@/lib/data-service";
 import { deleteUser } from "@/lib/user-management-actions";
-import { ILevels } from "@/app/user/announcements/page";
 
 import UserManagementSection from "@/components/UserManagementSection";
 
@@ -15,8 +14,6 @@ export default async function Page() {
   if (!hasUser(session)) redirect("/signin");
 
   if (session.user.role !== "admin") redirect("/user/classroom");
-
-  const allLevels = await getAllLevels();
 
   async function handleGetUsers(name: string) {
     "use server";
@@ -51,7 +48,6 @@ export default async function Page() {
         onGetUsers={handleGetUsers}
         onDeleteUser={handleDeleteUser}
         onCheckEmail={handleCheckEmail}
-        allLevels={allLevels as ILevels[]}
       />
     </section>
   );
