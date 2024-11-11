@@ -15,10 +15,12 @@
     "@types/react-linkify": "^1.0.4",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.3.0",
+    "framer-motion": "^11.11.11",
     "next": "14.2.14",
     "next-auth": "^5.0.0-beta.22",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "react-linkify": "^1.0.0-alpha",
     "uuid": "^11.0.2"
   },
