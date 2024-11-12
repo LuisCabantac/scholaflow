@@ -123,7 +123,13 @@ export async function getAllLevels(): Promise<ILevels[] | null> {
   return data;
 }
 
-export async function getClassByTeacherId(id: string) {
+export async function getAllClassesByTeacherId(
+  id: string,
+): Promise<IClass[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase
     .from("classroom")
     .select("*")
@@ -133,11 +139,225 @@ export async function getClassByTeacherId(id: string) {
   return data;
 }
 
-export async function getClassNameByClassId(id: string) {
+export async function getClassNameByClassId(id: string): Promise<{
+  className: string;
+} | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
   const { data } = await supabase
     .from("classroom")
     .select("className")
-    .eq("id", id)
+    .eq("classroomId", id)
+    .single();
+
+  return data;
+}
+
+export async function getClassByClassId(id: string): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classroom")
+    .select("*")
+    .eq("classroomId", id)
+    .single();
+
+  return data;
+}
+
+export async function getClassByClassCode(
+  code: string,
+): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classroom")
+    .select("*")
+    .eq("classCode", code)
+    .single();
+
+  return data;
+}
+
+export async function getEnrolledClassByClassAndSessionId(
+  classId: string,
+): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("userId", session.user.id)
+    .eq("classroomId", classId)
+    .single();
+
+  return data;
+}
+
+export async function getEnrolledClassByEnrolledClassId(
+  enrolledClassId: string,
+): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("id", enrolledClassId)
+    .single();
+
+  return data;
+}
+
+export async function getAllEnrolledClassesByClassAndSessionId(
+  classId: string,
+): Promise<IClass[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  if (session.user.role !== "teacher") return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("classroomId", classId);
+
+  return data;
+}
+
+export async function getAllEnrolledClassesByClassAndCurrentSessionId(
+  classId: string,
+): Promise<IClass[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("classroomId", classId)
+    .eq("userId", session.user.id);
+
+  return data;
+}
+
+export async function getEnrolledClassByClassAndUserId(
+  userId: string,
+  classId: string,
+): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  if (session.user.role !== "teacher") return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("classroomId", classId)
+    .eq("userId", userId)
+    .single();
+
+  return data;
+}
+
+export async function getAllEnrolledClassesByUserId(
+  userId: string,
+): Promise<IClass[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("userId", userId)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllEnrolledClassesByClassId(
+  classId: string,
+): Promise<IClass[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("classroomId", classId);
+
+  return data;
+}
+
+export async function getEnrolledClassByUserAndClassId(
+  userId: string,
+  classId: string,
+): Promise<IClass | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("enrolledClass")
+    .select("*")
+    .eq("userId", userId)
+    .eq("classroomId", classId)
+    .single();
+
+  return data;
+}
+
+export async function getAllClassStreamsByClassId(
+  classId: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("classroomId", classId)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllEnrolledClassesClassworks(
+  userId: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
+
+  const classworks = Array.isArray(enrolledClasses)
+    ? await Promise.all(
+        enrolledClasses.map(
+          async (enrolledClass) =>
+            await getAllClassworkStreamsByClassId(enrolledClass.classroomId),
+        ),
+      )
+    : [];
+
+  return classworks
+    .filter((array): array is IStream[] => array !== null)
+    .flat();
+}
     .single();
 
   return data;
