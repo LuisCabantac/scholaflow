@@ -36,16 +36,27 @@ function SidebarProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      setIsMobile(window.matchMedia("(min-width: 900px)").matches);
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        setIsMobile(window.matchMedia("(min-width: 900px)").matches);
+      }, 100);
     };
 
     window.addEventListener("resize", handleResize);
 
+    handleResize();
+
     return () => {
+      clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setSidebarExpand(isMobile);
+  }, [isMobile]);
 
   return (
     <SidebarContext.Provider
