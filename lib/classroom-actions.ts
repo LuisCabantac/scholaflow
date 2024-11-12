@@ -9,6 +9,7 @@ import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
   arraysAreEqual,
+  capitalizeFirstLetter,
   extractClassworkFilePath,
   extractStreamFilePath,
   generateClassCode,
@@ -289,7 +290,10 @@ export async function createClassStreamPost(
     `/user/classroom/class/${formData.get("classroomId")}/classwork`,
   );
 
-  return { success: true, message: "Post published!" };
+  return {
+    success: true,
+    message: `${(formData.get("streamType") as string) === "stream" ? "Post" : capitalizeFirstLetter((formData.get("streamType") as string) ?? "")} published!`,
+  };
 }
 
 export async function updateClassStreamPost(
@@ -423,11 +427,14 @@ export async function updateClassStreamPost(
       `/user/classroom/class/${formData.get("classroomId")}/classwork`,
     );
 
-    return { success: true, message: "Post updated successfully!" };
+    return {
+      success: true,
+      message: `${(formData.get("streamType") as string) === "stream" ? "Post" : capitalizeFirstLetter((formData.get("streamType") as string) ?? "")} updated successfully! `,
+    };
   }
   return {
     success: true,
-    message: "No changes were made to the post.",
+    message: `No changes were made to the ${(formData.get("streamType") as string) === "stream" ? "post" : (formData.get("streamType") as string)}.`,
   };
 }
 
