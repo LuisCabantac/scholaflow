@@ -51,7 +51,7 @@ export default function ClassroomCard({
 
   return (
     <li
-      className={`relative flex h-[8rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm md:h-[10rem]`}
+      className="relative flex h-[8rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm md:h-[10rem]"
       style={{
         backgroundColor: classData.classCardBackgroundColor,
       }}
@@ -81,9 +81,9 @@ export default function ClassroomCard({
               className="rounded-full"
             />
           </div>
-          <div className="text-sm md:text-base">
+          <div className="text-sm">
             <p>{classData.teacherName}</p>
-            <p className="text-xs md:text-sm">Instructor</p>
+            <p className="text-xs font-medium">Instructor</p>
           </div>
         </div>
         <div className="absolute bottom-5 right-4 md:bottom-3 md:right-3">
