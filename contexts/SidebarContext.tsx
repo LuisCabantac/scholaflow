@@ -21,9 +21,7 @@ const sidebarDefaultValue: SidebarType = {
 const SidebarContext = createContext(sidebarDefaultValue);
 
 function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isMobile, setIsMobile] = useState(
-    window.matchMedia("(min-width: 900px)").matches,
-  );
+  const [isMobile, setIsMobile] = useState(false);
   const [sidebarExpand, setSidebarExpand] = useState(isMobile);
   const [sidebarClassroomExpand, setSidebarClassroomExpand] = useState(true);
 
@@ -36,21 +34,16 @@ function SidebarProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    let resizeTimeout: NodeJS.Timeout;
+    const mediaQuery = window.matchMedia("(min-width: 900px)");
     const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        setIsMobile(window.matchMedia("(min-width: 900px)").matches);
-      }, 100);
+      setIsMobile(mediaQuery.matches);
     };
-
-    window.addEventListener("resize", handleResize);
 
     handleResize();
 
+    mediaQuery.addEventListener("change", handleResize);
     return () => {
-      clearTimeout(resizeTimeout);
-      window.removeEventListener("resize", handleResize);
+      mediaQuery.removeEventListener("change", handleResize);
     };
   }, []);
 
