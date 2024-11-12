@@ -26,8 +26,12 @@ export default function SidebarLinks({
   onGetAllEnrolledClassesByUserId: (userId: string) => Promise<IClass[] | null>;
 }) {
   const pathname = usePathname();
-  const { sidebarExpand, sidebarClassroomExpand, handleSidebarExpand } =
-    useSidebar();
+  const {
+    isMobile,
+    sidebarExpand,
+    sidebarClassroomExpand,
+    handleSidebarExpand,
+  } = useSidebar();
 
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {
@@ -85,7 +89,7 @@ export default function SidebarLinks({
                   <Link
                     href="/user/admin/user-management/"
                     className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/user-management") ? activeLinkStyle : inactiveLinkStyle}`}
-                    onClick={handleSidebarExpand}
+                    onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
                       <path
@@ -108,6 +112,7 @@ export default function SidebarLinks({
                 <Link
                   href="/user/classroom"
                   className={`sidebar__links md flex items-center justify-between gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-4 ${pathname === "/user/classroom" || (pathname.includes("/user/classroom") && !sidebarExpand) ? activeLinkStyle : inactiveLinkStyle} `}
+                  onClick={() => !isMobile && handleSidebarExpand()}
                 >
                   <div className="flex gap-2">
                     <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -126,7 +131,7 @@ export default function SidebarLinks({
                     <Link
                       href="/user/to-do"
                       className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/to-do" ? activeLinkStyle : inactiveLinkStyle}`}
-                      onClick={handleSidebarExpand}
+                      onClick={() => !isMobile && handleSidebarExpand()}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +172,7 @@ export default function SidebarLinks({
                         <Link
                           href={`/user/classroom/class/${curClass.classroomId}`}
                           className={`${pathname.includes(curClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid items-center rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
-                          onClick={handleSidebarExpand}
+                          onClick={() => !isMobile && handleSidebarExpand()}
                         >
                           <div className="flex items-center gap-2">
                             <div
@@ -199,7 +204,7 @@ export default function SidebarLinks({
                         <Link
                           href={`/user/classroom/class/${enrolledClass.classroomId}`}
                           className={`${pathname.includes(enrolledClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
-                          onClick={handleSidebarExpand}
+                          onClick={() => !isMobile && handleSidebarExpand()}
                         >
                           <div className="flex items-center gap-2">
                             <div
