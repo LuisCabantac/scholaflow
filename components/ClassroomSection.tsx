@@ -577,7 +577,7 @@ export default function ClassroomSection({
             </ul>
           </div>
         </div>
-      ) : (
+      {showCreateClassForm && (
         <CreateClassForm
           session={session}
           onShowCreateClassForm={handleToggleShowCreateClassForm}
