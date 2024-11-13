@@ -23,15 +23,6 @@ export interface IUser {
   gender: string;
   updatedProfile: boolean;
   schoolName: string;
-  course: string;
-  courseName: string;
-  strand: string;
-  strandName: string;
-  gradeLevel: string;
-  level: string;
-  levelName: number;
-  kindergarten: number;
-  kindergartenName: string;
 }
 
 export default function UserManagementSection({
