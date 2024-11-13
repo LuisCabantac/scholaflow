@@ -18,11 +18,11 @@ export async function getUser(email: string) {
   return data;
 }
 
-export async function getUserByUserId(email: string): Promise<IUser | null> {
+export async function getUserByUserId(userId: string): Promise<IUser | null> {
   const { data } = await supabase
     .from("users")
     .select("*")
-    .eq("email", email)
+    .eq("id", userId)
     .single();
 
   return data;
