@@ -29,7 +29,6 @@ import {
   getUserByEmail,
   getUserByUserId,
 } from "@/lib/data-service";
-import { deleteFileFromBucket } from "@/lib/announcements-actions";
 
 export async function createClass(formData: FormData) {
   const session = await auth();
@@ -759,6 +758,18 @@ export async function uploadAttachments(
       .getPublicUrl(attachment.path);
     return publicUrl;
   }
+}
+
+export async function deleteFileFromBucket(
+  bucketName: string,
+  filePath: string[],
+) {
+  const { error } = await supabase.storage.from(bucketName).remove(filePath);
+
+  if (error)
+    throw new Error(
+      `${filePath} cannot be deleted from the ${bucketName} bucket`,
+    );
 }
 
 export async function submitClasswork(
