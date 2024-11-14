@@ -1,40 +1,73 @@
+import Image from "next/image";
 import Button from "@/components/Button";
 import heroImage from "@/public/landing_page/hero.png";
-import Image from "next/image";
+
+import * as motion from "framer-motion/client";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { straggerChildren: 0.2 } },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6 } },
+};
 
 export default function Hero() {
   return (
-    <div className="z-10 flex flex-col items-center">
-      <section className="flex items-center justify-center gap-4 px-4 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
+    <motion.section
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="z-10 flex flex-col items-center"
+    >
+      <div className="flex items-center justify-center gap-4 px-4 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
           <div className="grid gap-6">
-            <h1 className="text-3xl font-semibold md:text-6xl">
-              Your School&apos;s All-in-One Learning Platform
-            </h1>
-            <p className="px-8 text-center text-sm md:text-lg">
+            <motion.h1
+              variants={fadeInUp}
+              className="text-3xl font-semibold md:text-6xl"
+            >
+              Your All-in-One Learning Platform
+            </motion.h1>
+            <motion.p
+              variants={fadeInUp}
+              className="px-8 text-center text-sm md:text-lg"
+            >
               Virtual classrooms, essential tools, and everything you need for
               learning, all in one place. Simplify your school day and make
               learning easier.
-            </p>
+            </motion.p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button href="/user/dashboard" type="primary">
+          <motion.div variants={fadeInUp} className="flex items-center gap-2">
+            <Button href="/user/classroom" type="primary">
               Get started
             </Button>
             <Button href="#" type="secondary">
               View features
             </Button>
-          </div>
+          </motion.div>
         </div>
-      </section>
-      <Image
-        src={heroImage}
-        width={0}
-        height={0}
-        placeholder="blur"
+      </div>
+      <motion.div
+        variants={fadeIn}
         className="h-[90%] w-[90%] rounded-md shadow-lg md:w-[70%]"
-        alt="hero image"
-      />
-    </div>
+      >
+        <Image
+          src={heroImage}
+          width={0}
+          height={0}
+          placeholder="blur"
+          className="rounded-md"
+          alt="hero image"
+        />
+      </motion.div>
+    </motion.section>
   );
 }
