@@ -82,7 +82,6 @@ export default function SidebarLinks({
                 <span className="text-base transition-all">Calendar</span>
               </Link>
             </li> */}
-
             {role === "admin" && verified ? (
               <>
                 <li>
@@ -186,6 +185,7 @@ export default function SidebarLinks({
                             </span>
                           </div>
                           <span className="block pl-5 text-xs">
+                            {curClass.subject && `${curClass.subject} · `}
                             {curClass.section.length > 22
                               ? curClass.section.slice(0, 22).concat("...")
                               : curClass.section}
@@ -220,6 +220,8 @@ export default function SidebarLinks({
                             </span>
                           </div>
                           <span className="block pl-5 text-xs">
+                            {enrolledClass.subject &&
+                              `${enrolledClass.subject} · `}
                             {enrolledClass.section.length > 22
                               ? enrolledClass.section.slice(0, 22).concat("...")
                               : enrolledClass.section}
