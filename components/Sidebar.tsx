@@ -66,7 +66,6 @@ export default function Sidebar({
           <SidebarLinks
             userId={session.user.id}
             role={session.user.role}
-            verified={session.user.verified}
             onGetAllClassesByTeacherId={onGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={onGetAllEnrolledClassesByUserId}
           />
