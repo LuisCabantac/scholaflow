@@ -26,12 +26,7 @@ export default function SidebarLinks({
   onGetAllEnrolledClassesByUserId: (userId: string) => Promise<IClass[] | null>;
 }) {
   const pathname = usePathname();
-  const {
-    isMobile,
-    sidebarExpand,
-    sidebarClassroomExpand,
-    handleSidebarExpand,
-  } = useSidebar();
+  const { isMobile, sidebarExpand, handleSidebarExpand } = useSidebar();
 
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {

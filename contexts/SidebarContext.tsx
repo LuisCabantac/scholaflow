@@ -5,17 +5,13 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 interface SidebarType {
   isMobile: boolean;
   sidebarExpand: boolean;
-  sidebarClassroomExpand: boolean;
   handleSidebarExpand: () => void;
-  handleSidebarClassroomExpand: () => void;
 }
 
 const sidebarDefaultValue: SidebarType = {
   isMobile: false,
   sidebarExpand: false,
-  sidebarClassroomExpand: false,
   handleSidebarExpand: () => {},
-  handleSidebarClassroomExpand: () => {},
 };
 
 const SidebarContext = createContext(sidebarDefaultValue);
@@ -23,14 +19,9 @@ const SidebarContext = createContext(sidebarDefaultValue);
 function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarExpand, setSidebarExpand] = useState(isMobile);
-  const [sidebarClassroomExpand, setSidebarClassroomExpand] = useState(true);
 
   function handleSidebarExpand() {
     setSidebarExpand(!sidebarExpand);
-  }
-
-  function handleSidebarClassroomExpand() {
-    setSidebarClassroomExpand(!sidebarClassroomExpand);
   }
 
   useEffect(() => {
@@ -56,9 +47,7 @@ function SidebarProvider({ children }: { children: React.ReactNode }) {
       value={{
         isMobile,
         sidebarExpand,
-        sidebarClassroomExpand,
         handleSidebarExpand,
-        handleSidebarClassroomExpand,
       }}
     >
       {children}
