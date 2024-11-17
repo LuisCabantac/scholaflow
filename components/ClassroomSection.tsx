@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { isToday, format, isYesterday } from "date-fns";
+import { isToday, format, isYesterday, isThisYear } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -15,7 +15,7 @@ import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page"
 
 import Button from "@/components/Button";
 import ClassroomLists from "@/components/ClassroomLists";
-import CreateClassForm from "@/components/CreateClassForm";
+import ClassForm from "@/components/ClassForm";
 import NoClasses from "@/components/NoClasses";
 import JoinClassModal from "@/components/JoinClassModal";
 
@@ -38,6 +38,7 @@ export interface IClass {
   illustrationIndex: number;
   allowStudentsToPost: boolean;
   allowStudentsToComment: boolean;
+  classDescription: string;
 }
 
 export default function ClassroomSection({
@@ -70,7 +71,7 @@ export default function ClassroomSection({
   const btnWrapperRef = useRef<HTMLDivElement>(null);
   const filterWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showCreateClassForm, setShowCreateClassForm] = useState(false);
+  const [showClassForm, setShowClassForm] = useState(false);
   const [showJoinClass, setShowJoinClass] = useState(false);
   const [showAddClassPopover, setShowAddClassPopover] = useState(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
@@ -114,6 +115,64 @@ export default function ClassroomSection({
     onError: (error) => toast.error(error.message),
   });
 
+  const assignedClassworks = enrolledClassworks
+    ?.filter(
+      (classwork) =>
+        !classworks
+          ?.map((turnedIn) => turnedIn.streamId)
+          .includes(classwork.id) &&
+        (classwork.hasDueDate === "false" ||
+          (classwork.hasDueDate === "true" &&
+            new Date(classwork?.dueDate ?? "") > new Date())) &&
+        (classwork.announceToAll ||
+          (classwork.announceTo &&
+            classwork.announceTo.includes(session.user.id))),
+    )
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      dateA.setHours(0, 0, 0, 0);
+      dateB.setHours(0, 0, 0, 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+  const missingClassworks = enrolledClassworks
+    ?.filter(
+      (classwork) =>
+        !classworks?.some(
+          (turnedIn) =>
+            turnedIn.streamId === classwork.id && turnedIn.isTurnedIn,
+        ) &&
+        classwork.hasDueDate === "true" &&
+        new Date(classwork?.dueDate ?? "") < new Date() &&
+        (classwork.announceToAll ||
+          (classwork.announceTo &&
+            classwork.announceTo.includes(session.user.id))),
+    )
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      dateA.setHours(0, 0, 0, 0);
+      dateB.setHours(0, 0, 0, 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+  const doneClassworks = classworks
+    ?.filter(
+      (classwork) =>
+        classwork.isTurnedIn &&
+        enrolledClasses
+          ?.map((enrolledClass) => enrolledClass.classroomId)
+          .includes(classwork.classroomId),
+    )
+    .sort((a, b) => {
+      const dateA = new Date(a.turnedInDate);
+      const dateB = new Date(b.turnedInDate);
+      dateA.setHours(0, 0, 0, 0);
+      dateB.setHours(0, 0, 0, 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
   async function handleJoinClass(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
@@ -139,29 +198,26 @@ export default function ClassroomSection({
     if (success) {
       setIsLoading(false);
       toast.success(message);
-      handleShowToggleJoinClass();
+      handleToggleShowJoinClass();
       router.push(`/user/classroom/class/${classExists.classroomId}`);
     } else toast.error(message);
   }
 
-  function handleShowToggleAddClassPopover() {
-    if (role === "teacher" || role === "student")
-      setShowAddClassPopover(!showAddClassPopover);
+  function handleToggleShowAddClassPopover() {
+    setShowAddClassPopover(!showAddClassPopover);
   }
 
-  function handleShowToggleJoinClass() {
-    if (role === "teacher" || role === "student")
-      setShowJoinClass(!showJoinClass);
+  function handleToggleShowJoinClass() {
+    setShowJoinClass(!showJoinClass);
   }
 
-  function handleToggleShowCreateClassForm() {
-    if (role === "teacher") setShowCreateClassForm(!showCreateClassForm);
-    handleShowToggleAddClassPopover();
+  function handleToggleShowClassForm() {
+    if (role === "teacher") setShowClassForm(!showClassForm);
+    handleToggleShowAddClassPopover();
   }
 
-  function handleShowToggleFilterDropdown() {
-    if (role === "teacher" || role === "student")
-      setShowFilterDropdown(!showFilterDropdown);
+  function handleToggleShowFilterDropdown() {
+    setShowFilterDropdown(!showFilterDropdown);
   }
 
   useClickOutsideHandler(
@@ -182,137 +238,162 @@ export default function ClassroomSection({
 
   return (
     <div className="relative overflow-hidden">
-      {!showCreateClassForm ? (
-        <div className="grid items-start gap-4 md:grid-cols-[1fr_18rem]">
-          <div>
-            <div className="flex items-center justify-between">
-              <div
-                className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
-                onClick={handleShowToggleFilterDropdown}
-                ref={filterWrapperRef}
+      <div className="grid items-start gap-4 md:grid-cols-[1fr_18rem]">
+        <div>
+          <div className="flex items-center justify-between">
+            <div
+              className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
+              onClick={handleToggleShowFilterDropdown}
+              ref={filterWrapperRef}
+            >
+              <div className="flex items-center gap-2 text-base font-medium md:gap-4 md:text-lg">
+                <span>
+                  {searchParams.get("filter") === null
+                    ? "All classes"
+                    : `${searchParams.get("filter")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={3}
+                  stroke="currentColor"
+                  className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </div>
+              <ul
+                className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
               >
-                <div className="flex items-center gap-2 text-base font-medium md:gap-4 md:text-lg">
-                  <span>
-                    {searchParams.get("filter") === null
-                      ? "All classes"
-                      : `${searchParams.get("filter")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
-                  </span>
+                <li>
+                  <Link
+                    href="/user/classroom?filter=all-classes"
+                    className={`${(searchParams.get("filter") === "all-classes" || searchParams.get("filter") === null) && "bg-[#c7d2f1] font-medium"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                  >
+                    All classes
+                  </Link>
+                </li>
+                {role === "teacher" && (
+                  <li>
+                    <Link
+                      href="/user/classroom?filter=created-classes"
+                      className={`${searchParams.get("filter") === "created-classes" && "bg-[#c7d2f1] font-medium"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      Created classes
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <Link
+                    href="/user/classroom?filter=enrolled-classes"
+                    className={`${searchParams.get("filter") === "enrolled-classes" && "bg-[#c7d2f1] font-medium"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                  >
+                    Enrolled classes
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="relative" ref={btnWrapperRef}>
+              {role === "teacher" ? (
+                <Button
+                  type="primary"
+                  onClick={handleToggleShowAddClassPopover}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    strokeWidth={3}
+                    strokeWidth={2}
                     stroke="currentColor"
-                    className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+                    className="size-6"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                      d="M12 4.5v15m7.5-7.5h-15"
                     />
                   </svg>
-                </div>
-                <ul
-                  className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
-                >
-                  <li>
-                    <Link
-                      href="/user/classroom?filter=all-classes"
-                      className={`${(searchParams.get("filter") === "all-classes" || searchParams.get("filter") === null) && "bg-[#c7d2f1] font-medium text-[#1a1c1f]"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
-                    >
-                      All classes
-                    </Link>
-                  </li>
-
-                  {role === "teacher" && (
-                    <li>
-                      <Link
-                        href="/user/classroom?filter=created-classes"
-                        className={`${searchParams.get("filter") === "created-classes" && "bg-[#c7d2f1] font-medium text-[#1a1c1f]"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
-                      >
-                        Created classes
-                      </Link>
-                    </li>
-                  )}
-                  <li>
-                    <Link
-                      href="/user/classroom?filter=enrolled-classes"
-                      className={`${searchParams.get("filter") === "enrolled-classes" && "bg-[#c7d2f1] font-medium text-[#1a1c1f]"} block w-full text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
-                    >
-                      Enrolled classes
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="relative" ref={btnWrapperRef}>
-                {role === "teacher" ? (
-                  <Button
-                    type="primary"
-                    onClick={handleShowToggleAddClassPopover}
+                  <span>Add class</span>
+                </Button>
+              ) : (
+                <Button type="primary" onClick={handleToggleShowJoinClass}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-6"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="size-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                    <span>Add class</span>
-                  </Button>
-                ) : (
-                  <Button type="primary" onClick={handleShowToggleJoinClass}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="size-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                    <span>Join class</span>
-                  </Button>
-                )}
-                <div
-                  className={`${showAddClassPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                  <span>Join class</span>
+                </Button>
+              )}
+              <div
+                className={`${showAddClassPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] rounded-md bg-[#f3f6ff] p-2 font-medium shadow-md transition-all ease-in-out`}
+              >
+                <button
+                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
+                  onClick={handleToggleShowJoinClass}
                 >
+                  Join class
+                </button>
+                {role === "teacher" && (
                   <button
-                    className="flex items-center gap-2 rounded-md p-2 hover:bg-[#d8e0f5]"
-                    onClick={handleShowToggleJoinClass}
+                    className="flex items-center rounded-md p-2 hover:text-[#242628]"
+                    onClick={handleToggleShowClassForm}
                   >
-                    Join class
+                    Create class
                   </button>
-                  {role === "teacher" && (
-                    <button
-                      className="flex items-center gap-2 rounded-md p-2 hover:bg-[#d8e0f5]"
-                      onClick={handleToggleShowCreateClassForm}
-                    >
-                      Create class
-                    </button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
-
-            {(createdClasses && createdClasses.length) ||
-            (enrolledClasses && enrolledClasses.length) ? (
-              <div className="mt-2 flex h-dvh w-full flex-col items-start gap-4 overflow-x-hidden overflow-y-scroll rounded-md md:grid md:grid-cols-2 md:gap-4">
-                {(searchParams.get("filter") === "all-classes" ||
-                  searchParams.get("filter") === "created-classes" ||
-                  searchParams.get("filter") === null) && (
+          </div>
+          <div className="mt-2 flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
+            <Link href="/user/to-do?filter=assigned">
+              <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
+              <p className="text-2xl font-semibold">
+                {assignedClassworks?.length ?? 0}
+              </p>
+            </Link>
+            <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+            <Link href="/user/to-do?filter=missing">
+              <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
+              <p className="text-2xl font-semibold">
+                {missingClassworks?.length ?? 0}
+              </p>
+            </Link>
+            <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+            <Link href="/user/to-do?filter=done">
+              <h4 className="text-xs font-medium text-[#616572]">Done</h4>
+              <p className="text-2xl font-semibold">
+                {doneClassworks?.length ?? 0}
+              </p>
+            </Link>
+          </div>
+          {(!createdClasses?.length && !enrolledClasses?.length) ||
+          (searchParams.get("filter") === "created-classes" &&
+            !createdClasses?.length) ||
+          (searchParams.get("filter") === "enrolled-classes" &&
+            !enrolledClasses?.length) ? (
+            <NoClasses />
+          ) : (
+            <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-md md:grid md:grid-cols-2">
+              {(searchParams.get("filter") === "all-classes" ||
+                searchParams.get("filter") === "created-classes" ||
+                searchParams.get("filter") === null) &&
+                createdClasses &&
+                createdClasses?.length > 0 && (
                   <ClassroomLists
                     classes={createdClasses}
                     classesIsPending={createdClassesIsPending}
@@ -320,9 +401,11 @@ export default function ClassroomSection({
                     deleteClassIsPending={deleteClassIsPending}
                   />
                 )}
-                {(searchParams.get("filter") === "all-classes" ||
-                  searchParams.get("filter") === "enrolled-classes" ||
-                  searchParams.get("filter") === null) && (
+              {(searchParams.get("filter") === "all-classes" ||
+                searchParams.get("filter") === "enrolled-classes" ||
+                searchParams.get("filter") === null) &&
+                enrolledClasses &&
+                enrolledClasses?.length > 0 && (
                   <ClassroomLists
                     classes={enrolledClasses}
                     classesIsPending={enrolledClassesIsPending}
@@ -330,264 +413,241 @@ export default function ClassroomSection({
                     deleteClassIsPending={deleteClassIsPending}
                   />
                 )}
-              </div>
-            ) : (
-              <NoClasses />
-            )}
-          </div>
-          <div className="hidden overflow-hidden rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:block">
-            <h3 className="text-lg font-medium">To do</h3>
-            <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
-              <button
-                onClick={() => setToDoFilter("assigned")}
-                className={`px-3 py-2 transition-all ${toDoFilter === "assigned" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-              >
-                Assigned
-              </button>
-              <button
-                onClick={() => setToDoFilter("missing")}
-                className={`px-3 py-2 transition-all ${toDoFilter === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-              >
-                Missing
-              </button>
-              <button
-                onClick={() => setToDoFilter("done")}
-                className={`px-3 py-2 transition-all ${toDoFilter === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-              >
-                Done
-              </button>
             </div>
-            <ul className="mt-2 grid gap-2">
-              {toDoFilter === "assigned" && enrolledClassworks?.length
-                ? enrolledClassworks
-                    ?.filter(
-                      (classwork) =>
-                        !classworks
-                          ?.map((turnedIn) => turnedIn.streamId)
-                          .includes(classwork.id) &&
-                        (classwork.hasDueDate === "false" ||
-                          (classwork.hasDueDate === "true" &&
-                            new Date(classwork?.dueDate ?? "") > new Date())) &&
-                        (classwork.announceToAll ||
-                          (classwork.announceTo &&
-                            classwork.announceTo.includes(session.user.id))),
-                    )
-                    .map((assignedClassworks) => {
-                      return (
-                        <li key={assignedClassworks.id}>
-                          <Link
-                            href={`/user/classroom/class/${assignedClassworks.classroomId}/stream/${assignedClassworks.id}`}
-                            className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+          )}
+        </div>
+        <div className="hidden overflow-hidden rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:block">
+          <h3 className="text-lg font-medium">To-do</h3>
+          <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+            <button
+              onClick={() => setToDoFilter("assigned")}
+              className={`px-3 py-2 transition-all ${toDoFilter === "assigned" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+            >
+              Assigned
+            </button>
+            <button
+              onClick={() => setToDoFilter("missing")}
+              className={`px-3 py-2 transition-all ${toDoFilter === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+            >
+              Missing
+            </button>
+            <button
+              onClick={() => setToDoFilter("done")}
+              className={`px-3 py-2 transition-all ${toDoFilter === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+            >
+              Done
+            </button>
+          </div>
+          <ul className="mt-2 grid w-full gap-2">
+            {toDoFilter === "assigned" && assignedClassworks?.length
+              ? assignedClassworks.map((assignedClasswork) => {
+                  return (
+                    <li key={assignedClasswork.id}>
+                      <Link
+                        href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                        className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                      >
+                        <div className="flex gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
                           >
-                            <div className="flex gap-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                                className="mt-1 size-5 flex-shrink-0"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"
-                                />
-                              </svg>
-                              <div>
-                                <p className="font-medium">
-                                  {assignedClassworks.title}
-                                </p>
-                                <p className="text-sm">
-                                  {assignedClassworks.classroomName}
-                                </p>
-                                <p className="mt-2 text-xs">
-                                  Posted{" "}
-                                  {isToday(assignedClassworks.created_at)
-                                    ? "today"
-                                    : isYesterday(assignedClassworks.created_at)
-                                      ? "yesterday"
-                                      : format(
-                                          assignedClassworks.created_at,
-                                          "MMM d",
-                                        )}
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        </li>
-                      );
-                    })
-                : null}
-              {toDoFilter === "missing" && enrolledClassworks?.length
-                ? enrolledClassworks
-                    ?.filter(
-                      (classwork) =>
-                        !classworks?.some(
-                          (turnedIn) =>
-                            turnedIn.streamId === classwork.id &&
-                            turnedIn.isTurnedIn,
-                        ) &&
-                        classwork.hasDueDate === "true" &&
-                        new Date(classwork?.dueDate ?? "") < new Date() &&
-                        (classwork.announceToAll ||
-                          (classwork.announceTo &&
-                            classwork.announceTo.includes(session.user.id))),
-                    )
-                    .map((assignedClassworks) => {
-                      return (
-                        <li key={assignedClassworks.id}>
-                          <Link
-                            href={`/user/classroom/class/${assignedClassworks.classroomId}/stream/${assignedClassworks.id}`}
-                            className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
-                          >
-                            <div className="flex gap-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                                className="mt-1 size-5 flex-shrink-0"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"
-                                />
-                              </svg>
-                              <div>
-                                <p className="font-medium">
-                                  {assignedClassworks.title}
-                                </p>
-                                <p className="text-sm">
-                                  {assignedClassworks.classroomName}
-                                </p>
-                                <p className="mt-2 text-xs">
-                                  Posted{" "}
-                                  {isToday(assignedClassworks.created_at)
-                                    ? "today"
-                                    : isYesterday(assignedClassworks.created_at)
-                                      ? "yesterday"
-                                      : format(
-                                          assignedClassworks.created_at,
-                                          "MMM d",
-                                        )}
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        </li>
-                      );
-                    })
-                : null}
-              {toDoFilter === "done" && classworks?.length
-                ? classworks
-                    ?.filter((classwork) => classwork.isTurnedIn)
-                    .map((work) => (
-                      <li key={work.id}>
-                        <Link
-                          href={`/user/classroom/class/${work.classroomId}/stream/${work.streamId}`}
-                          className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
-                        >
-                          <div className="flex gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={2}
-                              stroke="currentColor"
-                              className="mt-1 size-5 flex-shrink-0"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"
-                              />
-                            </svg>
-                            <div>
-                              <p className="font-medium">
-                                {work.classworkTitle}
-                              </p>
-                              <p className="text-sm">{work.classroomName}</p>
-                              <p className="mt-2 text-xs">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                            />
+                          </svg>
+                          <div>
+                            <p className="font-medium">
+                              {assignedClasswork.title}
+                            </p>
+                            <p className="text-sm">
+                              {assignedClasswork.classroomName}
+                            </p>
+                            <div className="mt-2 grid items-center gap-1 text-xs">
+                              <p>
                                 Posted{" "}
-                                {isToday(work.streamCreated)
+                                {isToday(assignedClasswork.created_at)
                                   ? "today"
-                                  : isYesterday(work.streamCreated)
+                                  : isYesterday(assignedClasswork.created_at)
                                     ? "yesterday"
-                                    : format(work.streamCreated, "MMM d")}
+                                    : format(
+                                        assignedClasswork.created_at,
+                                        "MMM d",
+                                      )}
                               </p>
+                              {assignedClasswork.dueDate &&
+                              assignedClasswork.hasDueDate === "true" ? (
+                                <p className="text-[#616572]">
+                                  {isToday(assignedClasswork.dueDate)
+                                    ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                    : isYesterday(assignedClasswork.dueDate)
+                                      ? `Due yesterday, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                      : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
+                                </p>
+                              ) : (
+                                <p className="text-[#616572]">No due date</p>
+                              )}
                             </div>
                           </div>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })
+              : null}
+            {toDoFilter === "missing" && missingClassworks?.length
+              ? missingClassworks.map((missingClasswork) => {
+                  return (
+                    <li key={missingClasswork.id}>
+                      <Link
+                        href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
+                        className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                      >
+                        <div className="flex gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                            />
+                          </svg>
                           <div>
-                            <p className="whitespace-nowrap text-sm">
-                              {work.isGraded && work.isTurnedIn
-                                ? `${work.userPoints}`
-                                : work.isTurnedIn
+                            <p className="font-medium">
+                              {missingClasswork.title}
+                            </p>
+                            <p className="text-sm">
+                              {missingClasswork.classroomName}
+                            </p>
+                            <div className="mt-2 grid items-center gap-1 text-xs">
+                              <p>
+                                Posted{" "}
+                                {isToday(missingClasswork.created_at)
+                                  ? "today"
+                                  : isYesterday(missingClasswork.created_at)
+                                    ? "yesterday"
+                                    : format(
+                                        missingClasswork.created_at,
+                                        "MMM d",
+                                      )}
+                              </p>
+                              {missingClasswork.dueDate &&
+                                missingClasswork.hasDueDate === "true" && (
+                                  <p className="text-[#f03e3e]">
+                                    {isToday(missingClasswork.dueDate)
+                                      ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                      : isYesterday(missingClasswork.dueDate)
+                                        ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                        : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
+                                  </p>
+                                )}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })
+              : null}
+            {toDoFilter === "done" && doneClassworks?.length
+              ? doneClassworks.map((doneClasswork) => (
+                  <li key={doneClasswork.id}>
+                    <Link
+                      href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
+                      className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                    >
+                      <div className="flex gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          />
+                        </svg>
+                        <div>
+                          <p className="font-medium">
+                            {doneClasswork.classworkTitle}
+                          </p>
+                          <p className="text-sm">
+                            {doneClasswork.classroomName}
+                          </p>
+                          <div className="mt-2 grid items-center gap-1 text-xs">
+                            <p>
+                              Posted{" "}
+                              {isToday(doneClasswork.streamCreated)
+                                ? "today"
+                                : isYesterday(doneClasswork.streamCreated)
+                                  ? "yesterday"
+                                  : format(
+                                      doneClasswork.streamCreated,
+                                      "MMM d",
+                                    )}
+                            </p>
+                            <p className="whitespace-nowrap">
+                              {doneClasswork.isGraded &&
+                              doneClasswork.isTurnedIn
+                                ? `Score: ${doneClasswork.userPoints}`
+                                : doneClasswork.isTurnedIn
                                   ? "Turned in"
                                   : ""}
                             </p>
                           </div>
-                        </Link>
-                      </li>
-                    ))
-                : null}
-              {toDoFilter === "assigned" &&
-              !enrolledClassworks?.filter(
-                (classwork) =>
-                  !classworks
-                    ?.map((turnedIn) => turnedIn.streamId)
-                    .includes(classwork.id) &&
-                  (classwork.hasDueDate === "false" ||
-                    (classwork.hasDueDate === "true" &&
-                      new Date(classwork?.dueDate ?? "") > new Date())) &&
-                  (classwork.announceToAll ||
-                    (classwork.announceTo &&
-                      classwork.announceTo.includes(session.user.id))),
-              ).length ? (
-                <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
-                  No classworks have been given yet.
-                </p>
-              ) : null}
-              {toDoFilter === "missing" &&
-              !enrolledClassworks?.filter(
-                (classwork) =>
-                  !classworks?.some(
-                    (turnedIn) =>
-                      turnedIn.streamId === classwork.id && turnedIn.isTurnedIn,
-                  ) &&
-                  classwork.hasDueDate === "true" &&
-                  new Date(classwork?.dueDate ?? "") < new Date() &&
-                  (classwork.announceToAll ||
-                    (classwork.announceTo &&
-                      classwork.announceTo.includes(session.user.id))),
-              ).length ? (
-                <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
-                  You&apos;re all caught up! No missing work.
-                </p>
-              ) : null}
-              {toDoFilter === "done" &&
-              !classworks?.filter((classwork) => classwork.isTurnedIn)
-                .length ? (
-                <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
-                  No work submitted yet.
-                </p>
-              ) : null}
-            </ul>
-          </div>
+                        </div>
+                      </div>
+                      <div></div>
+                    </Link>
+                  </li>
+                ))
+              : null}
+            {toDoFilter === "assigned" && !assignedClassworks?.length ? (
+              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+                No classworks have been given yet.
+              </p>
+            ) : null}
+            {toDoFilter === "missing" && !missingClassworks?.length ? (
+              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+                You&apos;re all caught up! No missing work.
+              </p>
+            ) : null}
+            {toDoFilter === "done" && !doneClassworks?.length ? (
+              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+                No work submitted yet.
+              </p>
+            ) : null}
+          </ul>
         </div>
-      {showCreateClassForm && (
-        <CreateClassForm
+      </div>
+      {showClassForm && (
+        <ClassForm
+          type="create"
           session={session}
-          onShowCreateClassForm={handleToggleShowCreateClassForm}
+          onToggleShowClassForm={handleToggleShowClassForm}
         />
       )}
       {showJoinClass && (
         <JoinClassModal
           isLoading={isLoading}
           onJoinClass={handleJoinClass}
-          onShowJoinClass={handleShowToggleJoinClass}
+          onShowJoinClass={handleToggleShowJoinClass}
           setShowJoinClass={setShowJoinClass}
         />
       )}
