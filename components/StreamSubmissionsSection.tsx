@@ -195,52 +195,35 @@ export default function StreamSubmissionsSection({
         </div>
         <div className="grid w-full items-start gap-8 md:grid-cols-[1fr_2fr]">
           <div className="grid gap-2">
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/user/classroom/class/${stream.classroomId}/classwork`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                  />
-                </svg>
-              </Link>
-              <h2 className="text-lg font-medium md:text-xl">
-                Classwork:{" "}
-                {stream.title.length > 15
-                  ? stream.title.slice(0, 15).concat("...")
-                  : stream.title}
-              </h2>
-            </div>
-            <div className="flex w-full items-center justify-between gap-2 md:justify-start">
-              <div className="relative h-[6rem] w-[7rem] rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-2">
-                <label className="text-sm font-medium">Turned in</label>
-                <p className="absolute bottom-2 right-2 text-2xl md:text-4xl">
+            <h2 className="text-lg font-medium md:text-xl">
+              {stream.title.length > 20
+                ? stream.title.slice(0, 20).concat("...")
+                : stream.title}
+            </h2>
+            <div className="flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm">
+              <div>
+                <p className="text-2xl font-semibold">
                   {turnedInUsers?.filter((users) => users.isTurnedIn).length}
                 </p>
+                <h4 className="text-xs font-medium text-[#616572]">
+                  Turned in
+                </h4>
               </div>
-              <div className="relative h-[6rem] w-[7rem] rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-2">
-                <label className="text-sm font-medium">Assigned</label>
-                <p className="absolute bottom-2 right-2 text-2xl md:text-4xl">
+              <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+              <div>
+                <p className="text-2xl font-semibold">
                   {stream?.announceToAll
                     ? enrolledUsers?.length
                     : stream.announceTo.length}
                 </p>
+                <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
               </div>
-              <div className="relative h-[6rem] w-[7rem] rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-2">
-                <label className="text-sm font-medium">Graded</label>
-                <p className="absolute bottom-2 right-2 text-2xl md:text-4xl">
+              <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+              <div>
+                <p className="text-2xl font-semibold">
                   {turnedInUsers?.filter((users) => users.isGraded).length}
                 </p>
+                <h4 className="text-xs font-medium text-[#616572]">Graded</h4>
               </div>
             </div>
             {turnedInUsers?.filter((user) => user.isTurnedIn).length ? (
@@ -269,7 +252,106 @@ export default function StreamSubmissionsSection({
                 </ul>
               </div>
             ) : null}
-            <div className="grid w-full gap-2">
+            {enrolledUsers?.filter((user) =>
+              stream.announceTo.includes(user.userId),
+            ).length ||
+            (stream.announceToAll && enrolledUsers?.length) ? (
+              <div className="grid w-full gap-2">
+                <p className="text-sm font-medium">Assigned</p>
+                <ul className="grid gap-2">
+                  {stream.announceToAll
+                    ? enrolledUsers?.map((user) => (
+                        <li key={user.id} onClick={handleToggleExpandUserWork}>
+                          <Link
+                            href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex gap-2">
+                              <Image
+                                src={user.userAvatar}
+                                alt={user.userName}
+                                width={30}
+                                height={30}
+                                className="rounded-full"
+                              />
+                              <p>{user.userName}</p>
+                            </div>
+                            <div>
+                              {turnedInUsers?.find(
+                                (turnedIn) => turnedIn.userId === user.userId,
+                              )?.isTurnedIn ? (
+                                <p className="text-sm font-medium text-[#616572]">
+                                  {new Date(stream?.dueDate ?? "") > new Date()
+                                    ? "Turned in"
+                                    : "Done late"}
+                                </p>
+                              ) : (
+                                stream.hasDueDate === "true" &&
+                                new Date(stream?.dueDate ?? "") <
+                                  new Date() && (
+                                  <p className="text-sm font-medium text-[#f03e3e]">
+                                    Missing
+                                  </p>
+                                )
+                              )}
+                            </div>
+                          </Link>
+                        </li>
+                      ))
+                    : enrolledUsers
+                        ?.filter((user) =>
+                          stream.announceTo.includes(user.userId),
+                        )
+                        .map((user) => (
+                          <li
+                            key={user.id}
+                            onClick={handleToggleExpandUserWork}
+                          >
+                            <Link
+                              href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                              className="flex items-center justify-between"
+                            >
+                              <div className="flex gap-2">
+                                <Image
+                                  src={user.userAvatar}
+                                  alt={user.userName}
+                                  width={30}
+                                  height={30}
+                                  className="rounded-full"
+                                />
+                                <p>{user.userName}</p>
+                              </div>
+                              <div>
+                                {turnedInUsers?.find(
+                                  (turnedIn) => turnedIn.userId === user.userId,
+                                )?.isTurnedIn ? (
+                                  <p className="text-sm font-medium text-[#616572]">
+                                    {new Date(stream?.dueDate ?? "") >
+                                    new Date()
+                                      ? "Turned in"
+                                      : "Done late"}
+                                  </p>
+                                ) : (
+                                  stream.hasDueDate === "true" &&
+                                  !turnedInUsers?.find(
+                                    (turnedIn) =>
+                                      turnedIn.userId === user.userId,
+                                  )?.isTurnedIn &&
+                                  new Date(stream?.dueDate ?? "") <
+                                    new Date() && (
+                                    <p className="text-sm font-medium text-[#f03e3e]">
+                                      Missing
+                                    </p>
+                                  )
+                                )}
+                              </div>
+                            </Link>
+                          </li>
+                        ))}
+                </ul>
+              </div>
+            ) : null}
+            {/* <div className="grid w-full gap-2">
               <p className="text-sm font-medium">Assigned</p>
               <ul className="grid gap-2">
                 {stream.announceToAll
@@ -289,7 +371,6 @@ export default function StreamSubmissionsSection({
                             />
                             <p>{user.userName}</p>
                           </div>
-
                           <div>
                             {turnedInUsers?.find(
                               (turnedIn) => turnedIn.userId === user.userId,
@@ -357,7 +438,7 @@ export default function StreamSubmissionsSection({
                         </li>
                       ))}
               </ul>
-            </div>
+            </div> */}
           </div>
           <div
             className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}

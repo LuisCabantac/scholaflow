@@ -361,24 +361,24 @@ export default function ClassroomSection({
           </div>
           <div className="mt-2 flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
             <Link href="/user/to-do?filter=assigned">
-              <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
               <p className="text-2xl font-semibold">
                 {assignedClassworks?.length ?? 0}
               </p>
+              <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
             </Link>
             <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
             <Link href="/user/to-do?filter=missing">
-              <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
               <p className="text-2xl font-semibold">
                 {missingClassworks?.length ?? 0}
               </p>
+              <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
             </Link>
             <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
             <Link href="/user/to-do?filter=done">
-              <h4 className="text-xs font-medium text-[#616572]">Done</h4>
               <p className="text-2xl font-semibold">
                 {doneClassworks?.length ?? 0}
               </p>
+              <h4 className="text-xs font-medium text-[#616572]">Done</h4>
             </Link>
           </div>
           {(!createdClasses?.length && !enrolledClasses?.length) ||
