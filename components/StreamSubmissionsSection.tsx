@@ -351,97 +351,9 @@ export default function StreamSubmissionsSection({
                 </ul>
               </div>
             ) : null}
-            {/* <div className="grid w-full gap-2">
-              <p className="text-sm font-medium">Assigned</p>
-              <ul className="grid gap-2">
-                {stream.announceToAll
-                  ? enrolledUsers?.map((user) => (
-                      <li key={user.id} onClick={handleToggleExpandUserWork}>
-                        <Link
-                          href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                          className="flex items-center justify-between"
-                        >
-                          <div className="flex gap-2">
-                            <Image
-                              src={user.userAvatar}
-                              alt={user.userName}
-                              width={30}
-                              height={30}
-                              className="rounded-full"
-                            />
-                            <p>{user.userName}</p>
-                          </div>
-                          <div>
-                            {turnedInUsers?.find(
-                              (turnedIn) => turnedIn.userId === user.userId,
-                            )?.isTurnedIn ? (
-                              <p className="text-sm font-medium text-[#616572]">
-                                {new Date(stream?.dueDate ?? "") > new Date()
-                                  ? "Turned in"
-                                  : "Done late"}
-                              </p>
-                            ) : (
-                              stream.hasDueDate === "true" &&
-                              new Date(stream?.dueDate ?? "") < new Date() && (
-                                <p className="text-sm font-medium text-[#f03e3e]">
-                                  Missing
-                                </p>
-                              )
-                            )}
-                          </div>
-                        </Link>
-                      </li>
-                    ))
-                  : enrolledUsers
-                      ?.filter((user) =>
-                        stream.announceTo.includes(user.userId),
-                      )
-                      .map((user) => (
-                        <li key={user.id} onClick={handleToggleExpandUserWork}>
-                          <Link
-                            href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                            className="flex items-center justify-between"
-                          >
-                            <div className="flex gap-2">
-                              <Image
-                                src={user.userAvatar}
-                                alt={user.userName}
-                                width={30}
-                                height={30}
-                                className="rounded-full"
-                              />
-                              <p>{user.userName}</p>
-                            </div>
-                            <div>
-                              {turnedInUsers?.find(
-                                (turnedIn) => turnedIn.userId === user.userId,
-                              )?.isTurnedIn ? (
-                                <p className="text-sm font-medium text-[#616572]">
-                                  {new Date(stream?.dueDate ?? "") > new Date()
-                                    ? "Turned in"
-                                    : "Done late"}
-                                </p>
-                              ) : (
-                                stream.hasDueDate === "true" &&
-                                !turnedInUsers?.find(
-                                  (turnedIn) => turnedIn.userId === user.userId,
-                                )?.isTurnedIn &&
-                                new Date(stream?.dueDate ?? "") <
-                                  new Date() && (
-                                  <p className="text-sm font-medium text-[#f03e3e]">
-                                    Missing
-                                  </p>
-                                )
-                              )}
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-              </ul>
-            </div> */}
           </div>
           <div
-            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
+            className={`fixed bottom-0 left-0 right-0 z-10 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
           >
             <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
               <button
