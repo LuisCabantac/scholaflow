@@ -51,14 +51,14 @@ export default function ClassroomCard({
 
   return (
     <li
-      className="relative flex h-[10rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm"
+      className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm md:h-[10rem]"
       style={{
         backgroundColor: classData.classCardBackgroundColor,
       }}
     >
       <Link
         href={`/user/classroom/class/${classData.classroomId}`}
-        className="relative h-[8rem] md:h-[10rem]"
+        className="relative h-[9rem] md:h-[10rem]"
       >
         <div className="absolute left-3 top-3 text-balance drop-shadow-sm md:left-4 md:top-4">
           <h5 className="text-lg font-semibold text-[#F5F5F5] md:text-xl">
@@ -90,7 +90,7 @@ export default function ClassroomCard({
         <div className="absolute bottom-5 right-4 md:bottom-3 md:right-3">
           <svg
             viewBox="0 0 64 64"
-            className="w-20 -rotate-45 mix-blend-overlay"
+            className="w-24 -rotate-45 mix-blend-overlay"
           >
             <path
               fill="none"

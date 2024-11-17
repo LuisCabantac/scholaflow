@@ -127,7 +127,7 @@ export default function ClassStreamsSection({
       </div>
       <div className="grid gap-2">
         <div
-          className="relative h-[10rem] rounded-md"
+          className="relative h-[9rem] rounded-md md:h-[10rem]"
           style={{ backgroundColor: classroom.classCardBackgroundColor }}
         >
           <div className="absolute left-3 top-3 text-balance drop-shadow-sm md:left-4 md:top-4">
@@ -192,7 +192,7 @@ export default function ClassStreamsSection({
           <div className="absolute bottom-5 right-4">
             <svg
               viewBox="0 0 64 64"
-              className="w-20 -rotate-45 mix-blend-overlay md:w-28"
+              className="w-24 -rotate-45 mix-blend-overlay md:w-28"
             >
               <path
                 fill="none"
