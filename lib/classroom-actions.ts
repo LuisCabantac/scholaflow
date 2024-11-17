@@ -11,13 +11,16 @@ import {
   arraysAreEqual,
   capitalizeFirstLetter,
   extractClassworkFilePath,
+  extractMessagesFilePath,
   extractStreamFilePath,
   generateClassCode,
   hasUser,
 } from "@/lib/utils";
 import {
   getAllClassStreamsByClassId,
+  getAllClassworksByStreamId,
   getAllEnrolledClassesByClassAndSessionId,
+  getAllMessagesByClassId,
   getClassByClassId,
   getClassStreamByStreamId,
   getClassworkByClassAndUserId,
@@ -202,8 +205,7 @@ export async function deleteClass(classId: string) {
   if (session.user.role === "admin")
     throw new Error("Only the teacher who created this class can delete it.");
 
-  if (session.user.role === "teacher") {
-    const classroom = await getClassByClassId(classId);
+  const classroom = await getClassByClassId(classId);
 
   if (
     session.user.role === "teacher" &&
@@ -216,6 +218,8 @@ export async function deleteClass(classId: string) {
       const classroomId = classes.map((curClass) => curClass.classroomId);
       await deleteMultipleEnrolledClass(classroomId);
     }
+
+    await deleteAllMessagesByClassId(classId);
 
     const streams = await getAllClassStreamsByClassId(classId);
 
@@ -1286,4 +1290,56 @@ export async function createEmptyClasswork(
   if (error) throw new Error(error.message);
 
   return data;
+}
+
+export async function addMessageToChat(formData: FormData) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  const classroom = await getClassByClassId(
+    formData.get("classroomId") as string,
+  );
+
+  if (!classroom) throw new Error("This class doesn't exist.");
+
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    formData.get("classroomId") as string,
+  );
+
+  if (!(classroom.teacherId === session.user.id || enrolledClass)) {
+    throw new Error(
+      "You don't have permission to send a message on this class.",
+    );
+  }
+
+  const attachments = formData.getAll("attachments");
+  const chatAttachments = Array.isArray(attachments)
+    ? await Promise.all(
+        attachments.map(async (attachment) => {
+          if (attachment instanceof File && attachment.name !== "undefined") {
+            return await uploadAttachments(
+              "messages",
+              formData.get("classroomId") as string,
+              attachment,
+            );
+          } else {
+            return null;
+          }
+        }),
+      ).then((results) => results.filter((url) => url !== null))
+    : [];
+
+  const newChat = {
+    author: session.user.id,
+    authorName: session.user.name,
+    authorAvatar: session.user.image,
+    message: formData.get("message"),
+    classroomId: formData.get("classroomId"),
+    attachment: chatAttachments,
+  };
+
+  const { error } = await supabase.from("chat").insert([newChat]);
+
+  if (error) throw new Error(error.message);
 }

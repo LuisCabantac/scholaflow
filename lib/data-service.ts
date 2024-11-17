@@ -79,57 +79,6 @@ export async function getUsersFilter(name: string) {
   return { success: true, message: "Fetch success", data };
 }
 
-export async function getAllPosts(): Promise<IPost[] | null> {
-  const session = await auth();
-
-  if (!hasUser(session)) return null;
-
-  const { data } = await supabase
-    .from("announcements")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  return data;
-}
-
-export async function getPostsByLevel(levels: string): Promise<IPost[] | null> {
-  const session = await auth();
-
-  if (!hasUser(session)) return null;
-
-  const { data } = await supabase
-    .from("announcements")
-    .select("*")
-    .eq("levels", levels)
-    .order("created_at", { ascending: false });
-
-  return data;
-}
-
-export async function getPostById(id: string): Promise<IPost | null> {
-  const session = await auth();
-
-  if (!hasUser(session)) return null;
-
-  const { data } = await supabase
-    .from("announcements")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  return data;
-}
-
-export async function getAllLevels(): Promise<ILevels[] | null> {
-  const session = await auth();
-
-  if (!hasUser(session)) return null;
-
-  const { data } = await supabase.from("levels").select("*");
-
-  return data;
-}
-
 export async function getAllClassesByTeacherId(
   id: string,
 ): Promise<IClass[] | null> {
@@ -588,8 +537,25 @@ export async function getStreamPrivateCommentByCommentId(
   return data;
 }
 
-export async function getClassByClassId(id: string) {
-  const { data } = await supabase.from("classroom").select("*").eq("id", id);
+export async function getAllMessagesByClassId(
+  classroomId: string,
+): Promise<IChat[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classroomId);
+
+  if (!classroom) return null;
+
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(classroomId);
+
+  if (!(classroom.teacherId === session.user.id || enrolledClass)) return null;
+
+  const { data } = await supabase
+    .from("chat")
+    .select("*")
+    .eq("classroomId", classroomId);
 
   return data;
 }
