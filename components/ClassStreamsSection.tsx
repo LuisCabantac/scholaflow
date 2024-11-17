@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
 import { deleteClassStreamPost } from "@/lib/classroom-actions";
 import { ISession } from "@/lib/auth";
@@ -18,7 +19,6 @@ import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
 import ClassStreamCard from "@/components/ClassStreamCard";
-import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -127,7 +127,7 @@ export default function ClassStreamsSection({
       </div>
       <div className="grid gap-2">
         <div
-          className="relative h-[8rem] rounded-md md:h-[10rem]"
+          className="relative h-[10rem] rounded-md"
           style={{ backgroundColor: classroom.classCardBackgroundColor }}
         >
           <div className="absolute left-3 top-3 text-balance drop-shadow-sm md:left-4 md:top-4">
