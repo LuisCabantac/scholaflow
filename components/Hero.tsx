@@ -29,20 +29,19 @@ export default function Hero() {
     >
       <div className="flex items-center justify-center gap-4 px-4 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
-          <div className="grid gap-6">
+          <div className="grid gap-3 md:gap-6">
             <motion.h1
               variants={fadeInUp}
-              className="text-3xl font-semibold md:text-6xl"
+              className="text-4xl font-semibold md:text-6xl"
             >
               Your All-in-One Learning Platform
             </motion.h1>
             <motion.p
               variants={fadeInUp}
-              className="px-8 text-center text-sm md:text-lg"
+              className="px-8 text-center md:text-lg"
             >
-              Virtual classrooms, essential tools, and everything you need for
-              learning, all in one place. Simplify your school day and make
-              learning easier.
+              All your classroom tools in one place. Get organized, stay
+              focused, and make learning click.
             </motion.p>
           </div>
           <motion.div variants={fadeInUp} className="flex items-center gap-2">
