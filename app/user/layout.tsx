@@ -53,9 +53,9 @@ export default async function RootLayout({
             }
           />
         )}
-        <main className="h-full w-full overflow-auto px-4 py-4 md:px-8 md:py-5">
+        <main className="h-full w-full overflow-auto">
           {session && <Header />}
-          {children}
+          <div className="px-4 pb-4 md:px-8">{children}</div>
         </main>
       </Provider>
       <Toaster
