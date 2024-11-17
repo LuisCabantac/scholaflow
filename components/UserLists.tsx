@@ -5,16 +5,16 @@ import { IUser } from "@/components/UserManagementSection";
 import UserCard from "@/components/UserCard";
 
 export default function UserLists({
-  id,
   results,
+  onCheckEmail,
   handleDeleteUser,
   deleteUserIsPending,
 }: {
-  id: string;
   results:
     | { success: boolean; message: string; data: null }
     | { success: boolean; message: string; data: IUser[] }
     | undefined;
+  onCheckEmail: (formData: FormData) => Promise<boolean>;
   handleDeleteUser: UseMutateFunction<void, Error, string, unknown>;
   deleteUserIsPending: boolean;
 }) {
@@ -32,22 +32,17 @@ export default function UserLists({
 
   return (
     <>
-      {optimisticUser &&
-        optimisticUser.map((user) => (
-          <UserCard
-            key={user.id}
-            sessionId={id}
-            id={user.id}
-            fullName={user.fullName}
-            avatar={user.avatar}
-            email={user.email}
-            role={user.role}
-            createdAt={user.created_at}
-            verified={user.verified}
-            onDeleteUser={handleUserDelete}
-            deleteUserIsPending={deleteUserIsPending}
-          />
-        ))}
+      {optimisticUser?.length
+        ? optimisticUser.map((user) => (
+            <UserCard
+              key={user.id}
+              userData={user}
+              onCheckEmail={onCheckEmail}
+              onDeleteUser={handleUserDelete}
+              deleteUserIsPending={deleteUserIsPending}
+            />
+          ))
+        : null}
     </>
   );
 }

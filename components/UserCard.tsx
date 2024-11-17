@@ -1,78 +1,80 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { useRef, useState } from "react";
 import { format } from "date-fns";
+import Image from "next/image";
 
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
+
+import { IUser } from "@/components/UserManagementSection";
+import UserForm from "@/components/UserForm";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
+import EllipsisPopover from "@/components/EllipsisPopover";
 
 export default function UserCard({
-  sessionId,
-  id,
-  fullName,
-  avatar,
-  email,
-  role,
-  createdAt,
-  verified,
+  userData,
   onDeleteUser,
+  onCheckEmail,
   deleteUserIsPending,
 }: {
-  sessionId: string;
-  id: string;
-  fullName: string;
-  avatar: string;
-  email: string;
-  role: string;
-  createdAt: string;
-  verified: boolean;
+  userData: IUser;
+  onCheckEmail: (formData: FormData) => Promise<boolean>;
   onDeleteUser: (userId: string) => void;
   deleteUserIsPending: boolean;
 }) {
+  const { useClickOutsideHandler } = useClickOutside();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [ellipsis, setEllipsis] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showUserForm, setShowUserForm] = useState(false);
 
   function handleToggleEllipsis() {
     setEllipsis(!ellipsis);
   }
 
-  function handleCloseEllipsis() {
-    setEllipsis(false);
+  function handleToggleShowUserForm() {
+    setShowUserForm(!showUserForm);
   }
 
   function handleToggleShowConfirmation() {
     setShowConfirmation(!showConfirmation);
   }
 
+  useClickOutsideHandler(
+    wrapperRef,
+    () => {
+      setEllipsis(false);
+    },
+    false,
+  );
+
   return (
-    <tr className="bg-[#f3f6ff]" onMouseLeave={handleCloseEllipsis}>
+    <tr className="bg-[#f3f6ff]">
       <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
         <Image
-          src={avatar}
-          alt={fullName}
+          src={userData.avatar}
+          alt={userData.fullName}
           width={30}
           height={30}
           className="rounded-full"
         />
-
-        <p className="text-balance font-medium">{fullName}</p>
+        <p className="text-balance font-medium">{userData.fullName}</p>
       </td>
       <td data-cell="Email:" className="px-4 py-2">
-        <p>{email}</p>
+        <p>{userData.email}</p>
       </td>
       <td data-cell="Role:" className="px-4 py-2">
         <span
-          className={`role flex w-24 items-center justify-center rounded-md p-1 text-[0.65rem] font-semibold md:p-2 md:text-xs ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"}`}
+          className={`role flex w-24 items-center justify-center rounded-md p-1 text-[0.65rem] font-semibold md:p-2 md:text-xs ${userData.role === "admin" ? "admin" : userData.role === "teacher" ? "teacher" : userData.role === "student" ? "student" : "guest"}`}
         >
-          {role.toUpperCase()}
+          {userData.role.toUpperCase()}
         </span>
       </td>
       <td data-cell="Date added:" className="px-4 py-2">
-        {format(new Date(createdAt), "MMMM d, yyyy")}
+        {format(new Date(userData.created_at), "MMMM d, yyyy")}
       </td>
       <td data-cell="Verified:" className="px-4 py-2">
-        {verified ? (
+        {userData.verified ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -104,66 +106,55 @@ export default function UserCard({
       </td>
       <td className="relative px-4 py-2">
         <div
-          className="absolute -top-[12rem] right-2 cursor-pointer md:right-4 md:top-4"
-          onClick={handleToggleEllipsis}
+          className="absolute -top-[11.5rem] right-2 md:left-0 md:right-4 md:top-3"
+          ref={wrapperRef}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-            />
-          </svg>
-        </div>
-
-        <div
-          className={`${ellipsis ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-2 z-20 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md transition-all ease-in-out`}
-        >
-          <Link href={`/user/admin/user-management/edit-user/${id}`}>
-            Edit user
-          </Link>
-          {id !== sessionId && (
-            <button
-              className="flex items-center gap-1 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a] md:text-base"
-              onClick={handleToggleShowConfirmation}
+          <button onClick={handleToggleEllipsis}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="size-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                />
-              </svg>
-              <span>Remove user</span>
-            </button>
-          )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+              />
+            </svg>
+          </button>
+          <EllipsisPopover
+            showEdit={true}
+            showDelete={true}
+            deleteLabel="Remove user"
+            showEllipsis={ellipsis}
+            onShowEditForm={handleToggleShowUserForm}
+            onToggleEllipsis={handleToggleEllipsis}
+            onShowConfirmationScreen={handleToggleShowConfirmation}
+          />
         </div>
+        {showConfirmation && (
+          <ConfirmationScreen
+            type="delete"
+            btnLabel="Remove"
+            isLoading={deleteUserIsPending}
+            handleCancel={handleToggleShowConfirmation}
+            handleAction={() => onDeleteUser(userData.id)}
+          >
+            Are you sure you want to remove this user?
+          </ConfirmationScreen>
+        )}
+        {showUserForm && (
+          <UserForm
+            type="edit"
+            user={userData}
+            onCheckEmail={onCheckEmail}
+            onShowUserForm={handleToggleShowUserForm}
+          />
+        )}
       </td>
-      {showConfirmation && (
-        <ConfirmationScreen
-          type="delete"
-          btnLabel="Remove"
-          isLoading={deleteUserIsPending}
-          handleCancel={handleToggleShowConfirmation}
-          handleAction={() => onDeleteUser(id)}
-        >
-          Are you sure you want to remove this user?
-        </ConfirmationScreen>
-      )}
     </tr>
   );
 }
