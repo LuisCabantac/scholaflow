@@ -15,7 +15,7 @@ export default function HeaderTitle({
   const pathname = usePathname();
 
   const { data } = useQuery({
-    queryKey: [pathname],
+    queryKey: [`class--${extractFirstUuid(pathname)}`],
     queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
   });
 
@@ -33,8 +33,8 @@ export default function HeaderTitle({
         </h1>
 
         <h1 className="block text-xl font-semibold md:hidden md:text-2xl">
-          {(data && data?.className?.length > 18
-            ? data?.className.slice(0, 18).concat("...")
+          {(data && data?.className?.length > 25
+            ? data?.className.slice(0, 25).concat("...")
             : data?.className) ?? "Classroom"}
         </h1>
       </>
