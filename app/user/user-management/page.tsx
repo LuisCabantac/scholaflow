@@ -41,14 +41,10 @@ export default async function Page() {
   }
 
   return (
-    <section>
-      <UserManagementSection
-        id={session.user.id}
-        role={session.user.role}
-        onGetUsers={handleGetUsers}
-        onDeleteUser={handleDeleteUser}
-        onCheckEmail={handleCheckEmail}
-      />
-    </section>
+    <UserManagementSection
+      onGetUsers={handleGetUsers}
+      onDeleteUser={handleDeleteUser}
+      onCheckEmail={handleCheckEmail}
+    />
   );
 }

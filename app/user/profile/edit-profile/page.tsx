@@ -2,7 +2,8 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { getUser } from "@/lib/data-service";
+import { getUserByUserId } from "@/lib/data-service";
+import { hasUser } from "@/lib/utils";
 
 function handleFullName(fullName: string) {
   const nameParts = fullName.trim().split(/\s+/);
@@ -32,9 +33,12 @@ function handleFullName(fullName: string) {
 export default async function Page() {
   const session = await auth();
 
-  if (!session) return redirect("/signin");
+  if (!hasUser(session)) return redirect("/signin");
 
-  const userEmail = session?.user?.email ?? "";
+  const user = await getUserByUserId(session.user.id);
+
+  if (!user) return redirect("/signin");
+
   const {
     // role,
     email: currentUserEmail,
@@ -45,7 +49,7 @@ export default async function Page() {
     // gender,
     avatar,
     updatedProfile,
-  } = await getUser(userEmail);
+  } = user;
 
   const { firstName, middleName, lastName } = handleFullName(fullName);
 

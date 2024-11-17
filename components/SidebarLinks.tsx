@@ -45,8 +45,8 @@ export default function SidebarLinks({
         {role === "admin" && (
           <li>
             <Link
-              href="/user/admin/user-management/"
-              className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/user-management") ? activeLinkStyle : inactiveLinkStyle}`}
+              href="/user/user-management/"
+              className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/user-management" ? activeLinkStyle : inactiveLinkStyle}`}
               onClick={() => !isMobile && handleSidebarExpand()}
             >
               <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">

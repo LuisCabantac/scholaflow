@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { hasUser } from "@/lib/utils";
-import { getUserByUserId } from "./data-service";
+import { getUserByUserId } from "@/lib/data-service";
 
 export async function createUser(newGuest: object) {
   const session = await auth();
