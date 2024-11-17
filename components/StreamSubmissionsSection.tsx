@@ -549,12 +549,20 @@ export default function StreamSubmissionsSection({
                   <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] pt-2 md:mt-2">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">Private comments</p>
-                      <button
-                        onClick={handleToggleExpandPrivateComments}
-                        className="block text-xs text-[#22317c] md:hidden"
-                      >
-                        {expandPrivateComments ? "Minimize" : "Expand"}
-                      </button>
+                      {optimisticComments?.filter(
+                        (comment) =>
+                          (comment.author === session.user.id &&
+                            comment.toUserId === userId) ||
+                          (comment.author === userId &&
+                            comment.toUserId === session.user.id),
+                      ).length ? (
+                        <button
+                          onClick={handleToggleExpandPrivateComments}
+                          className="block text-xs text-[#22317c] md:hidden"
+                        >
+                          {expandPrivateComments ? "Minimize" : "Expand"}
+                        </button>
+                      ) : null}
                     </div>
                     {optimisticComments?.length ? (
                       <ul
@@ -586,15 +594,7 @@ export default function StreamSubmissionsSection({
                     ) : null}
                   </div>
                 </div>
-                <div className="flex-end flex w-full items-center gap-2">
-                  <div className="relative h-8 w-8 rounded-full">
-                    <Image
-                      src={session.user.image}
-                      alt={`${session.user.name}'s avatar`}
-                      fill
-                      className="rounded-full"
-                    />
-                  </div>
+                <div className="w-full">
                   <form
                     className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
                     onSubmit={handleCommentSubmit}
@@ -632,7 +632,6 @@ export default function StreamSubmissionsSection({
                       value={streamComment}
                       onChange={(event) => setStreamComment(event.target.value)}
                     ></textarea>
-
                     <button
                       className="py-2 pr-4"
                       disabled={addCommentIsPending}

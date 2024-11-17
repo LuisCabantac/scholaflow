@@ -429,15 +429,7 @@ export default function StreamDetailSection({
           </div>
           {(classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) && (
-            <div className="flex items-center gap-2">
-              <div className="relative h-8 w-8 rounded-full">
-                <Image
-                  src={session.user.image}
-                  alt={`${session.user.name}'s avatar`}
-                  fill
-                  className="rounded-full"
-                />
-              </div>
+            <div>
               <form
                 className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
                 onSubmit={handleCommentSubmit}
