@@ -49,7 +49,7 @@ export default function ClassworksSection({
   const [search, setSearch] = useState("");
 
   const { data: classworks, isPending: classworksIsPending } = useQuery({
-    queryKey: ["classworks", search],
+    queryKey: [`streams--${classroom.classroomId}`, search],
     queryFn: () => onGetAllClassworkStreams(classroom.classroomId, search),
   });
 
@@ -60,7 +60,7 @@ export default function ClassworksSection({
         toast.success("Post has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: ["streams"],
+          queryKey: [`streams--${classroom.classroomId}`],
         });
       },
       onError: (error) => toast.error(error.message),

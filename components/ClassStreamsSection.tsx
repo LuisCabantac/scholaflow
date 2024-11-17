@@ -48,7 +48,7 @@ export default function ClassStreamsSection({
   const [showClassForm, setShowClassForm] = useState(false);
 
   const { data: streams, isPending: streamsIsPending } = useQuery({
-    queryKey: ["streams"],
+    queryKey: [`streams--${classroom.classroomId}`],
     queryFn: () => onGetAllClassStreams(classId),
   });
 
@@ -59,7 +59,7 @@ export default function ClassStreamsSection({
         toast.success("Post has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: ["streams"],
+          queryKey: [`streams--${classroom.classroomId}`],
         });
       },
       onError: (error) => toast.error(error.message),
