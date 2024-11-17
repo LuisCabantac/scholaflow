@@ -19,7 +19,7 @@ export default function Sidebar({
   const { sidebarExpand, handleSidebarExpand } = useSidebar();
 
   return (
-    <aside className="relative">
+    <nav className="relative">
       {sidebarExpand && (
         <div
           className="fixed inset-0 z-20 bg-black bg-opacity-50 md:hidden"
@@ -71,6 +71,6 @@ export default function Sidebar({
           />
         )}
       </div>
-    </aside>
+    </nav>
   );
 }
