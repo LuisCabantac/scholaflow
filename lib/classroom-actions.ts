@@ -66,6 +66,90 @@ export async function createClass(formData: FormData) {
   return { success: true, message: "Class created successfully!" };
 }
 
+export async function updateClass(
+  updateClassCode: boolean,
+  formData: FormData,
+) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  if (session.user.role !== "teacher") {
+    return {
+      success: false,
+      message: "Only school teachers can edit classes.",
+    };
+  }
+
+  const classroomId = formData.get("classroomId") as string;
+
+  const currentClassroom = await getClassByClassId(classroomId);
+
+  if (!currentClassroom)
+    return {
+      success: false,
+      message: "This class doesn't exist.",
+    };
+
+  if (session.user.id !== currentClassroom.teacherId) {
+    return {
+      success: false,
+      message: "Only the creator of this class can edit this class.",
+    };
+  }
+
+  const newClassName = formData.get("className");
+  const newSubject = formData.get("subject");
+  const newSection = formData.get("section");
+  const newClassDescription = formData.get("classDescription");
+  const newAllowStudentsToComment =
+    formData.get("allowStudentsToComment") === "true";
+  const newClassCardBackgroundColor = formData.get("color");
+  const newAllowStudentsToPost = formData.get("allowStudentsToPost") === "true";
+
+  if (
+    updateClassCode ||
+    currentClassroom.className !== newClassName ||
+    currentClassroom.subject !== newSubject ||
+    currentClassroom.classDescription !== newClassDescription ||
+    currentClassroom.section !== newSection ||
+    currentClassroom.classCardBackgroundColor !== newClassCardBackgroundColor ||
+    currentClassroom.allowStudentsToComment !== newAllowStudentsToComment ||
+    currentClassroom.allowStudentsToPost !== newAllowStudentsToPost
+  ) {
+    const updatedClass = {
+      subject: newSubject,
+      section: newSection,
+      className: newClassName,
+      classDescription: newClassDescription,
+      allowStudentsToComment: newAllowStudentsToComment,
+      allowStudentsToPost: newAllowStudentsToPost,
+      classCardBackgroundColor: newClassCardBackgroundColor,
+      classCode: updateClassCode
+        ? generateClassCode()
+        : currentClassroom.classCode,
+    };
+
+    const { error } = await supabase
+      .from("classroom")
+      .update([updatedClass])
+      .eq("classroomId", classroomId);
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+
+    revalidatePath(`/user/classroom/class/${currentClassroom.classroomId}`);
+    revalidatePath("/user/classroom");
+
+    return { success: true, message: "Class updated successfully!" };
+  }
+  return {
+    success: true,
+    message: `No changes were made to the class.`,
+  };
+}
+
 export async function joinClass(classId: string) {
   const session = await auth();
 
@@ -120,6 +204,11 @@ export async function deleteClass(classId: string) {
 
   if (session.user.role === "teacher") {
     const classroom = await getClassByClassId(classId);
+
+  if (
+    session.user.role === "teacher" &&
+    classroom?.teacherId === session.user.id
+  ) {
     if (!classroom) throw new Error("This class doesn't exist.");
 
     const classes = await getAllEnrolledClassesByClassAndSessionId(classId);
@@ -428,7 +517,7 @@ export async function updateClassStreamPost(
 
     return {
       success: true,
-      message: `${(formData.get("streamType") as string) === "stream" ? "Post" : capitalizeFirstLetter((formData.get("streamType") as string) ?? "")} updated successfully! `,
+      message: `${(formData.get("streamType") as string) === "stream" ? "Post" : capitalizeFirstLetter((formData.get("streamType") as string) ?? "")} updated successfully!`,
     };
   }
   return {
@@ -458,13 +547,17 @@ export async function deleteClassStreamPost(streamId: string) {
   )
     throw new Error("You're not authorized to delete this post.");
 
-  await deleteAllClassStreamComments(streamId);
+  await deleteAllClassStreamCommentsByStreamId(streamId);
+
+  await deleteAllPrivateStreamCommentsByStreamId(streamId);
+
+  await deleteAllClassworkByStreamId(streamId);
 
   if (stream.attachment.length) {
-    const filePath = stream.attachment.map((file) =>
+    const streamAttachmentsFilePath = stream.attachment.map((file) =>
       extractStreamFilePath(file),
     );
-    await deleteFileFromBucket("streams", filePath);
+    await deleteFileFromBucket("streams", streamAttachmentsFilePath);
   }
 
   const { error } = await supabase.from("streams").delete().eq("id", streamId);
@@ -475,11 +568,83 @@ export async function deleteClassStreamPost(streamId: string) {
   if (error) throw new Error(error.message);
 }
 
-export async function deleteAllClassStreamComments(streamId: string) {
+export async function deleteAllClassworkByStreamId(streamId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const classworks = await getAllClassworksByStreamId(streamId);
+
+  if (!classworks || !classworks.length) return;
+
+  const attachments = classworks.map((chat) => chat.attachment).flat();
+
+  if (attachments.length) {
+    const classworkAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractClassworkFilePath(file),
+    );
+    await deleteFileFromBucket("classworks", classworkAttachmentsFilePath);
+  }
+
+  const { error } = await supabase
+    .from("classworks")
+    .delete()
+    .eq("streamId", streamId);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteAllMessagesByClassId(classId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const messages = await getAllMessagesByClassId(classId);
+
+  if (!messages || !messages.length) return;
+
+  const attachments = messages.map((chat) => chat.attachment).flat();
+
+  if (attachments.length) {
+    const chatAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractMessagesFilePath(file),
+    );
+    await deleteFileFromBucket("messages", chatAttachmentsFilePath);
+  }
+
+  const { error } = await supabase
+    .from("chat")
+    .delete()
+    .eq("classroomId", classId);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
   const { error } = await supabase
     .from("classComments")
     .delete()
     .eq("streamId", streamId);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteAllPrivateStreamCommentsByStreamId(
+  streamId: string,
+) {
+  const { error } = await supabase
+    .from("classPrivateComments")
+    .delete()
+    .eq("streamId", streamId);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteAllPrivateStreamCommentsByClassId(classId: string) {
+  const { error } = await supabase
+    .from("classPrivateComments")
+    .delete()
+    .eq("classroomId", classId);
 
   if (error) throw new Error(error.message);
 }

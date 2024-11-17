@@ -1,12 +1,19 @@
 import { auth } from "@/lib/auth";
+import { generateOTP, hasUser } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import {
   createVerificationToken,
   deleteVerificationToken,
 } from "@/lib/auth-actions";
+import {
+  IStream,
+  IStreamComment,
+} from "@/app/user/classroom/class/[classId]/page";
+import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+
+import { IClass } from "@/components/ClassroomSection";
 import { IUser } from "@/components/UserManagementSection";
-import { IPost } from "@/components/AnnouncementSection";
-import { ILevels } from "@/app/user/announcements/page";
+import { IChat } from "@/components/ClassChatSection";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -358,6 +365,224 @@ export async function getAllEnrolledClassesClassworks(
     .filter((array): array is IStream[] => array !== null)
     .flat();
 }
+
+export async function getClassStreamByStreamId(
+  streamId: string,
+): Promise<IStream | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("id", streamId)
+    .single();
+
+  return data;
+}
+
+export async function getAllClassworkStreamsByClassId(
+  classId: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classId);
+
+  if (!classroom) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("classroomId", classId)
+    .neq("type", "stream")
+    .neq("type", "material")
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllClassworksByClassId(
+  classId: string,
+): Promise<IClasswork[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("classroomId", classId);
+
+  return data;
+}
+
+export async function getAllClassworksByStreamId(
+  streamId: string,
+): Promise<IClasswork[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("streamId", streamId);
+
+  return data;
+}
+
+export async function getAllClassworksByUserId(
+  userId: string,
+): Promise<IClasswork[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("userId", userId);
+
+  return data;
+}
+
+export async function getClassworkByClassAndUserId(
+  userId: string,
+  classId: string,
+  streamId: string,
+): Promise<IClasswork | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classId);
+  if (!classroom) return null;
+
+  const stream = await getClassStreamByStreamId(streamId);
+  if (!stream) return null;
+
+  if (!(stream.announceToAll || stream.announceTo.includes(userId)))
+    return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("userId", userId)
+    .eq("classroomId", classId)
+    .eq("streamId", streamId)
+    .single();
+
+  return data;
+}
+
+export async function getClassworksByClassIdQuery(
+  classId: string,
+  query: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classId);
+
+  if (!classroom) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("classroomId", classId)
+    .neq("type", "stream")
+    .ilike("title", `%${query}%`)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllAssignedClassworksByStreamAndClassroomId(
+  classId: string,
+  streamId: string,
+): Promise<IClasswork[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classId);
+  if (!classroom) return null;
+
+  const stream = await getClassStreamByStreamId(streamId);
+  if (!stream) return null;
+
+  if (classroom.teacherId !== session.user.id) return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("classroomId", classId)
+    .eq("streamId", streamId);
+
+  return data;
+}
+
+export async function getAllCommentsByStreamId(
+  streamId: string,
+): Promise<IStreamComment[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classComments")
+    .select("*")
+    .eq("streamId", streamId);
+
+  return data;
+}
+
+export async function getAllPrivateCommentsByStreamId(
+  streamId: string,
+): Promise<IStreamComment[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classPrivateComments")
+    .select("*")
+    .eq("streamId", streamId);
+
+  return data;
+}
+
+export async function getStreamCommentByCommentId(
+  commentId: string,
+): Promise<IStreamComment | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classComments")
+    .select("*")
+    .eq("id", commentId)
+    .single();
+
+  return data;
+}
+
+export async function getStreamPrivateCommentByCommentId(
+  commentId: string,
+): Promise<IStreamComment | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classPrivateComments")
+    .select("*")
+    .eq("id", commentId)
     .single();
 
   return data;
