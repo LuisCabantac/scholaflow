@@ -217,7 +217,7 @@ export default function StreamForm({
             </h3>
           </div>
           <div
-            className={`grid gap-4 px-4 pb-4 ${streamType !== "stream" && "md:grid-cols-2"}`}
+            className={`grid px-4 pb-4 md:gap-4 ${streamType !== "stream" && "md:grid-cols-2"}`}
           >
             <div className="flex flex-col justify-start gap-3">
               <input
