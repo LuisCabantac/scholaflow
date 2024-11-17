@@ -16,7 +16,7 @@ export default async function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between pb-5">
+    <header className="sticky top-0 z-10 flex items-center justify-between bg-[#edf2ffe5] px-4 py-4 backdrop-blur-md md:px-8">
       <div className="flex items-center gap-2">
         <SidebarHeaderButton />
         <HeaderTitle onGetClassByClassId={handleGetClassByClassId} />
