@@ -24,7 +24,6 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
           email={session.user.email}
           fullName={session.user.name}
           role={session.user.role}
-          school={session.user.schoolName}
         />
       ) : (
         <Button href="/signin" type="primary">
