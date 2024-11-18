@@ -58,7 +58,7 @@ export default function StreamDetailSection({
   const [ellipsis, setEllipsis] = useState(false);
   const [showStreamConfirmation, setShowStreamConfirmation] = useState(false);
   const ellipsisWrapperRef = useRef<HTMLDivElement>(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showStreamForm, setShowStreamForm] = useState(false);
 
   const { mutate: deleteStreamPost, isPending: deleteStreamPostIsPending } =
     useMutation({
@@ -142,8 +142,8 @@ export default function StreamDetailSection({
     setShowStreamConfirmation(!showStreamConfirmation);
   }
 
-  function handleToggleShowEditModal() {
-    setShowEditModal(!showEditModal);
+  function handleToggleShowStreamForm() {
+    setShowStreamForm(!showStreamForm);
   }
 
   useClickOutsideHandler(
@@ -511,7 +511,7 @@ export default function StreamDetailSection({
                 clipboardUrl={`scholaflow.vercel.app${pathname}`}
                 onToggleEllipsis={handleToggleEllipsis}
                 showEllipsis={ellipsis}
-                onShowEditForm={handleToggleShowEditModal}
+                onShowEditForm={handleToggleShowStreamForm}
                 onShowConfirmationScreen={handleToggleShowStreamConfirmation}
               />
               {showStreamConfirmation && (
@@ -530,7 +530,7 @@ export default function StreamDetailSection({
               )}
             </div>
           </div>
-          {showEditModal && (
+          {showStreamForm && (
             <StreamForm
               streamType={stream.type}
               formType="edit"
@@ -538,7 +538,8 @@ export default function StreamDetailSection({
               session={session}
               classroom={classroom}
               enrolledClasses={enrolledClasses}
-              onToggleShowStreamForm={handleToggleShowEditModal}
+              onSetShowStreamForm={setShowStreamForm}
+              onToggleShowStreamForm={handleToggleShowStreamForm}
             />
           )}
         </div>

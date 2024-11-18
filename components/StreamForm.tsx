@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -26,6 +26,7 @@ export default function StreamForm({
   session,
   classroom,
   enrolledClasses,
+  onSetShowStreamForm,
   onToggleShowStreamForm,
 }: {
   streamType?: "stream" | "assignment" | "quiz" | "question" | "material";
@@ -34,10 +35,12 @@ export default function StreamForm({
   session: ISession;
   classroom: IClass;
   enrolledClasses: IClass[] | null;
+  onSetShowStreamForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowStreamForm: () => void;
 }) {
   const router = useRouter();
   const { useClickOutsideHandler } = useClickOutside();
+  const streamFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const selectUsersModalWrapperRef = useRef<HTMLDivElement>(null);
   const addLinkModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -188,6 +191,14 @@ export default function StreamForm({
   }
 
   useClickOutsideHandler(
+    streamFormModalWrapperRef,
+    () => {
+      onSetShowStreamForm(false);
+    },
+    isLoading,
+  );
+
+  useClickOutsideHandler(
     selectUsersModalWrapperRef,
     () => {
       setShowSelectUsersModal(false);
@@ -205,7 +216,10 @@ export default function StreamForm({
 
   return (
     <div className="modal__container">
-      <div className="flex h-[80%] w-[95%] items-center justify-center md:w-[80%]">
+      <div
+        className="flex h-[80%] w-[95%] items-center justify-center md:w-[80%]"
+        ref={streamFormModalWrapperRef}
+      >
         <form
           className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
           onSubmit={handleSubmitStream}

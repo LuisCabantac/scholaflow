@@ -622,6 +622,7 @@ export default function ClassStreamsSection({
           classroom={classroom}
           streamType="stream"
           enrolledClasses={enrolledClasses}
+          onSetShowStreamForm={setShowStreamForm}
           onToggleShowStreamForm={handleToggleShowStreamForm}
         />
       )}
