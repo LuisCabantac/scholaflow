@@ -366,8 +366,9 @@ export async function createClassStreamPost(
       formData.get("dueDate") as string,
       "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
     ),
-    acceptingSubmissions: formData.get("acceptingSubmissions"),
-    closeSubmissionsAfterDueDate: formData.get("closeSubmissionsAfterDueDate"),
+    acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
+    closeSubmissionsAfterDueDate:
+      formData.get("closeSubmissionsAfterDueDate") === "true",
     points: formData.get("totalPoints"),
   };
 
