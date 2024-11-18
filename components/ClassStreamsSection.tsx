@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useState } from "react";
+import { useOptimistic, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -19,6 +19,8 @@ import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
 import ClassStreamCard from "@/components/ClassStreamCard";
+import { useSearchParams } from "next/navigation";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -44,8 +46,12 @@ export default function ClassStreamsSection({
   onGetAllClassStreams: (classId: string) => Promise<IStream[] | null>;
 }) {
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const filterWrapperRef = useRef<HTMLDivElement>(null);
+  const { useClickOutsideHandler } = useClickOutside();
   const [showStreamForm, setShowStreamForm] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const { data: streams, isPending: streamsIsPending } = useQuery({
     queryKey: [`streams--${classroom.classroomId}`],
@@ -94,6 +100,18 @@ export default function ClassStreamsSection({
     optimisticDelete(streamId);
     deleteStreamPost(streamId);
   }
+
+  function handleToggleShowFilterDropdown() {
+    setShowFilterDropdown(!showFilterDropdown);
+  }
+
+  useClickOutsideHandler(
+    filterWrapperRef,
+    () => {
+      setShowFilterDropdown(false);
+    },
+    false,
+  );
 
   return (
     <section className="relative">
@@ -255,6 +273,167 @@ export default function ClassStreamsSection({
                 </p>
               </div>
             ) : null}
+            <div className="flex items-start justify-start">
+              <div
+                className="relative mb-2 flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
+                onClick={handleToggleShowFilterDropdown}
+                ref={filterWrapperRef}
+              >
+                <div className="flex items-center gap-2 text-base font-medium md:gap-4">
+                  <span>
+                    {searchParams.get("filter") === null
+                      ? "All"
+                      : searchParams.get("filter") === "stream"
+                        ? "Post"
+                        : `${searchParams.get("filter")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={3}
+                    stroke="currentColor"
+                    className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </div>
+                <ul
+                  className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
+                >
+                  <li>
+                    <Link
+                      href={`/user/classroom/class/${classroom.classroomId}?filter=all`}
+                      scroll={false}
+                      className={`${(searchParams.get("filter") === "all" || searchParams.get("filter") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      <span>All</span>
+                      {searchParams.get("filter") === "all" ||
+                        (searchParams.get("filter") === null && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={4}
+                            stroke="currentColor"
+                            className="size-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 12.75 6 6 9-13.5"
+                            />
+                          </svg>
+                        ))}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/user/classroom/class/${classroom.classroomId}?filter=stream`}
+                      scroll={false}
+                      className={`${searchParams.get("filter") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      <span>Post</span>
+                      {searchParams.get("filter") === "stream" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={4}
+                          stroke="currentColor"
+                          className="size-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 12.75 6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/user/classroom/class/${classroom.classroomId}?filter=assignment`}
+                      scroll={false}
+                      className={`${searchParams.get("filter") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      <span>Assignment</span>
+                      {searchParams.get("filter") === "assignment" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={4}
+                          stroke="currentColor"
+                          className="size-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 12.75 6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/user/classroom/class/${classroom.classroomId}?filter=quiz`}
+                      scroll={false}
+                      className={`${searchParams.get("filter") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      <span>Quiz</span>
+                      {searchParams.get("filter") === "quiz" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={4}
+                          stroke="currentColor"
+                          className="size-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 12.75 6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/user/classroom/class/${classroom.classroomId}?filter=material`}
+                      scroll={false}
+                      className={`${searchParams.get("filter") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    >
+                      <span>Material</span>
+                      {searchParams.get("filter") === "material" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={4}
+                          stroke="currentColor"
+                          className="size-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 12.75 6 6 9-13.5"
+                          />
+                        </svg>
+                      )}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <ul className="flex flex-col gap-2">
               {streamsIsPending && (
                 <>
@@ -278,14 +457,23 @@ export default function ClassStreamsSection({
                 </>
               )}
               {(!optimisticStreams && !streamsIsPending) ||
-              (!optimisticStreams?.filter(
-                (stream) =>
-                  (stream.announceTo.includes(session.user.id) &&
-                    stream.announceToAll === false) ||
-                  stream.announceToAll ||
-                  stream.author === session.user.id ||
-                  classroom.teacherId === session.user.id,
-              ).length &&
+              (!optimisticStreams
+                ?.filter(
+                  (stream) =>
+                    (stream.announceTo.includes(session.user.id) &&
+                      stream.announceToAll === false) ||
+                    stream.announceToAll ||
+                    stream.author === session.user.id ||
+                    classroom.teacherId === session.user.id,
+                )
+                .filter((stream) =>
+                  !(
+                    searchParams.get("filter") === null ||
+                    searchParams.get("filter") === "all"
+                  )
+                    ? stream.type === searchParams.get("filter")
+                    : true,
+                ).length &&
                 !streamsIsPending) ? (
                 <NoClassStreams />
               ) : null}
@@ -297,6 +485,14 @@ export default function ClassStreamsSection({
                     stream.announceToAll ||
                     stream.author === session.user.id ||
                     classroom.teacherId === session.user.id,
+                )
+                .filter((stream) =>
+                  !(
+                    searchParams.get("filter") === null ||
+                    searchParams.get("filter") === "all"
+                  )
+                    ? stream.type === searchParams.get("filter")
+                    : true,
                 )
                 .map((stream) => (
                   <ClassStreamCard
@@ -347,7 +543,6 @@ export default function ClassStreamsSection({
             )}
             <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
               <h4 className="pb-2 font-semibold">Recent classworks</h4>
-
               {assignedClasswork ? (
                 <div key={assignedClasswork.id}>
                   <Link
