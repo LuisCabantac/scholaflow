@@ -834,10 +834,10 @@ export async function addUserToClass(formData: FormData): Promise<{
     };
   }
 
-  const classId = formData.get("classId") as string;
+  const classroomId = formData.get("classroomId") as string;
   const userEmail = formData.get("email") as string;
 
-  const classroom = await getClassByClassId(classId);
+  const classroom = await getClassByClassId(classroomId);
 
   if (!classroom)
     return {

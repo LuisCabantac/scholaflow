@@ -54,7 +54,12 @@ export default function AddUserToClassModal({
           </div>
           <form onSubmit={handleAddUserToClassSubmit}>
             <div className="grid gap-1 md:gap-2">
-              <input type="text" name="classId" defaultValue={classId} hidden />
+              <input
+                type="text"
+                name="classroomId"
+                defaultValue={classId}
+                hidden
+              />
               <input
                 disabled={isLoading}
                 required
