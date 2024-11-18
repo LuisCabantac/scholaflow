@@ -269,7 +269,7 @@ export default function ClassStreamsSection({
                   />
                 </div>
                 <p className="text-sm text-[#616572] md:text-base">
-                  Announce something...
+                  Share with your class...
                 </p>
               </div>
             ) : null}
