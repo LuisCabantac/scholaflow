@@ -269,6 +269,7 @@ export default function ClassworksSection({
           classroom={classroom}
           session={session}
           enrolledClasses={enrolledClasses}
+          onSetShowStreamForm={setShowStreamForm}
           onToggleShowStreamForm={handleToggleShowStreamForm}
         />
       )}
