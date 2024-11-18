@@ -5,8 +5,8 @@ import Provider from "./Provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: { template: "ScholaFlow - %s", default: "ScholaFlow" },
-  description: "Your All-in-One Solution for a Seamless Learning Experience",
+  title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
+  description: "Your All-in-One Learning Platform.",
 };
 
 const beVietnamPro = Be_Vietnam_Pro({

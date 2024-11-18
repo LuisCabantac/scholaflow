@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
@@ -12,6 +13,22 @@ import {
 } from "@/lib/data-service";
 
 import ClassStreamsSection from "@/components/ClassStreamsSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { classId } = params;
+
+  const classroom = await getClassByClassId(classId);
+
+  return {
+    title: classroom?.className,
+    description:
+      classroom?.classDescription || `${classroom?.className} class.`,
+  };
+}
 
 export interface IStream {
   id: string;

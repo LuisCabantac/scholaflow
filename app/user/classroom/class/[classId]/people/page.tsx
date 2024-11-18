@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
@@ -11,6 +12,21 @@ import { deleteEnrolledClassbyClassAndEnrolledClassId } from "@/lib/classroom-ac
 import { hasUser } from "@/lib/utils";
 
 import ClassPeopleSection from "@/components/ClassPeopleSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { classId } = params;
+
+  const classroom = await getClassByClassId(classId);
+
+  return {
+    title: `People - ${classroom?.className}`,
+    description: `See who's in ${classroom?.className} class! This page lists all students enrolled in this course. `,
+  };
+}
 
 export default async function Page({ params }: { params: Params }) {
   const { classId } = params;

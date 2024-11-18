@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
@@ -14,6 +15,20 @@ import {
 } from "@/lib/data-service";
 
 import StreamDetailSection from "@/components/StreamDetailSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { streamId } = params;
+
+  const stream = await getClassStreamByStreamId(streamId);
+
+  return {
+    title: stream?.title || stream?.caption,
+  };
+}
 
 export default async function Page({ params }: { params: Params }) {
   const { streamId } = params;

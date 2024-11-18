@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
@@ -10,6 +11,21 @@ import {
 } from "@/lib/data-service";
 
 import ClassChatSection from "@/components/ClassChatSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { classId } = params;
+
+  const classroom = await getClassByClassId(classId);
+
+  return {
+    title: `Chat - ${classroom?.className}`,
+    description: `Connect with your classmates! Discuss course material, ask questions, and collaborate in ${classroom?.className} class chat.  `,
+  };
+}
 
 export default async function Page({ params }: { params: Params }) {
   const { classId } = params;

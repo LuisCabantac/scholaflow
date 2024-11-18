@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
@@ -7,6 +8,12 @@ import { getAllUser, getUsersFilter } from "@/lib/data-service";
 import { deleteUser } from "@/lib/user-management-actions";
 
 import UserManagementSection from "@/components/UserManagementSection";
+
+export const metadata: Metadata = {
+  title: "User-Management",
+  description:
+    "Manage user accounts and permissions. This administrative area allows for control over user access and roles within the platform.",
+};
 
 export default async function Page() {
   const session = await auth();

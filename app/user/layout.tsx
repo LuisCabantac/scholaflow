@@ -1,4 +1,5 @@
 import React from "react";
+import { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { redirect } from "next/navigation";
 
@@ -12,6 +13,11 @@ import {
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+
+export const metadata: Metadata = {
+  title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
+  description: "Your All-in-One Learning Platform.",
+};
 
 export default async function RootLayout({
   children,

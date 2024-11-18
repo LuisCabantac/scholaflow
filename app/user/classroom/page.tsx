@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
@@ -15,8 +16,10 @@ import { deleteClass } from "@/lib/classroom-actions";
 
 import ClassroomSection from "@/components/ClassroomSection";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Classroom",
+  description:
+    "Your learning hub. Access all your enrolled classes from here. Quickly jump into coursework, connect with classmates, and manage your learning journey.",
 };
 
 export default async function Page() {
