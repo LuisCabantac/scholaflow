@@ -56,7 +56,7 @@ export default function ClassStreamCard({
   const [showClassComments, setShowClassComments] = useState(false);
   const [streamComment, setStreamComment] = useState("");
   const [showStreamConfirmation, setShowStreamConfirmation] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showStreamForm, setShowStreamForm] = useState(false);
   const [ellipsis, setEllipsis] = useState(false);
   const ellipsisWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -138,8 +138,8 @@ export default function ClassStreamCard({
     setShowStreamConfirmation(!showStreamConfirmation);
   }
 
-  function handleToggleShowEditModal() {
-    setShowEditModal(!showEditModal);
+  function handleToggleShowStreamForm() {
+    setShowStreamForm(!showStreamForm);
   }
 
   useClickOutsideHandler(
@@ -387,7 +387,7 @@ export default function ClassStreamCard({
               showEllipsis={ellipsis}
               showDelete={session.user.id === stream.author}
               onToggleEllipsis={handleToggleEllipsis}
-              onShowEditForm={handleToggleShowEditModal}
+              onShowEditForm={handleToggleShowStreamForm}
               onShowConfirmationScreen={handleToggleShowStreamConfirmation}
             />
             {showStreamConfirmation && (
@@ -486,7 +486,7 @@ export default function ClassStreamCard({
           )}
         </>
       )}
-      {showEditModal && (
+      {showStreamForm && (
         <StreamForm
           streamType={stream.type}
           formType="edit"
@@ -494,7 +494,8 @@ export default function ClassStreamCard({
           session={session}
           classroom={classroom}
           enrolledClasses={enrolledClasses}
-          onToggleShowStreamForm={handleToggleShowEditModal}
+          onSetShowStreamForm={setShowStreamForm}
+          onToggleShowStreamForm={handleToggleShowStreamForm}
         />
       )}
     </li>
