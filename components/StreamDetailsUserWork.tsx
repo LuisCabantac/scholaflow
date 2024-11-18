@@ -377,7 +377,6 @@ export default function StreamDetailsUserWork({
         {currentUrlLinks.length || newUrlLinks.length ? (
           <div className="grid gap-2">
             <label className="text-xs font-medium md:text-sm">Links</label>
-
             <ul
               className={`grid gap-1 overflow-y-auto md:max-h-40 ${expandPrivateComments ? "max-h-20" : "max-h-40"}`}
             >
@@ -532,7 +531,6 @@ export default function StreamDetailsUserWork({
           </div>
         </div>
       </div>
-
       <div
         className="item-center relative mt-2 grid gap-2"
         ref={addWorkPopoverWrapperRef}
@@ -650,8 +648,26 @@ export default function StreamDetailsUserWork({
                   </button>
                 ) : null}
               </div>
-              {optimisticComments?.length ? (
-                <ul className="grid gap-2 overflow-y-auto md:max-h-[15rem]">
+              {optimisticComments?.filter(
+                (comment) =>
+                  (comment.author === session.user.id &&
+                    comment.toUserId === classroom.teacherId) ||
+                  (comment.author === classroom.teacherId &&
+                    comment.toUserId === session.user.id),
+              ).length ? (
+                <ul
+                  className={`grid gap-2 md:max-h-[15rem] ${
+                    optimisticComments?.filter(
+                      (comment) =>
+                        (comment.author === session.user.id &&
+                          comment.toUserId === classroom.teacherId) ||
+                        (comment.author === classroom.teacherId &&
+                          comment.toUserId === session.user.id),
+                    ).length > 4
+                      ? "overflow-y-auto"
+                      : ""
+                  }`}
+                >
                   {!streamsCommentsIsPending &&
                     optimisticComments
                       ?.filter(
@@ -676,15 +692,7 @@ export default function StreamDetailsUserWork({
               ) : null}
             </div>
           </div>
-          <div className="flex-end flex w-full items-center gap-2">
-            <div className="relative h-8 w-8 flex-shrink-0 rounded-full">
-              <Image
-                src={session.user.image}
-                alt={`${session.user.name}'s avatar`}
-                fill
-                className="rounded-full"
-              />
-            </div>
+          <div className="flex-end flex w-full items-center">
             <form
               className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
               onSubmit={handleCommentSubmit}

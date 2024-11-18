@@ -462,7 +462,6 @@ export default function ClassStreamCard({
                   value={streamComment}
                   onChange={(event) => setStreamComment(event.target.value)}
                 ></textarea>
-
                 <button className="py-2 pr-4" disabled={addCommentIsPending}>
                   {addCommentIsPending ? (
                     <div className="spinner__mini dark"></div>
