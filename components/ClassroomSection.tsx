@@ -276,23 +276,23 @@ export default function ClassroomSection({
                     className={`${(searchParams.get("filter") === "all-classes" || searchParams.get("filter") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                   >
                     <span>All classes</span>
-                    {searchParams.get("filter") === "all-classes" ||
-                      (searchParams.get("filter") === null && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={4}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
-                      ))}
+                    {(searchParams.get("filter") === "all-classes" ||
+                      searchParams.get("filter") === null) && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={4}
+                        stroke="currentColor"
+                        className="size-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                    )}
                   </Link>
                 </li>
                 {role === "teacher" && (
