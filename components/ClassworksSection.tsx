@@ -164,19 +164,28 @@ export default function ClassworksSection({
               >
                 <button
                   className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => handleSetClassworkType("assignment")}
+                  onClick={() => {
+                    handleSetClassworkType("assignment");
+                    handleToggleShowCreateClasswork();
+                  }}
                 >
                   Assignment
                 </button>
                 <button
                   className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => handleSetClassworkType("quiz")}
+                  onClick={() => {
+                    handleSetClassworkType("quiz");
+                    handleToggleShowCreateClasswork();
+                  }}
                 >
                   Quiz
                 </button>
                 <button
                   className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => handleSetClassworkType("material")}
+                  onClick={() => {
+                    handleSetClassworkType("material");
+                    handleToggleShowCreateClasswork();
+                  }}
                 >
                   Material
                 </button>
