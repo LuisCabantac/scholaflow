@@ -56,10 +56,10 @@ export default function StreamCommentCard({
   return (
     <li
       key={comment.id}
-      className="relative flex items-center justify-between break-all text-sm"
+      className="relative flex items-center justify-between break-all"
     >
-      <div className="grid grid-cols-[1.6rem_1fr] gap-1">
-        <div className="relative h-6 w-6 rounded-full">
+      <div className="grid grid-cols-[1.6rem_1fr] gap-4">
+        <div className="relative h-8 w-8 rounded-full">
           <Image
             src={comment.authorAvatar}
             fill
@@ -68,11 +68,9 @@ export default function StreamCommentCard({
           />
         </div>
         <div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 text-sm">
             <h6 className="font-medium">{comment.authorName}</h6>
-            <p className="text-xs text-[#616572]">
-              {formatDate(comment.created_at)}
-            </p>
+            <p className="text-[#616572]">{formatDate(comment.created_at)}</p>
           </div>
           <p className="whitespace-pre-line">{comment.comment}</p>
         </div>
@@ -99,6 +97,10 @@ export default function StreamCommentCard({
             </button>
             <EllipsisPopover
               showEdit={false}
+              showDelete={
+                session.user.id === comment.author ||
+                session.user.id === classroom.teacherId
+              }
               onToggleEllipsis={handleToggleCommentEllipsis}
               showEllipsis={commentEllipsis}
               onShowConfirmationScreen={handleToggleShowCommentConfirmation}
