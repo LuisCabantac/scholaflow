@@ -68,11 +68,11 @@ export default function StreamCommentCard({
           />
         </div>
         <div>
-          <div className="flex items-center gap-1 text-sm">
-            <h6 className="font-medium">{comment.authorName}</h6>
-            <p className="text-[#616572]">{formatDate(comment.created_at)}</p>
-          </div>
+          <h6 className="text-sm font-medium">{comment.authorName}</h6>
           <p className="whitespace-pre-line">{comment.comment}</p>
+          <p className="text-[0.65rem] text-[#616572]">
+            {formatDate(comment.created_at)}
+          </p>
         </div>
       </div>
       {(session.user.id === comment.author ||
