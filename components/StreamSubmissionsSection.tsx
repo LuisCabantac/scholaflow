@@ -356,7 +356,7 @@ export default function StreamSubmissionsSection({
             ) : null}
           </div>
           <div
-            className={`fixed bottom-0 left-0 right-0 z-10 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:z-0 md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
+            className={`fixed bottom-0 left-0 right-0 z-10 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
           >
             <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
               <button
@@ -547,7 +547,7 @@ export default function StreamSubmissionsSection({
                   <p>No attachments</p>
                 </>
               )}
-              <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] pb-3 md:static md:block md:pb-0">
+              <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] md:static md:block">
                 <div>
                   <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
@@ -613,9 +613,9 @@ export default function StreamSubmissionsSection({
                     ) : null}
                   </div>
                 </div>
-                <div className="z-10 w-full bg-[#f3f6ff] px-3 md:px-0">
+                <div className="z-10 w-full bg-[#f3f6ff] px-3 pb-3 pt-1 md:px-0 md:pb-0">
                   <form
-                    className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
+                    className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input
@@ -646,7 +646,7 @@ export default function StreamSubmissionsSection({
                       required
                       disabled={addCommentIsPending}
                       name="comment"
-                      className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                      className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
                       placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                       value={streamComment}
                       onChange={(event) => setStreamComment(event.target.value)}

@@ -460,9 +460,9 @@ export default function StreamDetailsUserWork({
               ) : null}
             </div>
           </div>
-          <div className="w-full">
+          <div className="mt-1 w-full">
             <form
-              className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
+              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -493,7 +493,7 @@ export default function StreamDetailsUserWork({
                 required
                 disabled={addCommentIsPending}
                 name="comment"
-                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
@@ -692,9 +692,9 @@ export default function StreamDetailsUserWork({
               ) : null}
             </div>
           </div>
-          <div className="flex-end flex w-full items-center">
+          <div className="flex-end mt-1 flex w-full items-center">
             <form
-              className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
+              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -725,7 +725,7 @@ export default function StreamDetailsUserWork({
                 required
                 disabled={addCommentIsPending}
                 name="comment"
-                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}

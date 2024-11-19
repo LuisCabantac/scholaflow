@@ -44,7 +44,6 @@ export default function ClassStreamCard({
 }: {
   topics: ITopic[] | null;
   stream: IStream;
-  classId: string;
   session: ISession;
   classroom: IClass;
   showComments?: boolean;
@@ -413,12 +412,19 @@ export default function ClassStreamCard({
         <>
           <div>
             {optimisticComments?.length ? (
-              <button
-                onClick={handleToggleShowClassComments}
+              <>
+                <Link
+                  href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                  className="mt-2 text-sm font-medium md:hidden"
+                >
+                  View all comments
+                </Link>
+                <button
+                  onClick={handleToggleShowClassComments}
                   className={`${showClassComments && "mb-2"} mt-2 hidden text-sm font-medium md:block`}
-              >
-                {showClassComments ? "Hide" : "View"} all comments
-              </button>
+                >
+                  {showClassComments ? "Hide" : "View"} all comments
+                </button>
               </>
             ) : null}
             <ul className="hidden gap-2 md:grid">
@@ -458,9 +464,9 @@ export default function ClassStreamCard({
           </Link>
           {(classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) && (
-            <div className="hidden md:block">
+            <div className="mt-2 hidden md:block">
               <form
-                className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
+                className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                 onSubmit={handleCommentSubmit}
               >
                 <input
@@ -479,7 +485,7 @@ export default function ClassStreamCard({
                   required
                   disabled={addCommentIsPending}
                   name="comment"
-                  className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
                   placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
                   value={streamComment}
                   onChange={(event) => setStreamComment(event.target.value)}
