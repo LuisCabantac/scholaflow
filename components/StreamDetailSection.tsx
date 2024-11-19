@@ -385,7 +385,7 @@ export default function StreamDetailSection({
               )}
               {stream.attachment.length || stream.links.length ? (
                 <div className="mb-2">
-                  <ul className="grid gap-2 font-medium">
+                  <ul className="grid gap-1 font-medium">
                     {stream.attachment.map((file, index) => (
                       <AttachmentFileCard
                         file={file}
