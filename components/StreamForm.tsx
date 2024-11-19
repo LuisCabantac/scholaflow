@@ -811,7 +811,7 @@ export default function StreamForm({
               </div>
             )}
           </div>
-          <div className="fixed bottom-0 right-0 mr-4 flex w-full items-center justify-end gap-2 bg-[#f3f6ff] py-4 md:mr-8 md:w-auto">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
             {!isLoading && (
               <Button type="secondary" onClick={onToggleShowStreamForm}>
                 Cancel
