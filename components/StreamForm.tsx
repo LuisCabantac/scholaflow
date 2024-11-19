@@ -449,7 +449,7 @@ export default function StreamForm({
                 <label className="flex gap-1">
                   <button
                     onClick={handleToggleShowAddLinkModal}
-                    className="flex gap-1"
+                    className="flex gap-1 disabled:cursor-not-allowed"
                     type="button"
                     disabled={isLoading}
                   >
@@ -481,7 +481,7 @@ export default function StreamForm({
                           <h4 className="text-lg font-medium">Add link</h4>
                           <input
                             type="text"
-                            className="w-full rounded-md border-2 bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                            className="w-full rounded-md border-2 bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
                             placeholder="Enter a url..."
                             required
                             value={url}
@@ -593,7 +593,7 @@ export default function StreamForm({
                       onClick={handleToggleShowSelectUsersModal}
                       type="button"
                       disabled={isLoading}
-                      className="w-full rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-start text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                      className="w-full rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-start text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                     >
                       {enrolledClasses?.length === audience.length
                         ? "All users"
@@ -701,7 +701,7 @@ export default function StreamForm({
                           <select
                             disabled={isLoading}
                             name="levels"
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                             onChange={(event) =>
                               setIsGraded(event.target.value)
                             }
@@ -715,7 +715,7 @@ export default function StreamForm({
                           <input
                             type="number"
                             name="totalPoints"
-                            className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                             value={grade}
                             defaultValue="100"
                             onChange={handleGradeChange}
@@ -733,7 +733,7 @@ export default function StreamForm({
                         <div className="relative w-full">
                           <select
                             disabled={isLoading}
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                             onChange={(event) =>
                               setHasDueDate(event.target.value)
                             }
@@ -748,7 +748,7 @@ export default function StreamForm({
                             type="datetime-local"
                             disabled={isLoading}
                             name="dueDate"
-                            className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                             value={dueDate}
                             onChange={(event) => setDueDate(event.target.value)}
                           />
@@ -775,11 +775,11 @@ export default function StreamForm({
                 {streamType !== "material" && (
                   <>
                     <div className="grid gap-2">
-                      <label className="flex gap-2 text-xs font-medium md:text-sm">
+                      <label className="flex cursor-pointer gap-2 text-xs font-medium disabled:cursor-not-allowed md:text-sm">
                         <input
                           type="checkbox"
                           name="acceptingSubmissions"
-                          className="checked:accent-[#384689]"
+                          className="cursor-pointer checked:accent-[#384689]"
                           value={isAcceptingSubmissions.toString()}
                           checked={isAcceptingSubmissions}
                           onChange={(event) =>
@@ -791,11 +791,11 @@ export default function StreamForm({
                       </label>
                     </div>
                     <div className="grid gap-2">
-                      <label className="flex gap-2 text-xs font-medium md:text-sm">
+                      <label className="flex cursor-pointer gap-2 text-xs font-medium md:text-sm">
                         <input
                           type="checkbox"
                           name="closeSubmissionsAfterDueDate"
-                          className="checked:accent-[#384689]"
+                          className="cursor-pointer checked:accent-[#384689] disabled:cursor-not-allowed"
                           value={closeSubmissions.toString()}
                           checked={closeSubmissions}
                           onChange={(event) =>
