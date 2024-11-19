@@ -427,7 +427,7 @@ export default function StreamDetailsUserWork({
                 ).length ? (
                   <button
                     onClick={handleToggleExpandPrivateComments}
-                    className="block text-xs text-[#22317c] md:hidden"
+                    className="block text-sm text-[#22317c] md:hidden"
                   >
                     {expandPrivateComments ? "Minimize" : "Expand"}
                   </button>
@@ -502,7 +502,7 @@ export default function StreamDetailsUserWork({
                 required
                 disabled={addCommentIsPending}
                 name="comment"
-                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:pt-[0.10rem] placeholder:text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
@@ -629,6 +629,19 @@ export default function StreamDetailsUserWork({
         <div className="hidden md:block">
           <div>
             <div className="flex-end flex flex-col">
+              <div
+                className={`flex items-center justify-between ${
+                  optimisticComments?.filter(
+                    (comment) =>
+                      (comment.author === session.user.id &&
+                        comment.toUserId === classroom.teacherId) ||
+                      (comment.author === classroom.teacherId &&
+                        comment.toUserId === session.user.id),
+                  ).length
+                    ? "mb-2"
+                    : ""
+                }`}
+              >
                 <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
@@ -722,7 +735,7 @@ export default function StreamDetailsUserWork({
                 required
                 disabled={addCommentIsPending}
                 name="comment"
-                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:pt-[0.10rem] placeholder:text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className="comment__textarea h-10 w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
