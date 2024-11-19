@@ -14,6 +14,7 @@ import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page"
 import { IClass } from "@/components/ClassroomSection";
 import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
+import { ITopic } from "@/components/TopicForm";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -353,6 +354,28 @@ export async function getAllClassworkStreamsByClassId(
   return data;
 }
 
+export async function getAllClassworkStreamsByTopicId(
+  topicId: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const topic = await getClassTopicByTopicId(topicId);
+
+  if (!topic) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("topicId", topicId)
+    .neq("type", "stream")
+    .neq("type", "material")
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
 export async function getAllClassworksByClassId(
   classId: string,
 ): Promise<IClasswork[] | null> {
@@ -556,6 +579,38 @@ export async function getAllMessagesByClassId(
     .from("chat")
     .select("*")
     .eq("classroomId", classroomId);
+
+  return data;
+}
+
+export async function getClassTopicByTopicId(
+  topicId: string,
+): Promise<ITopic | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classTopic")
+    .select("*")
+    .eq("topicId", topicId)
+    .single();
+
+  return data;
+}
+
+export async function getAllClassTopicsByClassId(
+  classId: string,
+): Promise<ITopic[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classTopic")
+    .select("*")
+    .eq("classroomId", classId)
+    .order("created_at", { ascending: false });
 
   return data;
 }

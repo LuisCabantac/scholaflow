@@ -5,6 +5,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import {
+  getAllClassTopicsByClassId,
   getAllCommentsByStreamId,
   getAllEnrolledClassesByClassId,
   getAllPrivateCommentsByStreamId,
@@ -73,6 +74,8 @@ export default async function Page({ params }: { params: Params }) {
     stream.classroomId,
   );
 
+  const allTopics = await getAllClassTopicsByClassId(stream.classroomId);
+
   if (
     session.user.id === classroom.teacherId ||
     (stream.announceTo.includes(session.user.id) &&
@@ -81,6 +84,7 @@ export default async function Page({ params }: { params: Params }) {
   )
     return (
       <StreamDetailSection
+        topics={allTopics}
         stream={stream}
         session={session}
         classroom={classroom}

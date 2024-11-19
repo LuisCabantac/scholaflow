@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 
 import noClasworks from "@/public/app/no_classworks.svg";
-import { deleteClassStreamPost } from "@/lib/classroom-actions";
+import { deleteClassStreamPost, deleteTopic } from "@/lib/classroom-actions";
 import { ISession } from "@/lib/auth";
 import {
   IStream,
@@ -19,21 +19,23 @@ import { IClass } from "@/components/ClassroomSection";
 import ClassStreamCard from "@/components/ClassStreamCard";
 import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
+import TopicForm, { ITopic } from "@/components/TopicForm";
+import TopicCard from "./TopicCard";
 
 type IStreamType = "stream" | "assignment" | "quiz" | "question" | "material";
 
 export default function ClassworksSection({
-  classId,
-  classroom,
   session,
+  classroom,
+  onGetAllTopics,
   enrolledClasses,
   onGetAllComments,
   onGetAllClassworkStreams,
 }: {
-  classId: string;
-  classroom: IClass;
   session: ISession;
+  classroom: IClass;
   enrolledClasses: IClass[] | null;
+  onGetAllTopics: (classId: string) => Promise<ITopic[] | null>;
   onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
   onGetAllClassworkStreams: (
     classId: string,
@@ -43,10 +45,11 @@ export default function ClassworksSection({
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const btnWrapperRef = useRef<HTMLDivElement>(null);
-  const [showStreamForm, setShowStreamForm] = useState(false);
-  const [showCreateClasswork, setShowCreateClasswork] = useState(false);
   const [classworkType, setClassworkType] = useState<IStreamType>("stream");
   const [search, setSearch] = useState("");
+  const [showStreamForm, setShowStreamForm] = useState(false);
+  const [showTopicForm, setShowTopicForm] = useState(false);
+  const [showCreateClasswork, setShowCreateClasswork] = useState(false);
 
   const { data: classworks, isPending: classworksIsPending } = useQuery({
     queryKey: [`streams--${classroom.classroomId}`, search],
@@ -66,10 +69,35 @@ export default function ClassworksSection({
       onError: (error) => toast.error(error.message),
     });
 
+  const { data: topics } = useQuery({
+    queryKey: [`topics--${classroom.classroomId}`],
+    queryFn: () => onGetAllTopics(classroom.classroomId),
+  });
+
+  const { mutate: deleteClassTopic, isPending: deleteTopicIsPending } =
+    useMutation({
+      mutationFn: deleteTopic,
+      onSuccess: () => {
+        toast.success("Topic has been successfully deleted!");
+
+        queryClient.invalidateQueries({
+          queryKey: [`topics--${classroom.classroomId}`],
+        });
+      },
+      onError: (error) => toast.error(error.message),
+    });
+
   const [optimisticClassworks, optimisticDeleteClassworks] = useOptimistic(
     classworks,
     (curClass, streamId) => {
       return curClass?.filter((stream) => stream.id !== streamId);
+    },
+  );
+
+  const [optimisticTopics, optimisticDeleteTopics] = useOptimistic(
+    topics,
+    (curTopic, topicId) => {
+      return curTopic?.filter((topic) => topic.topicId !== topicId);
     },
   );
 
@@ -81,6 +109,10 @@ export default function ClassworksSection({
     setShowCreateClasswork(!showCreateClasswork);
   }
 
+  function handleToggleShowTopicForm() {
+    setShowTopicForm(!showTopicForm);
+  }
+
   function handleSetClassworkType(type: IStreamType) {
     setClassworkType(type);
     handleToggleShowStreamForm();
@@ -89,6 +121,11 @@ export default function ClassworksSection({
   function handleDeleteClassworkStream(streamId: string) {
     optimisticDeleteClassworks(streamId);
     deleteStreamPost(streamId);
+  }
+
+  function handleDeleteTopic(topicId: string) {
+    optimisticDeleteTopics(topicId);
+    deleteClassTopic(topicId);
   }
 
   useClickOutsideHandler(
@@ -104,25 +141,25 @@ export default function ClassworksSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
           <Link
-            href={`/user/classroom/class/${classId}`}
+            href={`/user/classroom/class/${classroom.classroomId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/classwork`}
+            href={`/user/classroom/class/${classroom.classroomId}/classwork`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/people`}
+            href={`/user/classroom/class/${classroom.classroomId}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/chat`}
+            href={`/user/classroom/class/${classroom.classroomId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
@@ -189,6 +226,15 @@ export default function ClassworksSection({
                 >
                   Material
                 </button>
+                <button
+                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
+                  onClick={() => {
+                    handleToggleShowTopicForm();
+                    handleToggleShowCreateClasswork();
+                  }}
+                >
+                  Topic
+                </button>
               </div>
             </div>
           )}
@@ -220,32 +266,8 @@ export default function ClassworksSection({
                     ))}
                 </>
               )}
-              {optimisticClassworks?.length ? (
-                optimisticClassworks
-                  ?.filter(
-                    (stream) =>
-                      (stream.announceTo.includes(session.user.id) &&
-                        stream.announceToAll === false) ||
-                      stream.announceToAll ||
-                      stream.author === session.user.id ||
-                      classroom.teacherId === session.user.id,
-                  )
-                  .map((stream) => (
-                    <ClassStreamCard
-                      key={stream.id}
-                      stream={stream}
-                      classroom={classroom}
-                      session={session}
-                      classId={classId}
-                      showComments={false}
-                      enrolledClasses={enrolledClasses}
-                      deleteStreamPostIsPending={deleteStreamPostIsPending}
-                      onDeleteStreamPost={handleDeleteClassworkStream}
-                      onGetAllComments={onGetAllComments}
-                    />
-                  ))
-              ) : (
-                <div className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
+              {!optimisticClassworks?.length && !classworksIsPending ? (
+                <li className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
                   <div className="relative w-[15rem] md:w-[20rem]">
                     <Image
                       src={noClasworks}
@@ -256,21 +278,77 @@ export default function ClassworksSection({
                   <p className="font-medium md:text-lg">
                     Nothing to do for class yet!
                   </p>
-                </div>
+                </li>
+              ) : (
+                optimisticClassworks
+                  ?.filter(
+                    (stream) =>
+                      ((stream.announceTo.includes(session.user.id) &&
+                        stream.announceToAll === false) ||
+                        stream.announceToAll ||
+                        stream.author === session.user.id ||
+                        classroom.teacherId === session.user.id) &&
+                      !stream.topicId,
+                  )
+                  .map((stream) => (
+                    <ClassStreamCard
+                      key={stream.id}
+                      topics={topics as ITopic[] | null}
+                      stream={stream}
+                      session={session}
+                      classroom={classroom}
+                      showComments={false}
+                      enrolledClasses={enrolledClasses}
+                      deleteStreamPostIsPending={deleteStreamPostIsPending}
+                      onDeleteStreamPost={handleDeleteClassworkStream}
+                      onGetAllComments={onGetAllComments}
+                    />
+                  ))
               )}
+              {optimisticTopics?.length ? (
+                <li className="mt-1 border-t-2 border-[#dbe4ff] pt-2">
+                  <ul className="grid gap-4">
+                    {optimisticTopics.map((topic) => (
+                      <TopicCard
+                        key={topic.topicId}
+                        topic={topic}
+                        topics={topics}
+                        session={session}
+                        classroom={classroom}
+                        classworks={classworks}
+                        enrolledClasses={enrolledClasses}
+                        onGetAllComments={onGetAllComments}
+                        onDeleteTopic={handleDeleteTopic}
+                        onDeleteStreamPost={handleDeleteClassworkStream}
+                        deleteTopicIsPending={deleteTopicIsPending}
+                        deleteStreamPostIsPending={deleteStreamPostIsPending}
+                      />
+                    ))}
+                  </ul>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>
       </div>
       {showStreamForm && (
         <StreamForm
-          streamType={classworkType}
+          topics={topics as ITopic[] | null}
+          session={session}
           formType="create"
           classroom={classroom}
-          session={session}
+          streamType={classworkType}
           enrolledClasses={enrolledClasses}
           onSetShowStreamForm={setShowStreamForm}
           onToggleShowStreamForm={handleToggleShowStreamForm}
+        />
+      )}
+      {showTopicForm && (
+        <TopicForm
+          type="create"
+          classroom={classroom}
+          onToggleShowTopic={handleToggleShowTopicForm}
+          onSetShowTopicForm={setShowTopicForm}
         />
       )}
     </section>

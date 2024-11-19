@@ -18,22 +18,25 @@ import { IClass } from "@/components/ClassroomSection";
 import Button from "@/components/Button";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
+import { ITopic } from "@/components/TopicForm";
 
 export default function StreamForm({
-  streamType,
-  formType,
+  topics,
   stream,
   session,
+  formType,
   classroom,
+  streamType,
   enrolledClasses,
   onSetShowStreamForm,
   onToggleShowStreamForm,
 }: {
-  streamType?: "stream" | "assignment" | "quiz" | "question" | "material";
-  formType: "create" | "edit";
+  topics: ITopic[] | null;
   stream?: IStream;
   session: ISession;
+  formType: "create" | "edit";
   classroom: IClass;
+  streamType?: "stream" | "assignment" | "quiz" | "question" | "material";
   enrolledClasses: IClass[] | null;
   onSetShowStreamForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowStreamForm: () => void;
@@ -764,11 +767,18 @@ export default function StreamForm({
                   <div className="relative w-full">
                     <select
                       disabled={isLoading}
-                      name="topic"
-                      className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                      name="topicId"
+                      className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed md:px-5 md:py-3 md:text-base"
+                      defaultValue={stream?.topicId ?? "no-topic"}
                     >
                       <option value="no-topic">No topic</option>
-                      <option value="false">Topic</option>
+                      {topics?.length
+                        ? topics.map((topic) => (
+                            <option key={topic.topicId} value={topic.topicId}>
+                              {topic.topicName}
+                            </option>
+                          ))
+                        : null}
                     </select>
                   </div>
                 </div>

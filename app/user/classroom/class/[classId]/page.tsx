@@ -10,6 +10,7 @@ import {
   getAllClassStreamsByClassId,
   getAllEnrolledClassesByClassId,
   getEnrolledClassByClassAndSessionId,
+  getAllClassTopicsByClassId,
 } from "@/lib/data-service";
 
 import ClassStreamsSection from "@/components/ClassStreamsSection";
@@ -98,9 +99,11 @@ export default async function Page({ params }: { params: Params }) {
 
   const enrolledClasses = await getAllEnrolledClassesByClassId(classId);
 
+  const allTopics = await getAllClassTopicsByClassId(classId);
+
   return (
     <ClassStreamsSection
-      classId={classId}
+      topics={allTopics}
       session={session}
       classroom={classroom}
       enrolledClasses={enrolledClasses}

@@ -30,8 +30,10 @@ import EllipsisPopover from "@/components/EllipsisPopover";
 import ConfirmationScreen from "@/components/ConfirmationScreen";
 import StreamForm from "@/components/StreamForm";
 import StreamDetailsUserWork from "@/components/StreamDetailsUserWork";
+import { ITopic } from "@/components/TopicForm";
 
 export default function StreamDetailSection({
+  topics,
   stream,
   session,
   classroom,
@@ -40,6 +42,7 @@ export default function StreamDetailSection({
   onGetAllComments,
   onGetAllPrivateComments,
 }: {
+  topics: ITopic[] | null;
   stream: IStream;
   session: ISession;
   classroom: IClass;
@@ -530,6 +533,7 @@ export default function StreamDetailSection({
           </div>
           {showStreamForm && (
             <StreamForm
+              topics={topics}
               streamType={stream.type}
               formType="edit"
               stream={stream}

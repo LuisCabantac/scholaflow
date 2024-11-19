@@ -29,11 +29,12 @@ import AttachmentFileCard from "@/components/AttachmentFileCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import EllipsisPopover from "@/components/EllipsisPopover";
 import StreamForm from "@/components/StreamForm";
+import { ITopic } from "@/components/TopicForm";
 
 export default function ClassStreamCard({
+  topics,
   stream,
   session,
-  classId,
   classroom,
   showComments,
   enrolledClasses,
@@ -41,6 +42,7 @@ export default function ClassStreamCard({
   onDeleteStreamPost,
   deleteStreamPostIsPending,
 }: {
+  topics: ITopic[] | null;
   stream: IStream;
   classId: string;
   session: ISession;
@@ -175,7 +177,9 @@ export default function ClassStreamCard({
       >
         {stream.type === "stream" && (
           <div>
-            <Link href={`/user/classroom/class/${classId}/stream/${stream.id}`}>
+            <Link
+              href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+            >
               <div className="flex gap-2 pb-2">
                 <div className="relative h-10 w-10">
                   <Image
@@ -225,7 +229,7 @@ export default function ClassStreamCard({
                 {stream.caption.length > 80 && (
                   <span className="text-[#616572]">
                     <Link
-                      href={`/user/classroom/class/${classId}/stream/${stream.id}`}
+                      href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
                     >
                       {" "}
                       See more
@@ -237,9 +241,7 @@ export default function ClassStreamCard({
             {stream.attachment.length || stream.links.length ? (
               <div className="mt-2 grid gap-2">
                 <p className="font-medium">Attachments</p>
-                <ul
-                  className={`grid gap-[2px] font-medium ${stream.attachment.length > 1 && "md:grid-cols-2"}`}
-                >
+                <ul className="grid gap-1 font-medium">
                   {stream.attachment.map((file, index) => (
                     <AttachmentFileCard
                       file={file}
@@ -266,7 +268,7 @@ export default function ClassStreamCard({
         {stream.type !== "stream" && (
           <div>
             <Link
-              href={`/user/classroom/class/${classId}/stream/${stream.id}`}
+              href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               className="flex gap-2"
             >
               {stream.type === "assignment" && (
@@ -383,7 +385,7 @@ export default function ClassStreamCard({
             </button>
             <EllipsisPopover
               showEdit={session.user.id === stream.author}
-              clipboardUrl={`scholaflow.vercel.app/user/classroom/class/${classId}/stream/${stream.id}`}
+              clipboardUrl={`scholaflow.vercel.app/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               showEllipsis={ellipsis}
               showDelete={session.user.id === stream.author}
               onToggleEllipsis={handleToggleEllipsis}
@@ -464,7 +466,7 @@ export default function ClassStreamCard({
                 <input
                   type="text"
                   name="classroomId"
-                  defaultValue={classId}
+                  defaultValue={classroom.classroomId}
                   hidden
                 />
                 <input
@@ -508,11 +510,12 @@ export default function ClassStreamCard({
       )}
       {showStreamForm && (
         <StreamForm
-          streamType={stream.type}
-          formType="edit"
+          topics={topics}
           stream={stream}
           session={session}
+          formType="edit"
           classroom={classroom}
+          streamType={stream.type}
           enrolledClasses={enrolledClasses}
           onSetShowStreamForm={setShowStreamForm}
           onToggleShowStreamForm={handleToggleShowStreamForm}

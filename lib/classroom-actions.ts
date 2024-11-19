@@ -19,10 +19,12 @@ import {
 import {
   getAllClassStreamsByClassId,
   getAllClassworksByStreamId,
+  getAllClassworkStreamsByTopicId,
   getAllEnrolledClassesByClassAndSessionId,
   getAllMessagesByClassId,
   getClassByClassId,
   getClassStreamByStreamId,
+  getClassTopicByTopicId,
   getClassworkByClassAndUserId,
   getEnrolledClassByClassAndSessionId,
   getEnrolledClassByEnrolledClassId,
@@ -32,6 +34,7 @@ import {
   getUserByEmail,
   getUserByUserId,
 } from "@/lib/data-service";
+import { IStream } from "@/app/user/classroom/class/[classId]/page";
 
 export async function createClass(formData: FormData) {
   const session = await auth();
@@ -348,6 +351,10 @@ export async function createClassStreamPost(
 
   const dueDate = formData.get("dueDate");
 
+  const topicId = formData.get("topicId");
+
+  const topic = await getClassTopicByTopicId(topicId as string);
+
   const newStream = {
     author: session.user.id,
     authorName: session.user.name,
@@ -370,6 +377,8 @@ export async function createClassStreamPost(
     closeSubmissionsAfterDueDate:
       formData.get("closeSubmissionsAfterDueDate") === "true",
     points: formData.get("totalPoints"),
+    topicId: topic?.topicId,
+    topicName: topic?.topicName,
   };
 
   const { error } = await supabase.from("streams").insert([newStream]);
@@ -429,13 +438,17 @@ export async function updateClassStreamPost(
   const newTitle = formData.get("title");
   const newDueDate = formData.get("dueDate");
   const newPoints = formData.get("totalPoints");
+  const newTopicId = formData.get("topicId");
   const newAcceptingSubmissions =
     formData.get("acceptingSubmissions") === "true";
   const newCloseSubmissionsAfterDueDate =
     formData.get("closeSubmissionsAfterDueDate") === "true";
 
+  const topic = await getClassTopicByTopicId(newTopicId as string);
+
   if (
     currentStream.caption !== newCaption ||
+    currentStream.topicId !== (topic?.topicId || null) ||
     currentStream.announceToAll !== audienceIsAll ||
     newAttachments.length ||
     newUrlLinks.length ||
@@ -503,6 +516,8 @@ export async function updateClassStreamPost(
       points: newPoints,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,
+      topicId: topic?.topicId,
+      topicName: topic?.topicName,
       updatedPost: true,
     };
 
@@ -868,7 +883,7 @@ export async function addUserToClass(formData: FormData): Promise<{
 
   const enrolledClass = await getEnrolledClassByUserAndClassId(
     user.id,
-    classId,
+    classroomId,
   );
 
   if (enrolledClass)
@@ -1343,4 +1358,189 @@ export async function addMessageToChat(formData: FormData) {
   const { error } = await supabase.from("chat").insert([newChat]);
 
   if (error) throw new Error(error.message);
+}
+
+export async function createTopic(formData: FormData) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  const classroomId = formData.get("classroomId") as string;
+
+  const classroom = await getClassByClassId(classroomId);
+
+  if (!classroom)
+    return {
+      success: false,
+      message: "This class does not exist.",
+    };
+
+  if (
+    session.user.role !== "teacher" ||
+    session.user.id !== classroom.teacherId
+  ) {
+    return {
+      success: false,
+      message: "Only the creator of this class can create topics.",
+    };
+  }
+
+  const newTopic = {
+    topicName: formData.get("topicName"),
+    classroomId: formData.get("classroomId"),
+  };
+
+  const { error } = await supabase.from("classTopic").insert([newTopic]);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath("/user/classroom");
+
+  return { success: true, message: "Topic created successfully!" };
+}
+
+export async function updateTopic(formData: FormData) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  const classroomId = formData.get("classroomId") as string;
+
+  const classroom = await getClassByClassId(classroomId);
+
+  if (!classroom)
+    return {
+      success: false,
+      message: "This class does not exist.",
+    };
+
+  if (
+    session.user.role !== "teacher" ||
+    session.user.id !== classroom.teacherId
+  ) {
+    return {
+      success: false,
+      message: "Only the creator of this class can edit topics.",
+    };
+  }
+
+  const topicId = formData.get("topicId") as string;
+
+  const currentTopic = await getClassTopicByTopicId(topicId);
+
+  if (!currentTopic)
+    return {
+      success: false,
+      message: "This topic doesn't exist.",
+    };
+
+  const newTopicName = formData.get("topicName");
+
+  if (newTopicName !== currentTopic.topicName) {
+    const updatedTopic = {
+      topicName: newTopicName,
+    };
+
+    const classworkStream = await getAllClassworkStreamsByTopicId(topicId);
+
+    if (classworkStream?.length) {
+      for (const stream of classworkStream) {
+        await updateClassStreamPostTopic(
+          "edit",
+          stream,
+          newTopicName as string,
+        );
+      }
+    }
+
+    const { error } = await supabase
+      .from("classTopic")
+      .update([updatedTopic])
+      .eq("topicId", topicId);
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+
+    revalidatePath(
+      `/user/classroom/class/${currentTopic.classroomId}/classworks`,
+    );
+
+    return { success: true, message: "Topic updated successfully!" };
+  }
+  return {
+    success: true,
+    message: `No changes were made to the topic.`,
+  };
+}
+
+export async function deleteTopic(topicId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  const topic = await getClassTopicByTopicId(topicId);
+
+  if (!topic) throw new Error("This topic does not exist.");
+
+  const classroom = await getClassByClassId(topic.classroomId);
+
+  if (!classroom) throw new Error("This class does not exist.");
+
+  if (
+    session.user.role !== "teacher" ||
+    session.user.id !== classroom.teacherId
+  )
+    throw new Error("Only the creator of this class can delete topics.");
+
+  const classworkStream = await getAllClassworkStreamsByTopicId(topicId);
+
+  if (classworkStream?.length) {
+    for (const stream of classworkStream) {
+      await updateClassStreamPostTopic("delete", stream);
+    }
+  }
+
+  const { error } = await supabase
+    .from("classTopic")
+    .delete()
+    .eq("topicId", topicId);
+
+  revalidatePath(`/user/classroom/class/${topic.classroomId}/classworks`);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function updateClassStreamPostTopic(
+  type: "edit" | "delete",
+  stream: IStream,
+  topicName?: string,
+) {
+  if (type === "edit") {
+    const updatedStream = {
+      topicName,
+    };
+
+    const { error } = await supabase
+      .from("streams")
+      .update([updatedStream])
+      .eq("id", stream.id);
+
+    if (error) throw new Error(error.message);
+  }
+  if (type === "delete") {
+    const updatedStream = {
+      topicName: null,
+      topicId: null,
+    };
+
+    const { error } = await supabase
+      .from("streams")
+      .update([updatedStream])
+      .eq("id", stream.id);
+
+    if (error) throw new Error(error.message);
+  }
 }

@@ -5,6 +5,7 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import {
+  getAllClassTopicsByClassId,
   getAllClassworkStreamsByClassId,
   getAllCommentsByStreamId,
   getAllEnrolledClassesByClassId,
@@ -85,13 +86,19 @@ export default async function Page({ params }: { params: Params }) {
 
   const enrolledClasses = await getAllEnrolledClassesByClassId(classId);
 
+  async function handleGetAllClassTopicsByClassId(classId: string) {
+    "use server";
+    const topics = await getAllClassTopicsByClassId(classId);
+    return topics;
+  }
+
   return (
     <ClassworksSection
-      classId={classId}
-      classroom={classroom}
       session={session}
+      classroom={classroom}
       enrolledClasses={enrolledClasses}
       onGetAllComments={handleGetAllCommentsByStreamId}
+      onGetAllTopics={handleGetAllClassTopicsByClassId}
       onGetAllClassworkStreams={handleGetAllClassworkStreamsByClassId}
     />
   );

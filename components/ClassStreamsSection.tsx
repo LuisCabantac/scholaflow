@@ -4,6 +4,7 @@ import { useOptimistic, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
@@ -13,14 +14,14 @@ import {
   IStream,
   IStreamComment,
 } from "@/app/user/classroom/class/[classId]/page";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
 import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
 import ClassStreamCard from "@/components/ClassStreamCard";
-import { useSearchParams } from "next/navigation";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { ITopic } from "@/components/TopicForm";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -31,14 +32,14 @@ const illustrationArr = [
 ];
 
 export default function ClassStreamsSection({
-  classId,
+  topics,
   session,
   classroom,
   enrolledClasses,
   onGetAllComments,
   onGetAllClassStreams,
 }: {
-  classId: string;
+  topics: ITopic[] | null;
   session: ISession;
   classroom: IClass;
   enrolledClasses: IClass[] | null;
@@ -55,7 +56,7 @@ export default function ClassStreamsSection({
 
   const { data: streams, isPending: streamsIsPending } = useQuery({
     queryKey: [`streams--${classroom.classroomId}`],
-    queryFn: () => onGetAllClassStreams(classId),
+    queryFn: () => onGetAllClassStreams(classroom.classroomId),
   });
 
   const { mutate: deleteStreamPost, isPending: deleteStreamPostIsPending } =
@@ -118,25 +119,25 @@ export default function ClassStreamsSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
           <Link
-            href={`/user/classroom/class/${classId}`}
+            href={`/user/classroom/class/${classroom.classroomId}`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/classwork`}
+            href={`/user/classroom/class/${classroom.classroomId}/classwork`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/people`}
+            href={`/user/classroom/class/${classroom.classroomId}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/chat`}
+            href={`/user/classroom/class/${classroom.classroomId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
@@ -497,10 +498,10 @@ export default function ClassStreamsSection({
                 .map((stream) => (
                   <ClassStreamCard
                     key={stream.id}
+                    topics={topics}
                     stream={stream}
                     classroom={classroom}
                     session={session}
-                    classId={classId}
                     showComments={true}
                     enrolledClasses={enrolledClasses}
                     onDeleteStreamPost={handleDeleteStreamPost}
@@ -598,7 +599,7 @@ export default function ClassStreamsSection({
                 </p>
               )}
               <Link
-                href={`/user/classroom/class/${classId}/classwork`}
+                href={`/user/classroom/class/${classroom.classroomId}/classwork`}
                 className="mt-2 flex justify-end text-sm font-medium text-[#22317c]"
               >
                 View all
@@ -618,6 +619,7 @@ export default function ClassStreamsSection({
       {showStreamForm && (
         <StreamForm
           formType="create"
+          topics={topics}
           session={session}
           classroom={classroom}
           streamType="stream"
