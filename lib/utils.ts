@@ -78,6 +78,7 @@ export function formatDate(createdAt: string): string {
 
   const differenceInDays =
     (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+  const differenceInYears = now.getFullYear() - date.getFullYear();
 
   if (differenceInDays < 1) {
     return formatDistanceToNow(date, { addSuffix: true });
@@ -85,8 +86,10 @@ export function formatDate(createdAt: string): string {
     return `Yesterday at ${format(date, "h:mm a")}`;
   } else if (differenceInDays < 7) {
     return format(date, "EEEE 'at' h:mm a");
-  } else {
+  } else if (differenceInYears < 1) {
     return format(date, "MMMM d 'at' h:mm a");
+  } else {
+    return format(date, "MMMM d, yyyy 'at' h:mm a");
   }
 }
 
