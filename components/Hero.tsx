@@ -25,14 +25,14 @@ export default function Hero() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="z-10 flex flex-col items-center"
+      className="z-10 flex flex-col items-center gap-14 md:gap-16"
     >
-      <div className="flex items-center justify-center gap-4 px-4 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
+      <div className="flex items-center justify-center gap-4 px-3 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
           <div className="grid gap-3 md:gap-6">
             <motion.h1
               variants={fadeInUp}
-              className="text-4xl font-semibold md:text-6xl"
+              className="text-4xl font-semibold tracking-tighter md:text-6xl"
             >
               Your All-in-One Learning Platform
             </motion.h1>
@@ -56,7 +56,7 @@ export default function Hero() {
       </div>
       <motion.div
         variants={fadeIn}
-        className="h-[90%] w-[90%] rounded-md shadow-lg md:w-[70%]"
+        className="h-[90%] w-[90%] rounded-md shadow-lg md:w-[80%]"
       >
         <Image
           src={heroImage}
