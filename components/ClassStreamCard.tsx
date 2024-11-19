@@ -413,12 +413,13 @@ export default function ClassStreamCard({
             {optimisticComments?.length ? (
               <button
                 onClick={handleToggleShowClassComments}
-                className={`${showClassComments && "mb-2"} mt-2 font-medium`}
+                  className={`${showClassComments && "mb-2"} mt-2 hidden text-sm font-medium md:block`}
               >
                 {showClassComments ? "Hide" : "View"} all comments
               </button>
+              </>
             ) : null}
-            <ul className="grid gap-2">
+            <ul className="hidden gap-2 md:grid">
               {showClassComments &&
                 !streamsCommentsIsPending &&
                 optimisticComments?.map((comment) => (
@@ -434,9 +435,28 @@ export default function ClassStreamCard({
                 ))}
             </ul>
           </div>
+          <Link
+            href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+            className="mt-2 flex h-10 w-full items-center justify-between rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-[#616572] md:hidden"
+          >
+            <span>Add class comment</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              className="size-6 stroke-[#22317c]"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+              />
+            </svg>
+          </Link>
           {(classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) && (
-            <div>
+            <div className="hidden md:block">
               <form
                 className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
                 onSubmit={handleCommentSubmit}
