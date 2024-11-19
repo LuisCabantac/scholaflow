@@ -281,7 +281,10 @@ export default function StreamSubmissionsSection({
                                 (turnedIn) => turnedIn.userId === user.userId,
                               )?.isTurnedIn ? (
                                 <p className="text-sm font-medium text-[#616572]">
-                                  {new Date(stream?.dueDate ?? "") > new Date()
+                                  {(new Date(stream?.dueDate ?? "") >
+                                    new Date() &&
+                                    stream?.hasDueDate === "true") ||
+                                  stream?.hasDueDate === "false"
                                     ? "Turned in"
                                     : "Done late"}
                                 </p>
