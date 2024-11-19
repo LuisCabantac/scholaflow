@@ -91,7 +91,7 @@ export default function AttachmentFileCard({
             </svg>
           </button>
         ) : (
-          <div className="w-[0.65rem] md:w-3"></div>
+          <div className="w-2 md:w-[0.35rem]"></div>
         )}
       </div>
     </li>
