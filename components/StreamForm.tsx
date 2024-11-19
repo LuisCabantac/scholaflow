@@ -217,21 +217,41 @@ export default function StreamForm({
   return (
     <div className="modal__container">
       <div
-        className="flex h-[80%] w-[95%] items-center justify-center md:w-[80%]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-[#f3f6ff]"
         ref={streamFormModalWrapperRef}
       >
         <form
-          className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
+          className="relative min-h-screen w-full pb-[6rem]"
           onSubmit={handleSubmitStream}
         >
-          <div className="flex items-center px-4 py-4">
-            <h3 className="text-lg font-medium md:text-xl">
+          <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
+            <h3 className="text-xl font-medium md:text-2xl">
               {formType === "edit" && stream ? "Edit " : "Create "}
               {streamType === "stream" ? "post" : (streamType ?? "")}
             </h3>
+            <button
+              className="disabled:cursor-not-allowed"
+              type="button"
+              onClick={onToggleShowStreamForm}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
           <div
-            className={`grid px-4 pb-4 md:gap-4 ${streamType !== "stream" && "md:grid-cols-2"}`}
+            className={`grid px-4 pb-4 md:gap-4 md:px-8 md:pb-8 ${streamType !== "stream" && "md:grid-cols-2"}`}
           >
             <div className="flex flex-col justify-start gap-3">
               <input
@@ -393,7 +413,7 @@ export default function StreamForm({
                 <textarea
                   required={streamType === "stream"}
                   name="caption"
-                  className="h-[5rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:h-[8rem] md:px-5 md:py-3 md:text-base"
+                  className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
                   placeholder="Add relevant details or instructions"
                   disabled={isLoading}
                   defaultValue={stream?.caption ?? ""}
@@ -498,7 +518,7 @@ export default function StreamForm({
                     Files
                   </label>
                 ) : null}
-                <ul className="grid max-h-20 gap-1 overflow-y-auto">
+                <ul className="grid gap-1 overflow-y-auto">
                   {attachmentNames.length
                     ? attachmentNames.map((file, index) => (
                         <AttachmentFileCard
@@ -527,13 +547,13 @@ export default function StreamForm({
                     : null}
                 </ul>
               </div>
-              <div className="grid gap-2">
+              <div className="mb-2 grid gap-2">
                 {currentUrlLinks.length || newUrlLinks.length ? (
                   <label className="text-xs font-medium md:text-sm">
                     Links
                   </label>
                 ) : null}
-                <ul className="grid max-h-20 gap-1 overflow-y-auto">
+                <ul className="grid gap-1 overflow-y-auto">
                   {newUrlLinks.length
                     ? newUrlLinks.map((link, index) => (
                         <AttachmentLinkCard
@@ -791,7 +811,7 @@ export default function StreamForm({
               </div>
             )}
           </div>
-          <div className="mx-3 mb-3 mt-2 flex items-center justify-end gap-2 md:mx-4 md:mb-4">
+          <div className="fixed bottom-0 right-0 mr-4 flex w-full items-center justify-end gap-2 bg-[#f3f6ff] py-4 md:mr-8 md:w-auto">
             {!isLoading && (
               <Button type="secondary" onClick={onToggleShowStreamForm}>
                 Cancel
