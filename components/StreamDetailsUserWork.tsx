@@ -1,5 +1,4 @@
 import React, { useOptimistic, useRef, useState } from "react";
-import Image from "next/image";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -414,9 +413,9 @@ export default function StreamDetailsUserWork({
         <div className="block md:hidden">
           <div>
             <div className="flex-end flex flex-col">
-              <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs font-medium md:text-sm">
-                  Private comments
+              <div
+                className={`flex items-center justify-between ${expandPrivateComments && "mb-2"}`}
+              >
                 <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
@@ -461,15 +460,7 @@ export default function StreamDetailsUserWork({
               ) : null}
             </div>
           </div>
-          <div className="flex-end flex w-full items-center gap-2">
-            <div className="relative h-8 w-8 flex-shrink-0 rounded-full">
-              <Image
-                src={session.user.image}
-                alt={`${session.user.name}'s avatar`}
-                fill
-                className="rounded-full"
-              />
-            </div>
+          <div className="w-full">
             <form
               className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
               onSubmit={handleCommentSubmit}
@@ -507,7 +498,6 @@ export default function StreamDetailsUserWork({
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
               ></textarea>
-
               <button className="py-2 pr-4" disabled={addCommentIsPending}>
                 {addCommentIsPending ? (
                   <div className="spinner__mini dark"></div>
