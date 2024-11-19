@@ -337,7 +337,7 @@ export default function StreamDetailsUserWork({
       <div className={`${expandModalView ? "grid" : "hidden"} gap-2 md:grid`}>
         {currentAttachments.length || attachmentNames.length ? (
           <div className="grid gap-2">
-            <label className="text-xs font-medium md:text-sm">Files</label>
+            <label className="text-sm font-medium">Files</label>
             <ul
               className={`grid gap-1 overflow-y-auto md:max-h-40 ${expandPrivateComments ? "max-h-20" : "max-h-40"}`}
             >
@@ -376,7 +376,7 @@ export default function StreamDetailsUserWork({
         ) : null}
         {currentUrlLinks.length || newUrlLinks.length ? (
           <div className="grid gap-2">
-            <label className="text-xs font-medium md:text-sm">Links</label>
+            <label className="text-sm font-medium">Links</label>
             <ul
               className={`grid gap-1 overflow-y-auto md:max-h-40 ${expandPrivateComments ? "max-h-20" : "max-h-40"}`}
             >
@@ -417,7 +417,7 @@ export default function StreamDetailsUserWork({
               <div className="mb-2 flex items-center justify-between">
                 <label className="text-xs font-medium md:text-sm">
                   Private comments
-                </label>
+                <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
                     (comment.author === session.user.id &&
@@ -629,10 +629,7 @@ export default function StreamDetailsUserWork({
         <div className="hidden md:block">
           <div>
             <div className="flex-end flex flex-col">
-              <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs font-medium md:text-sm">
-                  Private comments
-                </label>
+                <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
                     (comment.author === session.user.id &&
@@ -642,7 +639,7 @@ export default function StreamDetailsUserWork({
                 ).length ? (
                   <button
                     onClick={handleToggleExpandPrivateComments}
-                    className="block text-xs text-[#22317c] md:hidden"
+                    className="block text-sm text-[#22317c] md:hidden"
                   >
                     {expandPrivateComments ? "Minimize" : "Expand"}
                   </button>
