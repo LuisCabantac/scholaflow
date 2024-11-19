@@ -74,7 +74,7 @@ export default function StreamCommentCard({
               {formatDate(comment.created_at)}
             </p>
           </div>
-          <p className="whitespace-pre-line">{comment.comment}</p>
+          <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
         </div>
       </div>
       {(session.user.id === comment.author ||
