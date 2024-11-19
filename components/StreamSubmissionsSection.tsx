@@ -544,9 +544,9 @@ export default function StreamSubmissionsSection({
                   <p>No attachments</p>
                 </>
               )}
-              <div className="fixed bottom-0 left-3 right-3 flex flex-col bg-[#f3f6ff] pb-3 md:static md:block md:pb-0">
+              <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] pb-3 md:static md:block md:pb-0">
                 <div>
-                  <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] pt-2 md:mt-2">
+                  <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">Private comments</p>
                       {optimisticComments?.filter(
@@ -610,7 +610,7 @@ export default function StreamSubmissionsSection({
                     ) : null}
                   </div>
                 </div>
-                <div className="w-full">
+                <div className="z-10 w-full bg-[#f3f6ff] px-3 md:px-0">
                   <form
                     className="comment__form mt-2 flex w-full items-center rounded-md border-2 border-[#dbe4ff]"
                     onSubmit={handleCommentSubmit}
