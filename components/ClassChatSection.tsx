@@ -302,7 +302,7 @@ export default function ClassChatSection({
           </ul>
           <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-[#f3f6ff] md:pt-0">
             {attachmentNames.length ? (
-              <div>
+              <>
                 <div className="flex justify-between border-t-2 border-[#dbe4ff] pt-2 text-sm">
                   <p className="font-medium">Attachments</p>
                   <button type="button" onClick={handleToggleExpandAttachments}>
@@ -359,79 +359,90 @@ export default function ClassChatSection({
                       />
                     ))}
                 </ul>
-              </div>
+              </>
             ) : null}
             <div className="flex items-center gap-2">
               <form
+                className="flex w-full items-end gap-2"
                 onSubmit={handleSubmitMessage}
-                className="flex w-full items-center gap-2 md:gap-4"
               >
-                <div>
-                  <label className="input__file__label flex cursor-pointer gap-1">
-                    <input
-                      type="file"
-                      multiple
-                      className="input__file hidden disabled:cursor-not-allowed"
-                      disabled={addMessageIsPending}
-                      onChange={(event) => {
-                        handleAttachmentNameChange(event);
-                        handleSetNewAttachment(event);
-                      }}
-                    />
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      className="size-6 stroke-[#616572]"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
-                  </label>
-                </div>
-                <input
-                  type="text"
-                  name="classroomId"
-                  defaultValue={classId}
-                  hidden
-                />
-                <textarea
-                  name="message"
-                  className="h-[2.8rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
-                  value={message}
-                  required={!newAttachments.length}
-                  placeholder={
+                <label
+                  className={`py-[0.65rem] ${
                     addMessageIsPending
-                      ? "Adding your message..."
-                      : "Add a message..."
-                  }
-                  disabled={addMessageIsPending}
-                  onChange={(event) => setMessage(event.target.value)}
-                ></textarea>
-                <button type="submit" disabled={addMessageIsPending}>
-                  {addMessageIsPending ? (
-                    <div className="spinner__mini dark"></div>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      className="size-6 stroke-[#22317c] disabled:cursor-not-allowed"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                      />
-                    </svg>
-                  )}
-                </button>
+                      ? "disabled:cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    multiple
+                    className="input__file hidden disabled:cursor-not-allowed"
+                    disabled={addMessageIsPending}
+                    onChange={(event) => {
+                      handleAttachmentNameChange(event);
+                      handleSetNewAttachment(event);
+                    }}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    className="size-6 stroke-[#5c7cfa]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                </label>
+                <div
+                  className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${message.length > 50 ? "items-end" : "items-center"}`}
+                >
+                  <input
+                    type="text"
+                    name="classroomId"
+                    defaultValue={classId}
+                    hidden
+                  />
+                  <textarea
+                    name="message"
+                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${message.length > 50 ? "h-28" : "h-10"}`}
+                    value={message}
+                    required={!newAttachments.length}
+                    placeholder={
+                      addMessageIsPending
+                        ? "Adding your message..."
+                        : "Add a message..."
+                    }
+                    disabled={addMessageIsPending}
+                    onChange={(event) => setMessage(event.target.value)}
+                  ></textarea>
+                  <button
+                    type="submit"
+                    className="py-2 pr-4"
+                    disabled={addMessageIsPending}
+                  >
+                    {addMessageIsPending ? (
+                      <div className="spinner__mini dark"></div>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        className="size-6 stroke-[#22317c] disabled:cursor-not-allowed"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </form>
             </div>
           </div>
