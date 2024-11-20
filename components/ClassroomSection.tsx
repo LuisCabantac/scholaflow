@@ -689,6 +689,7 @@ export default function ClassroomSection({
         <ClassForm
           type="create"
           session={session}
+          onSetShowClassForm={setShowClassForm}
           onToggleShowClassForm={handleToggleShowClassForm}
         />
       )}

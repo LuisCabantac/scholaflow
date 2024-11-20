@@ -613,6 +613,7 @@ export default function ClassStreamsSection({
           type="edit"
           session={session}
           classroom={classroom}
+          onSetShowClassForm={setShowClassForm}
           onToggleShowClassForm={handleToggleShowClassForm}
         />
       )}

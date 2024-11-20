@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
 import { ISession } from "@/lib/auth";
 import { createClass, updateClass } from "@/lib/classroom-actions";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import { IClass } from "@/components/ClassroomSection";
@@ -14,13 +15,17 @@ export default function ClassForm({
   type,
   session,
   classroom,
+  onSetShowClassForm,
   onToggleShowClassForm,
 }: {
   type: "create" | "edit";
   session: ISession;
   classroom?: IClass;
+  onSetShowClassForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowClassForm: () => void;
 }) {
+  const { useClickOutsideHandler } = useClickOutside();
+  const classFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [className, setClassName] = useState(classroom?.className ?? "");
   const [section, setSection] = useState(classroom?.section ?? "");
@@ -57,20 +62,52 @@ export default function ClassForm({
     setUpdateClassCode(!updateClassCode);
   }
 
+  useClickOutsideHandler(
+    classFormModalWrapperRef,
+    () => {
+      onSetShowClassForm(false);
+    },
+    isLoading,
+  );
+
   return (
     <div className="modal__container">
-      <div className="flex h-[40%] w-[95%] items-center justify-center md:h-[60%] md:w-[80%]">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-[#f3f6ff]"
+        ref={classFormModalWrapperRef}
+      >
         <form
-          className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
+          className="min-h-screen w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleCreateClass}
         >
-          <div className="flex items-center justify-between px-4 py-4">
+          <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
             <h3 className="text-lg font-medium md:text-xl">
               {type === "edit" ? "Edit " : "Create "} class
             </h3>
+            <button
+              className="disabled:cursor-not-allowed"
+              type="button"
+              disabled={isLoading}
+              onClick={onToggleShowClassForm}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
           <div
-            className={`grid gap-4 px-4 pb-4 ${type !== "create" && "md:grid-cols-2"}`}
+            className={`grid gap-4 px-4 pb-4 md:px-8 md:pb-8 ${type !== "create" && "md:grid-cols-2"}`}
           >
             <div className="flex flex-col justify-start gap-3">
               <div className="grid gap-2">
@@ -236,7 +273,17 @@ export default function ClassForm({
                     Class code
                   </label>
                   <div className="flex items-center justify-between">
-                    <p className="text-lg">{classroom?.classCode}</p>
+                    <p
+                      className="cursor-pointer text-lg text-[#5c7cfa]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          classroom?.classCode ?? "",
+                        );
+                        toast.success("Copied to clipboard!");
+                      }}
+                    >
+                      {classroom?.classCode}
+                    </p>
                     <button
                       className="text-sm text-[#384689] hover:text-[#384689] disabled:cursor-not-allowed disabled:text-[#1b2763]"
                       type="button"
@@ -283,12 +330,12 @@ export default function ClassForm({
               </div>
             )}
           </div>
-          <div className="mx-3 mb-3 mt-2 flex items-center justify-end gap-2 md:mx-4 md:mb-4">
-            {!isLoading ? (
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+            {!isLoading && (
               <Button type="secondary" onClick={onToggleShowClassForm}>
                 Cancel
               </Button>
-            ) : null}
+            )}
             <Button type="primary" isLoading={isLoading}>
               {type === "edit" ? "Save changes" : "Create"}
             </Button>
