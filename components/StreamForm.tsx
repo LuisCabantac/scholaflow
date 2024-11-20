@@ -235,6 +235,7 @@ export default function StreamForm({
             <button
               className="disabled:cursor-not-allowed"
               type="button"
+              disabled={isLoading}
               onClick={onToggleShowStreamForm}
             >
               <svg
