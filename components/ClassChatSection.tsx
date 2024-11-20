@@ -30,16 +30,10 @@ const imageExtensions: string[] = [
   "png",
   "gif",
   "bmp",
-  "tiff",
-  "tif",
   "webp",
-  "heif",
-  "heic",
   "avif",
   "svg",
   "ico",
-  "raw",
-  "indd",
 ];
 
 export default function ClassChatSection({
