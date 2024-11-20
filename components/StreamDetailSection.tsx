@@ -512,6 +512,10 @@ export default function StreamDetailSection({
                   session.user.id === stream.author ||
                   session.user.id === classroom.teacherId
                 }
+                showDelete={
+                  session.user.id === stream.author ||
+                  session.user.id === classroom.teacherId
+                }
                 clipboardUrl={`scholaflow.vercel.app${pathname}`}
                 onToggleEllipsis={handleToggleEllipsis}
                 showEllipsis={ellipsis}
