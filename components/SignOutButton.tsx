@@ -4,7 +4,7 @@ export default function SignOutButton() {
   return (
     <form action={signOutAction}>
       <button
-        className="signout__button flex w-full gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-[#c7d2f1]"
+        className="signout__button flex w-full gap-2 rounded-md px-2 py-2 text-sm transition-colors hover:bg-[#d8e0f5]"
         type="submit"
       >
         <svg
