@@ -345,7 +345,7 @@ export default function ClassChatSection({
                     </span>
                   </div>
                 )}
-                <ul className={`mb-2 grid gap-1 overflow-y-auto md:max-h-40`}>
+                <ul className="mb-2 grid gap-1 overflow-y-auto md:max-h-40">
                   {expandAttachments &&
                     attachmentNames.map((file, index) => (
                       <AttachmentFileCard

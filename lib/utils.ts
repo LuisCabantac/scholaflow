@@ -20,6 +20,11 @@ export function extractImagePath(url: string): string {
   return match ? match[1] : "";
 }
 
+export function extractCommentFilePath(url: string): string {
+  const match = url.match(/\/comments\/(.+)/);
+  return match![1];
+}
+
 export function extractStreamFilePath(url: string): string {
   const match = url.match(/\/streams\/(.+)/);
   return match![1];

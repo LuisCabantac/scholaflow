@@ -11,6 +11,7 @@ import {
   arraysAreEqual,
   capitalizeFirstLetter,
   extractClassworkFilePath,
+  extractCommentFilePath,
   extractMessagesFilePath,
   extractStreamFilePath,
   generateClassCode,
@@ -20,8 +21,10 @@ import {
   getAllClassStreamsByClassId,
   getAllClassworksByStreamId,
   getAllClassworkStreamsByTopicId,
+  getAllCommentsByStreamId,
   getAllEnrolledClassesByClassAndSessionId,
   getAllMessagesByClassId,
+  getAllPrivateCommentsByStreamId,
   getClassByClassId,
   getClassStreamByStreamId,
   getClassTopicByTopicId,
@@ -641,6 +644,14 @@ export async function deleteAllMessagesByClassId(classId: string) {
 }
 
 export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
+  const comments = await getAllCommentsByStreamId(streamId);
+
+  if (comments?.length) {
+    const attachments = comments.map((comment) => comment.attachment).flat();
+    const filePath = attachments.map((file) => extractCommentFilePath(file));
+    await deleteFileFromBucket("comments", filePath);
+  }
+
   const { error } = await supabase
     .from("classComments")
     .delete()
@@ -652,6 +663,16 @@ export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
 export async function deleteAllPrivateStreamCommentsByStreamId(
   streamId: string,
 ) {
+  const privateComments = await getAllPrivateCommentsByStreamId(streamId);
+
+  if (privateComments?.length) {
+    const attachments = privateComments
+      .map((comment) => comment.attachment)
+      .flat();
+    const filePath = attachments.map((file) => extractCommentFilePath(file));
+    await deleteFileFromBucket("comments", filePath);
+  }
+
   const { error } = await supabase
     .from("classPrivateComments")
     .delete()
@@ -698,6 +719,13 @@ export async function deleteStreamComment(
   )
     throw new Error("You're not authorized to delete this comment.");
 
+  if (comment.attachment.length) {
+    const filePath = comment.attachment.map((file) =>
+      extractCommentFilePath(file),
+    );
+    await deleteFileFromBucket("comments", filePath);
+  }
+
   const { error } = await supabase
     .from("classComments")
     .delete()
@@ -732,6 +760,23 @@ export async function addCommentToStream(formData: FormData) {
     throw new Error("You don't have permission to comment on this post.");
   }
 
+  const attachments = formData.getAll("attachments");
+  const commentAttachments = Array.isArray(attachments)
+    ? await Promise.all(
+        attachments.map(async (attachment) => {
+          if (attachment instanceof File && attachment.name !== "undefined") {
+            return await uploadAttachments(
+              "comments",
+              formData.get("classroomId") as string,
+              attachment,
+            );
+          } else {
+            return null;
+          }
+        }),
+      ).then((results) => results.filter((url) => url !== null))
+    : [];
+
   const newComment = {
     author: session.user.id,
     authorName: session.user.name,
@@ -739,6 +784,7 @@ export async function addCommentToStream(formData: FormData) {
     comment: formData.get("comment"),
     classroomId: formData.get("classroomId"),
     streamId: formData.get("streamId"),
+    attachment: commentAttachments,
   };
 
   const { error } = await supabase.from("classComments").insert([newComment]);
@@ -779,6 +825,23 @@ export async function addPrivateComment(formData: FormData) {
     throw new Error("You don't have permission to comment on this classwork.");
   }
 
+  const attachments = formData.getAll("attachments");
+  const commentAttachments = Array.isArray(attachments)
+    ? await Promise.all(
+        attachments.map(async (attachment) => {
+          if (attachment instanceof File && attachment.name !== "undefined") {
+            return await uploadAttachments(
+              "comments",
+              formData.get("classroomId") as string,
+              attachment,
+            );
+          } else {
+            return null;
+          }
+        }),
+      ).then((results) => results.filter((url) => url !== null))
+    : [];
+
   const newPrivateComment = {
     author: session.user.id,
     authorName: session.user.name,
@@ -788,6 +851,7 @@ export async function addPrivateComment(formData: FormData) {
     comment: formData.get("comment"),
     classroomId: formData.get("classroomId"),
     streamId: formData.get("streamId"),
+    attachment: commentAttachments,
   };
 
   const { error } = await supabase
@@ -825,6 +889,13 @@ export async function deletePrivateComment(
     )
   )
     throw new Error("You're not authorized to delete this comment.");
+
+  if (comment.attachment.length) {
+    const filePath = comment.attachment.map((file) =>
+      extractCommentFilePath(file),
+    );
+    await deleteFileFromBucket("comments", filePath);
+  }
 
   const { error } = await supabase
     .from("classPrivateComments")

@@ -36,6 +36,15 @@ export default function StreamCommentCard({
   const commentEllipsisWrapperRef = useRef<HTMLDivElement>(null);
   const [commentEllipsis, setCommentEllipsis] = useState(false);
   const [showCommentConfirmation, setShowCommentConfirmation] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+
+  function openZoomedImage(imageUrl: string) {
+    setZoomedImage(imageUrl);
+  }
+
+  function closeZoomedImage() {
+    setZoomedImage(null);
+  }
 
   function handleToggleCommentEllipsis() {
     setCommentEllipsis(!commentEllipsis);
@@ -74,7 +83,28 @@ export default function StreamCommentCard({
               {formatDate(comment.created_at)}
             </p>
           </div>
-          <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
+          {comment.comment && (
+            <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
+          )}
+          {comment.attachment.length ? (
+            <ul className="mt-1 grid gap-1">
+              {comment.attachment.map((image) => (
+                <li
+                  key={image}
+                  onClick={() => openZoomedImage(image)}
+                  className="cursor-pointer"
+                >
+                  <Image
+                    src={image}
+                    alt={image}
+                    width={100}
+                    height={100}
+                    className="w-[10rem] rounded-md object-cover md:w-[15rem]"
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
       {(session.user.id === comment.author ||
@@ -121,6 +151,17 @@ export default function StreamCommentCard({
                 Are you sure you want to delete this comment?
               </ConfirmationScreen>
             )}
+          </div>
+        </div>
+      )}
+      {zoomedImage && (
+        <div className="modal__container" onClick={closeZoomedImage}>
+          <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[40%]">
+            <img
+              src={zoomedImage}
+              alt="zoomed__image"
+              className="w-full object-cover"
+            />
           </div>
         </div>
       )}

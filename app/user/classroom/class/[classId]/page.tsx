@@ -69,6 +69,7 @@ export interface IStreamComment {
   created_at: string;
   updatedComment: boolean;
   toUserId: string;
+  attachment: string[];
 }
 
 export default async function Page({ params }: { params: Params }) {

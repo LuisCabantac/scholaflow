@@ -62,6 +62,10 @@ export default function StreamDetailsUserWork({
   );
   const [expandPrivateComments, setExpandPrivateComments] = useState(false);
   const [streamComment, setStreamComment] = useState("");
+  const [attachmentImagesNames, setAttachmentImagesNames] = useState<string[]>(
+    [],
+  );
+  const [attachmentImages, setAttachmentImages] = useState<File[]>([]);
 
   async function handleSubmitClasswork(event: React.FormEvent) {
     event.preventDefault();
@@ -156,8 +160,41 @@ export default function StreamDetailsUserWork({
   function handleCommentSubmit(event: React.FormEvent) {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
+    attachmentImages.forEach((attachment) =>
+      formData.append("attachments", attachment),
+    );
     addComment(formData);
     setStreamComment("");
+    setAttachmentImages([]);
+    setAttachmentImagesNames([]);
+  }
+
+  function handleSetAttachmentImages(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+      setAttachmentImages((prevFiles) => [...prevFiles, ...files]);
+    }
+  }
+
+  function handleAttachmentImageNameChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const files = event.target.files;
+    if (files) {
+      const newFileNames = Array.from(files).map((file) => file.name);
+      setAttachmentImagesNames(newFileNames);
+    }
+  }
+
+  function handleRemoveAttachmentImage(index: number) {
+    setAttachmentImages((prevFiles) =>
+      prevFiles.filter((_, i: number) => i !== index),
+    );
+    setAttachmentImagesNames((prevFiles) =>
+      prevFiles.filter((_, i: number) => i !== index),
+    );
   }
 
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
@@ -249,7 +286,7 @@ export default function StreamDetailsUserWork({
   );
 
   return (
-    <article className="fixed bottom-3 left-3 right-3 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[28rem] md:p-4 md:shadow-sm">
+    <article className="fixed bottom-3 left-3 right-3 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
       <div className="flex items-center justify-between">
         <h4 className="mb-2 text-lg font-medium">Your work</h4>
         <div className="flex gap-1">
@@ -410,7 +447,7 @@ export default function StreamDetailsUserWork({
             </ul>
           </div>
         ) : null}
-        <div className="block md:hidden">
+        <div className="z-10 block md:hidden">
           <div>
             <div className="flex-end flex flex-col">
               <div
@@ -462,62 +499,114 @@ export default function StreamDetailsUserWork({
           </div>
           <div className="mt-1 w-full">
             <form
-              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className="flex items-end gap-2"
               onSubmit={handleCommentSubmit}
             >
-              <input
-                type="text"
-                name="classroomId"
-                defaultValue={stream.classroomId}
-                hidden
-              />
-              <input
-                type="text"
-                name="classworkId"
-                defaultValue={classwork?.id}
-                hidden
-              />
-              <input
-                type="text"
-                name="userId"
-                defaultValue={classroom.teacherId}
-                hidden
-              />
-              <input
-                type="text"
-                name="streamId"
-                defaultValue={stream.id}
-                hidden
-              />
-              <textarea
-                required
-                disabled={addCommentIsPending}
-                name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
-                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                value={streamComment}
-                onChange={(event) => setStreamComment(event.target.value)}
-              ></textarea>
-              <button className="py-2 pr-4" disabled={addCommentIsPending}>
-                {addCommentIsPending ? (
-                  <div className="spinner__mini dark"></div>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-[#22317c]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                    />
-                  </svg>
-                )}
-              </button>
+              <label
+                className={`py-[0.65rem] ${
+                  addCommentIsPending
+                    ? "disabled:cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+              >
+                <input
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                  disabled={addCommentIsPending}
+                  onChange={(event) => {
+                    handleAttachmentImageNameChange(event);
+                    handleSetAttachmentImages(event);
+                  }}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="size-6 stroke-[#5c7cfa]"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
+              </label>
+              <div
+                className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              >
+                <input
+                  type="text"
+                  name="classroomId"
+                  defaultValue={stream.classroomId}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="classworkId"
+                  defaultValue={classwork?.id}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="userId"
+                  defaultValue={classroom.teacherId}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="streamId"
+                  defaultValue={stream.id}
+                  hidden
+                />
+                <textarea
+                  required={!attachmentImages.length}
+                  disabled={addCommentIsPending}
+                  name="comment"
+                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                  placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                  value={streamComment}
+                  onChange={(event) => setStreamComment(event.target.value)}
+                ></textarea>
+                <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                  {addCommentIsPending ? (
+                    <div className="spinner__mini dark"></div>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      className="size-6 stroke-[#22317c]"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </form>
+            {attachmentImagesNames.length ? (
+              <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
+                {attachmentImagesNames.map((file, index) => (
+                  <AttachmentFileCard
+                    file={file}
+                    index={index}
+                    type="newFile"
+                    location="form"
+                    isLoading={addCommentIsPending}
+                    onRemoveAttachment={handleRemoveAttachmentImage}
+                    key={file}
+                  />
+                ))}
+              </ul>
+            ) : null}
           </div>
         </div>
       </div>
@@ -617,140 +706,148 @@ export default function StreamDetailsUserWork({
           </button>
         )}
         <div className="hidden md:block">
-          <div>
-            <div className="flex-end flex flex-col">
+          <label className="text-sm font-medium">Private comments</label>
+          <div className="mt-1">
+            <form
+              className="flex items-end gap-2"
+              onSubmit={handleCommentSubmit}
+            >
+              <label
+                className={`py-[0.65rem] ${
+                  addCommentIsPending
+                    ? "disabled:cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+              >
+                <input
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                  disabled={addCommentIsPending}
+                  onChange={(event) => {
+                    handleAttachmentImageNameChange(event);
+                    handleSetAttachmentImages(event);
+                  }}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="size-6 stroke-[#5c7cfa]"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
+              </label>
               <div
-                className={`flex items-center justify-between ${
-                  optimisticComments?.filter(
+                className={`comment__form z-10 flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              >
+                <input
+                  type="text"
+                  name="classroomId"
+                  defaultValue={stream.classroomId}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="classworkId"
+                  defaultValue={classwork?.id}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="userId"
+                  defaultValue={classroom.teacherId}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="streamId"
+                  defaultValue={stream.id}
+                  hidden
+                />
+                <textarea
+                  required
+                  disabled={addCommentIsPending}
+                  name="comment"
+                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                  placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                  value={streamComment}
+                  onChange={(event) => setStreamComment(event.target.value)}
+                ></textarea>
+                <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                  {addCommentIsPending ? (
+                    <div className="spinner__mini dark"></div>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      className="size-6 stroke-[#22317c]"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </form>
+            {attachmentImagesNames.length ? (
+              <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
+                {attachmentImagesNames.map((file, index) => (
+                  <AttachmentFileCard
+                    file={file}
+                    index={index}
+                    type="newFile"
+                    location="form"
+                    isLoading={addCommentIsPending}
+                    onRemoveAttachment={handleRemoveAttachmentImage}
+                    key={file}
+                  />
+                ))}
+              </ul>
+            ) : null}
+          </div>
+          {optimisticComments?.filter(
+            (comment) =>
+              (comment.author === session.user.id &&
+                comment.toUserId === classroom.teacherId) ||
+              (comment.author === classroom.teacherId &&
+                comment.toUserId === session.user.id),
+          ).length ? (
+            <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
+              {!streamsCommentsIsPending &&
+                optimisticComments
+                  ?.filter(
                     (comment) =>
                       (comment.author === session.user.id &&
                         comment.toUserId === classroom.teacherId) ||
                       (comment.author === classroom.teacherId &&
                         comment.toUserId === session.user.id),
-                  ).length
-                    ? "mb-2"
-                    : ""
-                }`}
-              >
-                <label className="text-sm font-medium">Private comments</label>
-                {optimisticComments?.filter(
-                  (comment) =>
-                    (comment.author === session.user.id &&
-                      comment.toUserId === classroom.teacherId) ||
-                    (comment.author === classroom.teacherId &&
-                      comment.toUserId === session.user.id),
-                ).length ? (
-                  <button
-                    onClick={handleToggleExpandPrivateComments}
-                    className="block text-sm text-[#22317c] md:hidden"
-                  >
-                    {expandPrivateComments ? "Minimize" : "Expand"}
-                  </button>
-                ) : null}
-              </div>
-              {optimisticComments?.filter(
-                (comment) =>
-                  (comment.author === session.user.id &&
-                    comment.toUserId === classroom.teacherId) ||
-                  (comment.author === classroom.teacherId &&
-                    comment.toUserId === session.user.id),
-              ).length ? (
-                <ul
-                  className={`grid gap-2 md:max-h-[15rem] ${
-                    optimisticComments?.filter(
-                      (comment) =>
-                        (comment.author === session.user.id &&
-                          comment.toUserId === classroom.teacherId) ||
-                        (comment.author === classroom.teacherId &&
-                          comment.toUserId === session.user.id),
-                    ).length > 4
-                      ? "overflow-y-auto"
-                      : ""
-                  }`}
-                >
-                  {!streamsCommentsIsPending &&
-                    optimisticComments
-                      ?.filter(
-                        (comment) =>
-                          (comment.author === session.user.id &&
-                            comment.toUserId === classroom.teacherId) ||
-                          (comment.author === classroom.teacherId &&
-                            comment.toUserId === session.user.id),
-                      )
-                      .map((comment) => (
-                        <StreamCommentCard
-                          key={comment.id}
-                          comment={comment}
-                          stream={stream}
-                          session={session}
-                          classroom={classroom}
-                          deleteCommentIsPending={deletePrivateCommentIsPending}
-                          onDeleteComment={handleDeleteComment}
-                        />
-                      ))}
-                </ul>
-              ) : null}
-            </div>
-          </div>
-          <div className="flex-end mt-1 flex w-full items-center">
-            <form
-              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
-              onSubmit={handleCommentSubmit}
-            >
-              <input
-                type="text"
-                name="classroomId"
-                defaultValue={stream.classroomId}
-                hidden
-              />
-              <input
-                type="text"
-                name="classworkId"
-                defaultValue={classwork?.id}
-                hidden
-              />
-              <input
-                type="text"
-                name="userId"
-                defaultValue={classroom.teacherId}
-                hidden
-              />
-              <input
-                type="text"
-                name="streamId"
-                defaultValue={stream.id}
-                hidden
-              />
-              <textarea
-                required
-                disabled={addCommentIsPending}
-                name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
-                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                value={streamComment}
-                onChange={(event) => setStreamComment(event.target.value)}
-              ></textarea>
-              <button className="py-2 pr-4" disabled={addCommentIsPending}>
-                {addCommentIsPending ? (
-                  <div className="spinner__mini dark"></div>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-[#22317c]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                  )
+                  .map((comment) => (
+                    <StreamCommentCard
+                      key={comment.id}
+                      comment={comment}
+                      stream={stream}
+                      session={session}
+                      classroom={classroom}
+                      deleteCommentIsPending={deletePrivateCommentIsPending}
+                      onDeleteComment={handleDeleteComment}
                     />
-                  </svg>
-                )}
-              </button>
-            </form>
-          </div>
+                  ))}
+            </ul>
+          ) : null}
         </div>
         <div
           className={`${showAddWorkPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-md bg-[#f3f6ff] p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
