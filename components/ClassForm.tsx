@@ -207,6 +207,7 @@ export default function ClassForm({
                   type="text"
                   name="className"
                   className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                  placeholder="Add your class name..."
                   value={className}
                   onChange={(event) => setClassName(event.target.value)}
                   disabled={isLoading}
@@ -221,6 +222,7 @@ export default function ClassForm({
                   type="text"
                   name="section"
                   className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                  placeholder="Add a subject name..."
                   value={section}
                   onChange={(event) => setSection(event.target.value)}
                   disabled={isLoading}
@@ -235,6 +237,7 @@ export default function ClassForm({
                     type="text"
                     name="subject"
                     className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                    placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
                     disabled={isLoading}
@@ -252,6 +255,7 @@ export default function ClassForm({
                     type="text"
                     name="subject"
                     className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                    placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
                     disabled={isLoading}
@@ -263,7 +267,7 @@ export default function ClassForm({
                   </label>
                   <textarea
                     name="classDescription"
-                    className="h-[5rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:h-[8rem] md:px-5 md:py-3 md:text-base"
+                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:h-[8rem] md:px-5 md:py-3 md:text-base"
                     placeholder="Add a class description..."
                     defaultValue={classroom?.classDescription}
                   ></textarea>
