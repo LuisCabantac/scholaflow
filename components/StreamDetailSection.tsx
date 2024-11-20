@@ -384,7 +384,7 @@ export default function StreamDetailSection({
                     )}
                     <div className="mb-2">
                       <p className="text-xl font-medium">{stream.title}</p>
-                      <div className="flex items-center gap-1 text-xs text-[#616572] md:text-sm">
+                      <div className="flex items-center gap-1 text-sm text-[#616572]">
                         <p>{stream.authorName}</p>
                         <span>•</span>
                         <p>
@@ -464,7 +464,7 @@ export default function StreamDetailSection({
                     onSubmit={handleCommentSubmit}
                   >
                     <label
-                      className={`py-[0.65rem] ${
+                      className={`py-3 ${
                         addCommentIsPending
                           ? "disabled:cursor-not-allowed"
                           : "cursor-pointer"
@@ -515,7 +515,7 @@ export default function StreamDetailSection({
                         required={!attachmentImages.length}
                         disabled={addCommentIsPending}
                         name="comment"
-                        className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                        className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
                         placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
                         value={streamComment}
                         onChange={(event) =>
@@ -523,7 +523,7 @@ export default function StreamDetailSection({
                         }
                       ></textarea>
                       <button
-                        className="py-2 pr-4"
+                        className="py-3 pr-5"
                         disabled={addCommentIsPending}
                       >
                         {addCommentIsPending ? (

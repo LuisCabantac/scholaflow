@@ -86,7 +86,7 @@ export default function TopicForm({
                 required
                 type="text"
                 name="topicName"
-                className="focus:outline-t-2 w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:px-5 md:py-3"
+                className="focus:outline-t-2 w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
                 defaultValue={topic?.topicName}
                 placeholder="Enter the topic name here..."
               />

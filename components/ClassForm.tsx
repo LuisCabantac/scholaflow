@@ -81,7 +81,7 @@ export default function ClassForm({
           onSubmit={handleCreateClass}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
-            <h3 className="text-lg font-medium md:text-xl">
+            <h3 className="text-xl font-medium md:text-2xl">
               {type === "edit" ? "Edit " : "Create "} class
             </h3>
             <button
@@ -118,11 +118,9 @@ export default function ClassForm({
                   hidden
                 />
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium md:text-sm">
-                    Preview
-                  </label>
+                  <label className="text-sm font-medium">Preview</label>
                   <div className="grid gap-2">
-                    <label className="flex cursor-pointer gap-1 text-xs font-medium md:text-sm">
+                    <label className="flex cursor-pointer items-center gap-1 text-sm font-medium">
                       <input
                         type="color"
                         name="color"
@@ -139,7 +137,7 @@ export default function ClassForm({
                         viewBox="0 0 24 24"
                         strokeWidth={2}
                         stroke="currentColor"
-                        className="size-5 stroke-[#616572]"
+                        className="size-4 stroke-[#616572] md:size-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -199,14 +197,14 @@ export default function ClassForm({
                 </div>
               </div>
               <div className="grid gap-2">
-                <label className="text-xs font-medium md:text-sm">
+                <label className="text-sm font-medium">
                   Class name <span className="text-red-400">*</span>
                 </label>
                 <input
                   required
                   type="text"
                   name="className"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
                   placeholder="Add your class name..."
                   value={className}
                   onChange={(event) => setClassName(event.target.value)}
@@ -214,14 +212,14 @@ export default function ClassForm({
                 />
               </div>
               <div className="grid gap-2">
-                <label className="text-xs font-medium md:text-sm">
+                <label className="text-sm font-medium">
                   Section <span className="text-red-400">*</span>
                 </label>
                 <input
                   required
                   type="text"
                   name="section"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
                   placeholder="Add a subject name..."
                   value={section}
                   onChange={(event) => setSection(event.target.value)}
@@ -230,13 +228,11 @@ export default function ClassForm({
               </div>
               {type === "create" && (
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
-                    Subject
-                  </label>
+                  <label className="text-sm font-medium">Subject</label>
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -248,13 +244,11 @@ export default function ClassForm({
             {type === "edit" && (
               <div className="flex flex-col gap-3">
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
-                    Subject
-                  </label>
+                  <label className="text-sm font-medium">Subject</label>
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -262,20 +256,18 @@ export default function ClassForm({
                   />
                 </div>
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
+                  <label className="text-sm font-medium">
                     Class description
                   </label>
                   <textarea
                     name="classDescription"
-                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:h-[8rem] md:px-5 md:py-3 md:text-base"
+                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     placeholder="Add a class description..."
                     defaultValue={classroom?.classDescription}
                   ></textarea>
                 </div>
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
-                    Class code
-                  </label>
+                  <label className="text-sm font-medium">Class code</label>
                   <div className="flex items-center justify-between">
                     <p
                       className="cursor-pointer text-lg text-[#5c7cfa]"
@@ -298,9 +290,9 @@ export default function ClassForm({
                     </button>
                   </div>
                 </div>
-                <h5 className="text-xs font-medium md:text-sm">Stream</h5>
+                <h5 className="text-sm font-medium">Stream</h5>
                 <div className="grid gap-2">
-                  <label className="flex gap-2 text-xs font-medium md:text-sm">
+                  <label className="flex gap-2 font-medium">
                     <input
                       type="checkbox"
                       name="allowStudentsToPost"
@@ -316,7 +308,7 @@ export default function ClassForm({
                   </label>
                 </div>
                 <div className="grid gap-2">
-                  <label className="flex gap-2 text-xs font-medium md:text-sm">
+                  <label className="flex gap-2 font-medium">
                     <input
                       type="checkbox"
                       name="allowStudentsToComment"

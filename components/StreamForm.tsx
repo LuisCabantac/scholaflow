@@ -286,14 +286,12 @@ export default function StreamForm({
               session.user.id === classroom.teacherId &&
               streamType === "stream" ? (
                 <div className="flex flex-col items-start justify-start gap-2">
-                  <label className="text-xs font-medium md:text-sm">
-                    Assign to
-                  </label>
+                  <label className="text-sm font-medium">Assign to</label>
                   <button
                     onClick={handleToggleShowSelectUsersModal}
                     type="button"
                     disabled={isLoading}
-                    className="w-full rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-start text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                    className="w-full rounded-md border-2 border-[#dbe4ff] px-5 py-3 text-start focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
                   >
                     {enrolledClasses?.length === audience.length
                       ? "All users"
@@ -390,7 +388,7 @@ export default function StreamForm({
               ) : null}
               {streamType !== "stream" && (
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
+                  <label className="text-sm font-medium">
                     Title <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -400,12 +398,12 @@ export default function StreamForm({
                     type="text"
                     defaultValue={stream?.title ?? ""}
                     placeholder="Add a descriptive title"
-                    className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:text-base"
+                    className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   />
                 </div>
               )}
               <div className="grid gap-2">
-                <label className="text-xs font-medium md:text-sm">
+                <label className="text-sm font-medium">
                   {streamType === "stream" && "Caption"}
                   {(streamType === "quiz" || streamType === "assignment") &&
                     "Instructions"}
@@ -417,7 +415,7 @@ export default function StreamForm({
                 <textarea
                   required={streamType === "stream"}
                   name="caption"
-                  className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                  className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   placeholder="Add relevant details or instructions"
                   disabled={isLoading}
                   defaultValue={stream?.caption ?? ""}
@@ -448,7 +446,7 @@ export default function StreamForm({
                       d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
                     />
                   </svg>
-                  <p className="text-xs font-medium md:text-sm">Upload files</p>
+                  <p className="text-sm font-medium">Upload files</p>
                 </label>
                 <label className="flex gap-1">
                   <button
@@ -471,7 +469,7 @@ export default function StreamForm({
                         d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
                       />
                     </svg>
-                    <p className="text-xs font-medium md:text-sm">Add links</p>
+                    <p className="text-sm font-medium">Add links</p>
                   </button>
                 </label>
                 {showAddLinkModal && (
@@ -518,9 +516,7 @@ export default function StreamForm({
               </div>
               <div className="grid gap-2">
                 {currentAttachments.length || attachmentNames.length ? (
-                  <label className="text-xs font-medium md:text-sm">
-                    Files
-                  </label>
+                  <label className="text-sm font-medium">Files</label>
                 ) : null}
                 <ul className="grid gap-1 overflow-y-auto">
                   {attachmentNames.length
@@ -553,9 +549,7 @@ export default function StreamForm({
               </div>
               <div className="mb-2 grid gap-2">
                 {currentUrlLinks.length || newUrlLinks.length ? (
-                  <label className="text-xs font-medium md:text-sm">
-                    Links
-                  </label>
+                  <label className="text-sm font-medium">Links</label>
                 ) : null}
                 <ul className="grid gap-1 overflow-y-auto">
                   {newUrlLinks.length
@@ -590,14 +584,12 @@ export default function StreamForm({
                 {session.user.role === "teacher" &&
                 session.user.id === classroom.teacherId ? (
                   <div className="flex flex-col items-start justify-start gap-2">
-                    <label className="text-xs font-medium md:text-sm">
-                      Assign to
-                    </label>
+                    <label className="text-sm font-medium">Assign to</label>
                     <button
                       onClick={handleToggleShowSelectUsersModal}
                       type="button"
                       disabled={isLoading}
-                      className="w-full rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-start text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                      className="w-full rounded-md border-2 border-[#dbe4ff] px-5 py-3 text-start focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     >
                       {enrolledClasses?.length === audience.length
                         ? "All users"
@@ -697,15 +689,13 @@ export default function StreamForm({
                 {streamType !== "material" && (
                   <>
                     <div className="grid gap-2">
-                      <label className="text-xs font-medium md:text-sm">
-                        Points
-                      </label>
+                      <label className="text-sm font-medium">Points</label>
                       <div className="flex items-center gap-2">
                         <div className="relative w-full">
                           <select
                             disabled={isLoading}
                             name="levels"
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-5 py-4 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             onChange={(event) =>
                               setIsGraded(event.target.value)
                             }
@@ -719,7 +709,7 @@ export default function StreamForm({
                           <input
                             type="number"
                             name="totalPoints"
-                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={grade}
                             defaultValue="100"
                             onChange={handleGradeChange}
@@ -730,14 +720,12 @@ export default function StreamForm({
                       </div>
                     </div>
                     <div className="grid gap-2">
-                      <label className="text-xs font-medium md:text-sm">
-                        Due date
-                      </label>
+                      <label className="text-sm font-medium">Due date</label>
                       <div className="flex gap-2">
                         <div className="relative w-full">
                           <select
                             disabled={isLoading}
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-5 py-3 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             onChange={(event) =>
                               setHasDueDate(event.target.value)
                             }
@@ -752,7 +740,7 @@ export default function StreamForm({
                             type="datetime-local"
                             disabled={isLoading}
                             name="dueDate"
-                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={dueDate}
                             onChange={(event) => setDueDate(event.target.value)}
                           />
@@ -762,14 +750,12 @@ export default function StreamForm({
                   </>
                 )}
                 <div className="grid gap-2">
-                  <label className="text-xs font-medium md:text-sm">
-                    Topic
-                  </label>
+                  <label className="text-sm font-medium">Topic</label>
                   <div className="relative w-full">
                     <select
                       disabled={isLoading}
                       name="topicId"
-                      className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed md:px-5 md:py-3 md:text-base"
+                      className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-5 py-3 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
                       defaultValue={stream?.topicId ?? "no-topic"}
                     >
                       <option value="no-topic">No topic</option>
@@ -786,7 +772,7 @@ export default function StreamForm({
                 {streamType !== "material" && (
                   <>
                     <div className="grid gap-2">
-                      <label className="flex cursor-pointer gap-2 text-xs font-medium disabled:cursor-not-allowed md:text-sm">
+                      <label className="flex cursor-pointer gap-2 font-medium disabled:cursor-not-allowed">
                         <input
                           type="checkbox"
                           name="acceptingSubmissions"
@@ -802,7 +788,7 @@ export default function StreamForm({
                       </label>
                     </div>
                     <div className="grid gap-2">
-                      <label className="flex cursor-pointer gap-2 text-xs font-medium md:text-sm">
+                      <label className="flex cursor-pointer gap-2 font-medium">
                         <input
                           type="checkbox"
                           name="closeSubmissionsAfterDueDate"

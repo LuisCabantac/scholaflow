@@ -503,7 +503,7 @@ export default function StreamDetailsUserWork({
               onSubmit={handleCommentSubmit}
             >
               <label
-                className={`py-[0.65rem] ${
+                className={`py-3 ${
                   addCommentIsPending
                     ? "disabled:cursor-not-allowed"
                     : "cursor-pointer"
@@ -566,12 +566,12 @@ export default function StreamDetailsUserWork({
                   required={!attachmentImages.length}
                   disabled={addCommentIsPending}
                   name="comment"
-                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                  className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
                   placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                   value={streamComment}
                   onChange={(event) => setStreamComment(event.target.value)}
                 ></textarea>
-                <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                <button className="py-3 pr-5" disabled={addCommentIsPending}>
                   {addCommentIsPending ? (
                     <div className="spinner__mini dark"></div>
                   ) : (
@@ -713,7 +713,7 @@ export default function StreamDetailsUserWork({
               onSubmit={handleCommentSubmit}
             >
               <label
-                className={`py-[0.65rem] ${
+                className={`py-3 ${
                   addCommentIsPending
                     ? "disabled:cursor-not-allowed"
                     : "cursor-pointer"
@@ -776,12 +776,12 @@ export default function StreamDetailsUserWork({
                   required
                   disabled={addCommentIsPending}
                   name="comment"
-                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                  className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
                   placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                   value={streamComment}
                   onChange={(event) => setStreamComment(event.target.value)}
                 ></textarea>
-                <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                <button className="py-3 pr-5" disabled={addCommentIsPending}>
                   {addCommentIsPending ? (
                     <div className="spinner__mini dark"></div>
                   ) : (

@@ -509,7 +509,7 @@ export default function StreamSubmissionsSection({
                           type="number"
                           name="userPoints"
                           required
-                          className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none disabled:text-[#616572] md:px-5 md:py-3 md:text-base"
+                          className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
                           disabled={isLoading}
                           value={grade}
                           onChange={handleGradeChange}
@@ -594,7 +594,7 @@ export default function StreamSubmissionsSection({
                         onSubmit={handleCommentSubmit}
                       >
                         <label
-                          className={`py-[0.65rem] ${
+                          className={`py-3 ${
                             addCommentIsPending
                               ? "disabled:cursor-not-allowed"
                               : "cursor-pointer"
@@ -657,7 +657,7 @@ export default function StreamSubmissionsSection({
                             required={!attachmentImagesNames.length}
                             disabled={addCommentIsPending}
                             name="comment"
-                            className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                            className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
                             placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                             value={streamComment}
                             onChange={(event) =>
@@ -665,7 +665,7 @@ export default function StreamSubmissionsSection({
                             }
                           ></textarea>
                           <button
-                            className="py-2 pr-4"
+                            className="py-3 pr-5"
                             disabled={addCommentIsPending}
                           >
                             {addCommentIsPending ? (
@@ -801,7 +801,7 @@ export default function StreamSubmissionsSection({
                     onSubmit={handleCommentSubmit}
                   >
                     <label
-                      className={`py-[0.65rem] ${
+                      className={`py-3 ${
                         addCommentIsPending
                           ? "disabled:cursor-not-allowed"
                           : "cursor-pointer"
@@ -864,7 +864,7 @@ export default function StreamSubmissionsSection({
                         required={!attachmentImagesNames.length}
                         disabled={addCommentIsPending}
                         name="comment"
-                        className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-10"}`}
+                        className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
                         placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                         value={streamComment}
                         onChange={(event) =>
@@ -872,7 +872,7 @@ export default function StreamSubmissionsSection({
                         }
                       ></textarea>
                       <button
-                        className="py-2 pr-4"
+                        className="py-3 pr-5"
                         disabled={addCommentIsPending}
                       >
                         {addCommentIsPending ? (

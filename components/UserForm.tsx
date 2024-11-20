@@ -78,14 +78,14 @@ export default function UserForm({
           onSubmit={handleCreateUser}
         >
           <div className="flex items-center justify-between px-4 py-4">
-            <h3 className="text-lg font-medium md:text-xl">
+            <h3 className="text-xl font-medium md:text-2xl">
               {type === "edit" ? "Edit" : "Create"} user
             </h3>
             <input type="text" name="userId" defaultValue={user?.id} hidden />
           </div>
           <div className="grid gap-4 px-4 pb-4">
             <div className="grid gap-2">
-              <label className="text-xs font-medium md:text-sm">
+              <label className="text-sm font-medium">
                 Full name <span className="text-red-400">*</span>
               </label>
               <input
@@ -95,11 +95,11 @@ export default function UserForm({
                 name="fullName"
                 placeholder="Enter the user's name"
                 defaultValue={user?.fullName}
-                className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base"
+                className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
               />
             </div>
             <div className="grid gap-2">
-              <label className="text-xs font-medium md:text-sm">
+              <label className="text-sm font-medium">
                 Email address <span className="text-red-400">*</span>
               </label>
               <input
@@ -109,12 +109,12 @@ export default function UserForm({
                 name="email"
                 placeholder="Set up user's email"
                 value={email}
-                className={`${!emailExists && "border-red-500"} w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base`}
+                className={`${!emailExists && "border-red-500"} w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none`}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
             <div className="grid gap-2">
-              <label className="text-xs font-medium md:text-sm">
+              <label className="text-sm font-medium">
                 Password <span className="text-red-400">*</span>
               </label>
               <div className="flex">
@@ -124,7 +124,7 @@ export default function UserForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Set up the user's password"
                   disabled={isLoading}
-                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 text-sm focus:border-[#384689] focus:outline-none md:px-5 md:py-3 md:text-base ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
                   defaultValue={user?.password}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setValidPassword(
@@ -134,7 +134,7 @@ export default function UserForm({
                 />
                 <button
                   onClick={handleShowPassword}
-                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 md:py-3 md:pr-5 ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-3 pr-5 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +166,7 @@ export default function UserForm({
               </div>
             </div>
             <div className="accent-[#22317c]">
-              <label className="text-xs font-medium md:text-sm">
+              <label className="text-sm font-medium">
                 Role <span className="text-red-400">*</span>
               </label>
               <div className="mt-2 flex flex-col">
