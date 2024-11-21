@@ -23,7 +23,7 @@ export default function AttachmentFileCard({
       <a
         href={file}
         target="_blank"
-        className={`flex items-center justify-between p-3 md:p-4 ${!isLoading && location === "form" && onRemoveAttachment ? "w-[88%]" : "w-[90%]"}`}
+        className={`flex items-center justify-between p-3 ${!isLoading && location === "form" && onRemoveAttachment ? "w-[88%]" : "w-[90%]"}`}
         download
       >
         <div className="flex w-full items-center gap-2">
@@ -41,11 +41,11 @@ export default function AttachmentFileCard({
             />
           </svg>
           {type === "curFile" ? (
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm md:text-base">
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
               {getFileNameFromAttachments(removeUUIDFromFilename(file))}
             </p>
           ) : (
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm md:text-base">
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
               {file}
             </p>
           )}
