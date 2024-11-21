@@ -130,16 +130,16 @@ export default function SidebarLinks({
                                 curClass.classCardBackgroundColor,
                             }}
                           ></div>
-                          <span className="block text-sm">
-                            {curClass.className.length > 22
-                              ? curClass.className.slice(0, 22).concat("...")
+                          <span className="block whitespace-nowrap">
+                            {curClass.className.length > 18
+                              ? curClass.className.slice(0, 18).concat("...")
                               : curClass.className}
                           </span>
                         </div>
-                        <span className="block pl-5 text-xs">
+                        <span className="block whitespace-nowrap pl-5 text-xs">
                           {curClass.subject && `${curClass.subject} · `}
-                          {curClass.section.length > 22
-                            ? curClass.section.slice(0, 22).concat("...")
+                          {curClass.section.length > 20
+                            ? curClass.section.slice(0, 20).concat("...")
                             : curClass.section}
                         </span>
                       </Link>
@@ -163,19 +163,19 @@ export default function SidebarLinks({
                                 enrolledClass.classCardBackgroundColor,
                             }}
                           ></div>
-                          <span className="block text-sm">
-                            {enrolledClass.className.length > 20
+                          <span className="block whitespace-nowrap">
+                            {enrolledClass.className.length > 18
                               ? enrolledClass.className
-                                  .slice(0, 20)
+                                  .slice(0, 18)
                                   .concat("...")
                               : enrolledClass.className}
                           </span>
                         </div>
-                        <span className="block pl-5 text-xs">
+                        <span className="block whitespace-nowrap pl-5 text-xs">
                           {enrolledClass.subject &&
                             `${enrolledClass.subject} · `}
-                          {enrolledClass.section.length > 22
-                            ? enrolledClass.section.slice(0, 22).concat("...")
+                          {enrolledClass.section.length > 20
+                            ? enrolledClass.section.slice(0, 20).concat("...")
                             : enrolledClass.section}
                         </span>
                       </Link>
