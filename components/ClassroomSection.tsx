@@ -403,16 +403,16 @@ export default function ClassroomSection({
             </Link>
           </div>
           {(!createdClasses?.length && !enrolledClasses?.length) ||
-          (searchParams.get("filter") === "created-classes" &&
+          (searchParams.get("sort") === "created-classes" &&
             !createdClasses?.length) ||
-          (searchParams.get("filter") === "enrolled-classes" &&
+          (searchParams.get("sort") === "enrolled-classes" &&
             !enrolledClasses?.length) ? (
             <NoClasses />
           ) : (
             <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-md md:grid md:grid-cols-2">
-              {(searchParams.get("filter") === "all-classes" ||
-                searchParams.get("filter") === "created-classes" ||
-                searchParams.get("filter") === null) &&
+              {(searchParams.get("sort") === "all-classes" ||
+                searchParams.get("sort") === "created-classes" ||
+                searchParams.get("sort") === null) &&
                 createdClasses &&
                 createdClasses?.length > 0 && (
                   <ClassroomLists
@@ -422,9 +422,9 @@ export default function ClassroomSection({
                     deleteClassIsPending={deleteClassIsPending}
                   />
                 )}
-              {(searchParams.get("filter") === "all-classes" ||
-                searchParams.get("filter") === "enrolled-classes" ||
-                searchParams.get("filter") === null) &&
+              {(searchParams.get("sort") === "all-classes" ||
+                searchParams.get("sort") === "enrolled-classes" ||
+                searchParams.get("sort") === null) &&
                 enrolledClasses &&
                 enrolledClasses?.length > 0 && (
                   <ClassroomLists
