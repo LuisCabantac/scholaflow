@@ -17,7 +17,7 @@ import Button from "@/components/Button";
 import ClassroomLists from "@/components/ClassroomLists";
 import ClassForm from "@/components/ClassForm";
 import NoClasses from "@/components/NoClasses";
-import JoinClassModal from "@/components/JoinClassModal";
+import JoinClassDialog from "@/components/JoinClassDialog";
 
 export interface IClass {
   id: string;
@@ -246,11 +246,11 @@ export default function ClassroomSection({
               onClick={handleToggleShowFilterDropdown}
               ref={filterWrapperRef}
             >
-              <div className="flex items-center gap-2 text-base font-medium md:gap-4 md:text-lg">
+              <div className="flex items-center gap-2 text-base font-medium md:gap-4">
                 <span>
-                  {searchParams.get("filter") === null
+                  {searchParams.get("sort") === null
                     ? "All classes"
-                    : `${searchParams.get("filter")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
+                    : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
                 </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -272,17 +272,17 @@ export default function ClassroomSection({
               >
                 <li>
                   <Link
-                    href="/user/classroom?filter=all-classes"
-                    className={`${(searchParams.get("filter") === "all-classes" || searchParams.get("filter") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    href="/user/classroom?sort=all-classes"
+                    className={`${(searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                   >
                     <span>All classes</span>
-                    {(searchParams.get("filter") === "all-classes" ||
-                      searchParams.get("filter") === null) && (
+                    {(searchParams.get("sort") === "all-classes" ||
+                      searchParams.get("sort") === null) && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        strokeWidth={4}
+                        strokeWidth={3}
                         stroke="currentColor"
                         className="size-4"
                       >
@@ -298,16 +298,16 @@ export default function ClassroomSection({
                 {role === "teacher" && (
                   <li>
                     <Link
-                      href="/user/classroom?filter=created-classes"
-                      className={`${searchParams.get("filter") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      href="/user/classroom?sort=created-classes"
+                      className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Created classes</span>
-                      {searchParams.get("filter") === "created-classes" && (
+                      {searchParams.get("sort") === "created-classes" && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -323,16 +323,16 @@ export default function ClassroomSection({
                 )}
                 <li>
                   <Link
-                    href="/user/classroom?filter=enrolled-classes"
-                    className={`${searchParams.get("filter") === "enrolled-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    href="/user/classroom?sort=enrolled-classes"
+                    className={`${searchParams.get("sort") === "enrolled-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                   >
                     <span>Enrolled classes</span>
-                    {searchParams.get("filter") === "enrolled-classes" && (
+                    {searchParams.get("sort") === "enrolled-classes" && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        strokeWidth={4}
+                        strokeWidth={3}
                         stroke="currentColor"
                         className="size-4"
                       >
@@ -353,39 +353,11 @@ export default function ClassroomSection({
                   type="primary"
                   onClick={handleToggleShowAddClassPopover}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                  <span>Add class</span>
+                  Add class
                 </Button>
               ) : (
                 <Button type="primary" onClick={handleToggleShowJoinClass}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                  <span>Join class</span>
+                  Join class
                 </Button>
               )}
               <div
@@ -466,8 +438,8 @@ export default function ClassroomSection({
           )}
         </div>
         <div className="hidden overflow-hidden rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:block">
-          <h3 className="text-lg font-medium">To-do</h3>
-          <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+          <h3 className="text-lg font-medium tracking-tight">To-do</h3>
+          <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
             <button
               onClick={() => setToDoFilter("assigned")}
               className={`px-3 py-2 transition-all ${toDoFilter === "assigned" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
@@ -515,7 +487,7 @@ export default function ClassroomSection({
                             <p className="font-medium">
                               {assignedClasswork.title}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-xs">
                               {assignedClasswork.classroomName}
                             </p>
                             <div className="mt-2 grid items-center gap-1 text-xs">
@@ -577,7 +549,7 @@ export default function ClassroomSection({
                             <p className="font-medium">
                               {missingClasswork.title}
                             </p>
-                            <p className="text-sm">
+                            <p className="text-xs">
                               {missingClasswork.classroomName}
                             </p>
                             <div className="mt-2 grid items-center gap-1 text-xs">
@@ -636,7 +608,7 @@ export default function ClassroomSection({
                           <p className="font-medium">
                             {doneClasswork.classworkTitle}
                           </p>
-                          <p className="text-sm">
+                          <p className="text-xs">
                             {doneClasswork.classroomName}
                           </p>
                           <div className="mt-2 grid items-center gap-1 text-xs">
@@ -668,17 +640,17 @@ export default function ClassroomSection({
                 ))
               : null}
             {toDoFilter === "assigned" && !assignedClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
                 No classworks have been given yet.
               </p>
             ) : null}
             {toDoFilter === "missing" && !missingClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
                 You&apos;re all caught up! No missing work.
               </p>
             ) : null}
             {toDoFilter === "done" && !doneClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
                 No work submitted yet.
               </p>
             ) : null}
@@ -694,7 +666,7 @@ export default function ClassroomSection({
         />
       )}
       {showJoinClass && (
-        <JoinClassModal
+        <JoinClassDialog
           isLoading={isLoading}
           onJoinClass={handleJoinClass}
           onShowJoinClass={handleToggleShowJoinClass}

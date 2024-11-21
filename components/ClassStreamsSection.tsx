@@ -117,7 +117,7 @@ export default function ClassStreamsSection({
   return (
     <section className="relative">
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
             href={`/user/classroom/class/${classroom.classroomId}`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
@@ -269,9 +269,7 @@ export default function ClassStreamsSection({
                     fill
                   />
                 </div>
-                <p className="text-sm text-[#616572] md:text-base">
-                  Share with your class...
-                </p>
+                <p className="text-[#616572]">Share with your class...</p>
               </div>
             ) : null}
             <div className="flex items-start justify-start">
@@ -280,13 +278,13 @@ export default function ClassStreamsSection({
                 onClick={handleToggleShowFilterDropdown}
                 ref={filterWrapperRef}
               >
-                <div className="flex items-center gap-2 text-base font-medium md:gap-4">
+                <div className="flex items-center gap-2 font-medium md:gap-4">
                   <span>
-                    {searchParams.get("filter") === null
+                    {searchParams.get("sort") === null
                       ? "All"
-                      : searchParams.get("filter") === "stream"
+                      : searchParams.get("sort") === "stream"
                         ? "Post"
-                        : `${searchParams.get("filter")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
+                        : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
                   </span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -308,18 +306,18 @@ export default function ClassStreamsSection({
                 >
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?filter=all`}
+                      href={`/user/classroom/class/${classroom.classroomId}?sort=all`}
                       scroll={false}
-                      className={`${(searchParams.get("filter") === "all" || searchParams.get("filter") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>All</span>
-                      {(searchParams.get("filter") === "all" ||
-                        searchParams.get("filter") === null) && (
+                      {(searchParams.get("sort") === "all" ||
+                        searchParams.get("sort") === null) && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -334,17 +332,17 @@ export default function ClassStreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?filter=stream`}
+                      href={`/user/classroom/class/${classroom.classroomId}?sort=stream`}
                       scroll={false}
-                      className={`${searchParams.get("filter") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Post</span>
-                      {searchParams.get("filter") === "stream" && (
+                      {searchParams.get("sort") === "stream" && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -359,17 +357,17 @@ export default function ClassStreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?filter=assignment`}
+                      href={`/user/classroom/class/${classroom.classroomId}?sort=assignment`}
                       scroll={false}
-                      className={`${searchParams.get("filter") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Assignment</span>
-                      {searchParams.get("filter") === "assignment" && (
+                      {searchParams.get("sort") === "assignment" && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -384,17 +382,17 @@ export default function ClassStreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?filter=quiz`}
+                      href={`/user/classroom/class/${classroom.classroomId}?sort=quiz`}
                       scroll={false}
-                      className={`${searchParams.get("filter") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Quiz</span>
-                      {searchParams.get("filter") === "quiz" && (
+                      {searchParams.get("sort") === "quiz" && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -409,17 +407,17 @@ export default function ClassStreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?filter=material`}
+                      href={`/user/classroom/class/${classroom.classroomId}?sort=material`}
                       scroll={false}
-                      className={`${searchParams.get("filter") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Material</span>
-                      {searchParams.get("filter") === "material" && (
+                      {searchParams.get("sort") === "material" && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          strokeWidth={4}
+                          strokeWidth={3}
                           stroke="currentColor"
                           className="size-4"
                         >
@@ -469,10 +467,10 @@ export default function ClassStreamsSection({
                 )
                 .filter((stream) =>
                   !(
-                    searchParams.get("filter") === null ||
-                    searchParams.get("filter") === "all"
+                    searchParams.get("sort") === null ||
+                    searchParams.get("sort") === "all"
                   )
-                    ? stream.type === searchParams.get("filter")
+                    ? stream.type === searchParams.get("sort")
                     : true,
                 ).length &&
                 !streamsIsPending) ? (
@@ -489,10 +487,10 @@ export default function ClassStreamsSection({
                 )
                 .filter((stream) =>
                   !(
-                    searchParams.get("filter") === null ||
-                    searchParams.get("filter") === "all"
+                    searchParams.get("sort") === null ||
+                    searchParams.get("sort") === "all"
                   )
-                    ? stream.type === searchParams.get("filter")
+                    ? stream.type === searchParams.get("sort")
                     : true,
                 )
                 .map((stream) => (
@@ -514,7 +512,9 @@ export default function ClassStreamsSection({
           <aside className="hidden gap-2 md:grid">
             {session.user.id === classroom.teacherId && (
               <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
-                <h4 className="pb-2 font-semibold">Class code</h4>
+                <h4 className="pb-2 text-base font-medium tracking-tight">
+                  Class code
+                </h4>
                 <div className="flex items-center justify-between">
                   <p className="text-lg text-[#5c7cfa]">
                     {classroom.classCode}
@@ -543,7 +543,9 @@ export default function ClassStreamsSection({
               </div>
             )}
             <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
-              <h4 className="pb-2 text-base font-medium">Recent Work</h4>
+              <h4 className="pb-2 text-base font-medium tracking-tight">
+                Recent Work
+              </h4>
               {assignedClasswork ? (
                 <div key={assignedClasswork.id}>
                   <Link
@@ -594,13 +596,13 @@ export default function ClassStreamsSection({
                   </Link>
                 </div>
               ) : (
-                <p className="flex h-[10rem] items-center justify-center text-center text-sm font-medium">
+                <p className="flex h-[10rem] items-center justify-center text-center font-medium">
                   No classworks have been given yet.
                 </p>
               )}
               <Link
                 href={`/user/classroom/class/${classroom.classroomId}/classwork`}
-                className="mt-2 flex justify-end text-sm font-medium text-[#22317c]"
+                className="mt-2 flex justify-end font-medium text-[#22317c]"
               >
                 View all
               </Link>
