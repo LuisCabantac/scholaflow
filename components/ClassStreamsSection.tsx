@@ -543,7 +543,7 @@ export default function ClassStreamsSection({
               </div>
             )}
             <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
-              <h4 className="pb-2 font-semibold">Recent classworks</h4>
+              <h4 className="pb-2 text-base font-medium">Recent Work</h4>
               {assignedClasswork ? (
                 <div key={assignedClasswork.id}>
                   <Link
