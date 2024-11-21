@@ -452,7 +452,7 @@ export default function ClassStreamCard({
               <>
                 <Link
                   href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
-                  className="mt-2 block text-xs font-medium md:hidden"
+                  className="mt-2 block font-medium md:hidden"
                 >
                   View all comments
                 </Link>
@@ -480,108 +480,31 @@ export default function ClassStreamCard({
                 ))}
             </ul>
           </div>
-          <Link
-            href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
-            className="mt-2 flex items-end gap-2 md:hidden"
-          >
-            <div className="flex h-9 w-full items-center justify-between rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-[#616572]">
-              <span>Add class comment</span>
-              <div className="flex gap-4 py-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  className="size-6 stroke-[#22317c]"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                  />
-                </svg>
-              </div>
-            </div>
-          </Link>
+
           {(classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) && (
-            <div className="mt-2 hidden md:block">
-              <form
-                className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
-                onSubmit={handleCommentSubmit}
+            <>
+              <Link
+                href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                className="mt-2 flex items-end gap-2 md:hidden"
               >
-                <input
-                  type="text"
-                  name="classroomId"
-                  defaultValue={classroom.classroomId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="streamId"
-                  defaultValue={stream.id}
-                  hidden
-                />
-                <textarea
-                  required
-                  disabled={addCommentIsPending}
-                  name="comment"
-                  className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-18" : "h-9"}`}
-                  placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
-                  value={streamComment}
-                  onChange={(event) => setStreamComment(event.target.value)}
-                ></textarea>
-                <label
-                  className={`px-4 py-2 ${
-                    addCommentIsPending
-                      ? "disabled:cursor-not-allowed"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  <input
-                    type="file"
-                    className="hidden"
-                    multiple
-                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                    disabled={addCommentIsPending}
-                    onChange={(event) => {
-                      handleAttachmentImageNameChange(event);
-                      handleSetAttachmentImages(event);
-                    }}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                    />
-                  </svg>
-                </label>
-                <button className="py-2 pr-4" disabled={addCommentIsPending}>
-                  {addCommentIsPending ? (
-                    <div className="spinner__mini dark"></div>
-                  ) : (
+                <div className="flex h-9 w-full items-center justify-between rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-[#616572]">
+                  <span>Add class comment</span>
+                  <div className="flex gap-4 py-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                      />
+                    </svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -595,25 +518,105 @@ export default function ClassStreamCard({
                         d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
                       />
                     </svg>
-                  )}
-                </button>
-              </form>
-              {attachmentImagesNames.length ? (
-                <ul className="my-2 grid gap-1 overflow-y-auto md:max-h-40">
-                  {attachmentImagesNames.map((file, index) => (
-                    <AttachmentFileCard
-                      file={file}
-                      index={index}
-                      type="newFile"
-                      location="form"
-                      isLoading={addCommentIsPending}
-                      onRemoveAttachment={handleRemoveAttachmentImage}
-                      key={file}
+                  </div>
+                </div>
+              </Link>
+              <div className="mt-2 hidden md:block">
+                <form
+                  className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                  onSubmit={handleCommentSubmit}
+                >
+                  <input
+                    type="text"
+                    name="classroomId"
+                    defaultValue={classroom.classroomId}
+                    hidden
+                  />
+                  <input
+                    type="text"
+                    name="streamId"
+                    defaultValue={stream.id}
+                    hidden
+                  />
+                  <textarea
+                    required
+                    disabled={addCommentIsPending}
+                    name="comment"
+                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-18" : "h-9"}`}
+                    placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
+                    value={streamComment}
+                    onChange={(event) => setStreamComment(event.target.value)}
+                  ></textarea>
+                  <label
+                    className={`px-4 py-2 ${
+                      addCommentIsPending
+                        ? "disabled:cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      className="hidden"
+                      multiple
+                      accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                      disabled={addCommentIsPending}
+                      onChange={(event) => {
+                        handleAttachmentImageNameChange(event);
+                        handleSetAttachmentImages(event);
+                      }}
                     />
-                  ))}
-                </ul>
-              ) : null}
-            </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                      />
+                    </svg>
+                  </label>
+                  <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                    {addCommentIsPending ? (
+                      <div className="spinner__mini dark"></div>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        className="size-6 stroke-[#22317c]"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </form>
+                {attachmentImagesNames.length ? (
+                  <ul className="my-2 grid gap-1 overflow-y-auto md:max-h-40">
+                    {attachmentImagesNames.map((file, index) => (
+                      <AttachmentFileCard
+                        file={file}
+                        index={index}
+                        type="newFile"
+                        location="form"
+                        isLoading={addCommentIsPending}
+                        onRemoveAttachment={handleRemoveAttachmentImage}
+                        key={file}
+                      />
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            </>
           )}
         </>
       )}
