@@ -81,7 +81,7 @@ export default function ToDoSection({
   const doneClassworks = classworks
     ?.filter(
       (classwork) =>
-        classwork.isTurnedIn &&
+        (classwork.isTurnedIn || classwork.isGraded) &&
         enrolledClassworks
           ?.map((enrolledClasswork) => enrolledClasswork.classroomId)
           .includes(classwork.classroomId),
@@ -125,7 +125,7 @@ export default function ToDoSection({
                 <li key={assignedClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                    className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -143,7 +143,9 @@ export default function ToDoSection({
                         />
                       </svg>
                       <div>
-                        <p className="font-medium">{assignedClasswork.title}</p>
+                        <p className="underline__text font-medium">
+                          {assignedClasswork.title}
+                        </p>
                         <p>{assignedClasswork.classroomName}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
@@ -196,7 +198,7 @@ export default function ToDoSection({
                 <li key={missingClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
-                    className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -214,7 +216,9 @@ export default function ToDoSection({
                         />
                       </svg>
                       <div>
-                        <p className="font-medium">{missingClasswork.title}</p>
+                        <p className="underline__text font-medium">
+                          {missingClasswork.title}
+                        </p>
                         <p className="">{missingClasswork.classroomName}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
@@ -258,7 +262,7 @@ export default function ToDoSection({
               <li key={doneClasswork.id}>
                 <Link
                   href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
-                  className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                  className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                 >
                   <div className="flex gap-2">
                     <svg
@@ -276,7 +280,7 @@ export default function ToDoSection({
                       />
                     </svg>
                     <div>
-                      <p className="font-medium">
+                      <p className="underline__text font-medium">
                         {doneClasswork.classworkTitle}
                       </p>
                       <p>{doneClasswork.classroomName}</p>

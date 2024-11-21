@@ -550,7 +550,7 @@ export default function ClassStreamsSection({
                 <div key={assignedClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                    className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -568,7 +568,9 @@ export default function ClassStreamsSection({
                         />
                       </svg>
                       <div>
-                        <p className="font-medium">{assignedClasswork.title}</p>
+                        <p className="underline__text font-medium">
+                          {assignedClasswork.title}
+                        </p>
                         <div className="mt-1 grid gap-1 text-xs">
                           <p>
                             Posted{" "}

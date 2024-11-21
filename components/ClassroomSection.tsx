@@ -160,7 +160,7 @@ export default function ClassroomSection({
   const doneClassworks = classworks
     ?.filter(
       (classwork) =>
-        classwork.isTurnedIn &&
+        (classwork.isTurnedIn || classwork.isGraded) &&
         enrolledClasses
           ?.map((enrolledClass) => enrolledClass.classroomId)
           .includes(classwork.classroomId),
@@ -466,7 +466,7 @@ export default function ClassroomSection({
                     <li key={assignedClasswork.id}>
                       <Link
                         href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                        className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
                           <svg
@@ -484,7 +484,7 @@ export default function ClassroomSection({
                             />
                           </svg>
                           <div>
-                            <p className="font-medium">
+                            <p className="underline__text font-medium">
                               {assignedClasswork.title}
                             </p>
                             <p className="text-xs">
@@ -504,7 +504,7 @@ export default function ClassroomSection({
                               </p>
                               {assignedClasswork.dueDate &&
                               assignedClasswork.hasDueDate === "true" ? (
-                                <p className="text-[#616572]">
+                                <p className="text-xs text-[#616572]">
                                   {isToday(assignedClasswork.dueDate)
                                     ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
                                     : isYesterday(assignedClasswork.dueDate)
@@ -512,7 +512,9 @@ export default function ClassroomSection({
                                       : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
                                 </p>
                               ) : (
-                                <p className="text-[#616572]">No due date</p>
+                                <p className="text-xs text-[#616572]">
+                                  No due date
+                                </p>
                               )}
                             </div>
                           </div>
@@ -528,7 +530,7 @@ export default function ClassroomSection({
                     <li key={missingClasswork.id}>
                       <Link
                         href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
-                        className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
                           <svg
@@ -546,7 +548,7 @@ export default function ClassroomSection({
                             />
                           </svg>
                           <div>
-                            <p className="font-medium">
+                            <p className="underline__text font-medium">
                               {missingClasswork.title}
                             </p>
                             <p className="text-xs">
@@ -566,7 +568,7 @@ export default function ClassroomSection({
                               </p>
                               {missingClasswork.dueDate &&
                                 missingClasswork.hasDueDate === "true" && (
-                                  <p className="text-[#f03e3e]">
+                                  <p className="text-xs text-[#f03e3e]">
                                     {isToday(missingClasswork.dueDate)
                                       ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
                                       : isYesterday(missingClasswork.dueDate)
@@ -587,7 +589,7 @@ export default function ClassroomSection({
                   <li key={doneClasswork.id}>
                     <Link
                       href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
-                      className="flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                      className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
                     >
                       <div className="flex gap-2">
                         <svg
@@ -605,7 +607,7 @@ export default function ClassroomSection({
                           />
                         </svg>
                         <div>
-                          <p className="font-medium">
+                          <p className="underline__text font-medium">
                             {doneClasswork.classworkTitle}
                           </p>
                           <p className="text-xs">

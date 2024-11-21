@@ -229,11 +229,7 @@
     border-color: #384689;
   }
 
-  .topic__card:hover > h4 {
-    text-decoration: underline;
-  }
-
-  .stream__card:hover .stream__title {
+  .underline__container:hover .underline__text {
     text-decoration: underline;
   }
 }
