@@ -295,6 +295,7 @@ export default function StreamDetailSection({
               )}
               {stream.type !== "stream" && (
                 <div className="grid gap-2">
+                  {stream.type !== "material" && (
                   <div className="flex items-center justify-between text-[#616572]">
                     {stream.dueDate && stream.hasDueDate === "true" ? (
                       <p>
@@ -311,6 +312,7 @@ export default function StreamDetailSection({
                       <p className="font-medium">{stream.points} points</p>
                     )}
                   </div>
+                  )}
                   <div className="flex gap-2">
                     {stream.type === "assignment" && (
                       <svg
