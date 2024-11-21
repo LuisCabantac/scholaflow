@@ -33,9 +33,9 @@ export default function SignInForm() {
   }
 
   return (
-    <form className="grid gap-3" onSubmit={handleSignInAction}>
+    <form className="grid gap-3 text-sm" onSubmit={handleSignInAction}>
       <div className="grid gap-2">
-        <label className="text-sm font-medium">
+        <label className="font-medium">
           Email <span className="text-red-400">*</span>
         </label>
         <input
@@ -44,14 +44,14 @@ export default function SignInForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
-          className={`rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
+          className={`rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setValidEmail(emailRegex.test(event.target.value))
           }
         />
       </div>
       <div className="mb-2 grid gap-2">
-        <label className="text-sm font-medium">
+        <label className="font-medium">
           Password <span className="text-red-400">*</span>
         </label>
         <div className="flex">
@@ -61,7 +61,7 @@ export default function SignInForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValidPassword(event.target.value.length >= 8 ? true : false)
             }
@@ -70,7 +70,7 @@ export default function SignInForm() {
             type="button"
             disabled={isLoading}
             onClick={handleShowPassword}
-            className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-3 pr-5 focus:outline-0 disabled:cursor-not-allowed ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

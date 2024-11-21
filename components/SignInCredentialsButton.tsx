@@ -12,10 +12,11 @@ export default function SignInCredentialsButton({
 }) {
   return (
     <button
-      className={`${isLoading && "py-[0.8rem]"} flex w-full items-center justify-center rounded-md bg-[#22317c] px-5 py-3 text-sm font-semibold text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-wait disabled:bg-[#1b2763] disabled:text-[#d5dae6]`}
+      className={`flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#22317c] px-3 py-2 text-sm font-medium text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-wait disabled:bg-[#1b2763] disabled:text-[#d5dae6]`}
       disabled={isLoading}
     >
-      <span>{isLoading ? <SpinnerMini /> : children}</span>
+      {isLoading && <SpinnerMini />}
+      <span>{children}</span>
     </button>
   );
 }
