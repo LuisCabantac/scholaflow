@@ -19,13 +19,13 @@ import {
   IStream,
   IStreamComment,
 } from "@/app/user/classroom/class/[classId]/page";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import { IClass } from "@/components/ClassroomSection";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import StreamCommentCard from "@/components/StreamCommentCard";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 export default function StreamSubmissionsSection({
   stream,
@@ -261,26 +261,36 @@ export default function StreamSubmissionsSection({
                 <h4 className="text-xs font-medium text-[#616572]">Graded</h4>
               </div>
             </div>
-            {turnedInUsers?.filter((user) => user.isTurnedIn).length ? (
+            {turnedInUsers?.filter((user) => user.isTurnedIn || user.isGraded)
+              .length ? (
               <div className="grid gap-2">
                 <p className="font-medium">Turned in</p>
                 <ul className="grid gap-2">
                   {turnedInUsers
-                    ?.filter((user) => user.isTurnedIn)
+                    ?.filter((user) => user.isTurnedIn || user.isGraded)
                     .map((user) => (
                       <li key={user.id} onClick={handleToggleExpandUserWork}>
                         <Link
                           href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                          className="flex gap-2"
+                          className="underline__container flex items-center justify-between"
                         >
-                          <Image
-                            src={user.userAvatar}
-                            alt={user.userName}
-                            width={30}
-                            height={30}
-                            className="rounded-full"
-                          />
-                          <p>{user.userName}</p>
+                          <div className="flex gap-2">
+                            <Image
+                              src={user.userAvatar}
+                              alt={user.userName}
+                              width={30}
+                              height={30}
+                              className="rounded-full"
+                            />
+                            <p className="underline__text">{user.userName}</p>
+                          </div>
+                          {stream.points && (
+                            <p>
+                              {user.isGraded
+                                ? `${user.userPoints}/${stream.points}`
+                                : "Ungraded"}
+                            </p>
+                          )}
                         </Link>
                       </li>
                     ))}
@@ -299,7 +309,7 @@ export default function StreamSubmissionsSection({
                         <li key={user.id} onClick={handleToggleExpandUserWork}>
                           <Link
                             href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                            className="flex items-center justify-between"
+                            className="underline__container flex items-center justify-between"
                           >
                             <div className="flex gap-2">
                               <Image
@@ -309,12 +319,15 @@ export default function StreamSubmissionsSection({
                                 height={30}
                                 className="rounded-full"
                               />
-                              <p>{user.userName}</p>
+                              <p className="underline__text">{user.userName}</p>
                             </div>
                             <div>
                               {turnedInUsers?.find(
                                 (turnedIn) => turnedIn.userId === user.userId,
-                              )?.isTurnedIn ? (
+                              )?.isTurnedIn ||
+                              turnedInUsers?.find(
+                                (turnedIn) => turnedIn.userId === user.userId,
+                              )?.isGraded ? (
                                 <p className="font-medium text-[#616572]">
                                   {(new Date(stream?.dueDate ?? "") >
                                     new Date() &&
@@ -347,7 +360,7 @@ export default function StreamSubmissionsSection({
                           >
                             <Link
                               href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                              className="flex items-center justify-between"
+                              className="underline__container flex items-center justify-between"
                             >
                               <div className="flex gap-2">
                                 <Image
@@ -357,12 +370,17 @@ export default function StreamSubmissionsSection({
                                   height={30}
                                   className="rounded-full"
                                 />
-                                <p>{user.userName}</p>
+                                <p className="underline__text">
+                                  {user.userName}
+                                </p>
                               </div>
                               <div>
                                 {turnedInUsers?.find(
                                   (turnedIn) => turnedIn.userId === user.userId,
-                                )?.isTurnedIn ? (
+                                )?.isTurnedIn ||
+                                turnedInUsers?.find(
+                                  (turnedIn) => turnedIn.userId === user.userId,
+                                )?.isGraded ? (
                                   <p className="font-medium text-[#616572]">
                                     {new Date(stream?.dueDate ?? "") >
                                     new Date()
@@ -519,7 +537,7 @@ export default function StreamSubmissionsSection({
                 turnedInUsers
                   ?.filter((user) => user.userId === userId)
                   .map((works) => (
-                    <div key={works.id} className="grid gap-2">
+                    <div key={works.id}>
                       <div className="flex items-center justify-between">
                         <p className="text-lg font-medium">{works.userName}</p>
                         {stream.points && (
@@ -576,7 +594,7 @@ export default function StreamSubmissionsSection({
                 <div>
                   <div className="mt-2 border-t-2 border-[#dbe4ff] pt-2">
                     <p className="font-medium">Private comments</p>
-                    <div className="w-full bg-[#f3f6ff] py-1">
+                    <div className="w-full bg-[#f3f6ff] py-2">
                       <form
                         className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                         onSubmit={handleCommentSubmit}
