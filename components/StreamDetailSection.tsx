@@ -214,7 +214,7 @@ export default function StreamDetailSection({
         {session.user.id === classroom.teacherId &&
           stream.type !== "stream" &&
           stream.type !== "material" && (
-            <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+            <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
               <Link
                 href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}`}
                 className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
@@ -250,13 +250,6 @@ export default function StreamDetailSection({
                 />
               </svg>
             </Link>
-            <h1 className="text-xl font-medium">
-              {stream.type === "stream" && "Announcement"}
-              {stream.type === "assignment" && "Assignment"}
-              {stream.type === "quiz" && "Quiz"}
-              {stream.type === "material" && "Material"}
-              {stream.type === "question" && "Question"}
-            </h1>
           </div>
           <div>
             <div className="mt-2">
@@ -272,7 +265,7 @@ export default function StreamDetailSection({
                   </div>
                   <div>
                     <p className="font-medium">{stream.authorName}</p>
-                    <p className="flex items-center gap-1 text-sm text-[#616572]">
+                    <p className="flex items-center gap-1 text-[#616572]">
                       Posted{" "}
                       {isToday(stream.created_at)
                         ? "today"
@@ -301,7 +294,7 @@ export default function StreamDetailSection({
               )}
               {stream.type !== "stream" && (
                 <div className="grid gap-2">
-                  <div className="flex items-center justify-between text-sm text-[#616572]">
+                  <div className="flex items-center justify-between text-[#616572]">
                     {stream.dueDate && stream.hasDueDate === "true" ? (
                       <p>
                         {isToday(stream.dueDate)
@@ -383,8 +376,8 @@ export default function StreamDetailSection({
                       </svg>
                     )}
                     <div className="mb-2">
-                      <p className="text-xl font-medium">{stream.title}</p>
-                      <div className="flex items-center gap-1 text-sm text-[#616572]">
+                      <p className="text-base font-medium">{stream.title}</p>
+                      <div className="flex items-center gap-1 text-xs text-[#616572]">
                         <p>{stream.authorName}</p>
                         <span>•</span>
                         <p>
