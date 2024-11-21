@@ -8,7 +8,7 @@ import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
-export default function ClassPeopleCard({
+export default function PeopleCard({
   user,
   classroom,
   sessionId,

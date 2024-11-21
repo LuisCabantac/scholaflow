@@ -13,7 +13,7 @@ import {
   getAllClassTopicsByClassId,
 } from "@/lib/data-service";
 
-import ClassStreamsSection from "@/components/ClassStreamsSection";
+import StreamsSection from "@/components/StreamsSection";
 
 export async function generateMetadata({
   params,
@@ -103,7 +103,7 @@ export default async function Page({ params }: { params: Params }) {
   const allTopics = await getAllClassTopicsByClassId(classId);
 
   return (
-    <ClassStreamsSection
+    <StreamsSection
       topics={allTopics}
       session={session}
       classroom={classroom}

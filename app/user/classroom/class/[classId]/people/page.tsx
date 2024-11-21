@@ -11,7 +11,7 @@ import {
 import { deleteEnrolledClassbyClassAndEnrolledClassId } from "@/lib/classroom-actions";
 import { hasUser } from "@/lib/utils";
 
-import ClassPeopleSection from "@/components/ClassPeopleSection";
+import PeopleSection from "@/components/PeopleSection";
 
 export async function generateMetadata({
   params,
@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: Params }) {
   }
 
   return (
-    <ClassPeopleSection
+    <PeopleSection
       classId={classId}
       sessionId={session.user.id}
       classroom={classroom}

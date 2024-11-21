@@ -16,7 +16,7 @@ import {
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
-import ClassStreamCard from "@/components/ClassStreamCard";
+import StreamCard from "@/components/StreamCard";
 import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
 import TopicDialog, { ITopic } from "@/components/TopicDialog";
@@ -277,7 +277,7 @@ export default function ClassworksSection({
                       !stream.topicId,
                   )
                   .map((stream) => (
-                    <ClassStreamCard
+                    <StreamCard
                       key={stream.id}
                       topics={topics as ITopic[] | null}
                       stream={stream}

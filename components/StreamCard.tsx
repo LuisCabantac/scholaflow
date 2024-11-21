@@ -32,7 +32,7 @@ import StreamForm from "@/components/StreamForm";
 import { ITopic } from "@/components/TopicDialog";
 import CommentsLoading from "@/components/CommentsLoading";
 
-export default function ClassStreamCard({
+export default function StreamCard({
   topics,
   stream,
   session,

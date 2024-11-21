@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { IClass } from "@/components/ClassroomSection";
-import ClassPeopleCard from "@/components/ClassPeopleCard";
+import PeopleCard from "@/components/PeopleCard";
 import Button from "@/components/Button";
 import AddUserToClassDialog from "@/components/AddUserToClassDialog";
 
-export default function ClassPeopleSection({
+export default function PeopleSection({
   classId,
   sessionId,
   classroom,
@@ -134,7 +134,7 @@ export default function ClassPeopleSection({
               </li>
               {enrolledUsers &&
                 enrolledUsers?.map((user) => (
-                  <ClassPeopleCard
+                  <PeopleCard
                     key={user.id}
                     user={user}
                     classroom={classroom}

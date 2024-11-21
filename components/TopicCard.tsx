@@ -11,7 +11,7 @@ import {
 } from "@/app/user/classroom/class/[classId]/page";
 
 import TopicDialog, { ITopic } from "@/components/TopicDialog";
-import ClassStreamCard from "@/components/ClassStreamCard";
+import StreamCard from "@/components/StreamCard";
 import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
@@ -187,7 +187,7 @@ export default function TopicCard({
                 stream.topicId === topic.topicId,
             )
             .map((stream) => (
-              <ClassStreamCard
+              <StreamCard
                 key={stream.id}
                 topics={topics as ITopic[] | null}
                 stream={stream}

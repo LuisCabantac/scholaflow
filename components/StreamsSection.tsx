@@ -20,7 +20,7 @@ import { IClass } from "@/components/ClassroomSection";
 import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
-import ClassStreamCard from "@/components/ClassStreamCard";
+import StreamCard from "@/components/StreamCard";
 import { ITopic } from "@/components/TopicDialog";
 
 const illustrationArr = [
@@ -31,7 +31,7 @@ const illustrationArr = [
   "M36 5V1h-8v4h-4l-2 8h20l-2-8zM14 13h36v46H14z",
 ];
 
-export default function ClassStreamsSection({
+export default function StreamsSection({
   topics,
   session,
   classroom,
@@ -494,7 +494,7 @@ export default function ClassStreamsSection({
                     : true,
                 )
                 .map((stream) => (
-                  <ClassStreamCard
+                  <StreamCard
                     key={stream.id}
                     topics={topics}
                     stream={stream}
