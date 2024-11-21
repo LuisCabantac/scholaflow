@@ -205,11 +205,7 @@ export default function ClassStreamCard({
   return (
     <li className="flex w-full flex-col rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
       <div
-        className={`relative ${
-          (classroom.allowStudentsToComment ||
-            classroom.teacherId === session.user.id) &&
-          ` ${optimisticComments?.length && showComments && "border-b-2 border-[#dbe4ff] pb-3"}`
-        }`}
+        className={`relative ${optimisticComments?.length && showComments && "border-b-2 border-[#dbe4ff] pb-3"}`}
       >
         {stream.type === "stream" && (
           <div>
