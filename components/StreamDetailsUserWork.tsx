@@ -694,7 +694,11 @@ export default function StreamDetailsUserWork({
                 ) : (
                   <span className="flex items-center gap-2">
                     {isLoading && <div className="spinner__mini dark"></div>}
-                    <p>{classwork?.isGraded ? "Resubmit" : "Mark as done"}</p>
+                    <p>
+                      {classwork?.isGraded && stream.points
+                        ? "Resubmit"
+                        : "Mark as done"}
+                    </p>
                   </span>
                 )}
               </button>
