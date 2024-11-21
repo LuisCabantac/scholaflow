@@ -290,7 +290,7 @@ export default function StreamDetailsUserWork({
       <div className="flex items-center justify-between">
         <h4 className="mb-2 text-lg font-medium">Your work</h4>
         <div className="flex gap-1">
-          {classwork?.isGraded && (
+          {stream.points && classwork?.isGraded && (
             <p className="font-medium text-[#616572]">
               {classwork.userPoints} / {stream.points}
             </p>
