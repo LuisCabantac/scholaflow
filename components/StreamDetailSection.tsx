@@ -296,22 +296,22 @@ export default function StreamDetailSection({
               {stream.type !== "stream" && (
                 <div className="grid gap-2">
                   {stream.type !== "material" && (
-                  <div className="flex items-center justify-between text-[#616572]">
-                    {stream.dueDate && stream.hasDueDate === "true" ? (
-                      <p>
-                        {isToday(stream.dueDate)
-                          ? `Due today, ${format(stream.dueDate, "h:mm a")}`
-                          : isYesterday(stream.dueDate)
-                            ? `Due yesterday, ${format(stream.dueDate, "h:mm a")}`
-                            : `Due ${format(stream.dueDate, "MMM d,")} ${isThisYear(stream.dueDate) ? "" : `${format(stream.dueDate, "y ")}`} ${format(stream.dueDate, "h:mm a")}`}
-                      </p>
-                    ) : (
-                      <p>No due date</p>
-                    )}
-                    {stream.points !== null && (
-                      <p className="font-medium">{stream.points} points</p>
-                    )}
-                  </div>
+                    <div className="flex items-center justify-between text-[#616572]">
+                      {stream.dueDate && stream.hasDueDate === "true" ? (
+                        <p>
+                          {isToday(stream.dueDate)
+                            ? `Due today, ${format(stream.dueDate, "h:mm a")}`
+                            : isYesterday(stream.dueDate)
+                              ? `Due yesterday, ${format(stream.dueDate, "h:mm a")}`
+                              : `Due ${format(stream.dueDate, "MMM d,")} ${isThisYear(stream.dueDate) ? "" : `${format(stream.dueDate, "y ")}`} ${format(stream.dueDate, "h:mm a")}`}
+                        </p>
+                      ) : (
+                        <p>No due date</p>
+                      )}
+                      {stream.points !== null && (
+                        <p className="font-medium">{stream.points} points</p>
+                      )}
+                    </div>
                   )}
                   <div className="flex gap-2">
                     {stream.type === "assignment" && (
@@ -447,6 +447,7 @@ export default function StreamDetailSection({
             <ul className="grid gap-2">
               {classroom.allowStudentsToComment ||
               classroom.teacherId === session.user.id ||
+              commentsIsPending ||
               optimisticComments?.length ? (
                 <li className="border-t-2 border-[#dbe4ff] pt-2 text-sm font-medium">
                   Comments
