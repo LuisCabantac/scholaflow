@@ -290,7 +290,7 @@ export default function StreamDetailsUserWork({
       <div className="flex items-center justify-between">
         <h4 className="mb-2 text-lg font-medium">Your work</h4>
         <div className="flex gap-1">
-          {classwork?.isGraded && classwork?.isTurnedIn && (
+          {classwork?.isGraded && (
             <p className="font-medium text-[#616572]">
               {classwork.userPoints} / {stream.points}
             </p>
@@ -685,7 +685,7 @@ export default function StreamDetailsUserWork({
                 ) : (
                   <span className="flex items-center gap-2">
                     {isLoading && <div className="spinner__mini dark"></div>}
-                    <p>Mark as done</p>
+                    <p>{classwork?.isGraded ? "Resubmit" : "Mark as done"}</p>
                   </span>
                 )}
               </button>
