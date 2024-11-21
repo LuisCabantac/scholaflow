@@ -438,47 +438,18 @@ export default function StreamSubmissionsSection({
                 <div className="modal__container">
                   <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                     <div
-                      className="grid gap-2 rounded-md bg-[#f3f6ff] p-4"
+                      className="relative grid gap-4 rounded-md bg-[#f3f6ff] p-4 md:p-6"
                       ref={wrapperRef}
                     >
-                      <div className="relative flex items-center gap-2">
-                        <button
-                          className="absolute right-0 top-0"
-                          onClick={handleToggleShowGradeModal}
-                          disabled={isLoading}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="size-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 18 18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                          stroke="currentColor"
-                          className="size-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
-                          />
-                        </svg>
-                        <p className="text-lg font-medium">Grade</p>
+                      <div>
+                        <h4 className="text-lg font-semibold tracking-tight">
+                          Add grade
+                        </h4>
+                        <p>
+                          Add specific grades for assigned activities and tasks.
+                        </p>
                       </div>
-                      <form onSubmit={handleSubmitGrade}>
+                      <form onSubmit={handleSubmitGrade} className="grid gap-4">
                         <input
                           type="text"
                           name="classworkId"
@@ -512,12 +483,33 @@ export default function StreamSubmissionsSection({
                           value={grade}
                           onChange={handleGradeChange}
                         />
-                        <div className="mt-2 flex items-center justify-end">
+                        <div className="flex items-center justify-end">
                           <Button type="primary" isLoading={isLoading}>
                             Done
                           </Button>
                         </div>
                       </form>
+                      <button
+                        type="button"
+                        className="absolute right-4 top-4 disabled:cursor-not-allowed"
+                        disabled={isLoading}
+                        onClick={handleToggleShowGradeModal}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="size-5 transition-all hover:stroke-[#656b70]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
