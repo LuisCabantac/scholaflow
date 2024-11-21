@@ -13,7 +13,7 @@ import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
-export default function StreamCommentCard({
+export default function CommentCard({
   stream,
   comment,
   session,

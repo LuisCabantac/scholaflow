@@ -25,7 +25,8 @@ import Button from "@/components/Button";
 import { IClass } from "@/components/ClassroomSection";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
-import StreamCommentCard from "@/components/StreamCommentCard";
+import CommentCard from "@/components/CommentCard";
+import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamSubmissionsSection({
   stream,
@@ -73,7 +74,7 @@ export default function StreamSubmissionsSection({
 
   const [grade, setGrade] = useState(classwork?.userPoints ?? "");
 
-  const { data: streamsComments, isPending: streamsCommentsIsPending } =
+  const { data: privateComments, isPending: privateCommentsIsPending } =
     useQuery({
       queryKey: [`stream-${stream.id}-private-comments`],
       queryFn: () => onGetAllPrivateComments(stream.id),
@@ -115,7 +116,7 @@ export default function StreamSubmissionsSection({
   });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(
-    streamsComments,
+    privateComments,
     (curComment, commentId) => {
       return curComment?.filter((comment) => comment.id !== commentId);
     },
@@ -707,6 +708,15 @@ export default function StreamSubmissionsSection({
                         </ul>
                       ) : null}
                     </div>
+                    {privateCommentsIsPending && (
+                      <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
+                        {Array(6)
+                          .fill(undefined)
+                          .map((_, index) => (
+                            <CommentsLoading key={index} />
+                          ))}
+                      </ul>
+                    )}
                     {optimisticComments?.filter(
                       (comment) =>
                         (comment.author === session.user.id &&
@@ -715,7 +725,7 @@ export default function StreamSubmissionsSection({
                           comment.toUserId === session.user.id),
                     ).length ? (
                       <ul className="mt-1 grid max-h-[20rem] gap-2 overflow-y-auto">
-                        {!streamsCommentsIsPending &&
+                        {!privateCommentsIsPending &&
                           optimisticComments
                             ?.filter(
                               (comment) =>
@@ -725,7 +735,7 @@ export default function StreamSubmissionsSection({
                                   comment.toUserId === session.user.id),
                             )
                             .map((comment) => (
-                              <StreamCommentCard
+                              <CommentCard
                                 key={comment.id}
                                 comment={comment}
                                 stream={stream}
@@ -762,6 +772,15 @@ export default function StreamSubmissionsSection({
                         </button>
                       ) : null}
                     </div>
+                    {privateCommentsIsPending && (
+                      <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
+                        {Array(6)
+                          .fill(undefined)
+                          .map((_, index) => (
+                            <CommentsLoading key={index} />
+                          ))}
+                      </ul>
+                    )}
                     {optimisticComments?.filter(
                       (comment) =>
                         (comment.author === session.user.id &&
@@ -772,7 +791,7 @@ export default function StreamSubmissionsSection({
                       <ul
                         className={`grid gap-2 ${expandPrivateComments ? "max-h-[15rem] overflow-y-auto" : "max-h-0"}`}
                       >
-                        {!streamsCommentsIsPending &&
+                        {!privateCommentsIsPending &&
                           optimisticComments
                             ?.filter(
                               (comment) =>
@@ -782,7 +801,7 @@ export default function StreamSubmissionsSection({
                                   comment.toUserId === session.user.id),
                             )
                             .map((comment) => (
-                              <StreamCommentCard
+                              <CommentCard
                                 key={comment.id}
                                 comment={comment}
                                 stream={stream}

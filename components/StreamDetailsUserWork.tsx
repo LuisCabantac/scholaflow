@@ -21,8 +21,9 @@ import Button from "@/components/Button";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import SpinnerMini from "@/components/SpinnerMini";
-import StreamCommentCard from "@/components/StreamCommentCard";
+import CommentCard from "@/components/CommentCard";
 import { IClass } from "@/components/ClassroomSection";
+import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamDetailsUserWork({
   stream,
@@ -100,7 +101,7 @@ export default function StreamDetailsUserWork({
     } else toast.error(message);
   }
 
-  const { data: streamsComments, isPending: streamsCommentsIsPending } =
+  const { data: privateComments, isPending: privateCommentsIsPending } =
     useQuery({
       queryKey: [`stream-${stream.id}-private-comments`],
       queryFn: () => onGetAllPrivateComments(stream.id),
@@ -142,7 +143,7 @@ export default function StreamDetailsUserWork({
   });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(
-    streamsComments,
+    privateComments,
     (curComment, commentId) => {
       return curComment?.filter((comment) => comment.id !== commentId);
     },
@@ -473,7 +474,11 @@ export default function StreamDetailsUserWork({
                 <ul
                   className={`grid gap-2 overflow-y-auto md:max-h-[15rem] ${expandPrivateComments ? "max-h-[15rem]" : "h-0"}`}
                 >
-                  {!streamsCommentsIsPending &&
+                  {privateCommentsIsPending &&
+                    Array(6)
+                      .fill(undefined)
+                      .map((_, index) => <CommentsLoading key={index} />)}
+                  {!privateCommentsIsPending &&
                     optimisticComments
                       ?.filter(
                         (comment) =>
@@ -483,7 +488,7 @@ export default function StreamDetailsUserWork({
                             comment.toUserId === session.user.id),
                       )
                       .map((comment) => (
-                        <StreamCommentCard
+                        <CommentCard
                           key={comment.id}
                           comment={comment}
                           stream={stream}
@@ -810,6 +815,15 @@ export default function StreamDetailsUserWork({
               </ul>
             ) : null}
           </div>
+          {privateCommentsIsPending && (
+            <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
+              {Array(6)
+                .fill(undefined)
+                .map((_, index) => (
+                  <CommentsLoading key={index} />
+                ))}
+            </ul>
+          )}
           {optimisticComments?.filter(
             (comment) =>
               (comment.author === session.user.id &&
@@ -818,7 +832,7 @@ export default function StreamDetailsUserWork({
                 comment.toUserId === session.user.id),
           ).length ? (
             <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
-              {!streamsCommentsIsPending &&
+              {!privateCommentsIsPending &&
                 optimisticComments
                   ?.filter(
                     (comment) =>
@@ -828,7 +842,7 @@ export default function StreamDetailsUserWork({
                         comment.toUserId === session.user.id),
                   )
                   .map((comment) => (
-                    <StreamCommentCard
+                    <CommentCard
                       key={comment.id}
                       comment={comment}
                       stream={stream}

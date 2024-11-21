@@ -24,12 +24,13 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import StreamCommentCard from "@/components/StreamCommentCard";
+import CommentCard from "@/components/CommentCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import EllipsisPopover from "@/components/EllipsisPopover";
 import StreamForm from "@/components/StreamForm";
 import { ITopic } from "@/components/TopicDialog";
+import CommentsLoading from "@/components/CommentsLoading";
 
 export default function ClassStreamCard({
   topics,
@@ -66,8 +67,8 @@ export default function ClassStreamCard({
   const [attachmentImages, setAttachmentImages] = useState<File[]>([]);
 
   const {
-    data: streamsComments,
-    isPending: streamsCommentsIsPending,
+    data: comments,
+    isPending: commentsIsPending,
     refetch,
   } = useQuery({
     queryKey: [`stream-${stream.id}-comments`],
@@ -108,7 +109,7 @@ export default function ClassStreamCard({
     });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(
-    streamsComments,
+    comments,
     (curComment, commentId) => {
       return curComment?.filter((comment) => comment.id !== commentId);
     },
@@ -463,19 +464,26 @@ export default function ClassStreamCard({
               </>
             ) : null}
             <ul className="hidden max-h-[20rem] gap-2 overflow-y-auto md:grid">
-              {showClassComments &&
-                !streamsCommentsIsPending &&
-                optimisticComments?.map((comment) => (
-                  <StreamCommentCard
-                    key={comment.id}
-                    comment={comment}
-                    stream={stream}
-                    session={session}
-                    classroom={classroom}
-                    deleteCommentIsPending={deleteCommentIsPending}
-                    onDeleteComment={handleDeleteComment}
-                  />
-                ))}
+              {showClassComments && (
+                <>
+                  {commentsIsPending &&
+                    Array(6)
+                      .fill(undefined)
+                      .map((_, index) => <CommentsLoading key={index} />)}
+                  {!commentsIsPending &&
+                    optimisticComments?.map((comment) => (
+                      <CommentCard
+                        key={comment.id}
+                        comment={comment}
+                        stream={stream}
+                        session={session}
+                        classroom={classroom}
+                        deleteCommentIsPending={deleteCommentIsPending}
+                        onDeleteComment={handleDeleteComment}
+                      />
+                    ))}
+                </>
+              )}
             </ul>
           </div>
           {(classroom.allowStudentsToComment ||

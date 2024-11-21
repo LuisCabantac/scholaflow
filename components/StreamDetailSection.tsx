@@ -23,7 +23,7 @@ import {
 import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
-import StreamCommentCard from "@/components/StreamCommentCard";
+import CommentCard from "@/components/CommentCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import EllipsisPopover from "@/components/EllipsisPopover";
@@ -31,6 +31,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import StreamForm from "@/components/StreamForm";
 import StreamDetailsUserWork from "@/components/StreamDetailsUserWork";
 import { ITopic } from "@/components/TopicDialog";
+import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamDetailSection({
   topics,
@@ -80,7 +81,7 @@ export default function StreamDetailSection({
       onError: (error) => toast.error(error.message),
     });
 
-  const { data: comments } = useQuery({
+  const { data: comments, isPending: commentsIsPending } = useQuery({
     queryKey: [`stream-${stream.id}-comments`],
     queryFn: () => onGetAllComments(stream.id),
   });
@@ -550,10 +551,14 @@ export default function StreamDetailSection({
                   ) : null}
                 </li>
               )}
-              {optimisticComments?.length ? (
+              {commentsIsPending &&
+                Array(6)
+                  .fill(undefined)
+                  .map((_, index) => <CommentsLoading key={index} />)}
+              {!commentsIsPending && optimisticComments?.length ? (
                 <>
                   {optimisticComments?.map((comment) => (
-                    <StreamCommentCard
+                    <CommentCard
                       key={comment.id}
                       stream={stream}
                       classroom={classroom}
