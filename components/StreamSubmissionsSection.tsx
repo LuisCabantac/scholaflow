@@ -231,11 +231,9 @@ export default function StreamSubmissionsSection({
           </Link>
         </div>
         <div className="grid w-full items-start gap-8 md:grid-cols-[1fr_2fr]">
-          <div className="grid gap-2">
-            <h2 className="text-lg font-medium md:text-xl">
-              {stream.title.length > 20
-                ? stream.title.slice(0, 20).concat("...")
-                : stream.title}
+          <div className="grid w-full gap-2">
+            <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium md:text-xl">
+              {stream.title}
             </h2>
             <div className="flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm">
               <div>
