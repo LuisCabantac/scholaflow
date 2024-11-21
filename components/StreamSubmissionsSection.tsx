@@ -210,7 +210,7 @@ export default function StreamSubmissionsSection({
     () => {
       setShowGradeModal(false);
     },
-    false,
+    isLoading,
   );
 
   return (
