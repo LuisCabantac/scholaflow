@@ -208,7 +208,7 @@ export default function ClassStreamCard({
         className={`relative ${
           (classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) &&
-          ` ${optimisticComments?.length && showComments && "border-b-2 border-[#dbe4ff] pb-4"}`
+          ` ${optimisticComments?.length && showComments && "border-b-2 border-[#dbe4ff] pb-3"}`
         }`}
       >
         {stream.type === "stream" && (
@@ -480,7 +480,6 @@ export default function ClassStreamCard({
                 ))}
             </ul>
           </div>
-
           {(classroom.allowStudentsToComment ||
             classroom.teacherId === session.user.id) && (
             <>
