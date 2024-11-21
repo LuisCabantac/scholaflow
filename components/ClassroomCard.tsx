@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -60,17 +60,13 @@ export default function ClassroomCard({
         href={`/user/classroom/class/${classData.classroomId}`}
         className="relative h-[9rem] md:h-[10rem]"
       >
-        <div className="absolute left-3 top-3 text-balance drop-shadow-sm md:left-4 md:top-4">
-          <h5 className="text-lg font-semibold text-[#F5F5F5] md:text-xl">
-            {classData.className.length > 25
-              ? classData.className.slice(0, 25).concat("...")
-              : classData.className}
+        <div className="absolute left-3 top-3 w-[88%] text-balance drop-shadow-sm md:left-4 md:top-4">
+          <h5 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-[#F5F5F5]">
+            {classData.className}
           </h5>
-          <p className="text-sm font-medium text-[#F5F5F5]">
+          <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium text-[#F5F5F5]">
             {classData.subject && `${classData.subject} · `}
-            {classData.section.length > 25
-              ? classData.section.slice(0, 25).concat("...")
-              : classData.section}
+            {classData.section}
           </p>
         </div>
         <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
@@ -82,7 +78,7 @@ export default function ClassroomCard({
               className="rounded-full"
             />
           </div>
-          <div className="text-sm">
+          <div>
             <p>{classData.teacherName}</p>
             <p className="text-xs font-medium">Instructor</p>
           </div>
@@ -125,7 +121,7 @@ export default function ClassroomCard({
             className={`${ellipsis ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-2 z-20 grid w-[10rem] gap-2 rounded-md bg-[#f3f6ff] p-3 font-medium shadow-md transition-all ease-in-out`}
           >
             <button
-              className="flex items-center gap-2 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a]"
+              className="flex items-center gap-2 rounded-md text-[#f03e3e] hover:text-[#c92a2a]"
               onClick={handleToggleShowConfirmation}
             >
               <svg
@@ -148,7 +144,7 @@ export default function ClassroomCard({
         </div>
       </Link>
       {showConfirmation && (
-        <ConfirmationScreen
+        <ConfirmationModal
           type="delete"
           btnLabel="Leave"
           isLoading={deleteClassIsPending}
@@ -159,7 +155,7 @@ export default function ClassroomCard({
           }}
         >
           Are you sure you want to unenroll to this class?
-        </ConfirmationScreen>
+        </ConfirmationModal>
       )}
     </li>
   );

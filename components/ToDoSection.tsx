@@ -96,29 +96,29 @@ export default function ToDoSection({
 
   return (
     <section className="flex flex-col items-start justify-start">
-      <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+      <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm md:text-base">
         <Link
-          href="/user/to-do?filter=assigned"
-          className={`px-3 py-2 transition-all ${searchParams.get("filter") === "assigned" || searchParams.get("filter") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+          href="/user/to-do?sort=assigned"
+          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "assigned" || searchParams.get("sort") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Assigned
         </Link>
         <Link
-          href="/user/to-do?filter=missing"
-          className={`px-3 py-2 transition-all ${searchParams.get("filter") === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+          href="/user/to-do?sort=missing"
+          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Missing
         </Link>
         <Link
-          href="/user/to-do?filter=done"
-          className={`px-3 py-2 transition-all ${searchParams.get("filter") === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
+          href="/user/to-do?sort=done"
+          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Done
         </Link>
       </div>
       <ul className="mt-2 grid w-full gap-2">
-        {(searchParams.get("filter") === "assigned" ||
-          searchParams.get("filter") === null) &&
+        {(searchParams.get("sort") === "assigned" ||
+          searchParams.get("sort") === null) &&
         assignedClassworks?.length
           ? assignedClassworks.map((assignedClasswork) => {
               return (
@@ -144,9 +144,7 @@ export default function ToDoSection({
                       </svg>
                       <div>
                         <p className="font-medium">{assignedClasswork.title}</p>
-                        <p className="text-sm">
-                          {assignedClasswork.classroomName}
-                        </p>
+                        <p>{assignedClasswork.classroomName}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
                             Posted{" "}
@@ -175,7 +173,7 @@ export default function ToDoSection({
                     </div>
                     {assignedClasswork.dueDate &&
                     assignedClasswork.hasDueDate === "true" ? (
-                      <p className="hidden text-sm text-[#616572] md:block">
+                      <p className="hidden text-[#616572] md:block">
                         {isToday(assignedClasswork.dueDate)
                           ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
                           : isYesterday(assignedClasswork.dueDate)
@@ -183,7 +181,7 @@ export default function ToDoSection({
                             : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
                       </p>
                     ) : (
-                      <p className="hidden text-sm text-[#616572] md:block">
+                      <p className="hidden text-[#616572] md:block">
                         No due date
                       </p>
                     )}
@@ -192,7 +190,7 @@ export default function ToDoSection({
               );
             })
           : null}
-        {searchParams.get("filter") === "missing" && missingClassworks?.length
+        {searchParams.get("sort") === "missing" && missingClassworks?.length
           ? missingClassworks.map((missingClasswork) => {
               return (
                 <li key={missingClasswork.id}>
@@ -217,9 +215,7 @@ export default function ToDoSection({
                       </svg>
                       <div>
                         <p className="font-medium">{missingClasswork.title}</p>
-                        <p className="text-sm">
-                          {missingClasswork.classroomName}
-                        </p>
+                        <p className="">{missingClasswork.classroomName}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
                             Posted{" "}
@@ -244,7 +240,7 @@ export default function ToDoSection({
                     </div>
                     {missingClasswork.dueDate &&
                       missingClasswork.hasDueDate === "true" && (
-                        <p className="hidden text-sm text-[#f03e3e] md:block">
+                        <p className="hidden text-[#f03e3e] md:block">
                           {isToday(missingClasswork.dueDate)
                             ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
                             : isYesterday(missingClasswork.dueDate)
@@ -257,7 +253,7 @@ export default function ToDoSection({
               );
             })
           : null}
-        {searchParams.get("filter") === "done" && doneClassworks?.length
+        {searchParams.get("sort") === "done" && doneClassworks?.length
           ? doneClassworks.map((doneClasswork) => (
               <li key={doneClasswork.id}>
                 <Link
@@ -283,7 +279,7 @@ export default function ToDoSection({
                       <p className="font-medium">
                         {doneClasswork.classworkTitle}
                       </p>
-                      <p className="text-sm">{doneClasswork.classroomName}</p>
+                      <p>{doneClasswork.classroomName}</p>
                       <div className="mt-2 grid gap-1 text-xs">
                         <p>
                           Posted{" "}
@@ -314,8 +310,8 @@ export default function ToDoSection({
               </li>
             ))
           : null}
-        {(searchParams.get("filter") === "assigned" ||
-          searchParams.get("filter") === null) &&
+        {(searchParams.get("sort") === "assigned" ||
+          searchParams.get("sort") === null) &&
         !assignedClassworks?.length ? (
           <div className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
             <div className="relative w-[15rem] md:w-[20rem]">
@@ -330,7 +326,7 @@ export default function ToDoSection({
             </p>
           </div>
         ) : null}
-        {searchParams.get("filter") === "missing" &&
+        {searchParams.get("sort") === "missing" &&
         !missingClassworks?.length ? (
           <div className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
             <div className="relative w-[15rem] md:w-[20rem]">
@@ -345,7 +341,7 @@ export default function ToDoSection({
             </p>
           </div>
         ) : null}
-        {searchParams.get("filter") === "done" && !doneClassworks?.length ? (
+        {searchParams.get("sort") === "done" && !doneClassworks?.length ? (
           <div className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
             <div className="relative w-[15rem] md:w-[20rem]">
               <Image

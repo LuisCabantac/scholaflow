@@ -20,31 +20,41 @@ export default function HeaderTitle({
   });
 
   if (pathname.includes("/user/announcements/edit/"))
-    return <h1 className="text-xl font-semibold md:text-2xl">Edit post</h1>;
+    return (
+      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+        Edit post
+      </h1>
+    );
 
   if (pathname === "/user/classroom/class/")
-    return <h1 className="text-xl font-semibold md:text-2xl">Classroom</h1>;
+    return (
+      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+        Classroom
+      </h1>
+    );
 
   if (pathname.includes("/user/classroom/class/"))
     return (
       <>
-        <h1 className="hidden text-xl font-semibold md:block md:text-2xl">
+        <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:block md:text-2xl">
           {data ? data.className : "Classroom"}
         </h1>
 
-        <h1 className="block text-xl font-semibold md:hidden md:text-2xl">
-          {(data && data?.className?.length > 25
-            ? data?.className.slice(0, 25).concat("...")
-            : data?.className) ?? "Classroom"}
+        <h1 className="block overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:hidden md:text-2xl">
+          {data?.className ?? "Classroom"}
         </h1>
       </>
     );
 
   if (pathname.includes("/user/admin/user-management/edit-user"))
-    return <h1 className="text-xl font-semibold md:text-2xl">Edit user</h1>;
+    return (
+      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+        Edit user
+      </h1>
+    );
 
   return (
-    <h1 className="text-xl font-semibold md:text-2xl">
+    <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
       {getLastRouteName(pathname)}
     </h1>
   );
