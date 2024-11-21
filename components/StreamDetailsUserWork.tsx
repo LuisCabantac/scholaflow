@@ -288,7 +288,10 @@ export default function StreamDetailsUserWork({
 
   return (
     <article className="fixed bottom-3 left-3 right-3 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
-      <div className="flex items-center justify-between">
+      <div
+        className="flex cursor-pointer items-center justify-between md:cursor-auto"
+        onClick={handleToggleExpandModalView}
+      >
         <h4 className="mb-2 text-lg font-medium">Your work</h4>
         <div className="flex gap-1">
           {stream.points && classwork?.isGraded && (
@@ -318,6 +321,7 @@ export default function StreamDetailsUserWork({
           <button
             onClick={handleToggleExpandModalView}
             className="block md:hidden"
+            type="button"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
