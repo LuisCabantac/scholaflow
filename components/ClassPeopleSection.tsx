@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IClass } from "@/components/ClassroomSection";
 import ClassPeopleCard from "@/components/ClassPeopleCard";
 import Button from "@/components/Button";
-import AddUserToClassModal from "@/components/AddUserToClassModal";
+import AddUserToClassDialog from "@/components/AddUserToClassDialog";
 
 export default function ClassPeopleSection({
   classId,
@@ -54,28 +54,25 @@ export default function ClassPeopleSection({
   return (
     <section>
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
             href={`/user/classroom/class/${classId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Stream
           </Link>
-
           <Link
             href={`/user/classroom/class/${classId}/classwork`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Classwork
           </Link>
-
           <Link
             href={`/user/classroom/class/${classId}/people`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             People
           </Link>
-
           <Link
             href={`/user/classroom/class/${classId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
@@ -86,28 +83,14 @@ export default function ClassPeopleSection({
       </div>
       <div className="grid gap-2">
         <div className="flex items-center justify-between">
-          <p className="font-medium md:text-lg">All users</p>
+          <p className="text-base font-medium">All users</p>
           {sessionId === classroom.teacherId && (
             <Button type="primary" onClick={handleToggleShowAddUserModal}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="size-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-                />
-              </svg>
-              <span>Add user</span>
+              Add user
             </Button>
           )}
           {showAddUserModal && (
-            <AddUserToClassModal
+            <AddUserToClassDialog
               classId={classId}
               onToggleShowAddUserToClass={handleToggleShowAddUserModal}
               handleSetShowAddUserModal={setShowAddUserModal}
@@ -124,7 +107,7 @@ export default function ClassPeopleSection({
                     key={index}
                     className="flex items-center justify-between bg-[#f3f6ff] p-2"
                   >
-                    <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-center gap-2">
                       <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
                       <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
                     </div>
@@ -134,7 +117,7 @@ export default function ClassPeopleSection({
           ) : (
             <>
               <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2">
                   <div className="relative h-8 w-8">
                     <Image
                       src={classroom.teacherAvatar}
@@ -144,7 +127,7 @@ export default function ClassPeopleSection({
                     />
                   </div>
                   <p>{classroom.teacherName}</p>
-                  <span className="role teacher flex w-24 items-center justify-center rounded-md p-1 text-[0.65rem] font-semibold md:p-2 md:text-xs">
+                  <span className="role teacher mt-1 flex items-center justify-center rounded-md px-2 py-1 text-[0.65rem] font-semibold">
                     TEACHER
                   </span>
                 </div>

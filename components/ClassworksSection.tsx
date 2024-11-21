@@ -19,8 +19,8 @@ import { IClass } from "@/components/ClassroomSection";
 import ClassStreamCard from "@/components/ClassStreamCard";
 import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
-import TopicForm, { ITopic } from "@/components/TopicForm";
-import TopicCard from "./TopicCard";
+import TopicDialog, { ITopic } from "@/components/TopicDialog";
+import TopicCard from "@/components/TopicCard";
 
 type IStreamType = "stream" | "assignment" | "quiz" | "question" | "material";
 
@@ -139,7 +139,7 @@ export default function ClassworksSection({
   return (
     <section>
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
             href={`/user/classroom/class/${classroom.classroomId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
@@ -180,21 +180,7 @@ export default function ClassworksSection({
           {session.user.id === classroom.teacherId && (
             <div className="relative" ref={btnWrapperRef}>
               <Button type="primary" onClick={handleToggleShowCreateClasswork}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                <span>Create</span>
+                Create
               </Button>
               <div
                 className={`${showCreateClasswork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] rounded-md bg-[#f3f6ff] p-2 font-medium shadow-md transition-all ease-in-out`}
@@ -344,11 +330,11 @@ export default function ClassworksSection({
         />
       )}
       {showTopicForm && (
-        <TopicForm
+        <TopicDialog
           type="create"
           classroom={classroom}
           onToggleShowTopic={handleToggleShowTopicForm}
-          onSetShowTopicForm={setShowTopicForm}
+          onSetShowTopicDialog={setShowTopicForm}
         />
       )}
     </section>

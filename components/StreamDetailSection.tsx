@@ -27,10 +27,10 @@ import StreamCommentCard from "@/components/StreamCommentCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import EllipsisPopover from "@/components/EllipsisPopover";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import StreamForm from "@/components/StreamForm";
 import StreamDetailsUserWork from "@/components/StreamDetailsUserWork";
-import { ITopic } from "@/components/TopicForm";
+import { ITopic } from "@/components/TopicDialog";
 
 export default function StreamDetailSection({
   topics,
@@ -460,11 +460,32 @@ export default function StreamDetailSection({
                 classroom.teacherId === session.user.id) && (
                 <li>
                   <form
-                    className="flex items-end gap-2"
+                    className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
+                    <input
+                      type="text"
+                      name="classroomId"
+                      defaultValue={classroom.classroomId}
+                      hidden
+                    />
+                    <input
+                      type="text"
+                      name="streamId"
+                      defaultValue={stream.id}
+                      hidden
+                    />
+                    <textarea
+                      required={!attachmentImages.length}
+                      disabled={addCommentIsPending}
+                      name="comment"
+                      className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
+                      value={streamComment}
+                      onChange={(event) => setStreamComment(event.target.value)}
+                    ></textarea>
                     <label
-                      className={`py-3 ${
+                      className={`px-4 py-2 ${
                         addCommentIsPending
                           ? "disabled:cursor-not-allowed"
                           : "cursor-pointer"
@@ -487,7 +508,7 @@ export default function StreamDetailSection({
                         viewBox="0 0 24 24"
                         strokeWidth={2}
                         stroke="currentColor"
-                        className="size-6 stroke-[#5c7cfa]"
+                        className="size-6"
                       >
                         <path
                           strokeLinecap="round"
@@ -496,55 +517,28 @@ export default function StreamDetailSection({
                         />
                       </svg>
                     </label>
-                    <div
-                      className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    <button
+                      className="py-2 pr-4"
+                      disabled={addCommentIsPending}
                     >
-                      <input
-                        type="text"
-                        name="classroomId"
-                        defaultValue={classroom.classroomId}
-                        hidden
-                      />
-                      <input
-                        type="text"
-                        name="streamId"
-                        defaultValue={stream.id}
-                        hidden
-                      />
-                      <textarea
-                        required={!attachmentImages.length}
-                        disabled={addCommentIsPending}
-                        name="comment"
-                        className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
-                        placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
-                        value={streamComment}
-                        onChange={(event) =>
-                          setStreamComment(event.target.value)
-                        }
-                      ></textarea>
-                      <button
-                        className="py-3 pr-5"
-                        disabled={addCommentIsPending}
-                      >
-                        {addCommentIsPending ? (
-                          <div className="spinner__mini dark"></div>
-                        ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            className="size-6 stroke-[#22317c]"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
+                      {addCommentIsPending ? (
+                        <div className="spinner__mini dark"></div>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          className="size-6 stroke-[#22317c]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                          />
+                        </svg>
+                      )}
+                    </button>
                   </form>
                   {attachmentImagesNames.length ? (
                     <ul className="my-2 grid gap-1 overflow-y-auto md:max-h-40">
@@ -611,10 +605,10 @@ export default function StreamDetailSection({
                 onToggleEllipsis={handleToggleEllipsis}
                 showEllipsis={ellipsis}
                 onShowEditForm={handleToggleShowStreamForm}
-                onShowConfirmationScreen={handleToggleShowStreamConfirmation}
+                onShowConfirmationModal={handleToggleShowStreamConfirmation}
               />
               {showStreamConfirmation && (
-                <ConfirmationScreen
+                <ConfirmationModal
                   type="delete"
                   btnLabel="Delete"
                   isLoading={deleteStreamPostIsPending}
@@ -625,7 +619,7 @@ export default function StreamDetailSection({
                   }}
                 >
                   Are you sure you want to delete this post?
-                </ConfirmationScreen>
+                </ConfirmationModal>
               )}
             </div>
           </div>

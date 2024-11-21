@@ -10,10 +10,10 @@ import {
   IStreamComment,
 } from "@/app/user/classroom/class/[classId]/page";
 
-import TopicForm, { ITopic } from "@/components/TopicForm";
+import TopicDialog, { ITopic } from "@/components/TopicDialog";
 import ClassStreamCard from "@/components/ClassStreamCard";
 import { IClass } from "@/components/ClassroomSection";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
 export default function TopicCard({
@@ -159,10 +159,10 @@ export default function TopicCard({
                     showDelete={session.user.id === classroom.teacherId}
                     onToggleEllipsis={handleToggleEllipsis}
                     onShowEditForm={handleToggleShowTopicForm}
-                    onShowConfirmationScreen={handleToggleShowConfirmation}
+                    onShowConfirmationModal={handleToggleShowConfirmation}
                   />
                   {showConfirmation && (
-                    <ConfirmationScreen
+                    <ConfirmationModal
                       type="delete"
                       btnLabel="Delete"
                       isLoading={deleteTopicIsPending}
@@ -173,14 +173,14 @@ export default function TopicCard({
                       }}
                     >
                       Are you sure you want to delete this post?
-                    </ConfirmationScreen>
+                    </ConfirmationModal>
                   )}
                   {showTopicForm && (
-                    <TopicForm
+                    <TopicDialog
                       type="edit"
                       topic={topic}
                       classroom={classroom}
-                      onSetShowTopicForm={setShowTopicForm}
+                      onSetShowTopicDialog={setShowTopicForm}
                       onToggleShowTopic={handleToggleShowTopicForm}
                     />
                   )}

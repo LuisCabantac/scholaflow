@@ -8,7 +8,7 @@ export default function EllipsisPopover({
   showDelete = false,
   onShowEditForm,
   onToggleEllipsis,
-  onShowConfirmationScreen,
+  onShowConfirmationModal,
 }: {
   showEdit: boolean;
   deleteLabel?: string;
@@ -17,7 +17,7 @@ export default function EllipsisPopover({
   clipboardUrl?: string;
   onShowEditForm?: () => void;
   onToggleEllipsis: () => void;
-  onShowConfirmationScreen?: () => void;
+  onShowConfirmationModal?: () => void;
 }) {
   return (
     <div
@@ -26,7 +26,7 @@ export default function EllipsisPopover({
       {clipboardUrl && (
         <button
           type="button"
-          className="flex w-full items-center gap-1 rounded-md text-sm hover:text-[#242628] md:text-base"
+          className="flex w-full items-center gap-1 rounded-md hover:text-[#242628]"
           onClick={() => {
             navigator.clipboard.writeText(clipboardUrl);
             toast.success("Copied to clipboard!");
@@ -39,7 +39,7 @@ export default function EllipsisPopover({
       {showEdit && (
         <button
           type="button"
-          className="flex w-full items-center gap-1 rounded-md text-sm hover:text-[#242628] md:text-base"
+          className="flex w-full items-center gap-1 rounded-md hover:text-[#242628]"
           onClick={() => {
             onShowEditForm?.();
             onToggleEllipsis();
@@ -52,10 +52,10 @@ export default function EllipsisPopover({
         <button
           type="button"
           onClick={() => {
-            onShowConfirmationScreen?.();
+            onShowConfirmationModal?.();
             onToggleEllipsis();
           }}
-          className="flex items-center gap-1 rounded-md text-sm text-[#f03e3e] hover:text-[#c92a2a] md:text-base"
+          className="flex items-center gap-1 rounded-md text-[#f03e3e] hover:text-[#c92a2a]"
         >
           {deleteLabel ? deleteLabel : "Delete"}
         </button>

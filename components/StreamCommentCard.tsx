@@ -10,7 +10,7 @@ import {
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
 export default function StreamCommentCard({
@@ -135,10 +135,10 @@ export default function StreamCommentCard({
               }
               onToggleEllipsis={handleToggleCommentEllipsis}
               showEllipsis={commentEllipsis}
-              onShowConfirmationScreen={handleToggleShowCommentConfirmation}
+              onShowConfirmationModal={handleToggleShowCommentConfirmation}
             />
             {showCommentConfirmation && (
-              <ConfirmationScreen
+              <ConfirmationModal
                 type="delete"
                 btnLabel="Delete"
                 isLoading={deleteCommentIsPending}
@@ -149,7 +149,7 @@ export default function StreamCommentCard({
                 }}
               >
                 Are you sure you want to delete this comment?
-              </ConfirmationScreen>
+              </ConfirmationModal>
             )}
           </div>
         </div>

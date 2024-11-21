@@ -14,7 +14,7 @@ import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page"
 import { IClass } from "@/components/ClassroomSection";
 import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
-import { ITopic } from "@/components/TopicForm";
+import { ITopic } from "@/components/TopicDialog";
 
 export async function getUser(email: string) {
   const { data } = await supabase

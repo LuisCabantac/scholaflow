@@ -5,7 +5,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
 export default function ClassPeopleCard({
@@ -44,7 +44,7 @@ export default function ClassPeopleCard({
 
   return (
     <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2">
         <div className="relative h-8 w-8">
           <Image
             src={user.userAvatar}
@@ -81,10 +81,10 @@ export default function ClassPeopleCard({
             showDelete={true}
             showEllipsis={ellipsis}
             onToggleEllipsis={handleToggleEllipsis}
-            onShowConfirmationScreen={handleToggleShowConfirmation}
+            onShowConfirmationModal={handleToggleShowConfirmation}
           />
           {showConfirmation && (
-            <ConfirmationScreen
+            <ConfirmationModal
               type="delete"
               btnLabel="Remove"
               isLoading={deleteClassIsPending}
@@ -95,7 +95,7 @@ export default function ClassPeopleCard({
               }}
             >
               Are you sure you want to remove this user?
-            </ConfirmationScreen>
+            </ConfirmationModal>
           )}
         </div>
       )}

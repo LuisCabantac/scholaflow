@@ -4,7 +4,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 
-export default function ConfirmationScreen({
+export default function ConfirmationModal({
   type,
   btnLabel,
   isLoading,
@@ -32,9 +32,9 @@ export default function ConfirmationScreen({
 
   return (
     <div className="modal__container">
-      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[28%]">
+      <div className="flex h-[40%] max-w-[78%] items-center justify-center md:h-[60%] md:max-w-[40%]">
         <div
-          className="grid gap-2 rounded-md bg-[#f3f6ff] p-4"
+          className="grid gap-2 rounded-md bg-[#f3f6ff] p-6"
           ref={wrapperRef}
         >
           <div className="flex gap-2">

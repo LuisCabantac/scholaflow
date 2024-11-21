@@ -21,7 +21,7 @@ import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
 import ClassStreamCard from "@/components/ClassStreamCard";
-import { ITopic } from "@/components/TopicForm";
+import { ITopic } from "@/components/TopicDialog";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
