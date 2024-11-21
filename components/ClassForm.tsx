@@ -77,7 +77,7 @@ export default function ClassForm({
         ref={classFormModalWrapperRef}
       >
         <form
-          className="min-h-screen w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
+          className="min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleCreateClass}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
@@ -96,7 +96,7 @@ export default function ClassForm({
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="size-5 hover:stroke-[#656b70] transition-all"
+                className="size-5 transition-all hover:stroke-[#656b70]"
               >
                 <path
                   strokeLinecap="round"

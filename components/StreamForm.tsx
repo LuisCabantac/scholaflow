@@ -220,7 +220,7 @@ export default function StreamForm({
   return (
     <div className="modal__container">
       <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-[#f3f6ff]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff]"
         ref={streamFormModalWrapperRef}
       >
         <form
