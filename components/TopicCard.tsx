@@ -87,7 +87,7 @@ export default function TopicCard({
     <li className="grid gap-2">
       <ul className="flex items-center justify-between">
         <li
-          className="flex w-full cursor-pointer items-center gap-2 font-semibold"
+          className="topic__card flex w-full cursor-pointer items-center gap-2 font-semibold"
           onClick={handleToggleExpandTopic}
         >
           <svg

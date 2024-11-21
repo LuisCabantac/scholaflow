@@ -228,4 +228,8 @@
   .comment__form:has(.comment__textarea:focus) {
     border-color: #384689;
   }
+
+  .topic__card:hover > h4 {
+    text-decoration: underline;
+  }
 }
