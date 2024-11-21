@@ -8,7 +8,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IUser } from "@/components/UserManagementSection";
 import UserForm from "@/components/UserForm";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
 export default function UserCard({
@@ -132,11 +132,11 @@ export default function UserCard({
             showEllipsis={ellipsis}
             onShowEditForm={handleToggleShowUserForm}
             onToggleEllipsis={handleToggleEllipsis}
-            onShowConfirmationScreen={handleToggleShowConfirmation}
+            onShowConfirmationModal={handleToggleShowConfirmation}
           />
         </div>
         {showConfirmation && (
-          <ConfirmationScreen
+          <ConfirmationModal
             type="delete"
             btnLabel="Remove"
             isLoading={deleteUserIsPending}
@@ -144,7 +144,7 @@ export default function UserCard({
             handleAction={() => onDeleteUser(userData.id)}
           >
             Are you sure you want to remove this user?
-          </ConfirmationScreen>
+          </ConfirmationModal>
         )}
         {showUserForm && (
           <UserForm

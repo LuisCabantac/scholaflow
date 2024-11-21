@@ -7,7 +7,7 @@ export default function AccessDenied() {
       <div className="relative w-[15rem] md:w-[20rem]">
         <Image src={noPosts} alt="no posts" className="object-cover" />
       </div>
-      <p className="font-medium md:text-lg">
+      <p className="text-base font-medium">
         Please log in with a student or teacher account to access this page.
       </p>
     </div>

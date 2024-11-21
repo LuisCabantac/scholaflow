@@ -499,11 +499,44 @@ export default function StreamDetailsUserWork({
           </div>
           <div className="mt-1 w-full">
             <form
-              className="flex items-end gap-2"
+              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
+              <input
+                type="text"
+                name="classroomId"
+                defaultValue={stream.classroomId}
+                hidden
+              />
+              <input
+                type="text"
+                name="classworkId"
+                defaultValue={classwork?.id}
+                hidden
+              />
+              <input
+                type="text"
+                name="userId"
+                defaultValue={classroom.teacherId}
+                hidden
+              />
+              <input
+                type="text"
+                name="streamId"
+                defaultValue={stream.id}
+                hidden
+              />
+              <textarea
+                required={!attachmentImages.length}
+                disabled={addCommentIsPending}
+                name="comment"
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                value={streamComment}
+                onChange={(event) => setStreamComment(event.target.value)}
+              ></textarea>
               <label
-                className={`py-3 ${
+                className={`px-4 py-2 ${
                   addCommentIsPending
                     ? "disabled:cursor-not-allowed"
                     : "cursor-pointer"
@@ -526,7 +559,7 @@ export default function StreamDetailsUserWork({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-6 stroke-[#5c7cfa]"
+                  className="size-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -535,62 +568,25 @@ export default function StreamDetailsUserWork({
                   />
                 </svg>
               </label>
-              <div
-                className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
-              >
-                <input
-                  type="text"
-                  name="classroomId"
-                  defaultValue={stream.classroomId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="classworkId"
-                  defaultValue={classwork?.id}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="userId"
-                  defaultValue={classroom.teacherId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="streamId"
-                  defaultValue={stream.id}
-                  hidden
-                />
-                <textarea
-                  required={!attachmentImages.length}
-                  disabled={addCommentIsPending}
-                  name="comment"
-                  className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
-                  placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                  value={streamComment}
-                  onChange={(event) => setStreamComment(event.target.value)}
-                ></textarea>
-                <button className="py-3 pr-5" disabled={addCommentIsPending}>
-                  {addCommentIsPending ? (
-                    <div className="spinner__mini dark"></div>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      className="size-6 stroke-[#22317c]"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
+              <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                {addCommentIsPending ? (
+                  <div className="spinner__mini dark"></div>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    className="size-6 stroke-[#22317c]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                    />
+                  </svg>
+                )}
+              </button>
             </form>
             {attachmentImagesNames.length ? (
               <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
@@ -709,11 +705,44 @@ export default function StreamDetailsUserWork({
           <label className="text-sm font-medium">Private comments</label>
           <div className="mt-1">
             <form
-              className="flex items-end gap-2"
+              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
+              <input
+                type="text"
+                name="classroomId"
+                defaultValue={stream.classroomId}
+                hidden
+              />
+              <input
+                type="text"
+                name="classworkId"
+                defaultValue={classwork?.id}
+                hidden
+              />
+              <input
+                type="text"
+                name="userId"
+                defaultValue={classroom.teacherId}
+                hidden
+              />
+              <input
+                type="text"
+                name="streamId"
+                defaultValue={stream.id}
+                hidden
+              />
+              <textarea
+                required
+                disabled={addCommentIsPending}
+                name="comment"
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                value={streamComment}
+                onChange={(event) => setStreamComment(event.target.value)}
+              ></textarea>
               <label
-                className={`py-3 ${
+                className={`px-4 py-2 ${
                   addCommentIsPending
                     ? "disabled:cursor-not-allowed"
                     : "cursor-pointer"
@@ -736,7 +765,7 @@ export default function StreamDetailsUserWork({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-6 stroke-[#5c7cfa]"
+                  className="size-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -745,62 +774,25 @@ export default function StreamDetailsUserWork({
                   />
                 </svg>
               </label>
-              <div
-                className={`comment__form z-10 flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
-              >
-                <input
-                  type="text"
-                  name="classroomId"
-                  defaultValue={stream.classroomId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="classworkId"
-                  defaultValue={classwork?.id}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="userId"
-                  defaultValue={classroom.teacherId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="streamId"
-                  defaultValue={stream.id}
-                  hidden
-                />
-                <textarea
-                  required
-                  disabled={addCommentIsPending}
-                  name="comment"
-                  className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
-                  placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                  value={streamComment}
-                  onChange={(event) => setStreamComment(event.target.value)}
-                ></textarea>
-                <button className="py-3 pr-5" disabled={addCommentIsPending}>
-                  {addCommentIsPending ? (
-                    <div className="spinner__mini dark"></div>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      className="size-6 stroke-[#22317c]"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
+              <button className="py-2 pr-4" disabled={addCommentIsPending}>
+                {addCommentIsPending ? (
+                  <div className="spinner__mini dark"></div>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    className="size-6 stroke-[#22317c]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                    />
+                  </svg>
+                )}
+              </button>
             </form>
             {attachmentImagesNames.length ? (
               <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">

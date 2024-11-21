@@ -7,7 +7,7 @@ export default function NoClassStreams() {
       <div className="relative w-[10rem] md:w-[15rem]">
         <Image src={noStreams} alt="no classes" className="object-cover" />
       </div>
-      <p className="font-medium md:text-lg">
+      <p className="text-base font-medium">
         This is where you&apos;ll see updates for this class.
       </p>
     </div>

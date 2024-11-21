@@ -8,7 +8,7 @@ export default function UserNotFound() {
       <div className="relative w-[15rem] md:w-[20rem]">
         <Image src={noUsers} alt="no classes" className="object-cover" />
       </div>
-      <p className="font-medium md:text-lg">User not found.</p>
+      <p className="text-base font-medium">User not found.</p>
     </div>
   );
 }

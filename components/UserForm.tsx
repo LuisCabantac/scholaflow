@@ -95,7 +95,7 @@ export default function UserForm({
                 name="fullName"
                 placeholder="Enter the user's name"
                 defaultValue={user?.fullName}
-                className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
               />
             </div>
             <div className="grid gap-2">
@@ -109,7 +109,7 @@ export default function UserForm({
                 name="email"
                 placeholder="Set up user's email"
                 value={email}
-                className={`${!emailExists && "border-red-500"} w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none`}
+                className={`${!emailExists && "border-red-500"} w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none`}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
@@ -124,7 +124,7 @@ export default function UserForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Set up the user's password"
                   disabled={isLoading}
-                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
                   defaultValue={user?.password}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setValidPassword(
@@ -170,7 +170,7 @@ export default function UserForm({
                 Role <span className="text-red-400">*</span>
               </label>
               <div className="mt-2 flex flex-col">
-                <label htmlFor="roleTeacher" className="text-xs md:text-sm">
+                <label htmlFor="roleTeacher">
                   <div className="flex gap-2">
                     <input
                       disabled={isLoading}
@@ -186,7 +186,7 @@ export default function UserForm({
                     Teacher
                   </div>
                 </label>
-                <label htmlFor="roleStudent" className="text-xs md:text-sm">
+                <label htmlFor="roleStudent">
                   <div className="flex gap-2">
                     <input
                       disabled={isLoading}

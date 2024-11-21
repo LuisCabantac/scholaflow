@@ -149,7 +149,7 @@ export default function ClassChatSection({
   return (
     <section className="relative">
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
             href={`/user/classroom/class/${classId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
@@ -235,7 +235,7 @@ export default function ClassChatSection({
                       <div>
                         {message.author !== session.user.id &&
                           message.author !== messages[index - 1]?.author && (
-                            <p className="mb-1 text-sm font-semibold">
+                            <p className="mb-1 text-xs font-semibold">
                               {message.authorName}
                             </p>
                           )}
@@ -303,7 +303,7 @@ export default function ClassChatSection({
           <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-[#f3f6ff] md:pt-0">
             {attachmentNames.length ? (
               <>
-                <div className="flex justify-between border-t-2 border-[#dbe4ff] pt-2 text-sm">
+                <div className="flex justify-between border-t-2 border-[#dbe4ff] pt-2">
                   <p className="font-medium">Attachments</p>
                   <button type="button" onClick={handleToggleExpandAttachments}>
                     <svg
@@ -324,7 +324,7 @@ export default function ClassChatSection({
                 </div>
                 {!expandAttachments && (
                   <div
-                    className="flex cursor-pointer items-center gap-1 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-3 text-sm shadow-sm md:p-4 md:text-base"
+                    className="flex cursor-pointer items-center gap-1 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-3 shadow-sm md:p-4"
                     onClick={handleToggleExpandAttachments}
                   >
                     <svg
@@ -408,7 +408,7 @@ export default function ClassChatSection({
                   />
                   <textarea
                     name="message"
-                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${message.length > 50 ? "h-28" : "h-10"}`}
+                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${message.length > 50 ? "h-28" : "h-9"}`}
                     value={message}
                     required={!newAttachments.length}
                     placeholder={

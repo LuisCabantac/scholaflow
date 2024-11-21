@@ -216,7 +216,7 @@ export default function StreamSubmissionsSection({
   return (
     <section className="grid items-start">
       <div className="flex flex-col items-start gap-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 text-sm font-medium shadow-sm md:text-base">
+        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
             href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
@@ -265,7 +265,7 @@ export default function StreamSubmissionsSection({
             </div>
             {turnedInUsers?.filter((user) => user.isTurnedIn).length ? (
               <div className="grid gap-2">
-                <p className="text-sm font-medium">Turned in</p>
+                <p className="font-medium">Turned in</p>
                 <ul className="grid gap-2">
                   {turnedInUsers
                     ?.filter((user) => user.isTurnedIn)
@@ -294,7 +294,7 @@ export default function StreamSubmissionsSection({
             ).length ||
             (stream.announceToAll && enrolledUsers?.length) ? (
               <div className="grid w-full gap-2">
-                <p className="text-sm font-medium">Assigned</p>
+                <p className="font-medium">Assigned</p>
                 <ul className="grid gap-2">
                   {stream.announceToAll
                     ? enrolledUsers?.map((user) => (
@@ -317,7 +317,7 @@ export default function StreamSubmissionsSection({
                               {turnedInUsers?.find(
                                 (turnedIn) => turnedIn.userId === user.userId,
                               )?.isTurnedIn ? (
-                                <p className="text-sm font-medium text-[#616572]">
+                                <p className="font-medium text-[#616572]">
                                   {(new Date(stream?.dueDate ?? "") >
                                     new Date() &&
                                     stream?.hasDueDate === "true") ||
@@ -329,7 +329,7 @@ export default function StreamSubmissionsSection({
                                 stream.hasDueDate === "true" &&
                                 new Date(stream?.dueDate ?? "") <
                                   new Date() && (
-                                  <p className="text-sm font-medium text-[#f03e3e]">
+                                  <p className="font-medium text-[#f03e3e]">
                                     Missing
                                   </p>
                                 )
@@ -365,7 +365,7 @@ export default function StreamSubmissionsSection({
                                 {turnedInUsers?.find(
                                   (turnedIn) => turnedIn.userId === user.userId,
                                 )?.isTurnedIn ? (
-                                  <p className="text-sm font-medium text-[#616572]">
+                                  <p className="font-medium text-[#616572]">
                                     {new Date(stream?.dueDate ?? "") >
                                     new Date()
                                       ? "Turned in"
@@ -379,7 +379,7 @@ export default function StreamSubmissionsSection({
                                   )?.isTurnedIn &&
                                   new Date(stream?.dueDate ?? "") <
                                     new Date() && (
-                                    <p className="text-sm font-medium text-[#f03e3e]">
+                                    <p className="font-medium text-[#f03e3e]">
                                       Missing
                                     </p>
                                   )
@@ -509,7 +509,7 @@ export default function StreamSubmissionsSection({
                           type="number"
                           name="userPoints"
                           required
-                          className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
+                          className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
                           disabled={isLoading}
                           value={grade}
                           onChange={handleGradeChange}
@@ -540,9 +540,7 @@ export default function StreamSubmissionsSection({
                       </div>
                       {works.attachment.length || works.links.length ? (
                         <div className="grid gap-2">
-                          <label className="text-xs font-medium md:text-sm">
-                            Attachments
-                          </label>
+                          <label className="font-medium">Attachments</label>
                           <ul className="grid max-h-full gap-1 overflow-y-auto md:max-h-44">
                             {works.attachment.length
                               ? works.attachment.map((file, index) => (
@@ -587,14 +585,49 @@ export default function StreamSubmissionsSection({
               <div className="hidden flex-col bg-[#f3f6ff] md:flex">
                 <div>
                   <div className="mt-2 border-t-2 border-[#dbe4ff] pt-2">
-                    <p className="text-sm font-medium">Private comments</p>
+                    <p className="font-medium">Private comments</p>
                     <div className="w-full bg-[#f3f6ff] py-1">
                       <form
-                        className="flex items-end gap-2"
+                        className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                         onSubmit={handleCommentSubmit}
                       >
+                        <input
+                          type="text"
+                          name="classroomId"
+                          defaultValue={stream.classroomId}
+                          hidden
+                        />
+                        <input
+                          type="text"
+                          name="classworkId"
+                          defaultValue={classwork?.id}
+                          hidden
+                        />
+                        <input
+                          type="text"
+                          name="userId"
+                          defaultValue={userId ?? ""}
+                          hidden
+                        />
+                        <input
+                          type="text"
+                          name="streamId"
+                          defaultValue={stream.id}
+                          hidden
+                        />
+                        <textarea
+                          required={!attachmentImagesNames.length}
+                          disabled={addCommentIsPending}
+                          name="comment"
+                          className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                          placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                          value={streamComment}
+                          onChange={(event) =>
+                            setStreamComment(event.target.value)
+                          }
+                        ></textarea>
                         <label
-                          className={`py-3 ${
+                          className={`px-4 py-2 ${
                             addCommentIsPending
                               ? "disabled:cursor-not-allowed"
                               : "cursor-pointer"
@@ -617,7 +650,7 @@ export default function StreamSubmissionsSection({
                             viewBox="0 0 24 24"
                             strokeWidth={2}
                             stroke="currentColor"
-                            className="size-6 stroke-[#5c7cfa]"
+                            className="size-6"
                           >
                             <path
                               strokeLinecap="round"
@@ -626,68 +659,30 @@ export default function StreamSubmissionsSection({
                             />
                           </svg>
                         </label>
-                        <div
-                          className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                        <button
+                          className="py-2 pr-4"
+                          disabled={addCommentIsPending}
                         >
-                          <input
-                            type="text"
-                            name="classroomId"
-                            defaultValue={stream.classroomId}
-                            hidden
-                          />
-                          <input
-                            type="text"
-                            name="classworkId"
-                            defaultValue={classwork?.id}
-                            hidden
-                          />
-                          <input
-                            type="text"
-                            name="userId"
-                            defaultValue={userId ?? ""}
-                            hidden
-                          />
-                          <input
-                            type="text"
-                            name="streamId"
-                            defaultValue={stream.id}
-                            hidden
-                          />
-                          <textarea
-                            required={!attachmentImagesNames.length}
-                            disabled={addCommentIsPending}
-                            name="comment"
-                            className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
-                            placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                            value={streamComment}
-                            onChange={(event) =>
-                              setStreamComment(event.target.value)
-                            }
-                          ></textarea>
-                          <button
-                            className="py-3 pr-5"
-                            disabled={addCommentIsPending}
-                          >
-                            {addCommentIsPending ? (
-                              <div className="spinner__mini dark"></div>
-                            ) : (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                className="size-6 stroke-[#22317c]"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                                />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
+                          {addCommentIsPending ? (
+                            <div className="spinner__mini dark"></div>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                              className="size-6 stroke-[#22317c]"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                              />
+                            </svg>
+                          )}
+                        </button>
                       </form>
+
                       {attachmentImagesNames.length ? (
                         <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
                           {attachmentImagesNames.map((file, index) => (
@@ -743,7 +738,7 @@ export default function StreamSubmissionsSection({
                 <div>
                   <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">Private comments</p>
+                      <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(
                         (comment) =>
                           (comment.author === session.user.id &&
@@ -797,11 +792,44 @@ export default function StreamSubmissionsSection({
                 </div>
                 <div className="z-10 w-full bg-[#f3f6ff] px-3 pb-3 pt-1 md:px-0 md:pb-0">
                   <form
-                    className="flex items-end gap-2"
+                    className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
+                    <input
+                      type="text"
+                      name="classroomId"
+                      defaultValue={stream.classroomId}
+                      hidden
+                    />
+                    <input
+                      type="text"
+                      name="classworkId"
+                      defaultValue={classwork?.id}
+                      hidden
+                    />
+                    <input
+                      type="text"
+                      name="userId"
+                      defaultValue={userId ?? ""}
+                      hidden
+                    />
+                    <input
+                      type="text"
+                      name="streamId"
+                      defaultValue={stream.id}
+                      hidden
+                    />
+                    <textarea
+                      required={!attachmentImagesNames.length}
+                      disabled={addCommentIsPending}
+                      name="comment"
+                      className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                      value={streamComment}
+                      onChange={(event) => setStreamComment(event.target.value)}
+                    ></textarea>
                     <label
-                      className={`py-3 ${
+                      className={`px-4 py-2 ${
                         addCommentIsPending
                           ? "disabled:cursor-not-allowed"
                           : "cursor-pointer"
@@ -824,7 +852,7 @@ export default function StreamSubmissionsSection({
                         viewBox="0 0 24 24"
                         strokeWidth={2}
                         stroke="currentColor"
-                        className="size-6 stroke-[#5c7cfa]"
+                        className="size-6"
                       >
                         <path
                           strokeLinecap="round"
@@ -833,67 +861,28 @@ export default function StreamSubmissionsSection({
                         />
                       </svg>
                     </label>
-                    <div
-                      className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    <button
+                      className="py-2 pr-4"
+                      disabled={addCommentIsPending}
                     >
-                      <input
-                        type="text"
-                        name="classroomId"
-                        defaultValue={stream.classroomId}
-                        hidden
-                      />
-                      <input
-                        type="text"
-                        name="classworkId"
-                        defaultValue={classwork?.id}
-                        hidden
-                      />
-                      <input
-                        type="text"
-                        name="userId"
-                        defaultValue={userId ?? ""}
-                        hidden
-                      />
-                      <input
-                        type="text"
-                        name="streamId"
-                        defaultValue={stream.id}
-                        hidden
-                      />
-                      <textarea
-                        required={!attachmentImagesNames.length}
-                        disabled={addCommentIsPending}
-                        name="comment"
-                        className={`comment__textarea w-full resize-none bg-transparent py-3 pl-5 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-12"}`}
-                        placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
-                        value={streamComment}
-                        onChange={(event) =>
-                          setStreamComment(event.target.value)
-                        }
-                      ></textarea>
-                      <button
-                        className="py-3 pr-5"
-                        disabled={addCommentIsPending}
-                      >
-                        {addCommentIsPending ? (
-                          <div className="spinner__mini dark"></div>
-                        ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            className="size-6 stroke-[#22317c]"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
+                      {addCommentIsPending ? (
+                        <div className="spinner__mini dark"></div>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          className="size-6 stroke-[#22317c]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                          />
+                        </svg>
+                      )}
+                    </button>
                   </form>
                   {attachmentImagesNames.length ? (
                     <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">

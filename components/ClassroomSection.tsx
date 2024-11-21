@@ -250,7 +250,7 @@ export default function ClassroomSection({
                 <span>
                   {searchParams.get("sort") === null
                     ? "All classes"
-                    : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("filter")?.slice(1).split("-").join(" ")}`}
+                    : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
                 </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

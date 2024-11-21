@@ -7,7 +7,7 @@ export default function NoClasses() {
       <div className="relative w-[15rem] md:w-[20rem]">
         <Image src={noPosts} alt="no classes" className="object-cover" />
       </div>
-      <p className="font-medium md:text-lg">Add a class to get started.</p>
+      <p className="text-base font-medium">Add a class to get started.</p>
     </div>
   );
 }
