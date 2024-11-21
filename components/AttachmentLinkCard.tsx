@@ -38,7 +38,7 @@ export default function AttachmentLinkCard({
           </p>
         </div>
       </a>
-      <div className="absolute -right-1 bottom-[0.85rem] flex items-center gap-4 md:bottom-[1.15rem]">
+      <div className="absolute -right-1 bottom-[0.85rem] flex items-center gap-4">
         <a
           href={link.includes("https://") ? link : `https://${link}`}
           target="_blank"

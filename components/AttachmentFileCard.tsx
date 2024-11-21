@@ -51,7 +51,7 @@ export default function AttachmentFileCard({
           )}
         </div>
       </a>
-      <div className="absolute -right-1 bottom-[0.85rem] flex items-center gap-4 md:bottom-[1.15rem]">
+      <div className="absolute -right-1 bottom-[0.85rem] flex items-center gap-4">
         {type === "curFile" && (
           <a href={file} target="_blank" download>
             <svg
@@ -91,7 +91,7 @@ export default function AttachmentFileCard({
             </svg>
           </button>
         ) : (
-          <div className="w-2 md:w-[0.35rem]"></div>
+          <div className="w-2"></div>
         )}
       </div>
     </li>
