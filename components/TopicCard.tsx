@@ -90,50 +90,34 @@ export default function TopicCard({
           className="topic__card flex w-full cursor-pointer items-center gap-2 font-semibold"
           onClick={handleToggleExpandTopic}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
-            />
-          </svg>
+          {classworks?.filter(
+            (stream) =>
+              ((stream.announceTo.includes(session.user.id) &&
+                stream.announceToAll === false) ||
+                stream.announceToAll ||
+                stream.author === session.user.id ||
+                classroom.teacherId === session.user.id) &&
+              stream.topicId === topic.topicId,
+          ).length ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={3}
+              stroke="currentColor"
+              className={`${expandTopic ? "rotate-180" : "rotate-0"} size-5 cursor-pointer transition-transform`}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          ) : null}
           <h4>{topic.topicName}</h4>
         </li>
         <li>
           <ul className="flex items-center">
-            {classworks?.filter(
-              (stream) =>
-                ((stream.announceTo.includes(session.user.id) &&
-                  stream.announceToAll === false) ||
-                  stream.announceToAll ||
-                  stream.author === session.user.id ||
-                  classroom.teacherId === session.user.id) &&
-                stream.topicId === topic.topicId,
-            ).length ? (
-              <li onClick={handleToggleExpandTopic}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={3}
-                  stroke="currentColor"
-                  className={`${expandTopic ? "rotate-180" : "rotate-0"} size-5 cursor-pointer transition-transform`}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
-              </li>
-            ) : null}
             {session.user.id === classroom.teacherId && (
               <li>
                 <div className="relative" ref={ellipsisWrapperRef}>
