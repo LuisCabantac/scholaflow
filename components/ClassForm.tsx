@@ -81,7 +81,7 @@ export default function ClassForm({
           onSubmit={handleCreateClass}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
-            <h3 className="text-xl font-medium md:text-2xl">
+            <h3 className="text-lg font-semibold tracking-tight">
               {type === "edit" ? "Edit " : "Create "} class
             </h3>
             <button
@@ -96,7 +96,7 @@ export default function ClassForm({
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="size-6"
+                className="size-5 hover:stroke-[#656b70] transition-all"
               >
                 <path
                   strokeLinecap="round"
@@ -204,7 +204,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="className"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Add your class name..."
                   value={className}
                   onChange={(event) => setClassName(event.target.value)}
@@ -219,7 +219,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="section"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Add a subject name..."
                   value={section}
                   onChange={(event) => setSection(event.target.value)}
@@ -232,7 +232,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -248,7 +248,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -261,7 +261,7 @@ export default function ClassForm({
                   </label>
                   <textarea
                     name="classDescription"
-                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     placeholder="Add a class description..."
                     defaultValue={classroom?.classDescription}
                   ></textarea>
