@@ -263,7 +263,7 @@ export default function ClassStreamCard({
                   ? stream.caption.slice(0, 80).concat("...")
                   : stream.caption}
                 {stream.caption.length > 80 && (
-                  <span className="text-[#616572]">
+                  <span className="text-[#616572] hover:underline">
                     <Link
                       href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
                     >
@@ -305,7 +305,7 @@ export default function ClassStreamCard({
           <div>
             <Link
               href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
-              className="flex gap-2"
+              className="stream__card flex gap-2"
             >
               {stream.type === "assignment" && (
                 <svg
@@ -372,7 +372,7 @@ export default function ClassStreamCard({
                 </svg>
               )}
               <div>
-                <p className="pr-2 font-medium">{stream.title}</p>
+                <p className="stream__title pr-2 font-medium">{stream.title}</p>
                 <p className="flex items-center gap-1 text-xs text-[#616572]">
                   Posted{" "}
                   {isToday(stream.created_at)
@@ -452,13 +452,13 @@ export default function ClassStreamCard({
               <>
                 <Link
                   href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
-                  className="mt-2 block font-medium md:hidden"
+                  className="mt-2 block font-medium hover:underline md:hidden"
                 >
                   View all comments
                 </Link>
                 <button
                   onClick={handleToggleShowClassComments}
-                  className={`${showClassComments && "mb-2"} mt-2 hidden font-medium md:block`}
+                  className={`${showClassComments && "mb-2"} mt-2 hidden font-medium hover:underline md:block`}
                 >
                   {showClassComments ? "Hide" : "View"} all comments
                 </button>

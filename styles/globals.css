@@ -232,4 +232,8 @@
   .topic__card:hover > h4 {
     text-decoration: underline;
   }
+
+  .stream__card:hover .stream__title {
+    text-decoration: underline;
+  }
 }
