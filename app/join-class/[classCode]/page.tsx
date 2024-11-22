@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
@@ -11,6 +12,22 @@ import {
 
 import Nav from "@/components/Nav";
 import InviteSection from "@/components/InviteSection";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { classCode } = params;
+
+  const classroom = await getClassByClassCode(classCode);
+
+  return {
+    title: `Join - ${classroom?.className}`,
+    description:
+      classroom?.classDescription || `${classroom?.className} class.`,
+  };
+}
 
 export default async function Page({ params }: { params: Params }) {
   const session = await auth();
