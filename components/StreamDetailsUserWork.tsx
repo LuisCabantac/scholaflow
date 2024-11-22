@@ -623,7 +623,7 @@ export default function StreamDetailsUserWork({
           <>
             {!isLoading && (
               <button
-                className={`flex w-full items-center justify-center gap-1 rounded-md text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "border-2 border-[#dbe4ff] bg-[#e1e7f5] px-[1.12rem] py-[0.65rem] text-[#22317c] hover:bg-[#d9dfee] disabled:bg-[#c5cde6]" : "bg-[#22317c] px-5 py-3 text-[#edf2ff] hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"}`}
+                className={`flex h-10 w-full items-center justify-center gap-1 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "bg-[#e1e7f5] text-[#22317c] hover:bg-[#d9dfee] disabled:bg-[#c5cde6]" : "bg-[#22317c] text-[#edf2ff] hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"}`}
                 disabled={
                   isLoading ||
                   (!classwork?.isTurnedIn &&
@@ -675,7 +675,7 @@ export default function StreamDetailsUserWork({
                 hidden
               />
               <button
-                className={`flex w-full items-center justify-center rounded-md text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "bg-[#22317c] px-5 py-3 text-[#edf2ff] hover:bg-[#384689] disabled:bg-[#1b2763] disabled:text-[#d5dae6]" : "border-2 border-[#dbe4ff] bg-[#e1e7f5] px-[1.12rem] py-[0.65rem] text-[#22317c] hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6]"}`}
+                className={`flex h-10 w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "bg-[#22317c] text-[#edf2ff] hover:bg-[#384689] disabled:bg-[#1b2763] disabled:text-[#d5dae6]" : "bg-[#e1e7f5] text-[#22317c] hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6]"}`}
                 disabled={
                   isLoading ||
                   (!classwork?.isTurnedIn &&
@@ -921,14 +921,16 @@ export default function StreamDetailsUserWork({
         <div className="modal__container">
           <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
             <div
-              className="grid w-full gap-2 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem]"
+              className="grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem] md:p-6"
               ref={addLinkModalWrapperRef}
             >
               <div className="grid gap-2">
-                <h4 className="text-lg font-medium">Add link</h4>
+                <h4 className="text-lg font-semibold tracking-tight">
+                  Add link
+                </h4>
                 <input
                   type="text"
-                  className="w-full rounded-md border-2 bg-transparent px-5 py-3 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border-2 bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Enter a url..."
                   required
                   value={url}
