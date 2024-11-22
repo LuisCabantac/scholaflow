@@ -275,7 +275,7 @@ export default function StreamSubmissionsSection({
                           href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                           className="underline__container flex items-center justify-between"
                         >
-                          <div className="flex gap-2">
+                          <div className="flex items-center gap-2">
                             <Image
                               src={user.userAvatar}
                               alt={user.userName}
@@ -312,7 +312,7 @@ export default function StreamSubmissionsSection({
                             href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                             className="underline__container flex items-center justify-between"
                           >
-                            <div className="flex gap-2">
+                            <div className="flex items-center gap-2">
                               <Image
                                 src={user.userAvatar}
                                 alt={user.userName}
@@ -363,7 +363,7 @@ export default function StreamSubmissionsSection({
                               href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                               className="underline__container flex items-center justify-between"
                             >
-                              <div className="flex gap-2">
+                              <div className="flex items-center gap-2">
                                 <Image
                                   src={user.userAvatar}
                                   alt={user.userName}
