@@ -28,14 +28,14 @@ export default function SidebarLinks({
 
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {
-      queryKey: ["createdClassesSidebar"],
+      queryKey: [`createdClasses--${userId}`],
       queryFn: () => onGetAllClassesByTeacherId(userId),
     },
   );
 
   const { data: enrolledClasses, isPending: enrolledClassesIsPending } =
     useQuery({
-      queryKey: ["enrolledClassesSidebar"],
+      queryKey: [`enrolledClasses--${userId}`],
       queryFn: () => onGetAllEnrolledClassesByUserId(userId),
     });
 

@@ -81,24 +81,24 @@ export default function ClassroomSection({
 
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {
-      queryKey: ["createdClasses"],
+      queryKey: [`createdClasses--${session.user.id}`],
       queryFn: () => onGetAllClasses(session.user.id),
     },
   );
 
   const { data: enrolledClasses, isPending: enrolledClassesIsPending } =
     useQuery({
-      queryKey: ["enrolledClasses"],
+      queryKey: [`enrolledClasses--${session.user.id}`],
       queryFn: () => onGetAllEnrolledClasses(session.user.id),
     });
 
   const { data: enrolledClassworks } = useQuery({
-    queryKey: ["enrolledClassesClassworks"],
+    queryKey: [`enrolledClassesClassworks--${session.user.id}`],
     queryFn: () => onGetAllEnrolledClassesClassworks(session.user.id),
   });
 
   const { data: classworks } = useQuery({
-    queryKey: ["classworks"],
+    queryKey: [`classworks--${session.user.id}`],
     queryFn: () => onGetAllClassworks(session.user.id),
   });
 
@@ -109,7 +109,10 @@ export default function ClassroomSection({
       router.refresh();
 
       queryClient.invalidateQueries({
-        queryKey: ["createdClasses", "enrolledClasses"],
+        queryKey: [
+          `createdClasses--${session.user.id}`,
+          `enrolledClasses--${session.user.id}`,
+        ],
       });
     },
     onError: (error) => toast.error(error.message),
