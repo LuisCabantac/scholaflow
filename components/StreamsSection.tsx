@@ -527,9 +527,10 @@ export default function StreamsSection({
                       strokeWidth={2}
                       stroke="currentColor"
                       className="size-5 cursor-pointer stroke-[#22317c]"
-                      onClick={() => {
-                        navigator.clipboard.writeText(classroom.classCode);
-                        toast.success("Copied to clipboard!");
+                      onClick={async () => {
+                        await navigator.clipboard
+                          .writeText(classroom.classCode)
+                          .then(() => toast.success("Copied to clipboard!"));
                       }}
                     >
                       <path

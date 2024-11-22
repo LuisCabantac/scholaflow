@@ -271,11 +271,10 @@ export default function ClassForm({
                   <div className="flex items-center justify-between">
                     <p
                       className="cursor-pointer text-lg text-[#5c7cfa]"
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          classroom?.classCode ?? "",
-                        );
-                        toast.success("Copied to clipboard!");
+                      onClick={async () => {
+                        await navigator.clipboard
+                          .writeText(classroom?.classCode ?? "")
+                          .then(() => toast.success("Copied to clipboard!"));
                       }}
                     >
                       {classroom?.classCode}

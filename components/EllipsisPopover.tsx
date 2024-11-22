@@ -27,10 +27,11 @@ export default function EllipsisPopover({
         <button
           type="button"
           className="flex w-full items-center gap-1 rounded-md hover:text-[#242628]"
-          onClick={() => {
-            navigator.clipboard.writeText(clipboardUrl);
-            toast.success("Copied to clipboard!");
-            onToggleEllipsis();
+          onClick={async () => {
+            await navigator.clipboard.writeText(clipboardUrl).then(() => {
+              toast.success("Copied to clipboard!");
+              onToggleEllipsis();
+            });
           }}
         >
           Copy link
