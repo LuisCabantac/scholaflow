@@ -105,10 +105,28 @@ export default function SidebarLinks({
                 </span>
               </Link>
             </li>
-            {createdClassesIsPending && null}
-            {enrolledClassesIsPending && null}
             {(!createdClasses || !createdClasses.length) && null}
             {(!enrolledClasses || !enrolledClasses.length) && null}
+            {role === "teacher" && createdClassesIsPending && (
+              <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
+                <ul className="flex flex-col gap-3">
+                  <li className="pl-4 text-xs text-[#929bb4]">Created</li>
+                  {Array(2)
+                    .fill(undefined)
+                    .map((_, index) => (
+                      <li key={index} className="px-4 py-4">
+                        <div className="flex gap-2">
+                          <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
+                          <div className="grid gap-1">
+                            <div className="h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                            <div className="h-3 w-8 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </li>
+            )}
             {
               <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
                 <ul className="flex flex-col gap-3">
@@ -145,6 +163,28 @@ export default function SidebarLinks({
                       </Link>
                     </li>
                   ))}
+                  {enrolledClassesIsPending && (
+                    <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
+                      <ul className="flex flex-col gap-3">
+                        <li className="pl-4 text-xs text-[#929bb4]">
+                          Enrolled
+                        </li>
+                        {Array(2)
+                          .fill(undefined)
+                          .map((_, index) => (
+                            <li key={index} className="px-4 py-4">
+                              <div className="flex gap-2">
+                                <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
+                                <div className="grid gap-1">
+                                  <div className="h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                                  <div className="h-3 w-8 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
+                    </li>
+                  )}
                   {enrolledClasses?.length ? (
                     <li className="pl-4 text-xs text-[#929bb4]">Enrolled</li>
                   ) : null}
