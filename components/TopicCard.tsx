@@ -114,7 +114,7 @@ export default function TopicCard({
               />
             </svg>
           ) : null}
-          <h4 className="underline__text">{topic.topicName}</h4>
+          <h4 className="underline__text text-base">{topic.topicName}</h4>
         </li>
         <li>
           <ul className="flex items-center">
