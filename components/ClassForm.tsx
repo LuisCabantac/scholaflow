@@ -261,7 +261,7 @@ export default function ClassForm({
                   </label>
                   <textarea
                     name="classDescription"
-                    className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    className="h-[5.3rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     placeholder="Add a class description..."
                     defaultValue={classroom?.classDescription}
                   ></textarea>
@@ -287,6 +287,23 @@ export default function ClassForm({
                     >
                       Reset
                     </button>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">Invite link</label>
+                  <div className="flex items-center justify-between">
+                    <p
+                      className="cursor-pointer text-lg text-[#5c7cfa]"
+                      onClick={async () => {
+                        await navigator.clipboard
+                          .writeText(
+                            `scholaflow.vercel.app/join-class/${classroom?.classCode}`,
+                          )
+                          .then(() => toast.success("Copied to clipboard!"));
+                      }}
+                    >
+                      {`scholaflow.vercel.app/join-class/${classroom?.classCode}`}
+                    </p>
                   </div>
                 </div>
                 <h5 className="text-sm font-medium">Stream</h5>
