@@ -376,6 +376,12 @@ export async function createClassStreamPost(
       formData.get("dueDate") as string,
       "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
     ),
+    scheduledAt: formData.get("scheduledAt")
+      ? format(
+          formData.get("scheduledAt") as string,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        )
+      : null,
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
       formData.get("closeSubmissionsAfterDueDate") === "true",
@@ -442,12 +448,26 @@ export async function updateClassStreamPost(
   const newDueDate = formData.get("dueDate");
   const newPoints = formData.get("totalPoints");
   const newTopicId = formData.get("topicId");
+  const newScheduledAt = formData.get("scheduledAt")
+    ? format(
+        formData.get("scheduledAt") as string,
+        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+      )
+    : null;
   const newAcceptingSubmissions =
     formData.get("acceptingSubmissions") === "true";
   const newCloseSubmissionsAfterDueDate =
     formData.get("closeSubmissionsAfterDueDate") === "true";
 
   const topic = await getClassTopicByTopicId(newTopicId as string);
+
+  console.log(
+    currentStream.scheduledAt !== newScheduledAt,
+    currentStream.scheduledAt
+      ? format(currentStream.scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
+      : null,
+    newScheduledAt,
+  );
 
   if (
     currentStream.caption !== newCaption ||
@@ -457,6 +477,9 @@ export async function updateClassStreamPost(
     newUrlLinks.length ||
     currentStream.points !== newPoints ||
     currentStream.title !== newTitle ||
+    (currentStream.scheduledAt
+      ? format(currentStream.scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
+      : null) !== newScheduledAt ||
     newAcceptingSubmissions !== currentStream.acceptingSubmissions ||
     newCloseSubmissionsAfterDueDate !==
       currentStream.closeSubmissionsAfterDueDate ||
@@ -516,6 +539,7 @@ export async function updateClassStreamPost(
         formData.get("dueDate") as string,
         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
       ),
+      scheduledAt: newScheduledAt,
       points: newPoints,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,

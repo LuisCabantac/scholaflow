@@ -2,7 +2,7 @@ import React, { useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { format, isToday, isYesterday } from "date-fns";
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import Linkify from "react-linkify";
 import {
   UseMutateFunction,
@@ -247,6 +247,17 @@ export default function StreamCard({
                         />
                       </svg>
                     )}
+                    {stream.scheduledAt &&
+                      new Date(stream.scheduledAt) > new Date() && (
+                        <span>
+                          •{" "}
+                          {isToday(stream.scheduledAt)
+                            ? `Scheduled today, ${format(stream.scheduledAt, "h:mm a")}`
+                            : isYesterday(stream.scheduledAt)
+                              ? `Scheduled yesterday, ${format(stream.scheduledAt, "h:mm a")}`
+                              : `Scheduled at ${format(stream.scheduledAt, "MMM d,")} ${isThisYear(stream.scheduledAt) ? "" : `${format(stream.scheduledAt, "y ")}`} ${format(stream.scheduledAt, "h:mm a")}`}
+                        </span>
+                      )}
                   </p>
                 </div>
               </div>
@@ -395,6 +406,17 @@ export default function StreamCard({
                       />
                     </svg>
                   )}
+                  {stream.scheduledAt &&
+                    new Date(stream.scheduledAt) > new Date() && (
+                      <span>
+                        •{" "}
+                        {isToday(stream.scheduledAt)
+                          ? `Scheduled today, ${format(stream.scheduledAt, "h:mm a")}`
+                          : isYesterday(stream.scheduledAt)
+                            ? `Scheduled yesterday, ${format(stream.scheduledAt, "h:mm a")}`
+                            : `Scheduled at ${format(stream.scheduledAt, "MMM d,")} ${isThisYear(stream.scheduledAt) ? "" : `${format(stream.scheduledAt, "y ")}`} ${format(stream.scheduledAt, "h:mm a")}`}
+                      </span>
+                    )}
                 </p>
               </div>
             </Link>

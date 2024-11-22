@@ -274,7 +274,11 @@ export default function ClassworksSection({
                         stream.announceToAll ||
                         stream.author === session.user.id ||
                         classroom.teacherId === session.user.id) &&
-                      !stream.topicId,
+                      !stream.topicId &&
+                      ((stream.scheduledAt
+                        ? new Date(stream.scheduledAt) < new Date()
+                        : true) ||
+                        classroom.teacherId === session.user.id),
                   )
                   .map((stream) => (
                     <StreamCard

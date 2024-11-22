@@ -129,7 +129,10 @@ export default function ClassroomSection({
             new Date(classwork?.dueDate ?? "") > new Date())) &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))),
+            classwork.announceTo.includes(session.user.id))) &&
+        (classwork.scheduledAt
+          ? new Date(classwork.scheduledAt) < new Date()
+          : true),
     )
     .sort((a, b) => {
       const dateA = new Date(a.created_at);
@@ -150,7 +153,10 @@ export default function ClassroomSection({
         new Date(classwork?.dueDate ?? "") < new Date() &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))),
+            classwork.announceTo.includes(session.user.id))) &&
+        (classwork.scheduledAt
+          ? new Date(classwork.scheduledAt) < new Date()
+          : true),
     )
     .sort((a, b) => {
       const dateA = new Date(a.created_at);

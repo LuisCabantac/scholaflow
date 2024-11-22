@@ -86,6 +86,10 @@ export default function StreamsSection({
         stream.announceToAll ||
         stream.author === session.user.id ||
         classroom.teacherId === session.user.id) &&
+      ((stream.scheduledAt
+        ? new Date(stream.scheduledAt) < new Date()
+        : true) ||
+        classroom.teacherId === session.user.id) &&
       !(stream.type === "stream" || stream.type === "material"),
   )[0];
 
@@ -479,11 +483,15 @@ export default function StreamsSection({
               {optimisticStreams
                 ?.filter(
                   (stream) =>
-                    (stream.announceTo.includes(session.user.id) &&
+                    ((stream.announceTo.includes(session.user.id) &&
                       stream.announceToAll === false) ||
-                    stream.announceToAll ||
-                    stream.author === session.user.id ||
-                    classroom.teacherId === session.user.id,
+                      stream.announceToAll ||
+                      stream.author === session.user.id ||
+                      classroom.teacherId === session.user.id) &&
+                    ((stream.scheduledAt
+                      ? new Date(stream.scheduledAt) < new Date()
+                      : true) ||
+                      classroom.teacherId === session.user.id),
                 )
                 .filter((stream) =>
                   !(
@@ -545,7 +553,7 @@ export default function StreamsSection({
             )}
             <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
               <h4 className="pb-2 text-base font-medium tracking-tight">
-                Recent Work
+                Recent work
               </h4>
               {assignedClasswork ? (
                 <div key={assignedClasswork.id}>

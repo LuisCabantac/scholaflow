@@ -46,8 +46,7 @@ export interface IStream {
   created_at: string;
   updatedPost: boolean;
   type: "stream" | "assignment" | "quiz" | "question" | "material";
-  isScheduled: boolean;
-  scheduledTime: string;
+  scheduledAt: string | null;
   topicId: string | null;
   topicName: string | null;
   title: string;

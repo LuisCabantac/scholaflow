@@ -445,6 +445,23 @@ export default function StreamForm({
                   defaultValue={stream?.caption ?? ""}
                 ></textarea>
               </div>
+              {session.user.id === classroom.teacherId &&
+                streamType === "stream" && (
+                  <div className="grid gap-2">
+                    <label className="font-medium">Schedule post</label>
+                    <input
+                      type="datetime-local"
+                      disabled={isLoading}
+                      name="scheduledAt"
+                      defaultValue={
+                        stream?.scheduledAt
+                          ? format(stream.scheduledAt, "yyyy-MM-dd'T'HH:mm")
+                          : ""
+                      }
+                      className="w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    />
+                  </div>
+                )}
               <div className="flex gap-2 md:gap-4">
                 <label className="input__file__label flex cursor-pointer gap-1">
                   <input
@@ -794,6 +811,20 @@ export default function StreamForm({
                         : null}
                     </select>
                   </div>
+                </div>
+                <div className="grid gap-2">
+                  <label className="font-medium">Schedule {streamType}</label>
+                  <input
+                    type="datetime-local"
+                    disabled={isLoading}
+                    name="scheduledAt"
+                    defaultValue={
+                      stream?.scheduledAt
+                        ? format(stream.scheduledAt, "yyyy-MM-dd'T'HH:mm")
+                        : ""
+                    }
+                    className="w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                  />
                 </div>
                 {streamType !== "material" && (
                   <>

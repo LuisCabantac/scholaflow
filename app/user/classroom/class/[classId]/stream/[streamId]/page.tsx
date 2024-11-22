@@ -52,6 +52,13 @@ export default async function Page({ params }: { params: Params }) {
   if (!enrolledClass && classroom?.teacherId !== session.user.id)
     return redirect("/user/classroom");
 
+  if (
+    stream.scheduledAt &&
+    new Date(stream.scheduledAt) > new Date() &&
+    classroom?.teacherId !== session.user.id
+  )
+    return redirect("/user/classroom");
+
   async function handleGetAllCommentsByStreamId(streamId: string) {
     "use server";
     const comments = await getAllCommentsByStreamId(streamId);

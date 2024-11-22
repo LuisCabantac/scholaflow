@@ -184,7 +184,11 @@ export default function TopicCard({
                   stream.announceToAll ||
                   stream.author === session.user.id ||
                   classroom.teacherId === session.user.id) &&
-                stream.topicId === topic.topicId,
+                stream.topicId === topic.topicId &&
+                ((stream.scheduledAt
+                  ? new Date(stream.scheduledAt) < new Date()
+                  : true) ||
+                  classroom.teacherId === session.user.id),
             )
             .map((stream) => (
               <StreamCard
