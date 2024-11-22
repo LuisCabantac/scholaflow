@@ -16,8 +16,8 @@ import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page"
 import Button from "@/components/Button";
 import ClassroomLists from "@/components/ClassroomLists";
 import ClassForm from "@/components/ClassForm";
-import NoClasses from "@/components/NoClasses";
 import JoinClassDialog from "@/components/JoinClassDialog";
+import NoClasses from "@/components/NoClasses";
 
 export interface IClass {
   id: string;
@@ -405,38 +405,39 @@ export default function ClassroomSection({
               <h4 className="text-xs font-medium text-[#616572]">Done</h4>
             </Link>
           </div>
-          {(!createdClasses?.length && !enrolledClasses?.length) ||
+          {(!createdClasses?.length &&
+            !enrolledClasses?.length &&
+            !createdClassesIsPending &&
+            !enrolledClassesIsPending) ||
           (searchParams.get("sort") === "created-classes" &&
-            !createdClasses?.length) ||
+            !createdClasses?.length &&
+            !createdClassesIsPending) ||
           (searchParams.get("sort") === "enrolled-classes" &&
-            !enrolledClasses?.length) ? (
+            !enrolledClasses?.length &&
+            !enrolledClassesIsPending) ? (
             <NoClasses />
           ) : (
             <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-md md:grid md:grid-cols-2">
               {(searchParams.get("sort") === "all-classes" ||
                 searchParams.get("sort") === "created-classes" ||
-                searchParams.get("sort") === null) &&
-                createdClasses &&
-                createdClasses?.length > 0 && (
-                  <ClassroomLists
-                    classes={createdClasses}
-                    classesIsPending={createdClassesIsPending}
-                    handleDeleteClass={deleteClass}
-                    deleteClassIsPending={deleteClassIsPending}
-                  />
-                )}
+                searchParams.get("sort") === null) && (
+                <ClassroomLists
+                  classes={createdClasses}
+                  classesIsPending={createdClassesIsPending}
+                  handleDeleteClass={deleteClass}
+                  deleteClassIsPending={deleteClassIsPending}
+                />
+              )}
               {(searchParams.get("sort") === "all-classes" ||
                 searchParams.get("sort") === "enrolled-classes" ||
-                searchParams.get("sort") === null) &&
-                enrolledClasses &&
-                enrolledClasses?.length > 0 && (
-                  <ClassroomLists
-                    classes={enrolledClasses}
-                    classesIsPending={enrolledClassesIsPending}
-                    handleDeleteClass={deleteClass}
-                    deleteClassIsPending={deleteClassIsPending}
-                  />
-                )}
+                searchParams.get("sort") === null) && (
+                <ClassroomLists
+                  classes={enrolledClasses}
+                  classesIsPending={enrolledClassesIsPending}
+                  handleDeleteClass={deleteClass}
+                  deleteClassIsPending={deleteClassIsPending}
+                />
+              )}
             </div>
           )}
         </div>
