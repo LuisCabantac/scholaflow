@@ -55,8 +55,8 @@ export default function InviteSection({
             className="rounded-full"
           />
         </div>
-        <div className="font-medium">
-          <p className="text-sm">{session.user.name}</p>
+        <div>
+          <p className="text-sm font-medium">{session.user.name}</p>
           <p className="text-xs">{session.user.email}</p>
         </div>
       </div>
@@ -67,7 +67,6 @@ export default function InviteSection({
           name="classroomId"
           hidden
         />
-
         <button
           className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#22317c] px-3 py-2 text-sm font-medium text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"
           disabled={isLoading || isSuccessful}
