@@ -102,7 +102,7 @@ export default function ToDoSection({
 
   return (
     <section className="flex flex-col items-start justify-start">
-      <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm md:text-base">
+      <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
         <Link
           href="/user/to-do?sort=assigned"
           className={`px-3 py-2 transition-all ${searchParams.get("sort") === "assigned" || searchParams.get("sort") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
