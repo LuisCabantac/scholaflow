@@ -257,18 +257,24 @@ export default function StreamSubmissionsSection({
               <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
               <div>
                 <p className="text-2xl font-semibold">
-                  {turnedInUsers?.filter((users) => users.isGraded).length}
+                  {(stream.points &&
+                    turnedInUsers?.filter((users) => users.isGraded).length) ||
+                    0}
                 </p>
                 <h4 className="text-xs font-medium text-[#616572]">Graded</h4>
               </div>
             </div>
-            {turnedInUsers?.filter((user) => user.isTurnedIn || user.isGraded)
-              .length ? (
+            {turnedInUsers?.filter(
+              (user) => user.isTurnedIn || (stream.points && user.isGraded),
+            ).length ? (
               <div className="grid gap-2">
                 <p className="font-medium">Turned in</p>
                 <ul className="grid gap-2">
                   {turnedInUsers
-                    ?.filter((user) => user.isTurnedIn || user.isGraded)
+                    ?.filter(
+                      (user) =>
+                        user.isTurnedIn || (stream.points && user.isGraded),
+                    )
                     .map((user) => (
                       <li key={user.id} onClick={handleToggleExpandUserWork}>
                         <Link
@@ -287,7 +293,7 @@ export default function StreamSubmissionsSection({
                           </div>
                           {stream.points && (
                             <p>
-                              {user.isGraded
+                              {stream.points && user.isGraded
                                 ? `${user.userPoints}/${stream.points}`
                                 : "Ungraded"}
                             </p>
@@ -383,8 +389,10 @@ export default function StreamSubmissionsSection({
                                   (turnedIn) => turnedIn.userId === user.userId,
                                 )?.isGraded ? (
                                   <p className="font-medium text-[#616572]">
-                                    {new Date(stream?.dueDate ?? "") >
-                                    new Date()
+                                    {(new Date(stream?.dueDate ?? "") >
+                                      new Date() &&
+                                      stream?.hasDueDate === "true") ||
+                                    stream?.hasDueDate === "false"
                                       ? "Turned in"
                                       : "Done late"}
                                   </p>
