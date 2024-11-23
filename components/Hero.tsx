@@ -5,7 +5,7 @@ import heroImage from "@/public/landing_page/hero.png";
 
 import Button from "@/components/Button";
 
-const containerVariants = {
+export const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { straggerChildren: 0.2 } },
 };

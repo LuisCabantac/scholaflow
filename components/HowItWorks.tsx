@@ -3,14 +3,14 @@ import * as motion from "framer-motion/client";
 
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
 
-import { fadeInUp } from "@/components/Hero";
+import { fadeInUp, containerVariants } from "@/components/Hero";
 
 export default function HowItWorks() {
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1, transition: { straggerChildren: 0.2 } }}
-      viewport={{ amount: "all", once: true }}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       className="mx-6 my-24 grid gap-6 md:mx-32"
     >
       <motion.div
