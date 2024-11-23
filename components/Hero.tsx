@@ -49,9 +49,12 @@ export default function Hero() {
             <Button href="/user/classroom" type="primary">
               Get started
             </Button>
-            <Button href="#" type="secondary">
+            <a
+              href="#"
+              className="flex h-10 items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-[#22317c] transition-colors hover:text-[#384689]"
+            >
               View features
-            </Button>
+            </a>
           </motion.div>
         </div>
       </div>
