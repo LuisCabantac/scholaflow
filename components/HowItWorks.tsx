@@ -45,17 +45,17 @@ export default function HowItWorks() {
               Create assignment
             </h6>
             <p className="ml-3 mt-3 text-xs font-medium">Assign to</p>
-            <div className="ml-3 mt-1 h-8 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               All users
             </div>
             <p className="ml-3 mt-3 text-xs font-medium">
               Title<span className="text-red-400"> *</span>
             </p>
-            <div className="ml-3 mt-1 h-8 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               Add a descriptive title...
             </div>
             <p className="ml-3 mt-3 text-xs font-medium">Description</p>
-            <div className="ml-3 mt-1 h-6 cursor-text rounded-l-md border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               Add relevant details or instructions...
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function HowItWorks() {
           </div>
           <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff]">
             <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
-            <div className="ml-3 mt-1 flex h-8 cursor-text items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-3 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 flex cursor-text items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-3 text-xs text-[#616572] hover:border-[#384689]">
               Add class comment...
             </div>
             <div className="ml-3 mt-2 flex items-start gap-2">
@@ -166,7 +166,7 @@ export default function HowItWorks() {
             </div>
             <div className="ml-3 mt-4 grid gap-1">
               <p className="text-xs font-medium">Attachments</p>
-              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -183,7 +183,7 @@ export default function HowItWorks() {
                 </svg>
                 <p className="text-xs">assignment-1.pdf</p>
               </div>
-              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -200,7 +200,7 @@ export default function HowItWorks() {
                 </svg>
                 <p className="text-xs">assignment-2.pdf</p>
               </div>
-              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -219,7 +219,7 @@ export default function HowItWorks() {
                   https://drive.scholaflow.vercel.app/drive/folders/1b1fFaWmvj
                 </p>
               </div>
-              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
