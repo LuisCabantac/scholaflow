@@ -2,6 +2,8 @@ import Image from "next/image";
 import * as motion from "framer-motion/client";
 
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
+import commentAvatar2 from "@/public/landing_page/comment-2-avatar.jpg";
+import commentAvatar3 from "@/public/landing_page/comment-3-avatar.jpg";
 
 import { fadeInUp, containerVariants } from "@/components/Hero";
 
@@ -11,7 +13,7 @@ export default function HowItWorks() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mx-6 my-24 grid gap-6 md:mx-32"
+      className="mx-6 my-36 grid gap-6 md:mx-8"
     >
       <motion.div
         variants={fadeInUp}
@@ -26,9 +28,9 @@ export default function HowItWorks() {
       </motion.div>
       <motion.div
         variants={fadeInUp}
-        className="grid h-[56rem] gap-6 md:h-[18rem] md:grid-cols-3"
+        className="flex flex-col flex-wrap gap-4 md:flex-row"
       >
-        <div className="relative rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               01
@@ -38,19 +40,27 @@ export default function HowItWorks() {
               Easily create assignments, share resources, and set deadlines.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[50%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
             <h6 className="ml-3 mt-3 text-base font-medium">
               Create assignment
             </h6>
             <p className="ml-3 mt-3 text-xs font-medium">Assign to</p>
-            <div className="ml-3 mt-1 h-8 rounded-l-sm border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572]">
+            <div className="ml-3 mt-1 h-8 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               All users
             </div>
-            <p className="ml-3 mt-3 text-xs font-medium">Title</p>
-            <div className="ml-3 mt-1 h-3.5 rounded-tl-sm border-l border-t border-[#dbe4ff] md:h-3"></div>
+            <p className="ml-3 mt-3 text-xs font-medium">
+              Title<span className="text-red-400"> *</span>
+            </p>
+            <div className="ml-3 mt-1 h-8 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+              Add a descriptive title...
+            </div>
+            <p className="ml-3 mt-3 text-xs font-medium">Description</p>
+            <div className="ml-3 mt-1 h-6 cursor-text rounded-l-md border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+              Add relevant details or instructions...
+            </div>
           </div>
         </div>
-        <div className="relative rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               02
@@ -63,9 +73,9 @@ export default function HowItWorks() {
               discussions.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[50%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff]">
             <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
-            <div className="ml-3 mt-1 flex items-center gap-2 rounded-l-sm border-y border-l border-[#dbe4ff] py-2 pl-3 text-xs text-[#616572]">
+            <div className="ml-3 mt-1 flex h-8 cursor-text items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-3 text-xs text-[#616572] hover:border-[#384689]">
               Add class comment...
             </div>
             <div className="ml-3 mt-2 flex items-start gap-2">
@@ -74,7 +84,7 @@ export default function HowItWorks() {
                   src={commentAvatar}
                   fill
                   className="rounded-full"
-                  alt="comment avatar"
+                  alt="comment 1 avatar"
                 />
               </div>
               <div>
@@ -85,9 +95,44 @@ export default function HowItWorks() {
                 </p>
               </div>
             </div>
+            <div className="ml-3 mt-2 flex items-start gap-2">
+              <div className="relative h-6 w-6 flex-shrink-0">
+                <Image
+                  src={commentAvatar2}
+                  fill
+                  className="rounded-full"
+                  alt="comment 2 avatar"
+                />
+              </div>
+              <div>
+                <p className="mb-0.5 text-xs font-medium">Zachariah Wheeler</p>
+                <p className="text-xs">
+                  I&apos;m a bit confused about the light-dependent reactions. I
+                  understand they happen in the thylakoid membrane, but I&apos;m
+                  not sure about the specific steps and how energy is
+                  transferred. Can you clarify?
+                </p>
+              </div>
+            </div>
+            <div className="ml-3 mt-2 flex items-start gap-2">
+              <div className="relative h-6 w-6 flex-shrink-0">
+                <Image
+                  src={commentAvatar3}
+                  fill
+                  className="rounded-full"
+                  alt="comment 3 avatar"
+                />
+              </div>
+              <div>
+                <p className="mb-0.5 text-xs font-medium">Lori Cantrell</p>
+                <p className="text-xs">
+                  Of course! The light-dependent reactions occur
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="relative rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               03
@@ -98,9 +143,9 @@ export default function HowItWorks() {
               grading.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[50%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
             <div className="ml-3 mt-3 flex justify-between">
-              <h6 className="text-base font-semibold">John Doe</h6>
+              <h6 className="text-base font-semibold">Shelby Berry</h6>
               <div className="mr-2 flex items-center gap-1">
                 <p className="text-xs">90/100</p>
                 <svg
@@ -114,14 +159,14 @@ export default function HowItWorks() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 22H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
                   />
                 </svg>
               </div>
             </div>
             <div className="ml-3 mt-4 grid gap-1">
               <p className="text-xs font-medium">Attachments</p>
-              <div className="flex h-8 items-center gap-2 rounded-l-sm border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -138,7 +183,7 @@ export default function HowItWorks() {
                 </svg>
                 <p className="text-xs">assignment-1.pdf</p>
               </div>
-              <div className="flex h-8 items-center gap-2 rounded-l-sm border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -154,6 +199,44 @@ export default function HowItWorks() {
                   />
                 </svg>
                 <p className="text-xs">assignment-2.pdf</p>
+              </div>
+              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                  />
+                </svg>
+                <p className="text-xs">
+                  https://drive.scholaflow.vercel.app/drive/folders/1b1fFaWmvj
+                </p>
+              </div>
+              <div className="flex h-8 items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                  />
+                </svg>
+                <p className="text-xs">
+                  https://drive.scholaflow.vercel.app/drive/folders/4agsxvsfFaWmnbvj
+                </p>
               </div>
             </div>
           </div>
