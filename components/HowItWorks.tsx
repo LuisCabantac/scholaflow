@@ -13,7 +13,7 @@ export default function HowItWorks() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mx-6 my-36 grid gap-6 md:mx-8 md:gap-8"
+      className="mx-6 my-36 grid items-center justify-center gap-6 md:mx-0 md:gap-8"
     >
       <motion.div
         variants={fadeInUp}
@@ -28,7 +28,7 @@ export default function HowItWorks() {
       </motion.div>
       <motion.div
         variants={fadeInUp}
-        className="flex flex-col flex-wrap gap-4 md:flex-row"
+        className="flex flex-col flex-wrap items-center justify-center gap-4 md:flex-row"
       >
         <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
