@@ -48,7 +48,7 @@ export default async function RootLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden text-sm">
+    <div className="flex h-screen overflow-hidden">
       <Provider>
         {session && (
           <Sidebar
