@@ -1,8 +1,9 @@
-import * as motion from "framer-motion/client";
 import Image from "next/image";
+import * as motion from "framer-motion/client";
 
-import { fadeInUp } from "@/app/page";
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
+
+import { fadeInUp } from "@/components/Hero";
 
 export default function HowItWorks() {
   return (

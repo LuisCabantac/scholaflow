@@ -1,7 +1,6 @@
 import Image from "next/image";
 import * as motion from "framer-motion/client";
 
-import { fadeIn, fadeInUp } from "@/app/page";
 import heroImage from "@/public/landing_page/hero.png";
 
 import Button from "@/components/Button";
@@ -9,6 +8,16 @@ import Button from "@/components/Button";
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { straggerChildren: 0.2 } },
+};
+
+export const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+export const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6 } },
 };
 
 export default function Hero() {
