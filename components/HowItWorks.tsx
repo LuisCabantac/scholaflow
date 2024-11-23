@@ -145,7 +145,7 @@ export default function HowItWorks() {
           </div>
           <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
             <div className="ml-3 mt-3 flex justify-between">
-              <h6 className="text-base font-semibold">Shelby Berry</h6>
+              <h6 className="text-base font-medium">Shelby Berry</h6>
               <div className="mr-2 flex items-center gap-1">
                 <p className="text-xs">90/100</p>
                 <svg
