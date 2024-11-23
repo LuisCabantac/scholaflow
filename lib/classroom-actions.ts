@@ -23,6 +23,7 @@ import {
   getAllClassworkStreamsByTopicId,
   getAllCommentsByStreamId,
   getAllEnrolledClassesByClassAndSessionId,
+  getAllEnrolledClassesByClassId,
   getAllMessagesByClassId,
   getAllPrivateCommentsByStreamId,
   getClassByClassId,
@@ -120,6 +121,8 @@ export async function updateClass(
     updateClassCode ||
     currentClassroom.className !== newClassName ||
     currentClassroom.subject !== newSubject ||
+    currentClassroom.teacherName !== session.user.name ||
+    currentClassroom.teacherAvatar !== session.user.image ||
     currentClassroom.classDescription !== newClassDescription ||
     currentClassroom.section !== newSection ||
     currentClassroom.classCardBackgroundColor !== newClassCardBackgroundColor ||
@@ -130,6 +133,8 @@ export async function updateClass(
       subject: newSubject,
       section: newSection,
       className: newClassName,
+      teacherName: session.user.name,
+      teacherAvatar: session.user.image,
       classDescription: newClassDescription,
       allowStudentsToComment: newAllowStudentsToComment,
       allowStudentsToPost: newAllowStudentsToPost,
@@ -138,6 +143,21 @@ export async function updateClass(
         ? generateClassCode()
         : currentClassroom.classCode,
     };
+
+    const enrolledClasses = await getAllEnrolledClassesByClassId(classroomId);
+
+    if (enrolledClasses?.length) {
+      for (const enrolledClass of enrolledClasses) {
+        await updateEnrolledClass(enrolledClass.id, {
+          teacherName: session.user.name,
+          teacherAvatar: session.user.image,
+          className: newClassName as string,
+          subject: newSubject as string,
+          section: newSection as string,
+          classCardBackgroundColor: newClassCardBackgroundColor as string,
+        });
+      }
+    }
 
     const { error } = await supabase
       .from("classroom")
@@ -157,6 +177,32 @@ export async function updateClass(
     success: true,
     message: `No changes were made to the class.`,
   };
+}
+
+async function updateEnrolledClass(
+  enrolledClassId: string,
+  updatedClass: {
+    teacherName: string | null;
+    teacherAvatar: string | null;
+    className: string | null;
+    subject: string | null;
+    section: string | null;
+    classCardBackgroundColor: string | null;
+  },
+) {
+  const session = await auth();
+
+  if (!hasUser(session)) return redirect("/signin");
+
+  if (session.user.role !== "teacher")
+    throw new Error("Only teachers can update the enrolled class information.");
+
+  const { error } = await supabase
+    .from("enrolledClass")
+    .update([updatedClass])
+    .eq("id", enrolledClassId);
+
+  if (error) throw new Error(error.message);
 }
 
 export async function joinClass(classId: string) {
