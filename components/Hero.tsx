@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 import * as motion from "framer-motion/client";
 
@@ -20,7 +21,13 @@ export const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.6 } },
 };
 
-export default function Hero() {
+export default function Hero({
+  featuresSectionRef,
+  onScrollToSection,
+}: {
+  featuresSectionRef: React.MutableRefObject<HTMLDivElement | null>;
+  onScrollToSection(ref: React.RefObject<HTMLElement>): void;
+}) {
   return (
     <motion.section
       variants={containerVariants}
@@ -49,12 +56,12 @@ export default function Hero() {
             <Button href="/user/classroom" type="primary">
               Get started
             </Button>
-            <a
-              href="#"
+            <button
+              onClick={() => onScrollToSection(featuresSectionRef)}
               className="flex h-10 items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-[#22317c] transition-colors hover:text-[#384689]"
             >
               View features
-            </a>
+            </button>
           </motion.div>
         </div>
       </div>
