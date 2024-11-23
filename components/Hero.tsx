@@ -1,22 +1,14 @@
 import Image from "next/image";
-import Button from "@/components/Button";
+import * as motion from "framer-motion/client";
+
+import { fadeIn, fadeInUp } from "@/app/page";
 import heroImage from "@/public/landing_page/hero.png";
 
-import * as motion from "framer-motion/client";
+import Button from "@/components/Button";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { straggerChildren: 0.2 } },
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.6 } },
 };
 
 export default function Hero() {
@@ -25,7 +17,7 @@ export default function Hero() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="z-10 flex flex-col items-center gap-14 md:gap-16"
+      className="z-10 flex flex-col items-center gap-10 md:gap-14"
     >
       <div className="flex items-center justify-center gap-4 px-3 pb-10 pt-20 text-center md:px-48 md:pb-10 md:pt-14">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
