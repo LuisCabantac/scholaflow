@@ -377,13 +377,10 @@ export async function createClassStreamPost(
       "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
     ),
     scheduledAt: formData.get("scheduledAt")
-      ? new Date(
-          new Date(formData.get("scheduledAt") as string).getTime() -
-            new Date(
-              formData.get("scheduledAt") as string,
-            ).getTimezoneOffset() *
-              60000,
-        ).toISOString()
+      ? format(
+          formData.get("scheduledAt") as string,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        )
       : null,
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
@@ -392,20 +389,6 @@ export async function createClassStreamPost(
     topicId: topic?.topicId,
     topicName: topic?.topicName,
   };
-
-  // value={
-  //   scheduledAt
-  //     ? new Date(scheduledAt).toISOString().slice(0, 16)
-  //     : ""
-  // }
-  // onChange={(event) => {
-  //   const date = new Date(event.target.value);
-  //   setScheduledAt(
-  //     new Date(
-  //       date.getTime() - date.getTimezoneOffset() * 60000,
-  //     ).toISOString(),
-  //   );
-  // }}
 
   const { error } = await supabase.from("streams").insert([newStream]);
 
@@ -479,9 +462,11 @@ export async function updateClassStreamPost(
   const topic = await getClassTopicByTopicId(newTopicId as string);
 
   console.log(
-    (currentStream.scheduledAt
+    currentStream.scheduledAt !== newScheduledAt,
+    currentStream.scheduledAt
       ? format(currentStream.scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
-      : null) !== newScheduledAt,
+      : null,
+    newScheduledAt,
   );
 
   if (
@@ -554,15 +539,7 @@ export async function updateClassStreamPost(
         formData.get("dueDate") as string,
         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
       ),
-      scheduledAt: formData.get("scheduledAt")
-        ? new Date(
-            new Date(formData.get("scheduledAt") as string).getTime() -
-              new Date(
-                formData.get("scheduledAt") as string,
-              ).getTimezoneOffset() *
-                60000,
-          ).toISOString()
-        : null,
+      scheduledAt: newScheduledAt,
       points: newPoints,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,
