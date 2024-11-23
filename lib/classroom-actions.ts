@@ -372,9 +372,15 @@ export async function createClassStreamPost(
     attachment: postAttachments,
     links: formData.getAll("links"),
     hasDueDate: dueDate ? "true" : "false",
-    dueDate: formData.get("dueDate"),
+    dueDate: format(
+      formData.get("dueDate") as string,
+      "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+    ),
     scheduledAt: formData.get("scheduledAt")
-      ? formData.get("scheduledAt")
+      ? format(
+          formData.get("scheduledAt") as string,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        )
       : null,
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
@@ -455,6 +461,14 @@ export async function updateClassStreamPost(
 
   const topic = await getClassTopicByTopicId(newTopicId as string);
 
+  console.log(
+    currentStream.scheduledAt !== newScheduledAt,
+    currentStream.scheduledAt
+      ? format(currentStream.scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
+      : null,
+    newScheduledAt,
+  );
+
   if (
     currentStream.caption !== newCaption ||
     currentStream.topicId !== (topic?.topicId || null) ||
@@ -521,8 +535,11 @@ export async function updateClassStreamPost(
       attachment: postAttachments.concat(curAttachments),
       links: newUrlLinks.concat(curUrlLinks),
       hasDueDate: newDueDate ? "true" : "false",
-      dueDate: formData.get("dueDate"),
-      scheduledAt: formData.get("scheduledAt"),
+      dueDate: format(
+        formData.get("dueDate") as string,
+        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+      ),
+      scheduledAt: newScheduledAt,
       points: newPoints,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,
