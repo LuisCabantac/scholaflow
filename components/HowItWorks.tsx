@@ -13,13 +13,13 @@ export default function HowItWorks() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mx-6 my-36 grid gap-6 md:mx-8"
+      className="mx-6 my-36 grid gap-6 md:mx-8 md:gap-8"
     >
       <motion.div
         variants={fadeInUp}
-        className="flex flex-col items-center justify-center gap-1"
+        className="flex flex-col items-center justify-center gap-2 md:gap-4"
       >
-        <h2 className="text-2xl font-semibold tracking-tighter md:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           How it works
         </h2>
         <p className="px-10 text-center text-base">
