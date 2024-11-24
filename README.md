@@ -1,13 +1,31 @@
 # ScholaFlow
 
-ScholaFlow simplifies online learning for everyone. It provides essential tools for managing courses, assignments, and grades, along with features for better communication and organization.
+ScholaFlow is an open-source learning management system (LMS) that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
 
-## Key Features
+## Key Differences:
 
-- **Simplified Course Management:** Easily create and manage courses, assignments, and grading.
-- **Visual Communication:** Make discussions more engaging by sharing images directly in comments.
-- **Real-Time Collaboration:** Dedicated group chat for each class promotes quick questions and project discussions.
-- **Personalized Notes:** A built-in note-taking app helps students organize thoughts, track research, and keep learning materials in one place.
+- **Visual Feedback:** Embed images directly in comments. Because sometimes a picture is worth a thousand words (especially in feedback).
+- **Seamless Communication:** Integrated group chat eliminates the need for external communication tools. Keep conversations centralized and focused.
+- **Integrated Note-Taking:** A built-in personal notes section (think Google Keep) helps students and educators stay organized within the platform.
+
+## Beyond the Basics:
+
+ScholaFlow offers the core functionality you expect from an LMS (assignments, grading, announcements), but with a focus on:
+
+- **Intuitive Interface:** Minimize the learning curve with a familiar design.
+- **Efficient Workflow:** Streamline tasks and communication for both teachers and students
+
+## Built with
+
+- [Next.js 14](https://nextjs.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/)
+- [Auth.js](https://authjs.dev/getting-started)
+- [TanStack Query](https://tanstack.com/query/latest)
+- [Date-fns](https://date-fns.org/)
+- [React Hot Toast](https://react-hot-toast.com/)
+- [React Linkify](https://www.npmjs.com/package/react-linkify)
+- [Framer Motion](https://motion.dev/)
 
 ## Getting Started
 
