@@ -34,6 +34,7 @@ export default function CommentCard({
 }) {
   const { useClickOutsideHandler } = useClickOutside();
   const commentEllipsisWrapperRef = useRef<HTMLDivElement>(null);
+  const zoomedImageWrapperRef = useRef(null);
   const [commentEllipsis, setCommentEllipsis] = useState(false);
   const [showCommentConfirmation, setShowCommentConfirmation] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
@@ -58,6 +59,14 @@ export default function CommentCard({
     commentEllipsisWrapperRef,
     () => {
       setCommentEllipsis(false);
+    },
+    false,
+  );
+
+  useClickOutsideHandler(
+    zoomedImageWrapperRef,
+    () => {
+      setZoomedImage(null);
     },
     false,
   );
@@ -97,8 +106,8 @@ export default function CommentCard({
                   <Image
                     src={image}
                     alt={image}
-                    width={100}
-                    height={100}
+                    width={500}
+                    height={500}
                     className="w-[10rem] rounded-md object-cover md:w-[15rem]"
                   />
                 </li>
@@ -155,12 +164,37 @@ export default function CommentCard({
         </div>
       )}
       {zoomedImage && (
-        <div className="modal__container" onClick={closeZoomedImage}>
-          <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[40%]">
-            <img
+        <div className="modal__container">
+          <button
+            type="button"
+            className="absolute right-2 top-2"
+            onClick={closeZoomedImage}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div
+            className="flex max-h-full max-w-full items-center justify-center"
+            ref={zoomedImageWrapperRef}
+          >
+            <Image
               src={zoomedImage}
-              alt="zoomed__image"
-              className="w-full object-cover"
+              alt={zoomedImage}
+              width={500}
+              height={500}
+              className="max-h-[90vh] max-w-[90vw] object-contain"
             />
           </div>
         </div>

@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabase";
 import { addMessageToChat } from "@/lib/classroom-actions";
 
 import AttachmentFileCard from "@/components/AttachmentFileCard";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 export interface IChat {
   id: string;
@@ -46,7 +47,9 @@ export default function ClassChatSection({
   onGetAllMessages: (classId: string) => Promise<IChat[] | null>;
 }) {
   const queryClient = useQueryClient();
+  const { useClickOutsideHandler } = useClickOutside();
   const messagesEndRef = useRef<null | HTMLLIElement>(null);
+  const zoomedImageWrapperRef = useRef(null);
   const [message, setMessage] = useState("");
   const [attachmentNames, setAttachmentNames] = useState<string[]>([]);
   const [newAttachments, setNewAttachments] = useState<File[]>([]);
@@ -145,6 +148,14 @@ export default function ClassChatSection({
   function handleToggleExpandAttachments() {
     setExpandAttachments(!expandAttachments);
   }
+
+  useClickOutsideHandler(
+    zoomedImageWrapperRef,
+    () => {
+      setZoomedImage(null);
+    },
+    false,
+  );
 
   return (
     <section className="relative">
@@ -269,8 +280,8 @@ export default function ClassChatSection({
                                     <Image
                                       src={attachment}
                                       alt={attachment}
-                                      width={100}
-                                      height={100}
+                                      width={500}
+                                      height={500}
                                       className="w-[10rem] rounded-md object-cover md:w-[15rem]"
                                     />
                                   </div>
@@ -449,12 +460,37 @@ export default function ClassChatSection({
         </div>
       </div>
       {zoomedImage && (
-        <div className="modal__container" onClick={closeZoomedImage}>
-          <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[40%]">
-            <img
+        <div className="modal__container">
+          <button
+            type="button"
+            className="absolute right-2 top-2"
+            onClick={closeZoomedImage}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div
+            className="flex max-h-full max-w-full items-center justify-center"
+            ref={zoomedImageWrapperRef}
+          >
+            <Image
               src={zoomedImage}
-              alt="zoomed__image"
-              className="w-full object-cover"
+              alt={zoomedImage}
+              width={500}
+              height={500}
+              className="max-h-[90vh] max-w-[90vw] object-contain"
             />
           </div>
         </div>
