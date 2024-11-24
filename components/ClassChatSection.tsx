@@ -3,8 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ISession } from "@/lib/auth";
 import { formatMessageDate, getFileExtension } from "@/lib/utils";
@@ -157,6 +158,20 @@ export default function ClassChatSection({
     false,
   );
 
+  function captionLinksDecorator(href: string, text: string, key: number) {
+    return (
+      <a
+        href={href}
+        key={key}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="overflow-wrap break-words break-all text-[#5c7cfa] underline"
+      >
+        {text}
+      </a>
+    );
+  }
+
   return (
     <section className="relative">
       <div className="flex items-center justify-between pb-2">
@@ -251,18 +266,22 @@ export default function ClassChatSection({
                             </p>
                           )}
                         {message.message && (
-                          <div
-                            className={`max-w-full whitespace-pre-line rounded-lg border-2 border-[#dbe4ff] px-3 py-2 ${message.author === session.user.id && "bg-[#dbe4ff]"}`}
+                          <ReactLinkify
+                            componentDecorator={captionLinksDecorator}
                           >
-                            <p className={`max-w-full whitespace-pre-line`}>
-                              {message.message}
-                            </p>
-                            <p
-                              className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.user.id === message.author ? "text-left" : "text-right"}`}
+                            <div
+                              className={`max-w-full whitespace-pre-line rounded-lg border-2 border-[#dbe4ff] px-3 py-2 ${message.author === session.user.id && "bg-[#dbe4ff]"}`}
                             >
-                              {formatMessageDate(message.created_at)}
-                            </p>
-                          </div>
+                              <p className={`max-w-full whitespace-pre-line`}>
+                                {message.message}
+                              </p>
+                              <p
+                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.user.id === message.author ? "text-left" : "text-right"}`}
+                              >
+                                {formatMessageDate(message.created_at)}
+                              </p>
+                            </div>
+                          </ReactLinkify>
                         )}
                         {message.attachment.length
                           ? message.attachment.map((attachment) => {

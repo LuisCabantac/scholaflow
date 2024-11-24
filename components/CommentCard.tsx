@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
+import ReactLinkify from "react-linkify";
 
 import { formatDate } from "@/lib/utils";
 import { ISession } from "@/lib/auth";
@@ -71,6 +72,20 @@ export default function CommentCard({
     false,
   );
 
+  function captionLinksDecorator(href: string, text: string, key: number) {
+    return (
+      <a
+        href={href}
+        key={key}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="overflow-wrap break-words break-all text-[#5c7cfa] underline"
+      >
+        {text}
+      </a>
+    );
+  }
+
   return (
     <li
       key={comment.id}
@@ -93,7 +108,9 @@ export default function CommentCard({
             </p>
           </div>
           {comment.comment && (
-            <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
+            <ReactLinkify componentDecorator={captionLinksDecorator}>
+              <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
+            </ReactLinkify>
           )}
           {comment.attachment.length ? (
             <ul className="mt-1 grid gap-1">

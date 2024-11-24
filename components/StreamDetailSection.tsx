@@ -4,7 +4,7 @@ import { useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
-import Linkify from "react-linkify";
+import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -435,11 +435,11 @@ export default function StreamDetailSection({
                 </div>
               )}
               {stream.caption && (
-                <Linkify componentDecorator={captionLinksDecorator}>
+                <ReactLinkify componentDecorator={captionLinksDecorator}>
                   <p className="overflow-wrap mb-2 whitespace-pre-line break-words">
                     {stream.caption}
                   </p>
-                </Linkify>
+                </ReactLinkify>
               )}
               {stream.attachment.length || stream.links.length ? (
                 <div className="mb-2">

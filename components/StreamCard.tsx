@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
-import Linkify from "react-linkify";
+import ReactLinkify from "react-linkify";
 import {
   UseMutateFunction,
   useMutation,
@@ -262,7 +262,7 @@ export default function StreamCard({
                 </div>
               </div>
             </Link>
-            <Linkify componentDecorator={captionLinksDecorator}>
+            <ReactLinkify componentDecorator={captionLinksDecorator}>
               <p className="hidden whitespace-pre-line md:block">
                 {stream.caption}
               </p>
@@ -281,7 +281,7 @@ export default function StreamCard({
                   </span>
                 )}
               </p>
-            </Linkify>
+            </ReactLinkify>
             {stream.attachment.length || stream.links.length ? (
               <div className="mt-2 grid gap-2">
                 <p className="font-medium">Attachments</p>
