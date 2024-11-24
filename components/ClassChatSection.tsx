@@ -252,7 +252,7 @@ export default function ClassChatSection({
                           )}
                         {message.message && (
                           <div
-                            className={`max-w-full whitespace-pre-line rounded-lg border-2 px-3 py-2 ${message.author === session.user.id && "bg-[#dbe4ff]"}`}
+                            className={`max-w-full whitespace-pre-line rounded-lg border-2 border-[#dbe4ff] px-3 py-2 ${message.author === session.user.id && "bg-[#dbe4ff]"}`}
                           >
                             <p className={`max-w-full whitespace-pre-line`}>
                               {message.message}
