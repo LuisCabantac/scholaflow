@@ -163,7 +163,7 @@ export default function NoteForm({
               />
             </svg>
           </button>
-          <div className="grid h-full gap-4 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
+          <div className="grid h-full gap-2 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
             <div className="mt-6 columns-2 gap-2 md:mt-0 md:columns-4">
               {attachmentImagesNames.map((image, index) => (
                 <div key={image} className="relative">
