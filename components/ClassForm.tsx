@@ -41,7 +41,7 @@ export default function ClassForm({
   );
   const [updateClassCode, setUpdateClassCode] = useState(false);
 
-  async function handleCreateClass(event: React.FormEvent) {
+  async function handleSubmitClass(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
@@ -78,7 +78,7 @@ export default function ClassForm({
       >
         <form
           className="min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
-          onSubmit={handleCreateClass}
+          onSubmit={handleSubmitClass}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
             <h3 className="text-lg font-semibold tracking-tight">
