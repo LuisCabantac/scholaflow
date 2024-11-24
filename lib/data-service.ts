@@ -9,6 +9,7 @@ import {
   IStream,
   IStreamComment,
 } from "@/app/user/classroom/class/[classId]/page";
+import { INotes } from "@/app/user/notes/page";
 import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
@@ -610,6 +611,54 @@ export async function getAllClassTopicsByClassId(
     .from("classTopic")
     .select("*")
     .eq("classroomId", classId)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllNotesBySession(): Promise<INotes[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("author", session.user.id)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getNoteByNoteIdSession(
+  noteId: string,
+): Promise<INotes | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("author", session.user.id)
+    .eq("id", noteId)
+    .single();
+
+  return data;
+}
+
+export async function getAllNotesBySessionQuery(
+  query: string,
+): Promise<INotes[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("author", session.user.id)
+    .ilike("title", `%${query}%`)
     .order("created_at", { ascending: false });
 
   return data;
