@@ -507,14 +507,6 @@ export async function updateClassStreamPost(
 
   const topic = await getClassTopicByTopicId(newTopicId as string);
 
-  console.log(
-    currentStream.scheduledAt !== newScheduledAt,
-    currentStream.scheduledAt
-      ? format(currentStream.scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
-      : null,
-    newScheduledAt,
-  );
-
   if (
     currentStream.caption !== newCaption ||
     currentStream.topicId !== (topic?.topicId || null) ||
@@ -1067,7 +1059,8 @@ export async function uploadAttachments(
   file: File,
 ) {
   if (file.name !== "undefined") {
-    const [name, extension] = file.name.split(/\.(?=[^\.]+$)/);
+    const sanitizedFileName = file.name.replace(/~/g, "").replace(/\s+/g, "_");
+    const [name, extension] = sanitizedFileName.split(/\.(?=[^\.]+$)/);
     const { data: attachment, error } = await supabase.storage
       .from(`${bucketName}/${classroomId}`)
       .upload(`${name}_${uuidv4()}.${extension}`, file, {
