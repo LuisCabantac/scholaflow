@@ -171,8 +171,8 @@ export default function ClassworksSection({
           {session.user.id === classroom.teacherId && (
             <input
               type="search"
-              className="w-[60%] rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none md:w-[50%]"
-              placeholder="Search classworks"
+              className="w-[60%] rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -227,8 +227,8 @@ export default function ClassworksSection({
           {session.user.id !== classroom.teacherId && (
             <input
               type="search"
-              className="w-full rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none md:w-[50%]"
-              placeholder="Search classworks"
+              className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none md:w-[50%]"
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

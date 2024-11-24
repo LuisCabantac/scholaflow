@@ -73,7 +73,7 @@ export default function UserManagementSection({
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search users"
+            placeholder="Search..."
             className="hidden rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-5 py-3 text-sm focus:border-[#384689] focus:outline-none md:inline md:w-48"
           />
           <Button type="primary" onClick={handleToggleShowUserForm}>
@@ -85,8 +85,8 @@ export default function UserManagementSection({
         type="search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search"
-        className="mb-4 block w-full rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-5 py-3 focus:border-[#384689] focus:outline-none md:hidden"
+        placeholder="Search..."
+        className="mb-4 block w-full rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-5 py-3 focus:border-[#384689] focus:outline-none md:hidden"
       />
       {(!users?.data || users?.data.length === 0) && !usersIsPending ? (
         <UserNotFound />
