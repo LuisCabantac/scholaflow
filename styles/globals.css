@@ -91,6 +91,11 @@
     margin: 0;
   }
 
+  input[type="timedate-local"]::-webkit-inner-spin-button,
+  input[type="timedate-local"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+
   .modal__container {
     position: fixed;
     top: 0;
