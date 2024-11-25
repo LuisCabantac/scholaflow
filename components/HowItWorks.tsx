@@ -35,7 +35,9 @@ export default function HowItWorks() {
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               01
             </p>
-            <h4 className="text-base font-semibold">Create and assign</h4>
+            <h4 className="text-lg font-semibold leading-tight">
+              Create and assign
+            </h4>
             <p className="text-sm">
               Easily create assignments, share resources, and set deadlines.
             </p>
@@ -65,7 +67,7 @@ export default function HowItWorks() {
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               02
             </p>
-            <h4 className="text-base font-semibold">
+            <h4 className="text-lg font-semibold leading-tight">
               Collaborate and communicate
             </h4>
             <p className="text-sm">
@@ -137,7 +139,9 @@ export default function HowItWorks() {
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               03
             </p>
-            <h4 className="text-base font-semibold">Grade and feedback</h4>
+            <h4 className="text-lg font-semibold leading-tight">
+              Grade and feedback
+            </h4>
             <p className="text-sm">
               Provide timely and helpful feedback while managing classwork
               grading.
