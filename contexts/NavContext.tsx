@@ -22,7 +22,7 @@ function NavProvider({ children }: { children: React.ReactNode }) {
   const [isSticky, setIsSticky] = useState<boolean>(false);
 
   const handleSetIsSticky = useCallback(() => {
-    if (window.scrollY >= 60) {
+    if (window.scrollY >= 20) {
       setIsSticky(true);
     } else setIsSticky(false);
   }, [setIsSticky]);
