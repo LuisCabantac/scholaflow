@@ -1,9 +1,8 @@
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 
 import Logo from "@/components/Logo";
-import Button from "@/components/Button";
-import ProfileIcon from "@/components/ProfileIcon";
+
+import HomeNav from "@/components/HomeNav";
 
 export default async function Nav({ showButton }: { showButton: boolean }) {
   const session = await auth();
@@ -15,21 +14,5 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
       </nav>
     );
 
-  return (
-    <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:py-5">
-      <Logo />
-      {hasUser(session) ? (
-        <ProfileIcon
-          avatar={session.user.image}
-          email={session.user.email}
-          fullName={session.user.name}
-          role={session.user.role}
-        />
-      ) : (
-        <Button href="/signin" type="primary">
-          Sign in
-        </Button>
-      )}
-    </nav>
-  );
+  return <HomeNav session={session} />;
 }
