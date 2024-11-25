@@ -542,7 +542,7 @@ export async function updateClassStreamPost(
       const filePath = removedAttachments.map((file) =>
         extractStreamFilePath(file),
       );
-      await deleteFileFromBucket("streams", filePath);
+      await deleteFilesFromBucket("streams", filePath);
     }
 
     const postAttachments = Array.isArray(newAttachments)
@@ -642,7 +642,7 @@ export async function deleteClassStreamPost(streamId: string) {
     const streamAttachmentsFilePath = stream.attachment.map((file) =>
       extractStreamFilePath(file),
     );
-    await deleteFileFromBucket("streams", streamAttachmentsFilePath);
+    await deleteFilesFromBucket("streams", streamAttachmentsFilePath);
   }
 
   const { error } = await supabase.from("streams").delete().eq("id", streamId);
@@ -668,7 +668,7 @@ export async function deleteAllClassworkByStreamId(streamId: string) {
     const classworkAttachmentsFilePath: string[] = attachments.map((file) =>
       extractClassworkFilePath(file),
     );
-    await deleteFileFromBucket("classworks", classworkAttachmentsFilePath);
+    await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
   }
 
   const { error } = await supabase
@@ -694,7 +694,7 @@ export async function deleteAllMessagesByClassId(classId: string) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
       extractMessagesFilePath(file),
     );
-    await deleteFileFromBucket("messages", chatAttachmentsFilePath);
+    await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
   }
 
   const { error } = await supabase
@@ -711,7 +711,7 @@ export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
   if (comments?.length) {
     const attachments = comments.map((comment) => comment.attachment).flat();
     const filePath = attachments.map((file) => extractCommentFilePath(file));
-    await deleteFileFromBucket("comments", filePath);
+    await deleteFilesFromBucket("comments", filePath);
   }
 
   const { error } = await supabase
@@ -732,7 +732,7 @@ export async function deleteAllPrivateStreamCommentsByStreamId(
       .map((comment) => comment.attachment)
       .flat();
     const filePath = attachments.map((file) => extractCommentFilePath(file));
-    await deleteFileFromBucket("comments", filePath);
+    await deleteFilesFromBucket("comments", filePath);
   }
 
   const { error } = await supabase
@@ -785,7 +785,7 @@ export async function deleteStreamComment(
     const filePath = comment.attachment.map((file) =>
       extractCommentFilePath(file),
     );
-    await deleteFileFromBucket("comments", filePath);
+    await deleteFilesFromBucket("comments", filePath);
   }
 
   const { error } = await supabase
@@ -956,7 +956,7 @@ export async function deletePrivateComment(
     const filePath = comment.attachment.map((file) =>
       extractCommentFilePath(file),
     );
-    await deleteFileFromBucket("comments", filePath);
+    await deleteFilesFromBucket("comments", filePath);
   }
 
   const { error } = await supabase
@@ -1079,7 +1079,7 @@ export async function uploadAttachments(
   }
 }
 
-export async function deleteFileFromBucket(
+export async function deleteFilesFromBucket(
   bucketName: string,
   filePath: string[],
 ) {
@@ -1214,7 +1214,7 @@ export async function updateClasswork(
       const filePath = removedAttachments.map((file) =>
         extractClassworkFilePath(file),
       );
-      await deleteFileFromBucket("classworks", filePath);
+      await deleteFilesFromBucket("classworks", filePath);
     }
 
     const postAttachments = Array.isArray(newAttachments)

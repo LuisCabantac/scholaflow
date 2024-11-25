@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { getNoteByNoteIdSession } from "@/lib/data-service";
 import { arraysAreEqual, extractNoteFilePath, hasUser } from "@/lib/utils";
 import {
-  deleteFileFromBucket,
+  deleteFilesFromBucket,
   uploadAttachments,
 } from "@/lib/classroom-actions";
 
@@ -109,7 +109,7 @@ export async function updateNote(
       const filePath = removedAttachments.map((file) =>
         extractNoteFilePath(file),
       );
-      await deleteFileFromBucket("notes", filePath);
+      await deleteFilesFromBucket("notes", filePath);
     }
 
     const noteAttachments = Array.isArray(newNoteAttachments)
@@ -173,7 +173,7 @@ export async function deleteNote(noteId: string) {
     const noteAttachmentsFilePath = note.attachment.map((file) =>
       extractNoteFilePath(file),
     );
-    await deleteFileFromBucket("notes", noteAttachmentsFilePath);
+    await deleteFilesFromBucket("notes", noteAttachmentsFilePath);
   }
 
   const { error } = await supabase.from("notes").delete().eq("id", noteId);
