@@ -55,23 +55,21 @@ export default function ProfileIcon({
       >
         <div className="relative flex cursor-default flex-col items-start gap-2 border-b-2 border-[#dbe4ff] px-2 pb-2">
           <div className="flex gap-2 pb-2">
-            <li className="relative h-10 w-10">
+            <li className="relative h-8 w-8 flex-shrink-0">
               <Image src={avatar} fill className="rounded-full" alt="avatar" />
             </li>
             <div className="flex flex-col items-start justify-start">
-              <li className="flex items-center gap-1 font-semibold">
-                <span className="flex-shrink-0">{fullName}</span>{" "}
-                <span
-                  className={`role mt-0.5 flex items-center justify-center rounded-md ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"} px-2 py-0.5 text-[0.6rem] font-bold uppercase`}
-                >
-                  {role}
-                </span>
-              </li>
+              <p className="flex-shrink-0 font-semibold">{fullName}</p>
               <li className="break-words text-xs text-[#6e7280]">{email}</li>
             </div>
           </div>
         </div>
-        <li>
+        <p
+          className={`role mt-0.5 flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"} `}
+        >
+          {role}
+        </p>
+        <li className="mt-0.5 border-t-2 border-[#dbe4ff]">
           <Link
             href="/user/profile"
             className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"
