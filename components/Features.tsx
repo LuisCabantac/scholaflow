@@ -19,7 +19,7 @@ export default function Features({
       initial="hidden"
       animate="visible"
       ref={featuresSectionRef}
-      className="mx-6 mb-36 mt-20 grid gap-6 pt-[4rem] md:mx-10 md:gap-8"
+      className="mx-6 mb-36 grid gap-6 pt-36 md:mx-10 md:gap-8"
     >
       <motion.div
         variants={fadeInUp}
