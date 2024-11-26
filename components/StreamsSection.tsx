@@ -35,6 +35,7 @@ export default function StreamsSection({
   topics,
   session,
   classroom,
+  onDeleteClass,
   enrolledClasses,
   onGetAllComments,
   onGetAllClassStreams,
@@ -42,6 +43,7 @@ export default function StreamsSection({
   topics: ITopic[] | null;
   session: ISession;
   classroom: IClass;
+  onDeleteClass: (classId: string) => Promise<void>;
   enrolledClasses: IClass[] | null;
   onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
   onGetAllClassStreams: (classId: string) => Promise<IStream[] | null>;
@@ -625,6 +627,7 @@ export default function StreamsSection({
           type="edit"
           session={session}
           classroom={classroom}
+          onDeleteClass={onDeleteClass}
           onSetShowClassForm={setShowClassForm}
           onToggleShowClassForm={handleToggleShowClassForm}
         />

@@ -15,15 +15,18 @@ export default function ClassForm({
   type,
   session,
   classroom,
+  onDeleteClass,
   onSetShowClassForm,
   onToggleShowClassForm,
 }: {
   type: "create" | "edit";
   session: ISession;
   classroom?: IClass;
+  onDeleteClass: (classId: string) => Promise<void>;
   onSetShowClassForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowClassForm: () => void;
 }) {
+  const router = useRouter();
   const { useClickOutsideHandler } = useClickOutside();
   const classFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -341,7 +344,23 @@ export default function ClassForm({
               </div>
             )}
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+            {type === "edit" ? (
+              <Button
+                type="secondary"
+                bg="text-[#f03e3e] hover:text-[#c92a2a]"
+                onClick={() => {
+                  onDeleteClass(classroom?.classroomId ?? "");
+                  onToggleShowClassForm();
+                }}
+                isLoading={isLoading}
+              >
+                Delete
+              </Button>
+            ) : (
+              <div></div>
+            )}
+            <div className="flex gap-2">
             {!isLoading && (
               <Button type="secondary" onClick={onToggleShowClassForm}>
                 Cancel
@@ -350,6 +369,7 @@ export default function ClassForm({
             <Button type="primary" isLoading={isLoading}>
               {type === "edit" ? "Save changes" : "Create"}
             </Button>
+            </div>
           </div>
         </form>
       </div>
