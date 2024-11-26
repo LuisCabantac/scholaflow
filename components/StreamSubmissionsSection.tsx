@@ -336,17 +336,16 @@ export default function StreamSubmissionsSection({
                                 (turnedIn) => turnedIn.userId === user.userId,
                               )?.isGraded ? (
                                 <p className="font-medium text-[#616572]">
-                                  {(new Date(stream?.dueDate ?? "") >
-                                    new Date() &&
-                                    stream?.hasDueDate === "true") ||
-                                  stream?.hasDueDate === "false"
+                                  {(stream.dueDate &&
+                                    new Date(stream.dueDate ?? "") >
+                                      new Date()) ||
+                                  !stream.dueDate
                                     ? "Turned in"
                                     : "Done late"}
                                 </p>
                               ) : (
-                                stream.hasDueDate === "true" &&
-                                new Date(stream?.dueDate ?? "") <
-                                  new Date() && (
+                                stream.dueDate &&
+                                new Date(stream.dueDate ?? "") < new Date() && (
                                   <p className="font-medium text-[#f03e3e]">
                                     Missing
                                   </p>
@@ -389,20 +388,20 @@ export default function StreamSubmissionsSection({
                                   (turnedIn) => turnedIn.userId === user.userId,
                                 )?.isGraded ? (
                                   <p className="font-medium text-[#616572]">
-                                    {(new Date(stream?.dueDate ?? "") >
-                                      new Date() &&
-                                      stream?.hasDueDate === "true") ||
-                                    stream?.hasDueDate === "false"
+                                    {(stream.dueDate &&
+                                      new Date(stream.dueDate ?? "") >
+                                        new Date()) ||
+                                    !stream.dueDate
                                       ? "Turned in"
                                       : "Done late"}
                                   </p>
                                 ) : (
-                                  stream.hasDueDate === "true" &&
+                                  stream.dueDate &&
                                   !turnedInUsers?.find(
                                     (turnedIn) =>
                                       turnedIn.userId === user.userId,
                                   )?.isTurnedIn &&
-                                  new Date(stream?.dueDate ?? "") <
+                                  new Date(stream.dueDate ?? "") <
                                     new Date() && (
                                     <p className="font-medium text-[#f03e3e]">
                                       Missing

@@ -124,9 +124,9 @@ export default function ClassroomSection({
         !classworks
           ?.map((turnedIn) => turnedIn.streamId)
           .includes(classwork.id) &&
-        (classwork.hasDueDate === "false" ||
-          (classwork.hasDueDate === "true" &&
-            new Date(classwork?.dueDate ?? "") > new Date())) &&
+        (!classwork.dueDate ||
+          (classwork.dueDate &&
+            new Date(classwork.dueDate ?? "") > new Date())) &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
             classwork.announceTo.includes(session.user.id))) &&
@@ -149,8 +149,8 @@ export default function ClassroomSection({
           (turnedIn) =>
             turnedIn.streamId === classwork.id && turnedIn.isTurnedIn,
         ) &&
-        classwork.hasDueDate === "true" &&
-        new Date(classwork?.dueDate ?? "") < new Date() &&
+        classwork.dueDate &&
+        new Date(classwork.dueDate ?? "") < new Date() &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
             classwork.announceTo.includes(session.user.id))) &&
@@ -512,8 +512,7 @@ export default function ClassroomSection({
                                         "MMM d",
                                       )}
                               </p>
-                              {assignedClasswork.dueDate &&
-                              assignedClasswork.hasDueDate === "true" ? (
+                              {assignedClasswork.dueDate ? (
                                 <p className="text-xs text-[#616572]">
                                   {isToday(assignedClasswork.dueDate)
                                     ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
@@ -576,16 +575,15 @@ export default function ClassroomSection({
                                         "MMM d",
                                       )}
                               </p>
-                              {missingClasswork.dueDate &&
-                                missingClasswork.hasDueDate === "true" && (
-                                  <p className="text-xs text-[#f03e3e]">
-                                    {isToday(missingClasswork.dueDate)
-                                      ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                      : isYesterday(missingClasswork.dueDate)
-                                        ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                        : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
-                                  </p>
-                                )}
+                              {missingClasswork.dueDate && (
+                                <p className="text-xs text-[#f03e3e]">
+                                  {isToday(missingClasswork.dueDate)
+                                    ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                    : isYesterday(missingClasswork.dueDate)
+                                      ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                      : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>

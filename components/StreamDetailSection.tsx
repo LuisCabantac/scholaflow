@@ -308,7 +308,7 @@ export default function StreamDetailSection({
                 <div className="grid gap-2">
                   {stream.type !== "material" && (
                     <div className="flex items-center justify-between text-[#616572]">
-                      {stream.dueDate && stream.hasDueDate === "true" ? (
+                      {stream.dueDate ? (
                         <p>
                           {isToday(stream.dueDate)
                             ? `Due today, ${format(stream.dueDate, "h:mm a")}`

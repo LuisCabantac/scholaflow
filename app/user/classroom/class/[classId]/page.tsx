@@ -51,7 +51,6 @@ export interface IStream {
   topicName: string | null;
   title: string;
   dueDate: string | null;
-  hasDueDate: "true" | "false";
   points: number | null;
   acceptingSubmissions: boolean;
   closeSubmissionsAfterDueDate: boolean;

@@ -589,8 +589,7 @@ export default function StreamsSection({
                                 ? "yesterday"
                                 : format(assignedClasswork.created_at, "MMM d")}
                           </p>
-                          {assignedClasswork.dueDate &&
-                          assignedClasswork.hasDueDate === "true" ? (
+                          {assignedClasswork.dueDate ? (
                             <p className="text-[#616572]">
                               {isToday(assignedClasswork.dueDate)
                                 ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`

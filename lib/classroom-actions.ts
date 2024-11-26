@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { format, parse, parseISO, subHours } from "date-fns";
+import { format, parseISO, subHours } from "date-fns";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -417,11 +417,12 @@ export async function createClassStreamPost(
     announceToAll: audienceIsAll,
     attachment: postAttachments,
     links: formData.getAll("links"),
-    hasDueDate: dueDate ? "true" : "false",
-    dueDate: format(
-      subHours(parseISO(formData.get("dueDate") as string), 8),
-      "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
-    ),
+    dueDate: dueDate
+      ? format(
+          subHours(parseISO(formData.get("dueDate") as string), 8),
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        )
+      : null,
     scheduledAt: formData.get("scheduledAt")
       ? format(
           subHours(parseISO(formData.get("scheduledAt") as string), 8),
@@ -491,7 +492,12 @@ export async function updateClassStreamPost(
   const newUrlLinks = formData.getAll("links");
   const newCaption = formData.get("caption");
   const newTitle = formData.get("title");
-  const newDueDate = formData.get("dueDate");
+  const newDueDate = formData.get("dueDate")
+    ? format(
+        formData.get("dueDate") as string,
+        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+      )
+    : null;
   const newPoints = formData.get("totalPoints");
   const newTopicId = formData.get("topicId");
   const newScheduledAt = formData.get("scheduledAt")
@@ -521,16 +527,9 @@ export async function updateClassStreamPost(
     newAcceptingSubmissions !== currentStream.acceptingSubmissions ||
     newCloseSubmissionsAfterDueDate !==
       currentStream.closeSubmissionsAfterDueDate ||
-    formData.get("hasDueDate") !== currentStream.hasDueDate ||
-    (newDueDate === null
-      ? "1970-01-01T00:00:00+00:00"
-      : format(
-          subHours(
-            parse(newDueDate as string, "yyyy-MM-dd'T'HH:mm", new Date()),
-            8,
-          ),
-          "yyyy-MM-dd'T'HH:mm:ss",
-        ) + "+00:00") !== currentStream.dueDate ||
+    (currentStream.dueDate
+      ? format(currentStream.dueDate, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
+      : null) !== newDueDate ||
     arraysAreEqual(audience, currentStream.announceTo) === false ||
     arraysAreEqual(curAttachments, currentStream.attachment) === false ||
     arraysAreEqual(curUrlLinks, currentStream.links) === false
@@ -572,11 +571,12 @@ export async function updateClassStreamPost(
       announceToAll: audienceIsAll,
       attachment: postAttachments.concat(curAttachments),
       links: newUrlLinks.concat(curUrlLinks),
-      hasDueDate: newDueDate ? "true" : "false",
-      dueDate: format(
-        subHours(parseISO(formData.get("dueDate") as string), 8),
-        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
-      ),
+      dueDate: newDueDate
+        ? format(
+            subHours(parseISO(formData.get("dueDate") as string), 8),
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+          )
+        : null,
       scheduledAt: formData.get("scheduledAt")
         ? format(
             subHours(parseISO(formData.get("scheduledAt") as string), 8),

@@ -65,13 +65,10 @@ export default function StreamForm({
   const [grade, setGrade] = useState(stream?.points ?? "100");
   const [isGraded, setIsGraded] = useState(stream?.points ? "true" : "false");
   const [hasDueDate, setHasDueDate] = useState<string>(
-    stream?.hasDueDate === "true" ? "true" : "false",
+    stream?.dueDate ? "true" : "false",
   );
   const [dueDate, setDueDate] = useState(
-    format(stream?.dueDate ?? new Date(), "yyyy-MM-dd'T'HH:mm") ===
-      format("1970-01-01 00:00:00+00", "yyyy-MM-dd'T'HH:mm")
-      ? format(new Date(), "yyyy-MM-dd'T'HH:mm")
-      : format(stream?.dueDate ?? new Date(), "yyyy-MM-dd'T'HH:mm"),
+    format(stream?.dueDate ?? new Date(), "yyyy-MM-dd'T'HH:mm"),
   );
   const [isAcceptingSubmissions, setIsAcceptingSubmissions] = useState<boolean>(
     stream?.acceptingSubmissions ?? true,

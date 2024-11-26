@@ -252,7 +252,9 @@ export default function ClassworksSection({
                     ))}
                 </>
               )}
-              {!optimisticClassworks?.length && !classworksIsPending ? (
+              {!optimisticClassworks?.length &&
+              !optimisticTopics?.length &&
+              !classworksIsPending ? (
                 <li className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
                   <div className="relative w-[15rem] md:w-[20rem]">
                     <Image
@@ -296,7 +298,9 @@ export default function ClassworksSection({
                   ))
               )}
               {optimisticTopics?.length ? (
-                <li className="mt-1 border-t-2 border-[#dbe4ff] pt-2">
+                <li
+                  className={`mt-1 ${optimisticClassworks?.length ? "border-t-2 border-[#dbe4ff] pt-2" : ""}`}
+                >
                   <ul className="grid gap-4">
                     {optimisticTopics.map((topic) => (
                       <TopicCard

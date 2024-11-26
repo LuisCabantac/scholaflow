@@ -42,9 +42,9 @@ export default function ToDoSection({
         !classworks
           ?.map((turnedIn) => turnedIn.streamId)
           .includes(classwork.id) &&
-        (classwork.hasDueDate === "false" ||
-          (classwork.hasDueDate === "true" &&
-            new Date(classwork?.dueDate ?? "") > new Date())) &&
+        (!classwork.dueDate ||
+          (classwork.dueDate &&
+            new Date(classwork.dueDate ?? "") > new Date())) &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
             classwork.announceTo.includes(session.user.id))) &&
@@ -67,8 +67,8 @@ export default function ToDoSection({
           (turnedIn) =>
             turnedIn.streamId === classwork.id && turnedIn.isTurnedIn,
         ) &&
-        classwork.hasDueDate === "true" &&
-        new Date(classwork?.dueDate ?? "") < new Date() &&
+        classwork.dueDate &&
+        new Date(classwork.dueDate ?? "") < new Date() &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
             classwork.announceTo.includes(session.user.id))) &&
@@ -162,8 +162,7 @@ export default function ToDoSection({
                                 ? "yesterday"
                                 : format(assignedClasswork.created_at, "MMM d")}
                           </p>
-                          {assignedClasswork.dueDate &&
-                          assignedClasswork.hasDueDate === "true" ? (
+                          {assignedClasswork.dueDate ? (
                             <p className="text-[#616572] md:hidden">
                               {isToday(assignedClasswork.dueDate)
                                 ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
@@ -179,8 +178,7 @@ export default function ToDoSection({
                         </div>
                       </div>
                     </div>
-                    {assignedClasswork.dueDate &&
-                    assignedClasswork.hasDueDate === "true" ? (
+                    {assignedClasswork.dueDate ? (
                       <p className="hidden text-[#616572] md:block">
                         {isToday(assignedClasswork.dueDate)
                           ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
@@ -235,29 +233,27 @@ export default function ToDoSection({
                                 ? "yesterday"
                                 : format(missingClasswork.created_at, "MMM d")}
                           </p>
-                          {missingClasswork.dueDate &&
-                            missingClasswork.hasDueDate === "true" && (
-                              <p className="text-[#f03e3e] md:hidden">
-                                {isToday(missingClasswork.dueDate)
-                                  ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                  : isYesterday(missingClasswork.dueDate)
-                                    ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                    : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
-                              </p>
-                            )}
+                          {missingClasswork.dueDate && (
+                            <p className="text-[#f03e3e] md:hidden">
+                              {isToday(missingClasswork.dueDate)
+                                ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                : isYesterday(missingClasswork.dueDate)
+                                  ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                  : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
-                    {missingClasswork.dueDate &&
-                      missingClasswork.hasDueDate === "true" && (
-                        <p className="hidden text-[#f03e3e] md:block">
-                          {isToday(missingClasswork.dueDate)
-                            ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
-                            : isYesterday(missingClasswork.dueDate)
-                              ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
-                              : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
-                        </p>
-                      )}
+                    {missingClasswork.dueDate && (
+                      <p className="hidden text-[#f03e3e] md:block">
+                        {isToday(missingClasswork.dueDate)
+                          ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
+                          : isYesterday(missingClasswork.dueDate)
+                            ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
+                            : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
+                      </p>
+                    )}
                   </Link>
                 </li>
               );

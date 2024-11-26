@@ -301,21 +301,19 @@ export default function StreamDetailsUserWork({
           )}
           {!classwork?.isGraded &&
             classwork?.isTurnedIn &&
-            ((new Date(stream?.dueDate ?? "") > new Date() &&
-              stream?.hasDueDate === "true") ||
-              stream?.hasDueDate === "false") && (
+            ((stream.dueDate && new Date(stream.dueDate) > new Date()) ||
+              !stream.dueDate) && (
               <p className="font-medium text-[#616572]">Turned in</p>
             )}
           {!classwork?.isGraded &&
             classwork?.isTurnedIn &&
-            new Date(stream?.dueDate ?? "") < new Date() &&
-            stream?.hasDueDate === "true" && (
+            stream.dueDate &&
+            new Date(stream.dueDate) < new Date() && (
               <p className="font-medium text-[#616572]">Done late</p>
             )}
           {!classwork?.isTurnedIn &&
-            new Date(stream?.dueDate ?? "") < new Date() &&
-            stream?.hasDueDate === "true" &&
-            stream.hasDueDate === "true" && (
+            stream.dueDate &&
+            new Date(stream.dueDate) < new Date() && (
               <p className="font-medium text-[#f03e3e]">Missing</p>
             )}
           <button
