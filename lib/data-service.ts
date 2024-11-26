@@ -370,7 +370,6 @@ export async function getAllClassworkStreamsByTopicId(
     .select("*")
     .eq("topicId", topicId)
     .neq("type", "stream")
-    .neq("type", "material")
     .order("created_at", { ascending: false });
 
   return data;
