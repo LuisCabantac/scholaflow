@@ -11,7 +11,7 @@ import SignInForm from "@/components/SignInForm";
 import SignInGoogleButton from "@/components/SignInGoogleButton";
 
 export const metadata: Metadata = {
-  title: "Sign-in",
+  title: "Sign in",
   description:
     "Sign in to access your classes, assignments, and connect with your classmates.",
 };
