@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { IClass } from "@/components/ClassroomSection";
@@ -26,7 +26,7 @@ export default function PeopleSection({
   onGetAllEnrolledClasses: (classId: string) => Promise<IClass[] | null>;
 }) {
   const queryClient = useQueryClient();
-  const router = useRouter();
+
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
   const { data: enrolledUsers, isPending: enrolledUsersIsPending } = useQuery({
@@ -38,7 +38,6 @@ export default function PeopleSection({
     mutationFn: onDeleteClass,
     onSuccess: () => {
       toast.success("User has been successfully removed.");
-      router.refresh();
 
       queryClient.invalidateQueries({
         queryKey: ["enrolledUsersClasses"],

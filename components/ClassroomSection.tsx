@@ -106,7 +106,6 @@ export default function ClassroomSection({
     mutationFn: onDeleteClass,
     onSuccess: () => {
       toast.success("Class has been successfully removed.");
-      router.refresh();
 
       queryClient.invalidateQueries({
         queryKey: [
