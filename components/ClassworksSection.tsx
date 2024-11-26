@@ -63,7 +63,10 @@ export default function ClassworksSection({
         toast.success("Post has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [`streams--${classroom.classroomId}`],
+          queryKey: [
+            `streams--${classroom.classroomId}`,
+            `topics--${classroom.classroomId}`,
+          ],
         });
       },
       onError: (error) => toast.error(error.message),
@@ -81,7 +84,10 @@ export default function ClassworksSection({
         toast.success("Topic has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [`topics--${classroom.classroomId}`],
+          queryKey: [
+            `topics--${classroom.classroomId}`,
+            `streams--${classroom.classroomId}`,
+          ],
         });
       },
       onError: (error) => toast.error(error.message),

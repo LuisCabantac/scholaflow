@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getUser, getUserByUserId } from "@/lib/data-service";
+import { getUserByEmail, getUserByUserId } from "@/lib/data-service";
 
 import ProfileSection from "@/components/ProfileSection";
 
@@ -24,7 +24,11 @@ export default async function Page() {
 
   if (!hasUser(session)) return redirect("/signin");
 
-  const user = await getUser(session.user.email);
+  async function handleGetUser(email: string) {
+    "use server";
+    const user = await getUserByEmail(email);
+    return user;
+  }
 
-  return <ProfileSection user={user} />;
+  return <ProfileSection session={session} onGetUser={handleGetUser} />;
 }

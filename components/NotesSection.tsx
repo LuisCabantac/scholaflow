@@ -162,6 +162,7 @@ export default function NotesSection({
       {showNotesForm && (
         <NoteForm
           type="create"
+          session={session}
           onDeleteNote={handleDeleteNote}
           deleteNoteIsPending={deleteNoteIsPending}
           onSetShowNotesForm={setShowNotesForm}

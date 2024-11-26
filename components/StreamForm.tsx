@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { ISession } from "@/lib/auth";
 import {
@@ -41,7 +41,7 @@ export default function StreamForm({
   onSetShowStreamForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowStreamForm: () => void;
 }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const streamFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const selectUsersModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,12 @@ export default function StreamForm({
     if (success) {
       toast.success(message);
       onToggleShowStreamForm();
-      router.refresh();
+      queryClient.invalidateQueries({
+        queryKey: [
+          `streams--${classroom.classroomId}`,
+          `topics--${classroom.classroomId}`,
+        ],
+      });
     } else toast.error(message);
   }
 

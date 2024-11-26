@@ -11,10 +11,13 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { ISession } from "@/lib/auth";
 
 export default function NoteForm({
   note,
   type,
+  session,
   onDeleteNote,
   onSetShowNotesForm,
   deleteNoteIsPending,
@@ -22,11 +25,13 @@ export default function NoteForm({
 }: {
   note?: INotes;
   type: "create" | "edit";
+  session: ISession;
   onDeleteNote: (noteId: string) => void;
   onSetShowNotesForm: Dispatch<SetStateAction<boolean>>;
   deleteNoteIsPending: boolean;
   onToggleShowNotesForm: () => void;
 }) {
+  const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const notesFormModalWrapperRef = useRef(null);
   const zoomedImageWrapperRef = useRef(null);
@@ -58,6 +63,9 @@ export default function NoteForm({
     if (success) {
       toast.success(message);
       onToggleShowNotesForm();
+      queryClient.invalidateQueries({
+        queryKey: [`notes--${session.user.id}`],
+      });
     } else toast.error(message);
   }
 

@@ -6,6 +6,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import { IClass } from "@/components/ClassroomSection";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface ITopic {
   topicId: string;
@@ -26,6 +27,7 @@ export default function TopicDialog({
   onToggleShowTopic: () => void;
   onSetShowTopicDialog: Dispatch<SetStateAction<boolean>>;
 }) {
+  const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +43,9 @@ export default function TopicDialog({
       setIsLoading(false);
       toast.success(message);
       onToggleShowTopic();
+      queryClient.invalidateQueries({
+        queryKey: [`topics--${classroom.classroomId}`],
+      });
     } else {
       setIsLoading(false);
       toast.error(message);

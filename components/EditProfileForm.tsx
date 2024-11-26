@@ -1,31 +1,34 @@
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
-
-import toast from "react-hot-toast";
-
+import { ISession } from "@/lib/auth";
 import { updateProfile } from "@/lib/user-management-actions";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import { IUser } from "@/components/UserManagementSection";
-import Image from "next/image";
 
 export default function EditProfileForm({
   user,
+  session,
   onToggleShowEditProfileForm,
   handleSetShowEditProfileForm,
 }: {
-  user: IUser;
+  user: IUser | null | undefined;
+  session: ISession;
   onToggleShowEditProfileForm: () => void;
   handleSetShowEditProfileForm: Dispatch<SetStateAction<boolean>>;
 }) {
+  const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const editProfileFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string>(
-    user?.avatar,
+    user?.avatar ?? "",
   );
   const [showPassword, setShowPassword] = useState(false);
   const [validPassword, setValidPassword] = useState(true);
@@ -42,6 +45,9 @@ export default function EditProfileForm({
     if (success) {
       toast.success(message);
       onToggleShowEditProfileForm();
+      queryClient.invalidateQueries({
+        queryKey: [`profile--${session.user.id}`],
+      });
     } else toast.error(message);
   }
 
