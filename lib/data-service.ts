@@ -349,7 +349,6 @@ export async function getAllClassworkStreamsByClassId(
     .select("*")
     .eq("classroomId", classId)
     .neq("type", "stream")
-    .neq("type", "material")
     .order("created_at", { ascending: false });
 
   return data;
