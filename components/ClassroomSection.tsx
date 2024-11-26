@@ -428,6 +428,7 @@ export default function ClassroomSection({
                 searchParams.get("sort") === "created-classes" ||
                 searchParams.get("sort") === null) && (
                 <ClassroomLists
+                  type="created"
                   classes={createdClasses}
                   classesIsPending={createdClassesIsPending}
                   handleDeleteClass={deleteClass}
@@ -438,6 +439,7 @@ export default function ClassroomSection({
                 searchParams.get("sort") === "enrolled-classes" ||
                 searchParams.get("sort") === null) && (
                 <ClassroomLists
+                  type="enrolled"
                   classes={enrolledClasses}
                   classesIsPending={enrolledClassesIsPending}
                   handleDeleteClass={deleteClass}

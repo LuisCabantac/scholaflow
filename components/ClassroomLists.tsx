@@ -6,11 +6,13 @@ import ClassLoading from "@/components/ClassLoading";
 import ClassroomCard from "@/components/ClassroomCard";
 
 export default function ClassroomLists({
+  type,
   classes,
   classesIsPending,
   handleDeleteClass,
   deleteClassIsPending,
 }: {
+  type: "created" | "enrolled";
   classes: IClass[] | null | undefined;
   classesIsPending: boolean;
   deleteClassIsPending: boolean;
@@ -37,6 +39,7 @@ export default function ClassroomLists({
       {optimisticClasses.map((classData) => (
         <ClassroomCard
           key={classData.classroomId}
+          type={type}
           classData={classData}
           onDeleteClass={handleClassDelete}
           deleteClassIsPending={deleteClassIsPending}
