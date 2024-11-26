@@ -419,7 +419,7 @@ export async function createClassStreamPost(
     links: formData.getAll("links"),
     hasDueDate: dueDate ? "true" : "false",
     dueDate: format(
-      formData.get("dueDate") as string,
+      subHours(parseISO(formData.get("dueDate") as string), 8),
       "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
     ),
     scheduledAt: formData.get("scheduledAt")
@@ -496,7 +496,7 @@ export async function updateClassStreamPost(
   const newTopicId = formData.get("topicId");
   const newScheduledAt = formData.get("scheduledAt")
     ? format(
-        subHours(parseISO(formData.get("scheduledAt") as string), 8),
+        formData.get("scheduledAt") as string,
         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
       )
     : null;
@@ -574,10 +574,15 @@ export async function updateClassStreamPost(
       links: newUrlLinks.concat(curUrlLinks),
       hasDueDate: newDueDate ? "true" : "false",
       dueDate: format(
-        formData.get("dueDate") as string,
+        subHours(parseISO(formData.get("dueDate") as string), 8),
         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
       ),
-      scheduledAt: newScheduledAt,
+      scheduledAt: formData.get("scheduledAt")
+        ? format(
+            subHours(parseISO(formData.get("scheduledAt") as string), 8),
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+          )
+        : null,
       points: newPoints,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,
