@@ -156,8 +156,8 @@ export default function ClassroomCard({
             handleToggleShowConfirmation();
           }}
         >
-          Are you sure you want to {type === "created" ? "delete" : "unenroll"}{" "}
-          to this class?
+          Are you sure you want to{" "}
+          {type === "created" ? "delete" : "unenroll to"} this class?
         </ConfirmationModal>
       )}
     </li>
