@@ -131,6 +131,7 @@ export default function NotesSection({
                 <NoteCard
                   key={note.created_at}
                   note={note}
+                  session={session}
                   onDeleteNote={handleDeleteNote}
                   deleteNoteIsPending={deleteNoteIsPending}
                 />
@@ -151,6 +152,7 @@ export default function NotesSection({
                 <NoteCard
                   key={note.created_at}
                   note={note}
+                  session={session}
                   onDeleteNote={handleDeleteNote}
                   deleteNoteIsPending={deleteNoteIsPending}
                 />

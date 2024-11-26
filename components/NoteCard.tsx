@@ -5,13 +5,16 @@ import { INotes } from "@/app/user/notes/page";
 import { formatDate } from "@/lib/utils";
 
 import NoteForm from "@/components/NoteForm";
+import { ISession } from "@/lib/auth";
 
 export default function NoteCard({
   note,
+  session,
   onDeleteNote,
   deleteNoteIsPending,
 }: {
   note: INotes;
+  session: ISession;
   onDeleteNote: (noteId: string) => void;
   deleteNoteIsPending: boolean;
 }) {
@@ -59,6 +62,7 @@ export default function NoteCard({
         <NoteForm
           type="edit"
           note={note}
+          session={session}
           onDeleteNote={onDeleteNote}
           onSetShowNotesForm={setShowNotesForm}
           deleteNoteIsPending={deleteNoteIsPending}
