@@ -38,11 +38,11 @@ export default async function Page() {
           </h2>
           <div className="grid gap-3">
             <SignInForm />
-            <SignInGoogleButton>Sign in with Google</SignInGoogleButton>
+            <SignInGoogleButton />
           </div>
           <p className="mx-auto my-0">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-semibold underline">
+            <Link href="/signup" className="font-medium underline">
               Sign up
             </Link>
           </p>
