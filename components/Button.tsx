@@ -54,7 +54,7 @@ export default function Button({
     return (
       <button
         onClick={onClick}
-        className={`${bg && type === "primary" ? `${bg} h-10 px-4 py-2 text-[#edf2ff]` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-not-allowed"} flex items-center gap-1 rounded-md text-sm font-medium shadow-sm transition-colors disabled:cursor-not-allowed md:gap-2`}
+        className={`${bg && type === "primary" ? `${bg} h-10 px-4 py-2 text-[#edf2ff]` : bg && type === "secondary" ? `${bg} shadow-none` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-not-allowed"} flex h-10 items-center gap-1 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors disabled:cursor-not-allowed md:gap-2`}
         disabled={isLoading}
       >
         {isLoading && <SpinnerMini />}
