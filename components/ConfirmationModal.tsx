@@ -34,7 +34,7 @@ export default function ConfirmationModal({
     <div className="modal__container">
       <div className="flex h-[40%] max-w-[78%] items-center justify-center md:h-[60%] md:max-w-[40%]">
         <div
-          className="grid gap-2 rounded-md bg-[#f3f6ff] p-4 md:p-6"
+          className="grid gap-2 rounded-md bg-[#f3f6ff] p-4"
           ref={wrapperRef}
         >
           <div className="flex gap-2">

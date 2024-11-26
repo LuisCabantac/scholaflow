@@ -36,7 +36,7 @@ export default function InviteSection({
   }
 
   return (
-    <section className="z-10 mx-8 grid w-full gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem] md:p-6">
+    <section className="z-10 mx-8 grid w-full gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
       <div className="w-full">
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
           {classroom.className}

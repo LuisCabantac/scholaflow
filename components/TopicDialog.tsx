@@ -59,7 +59,7 @@ export default function TopicDialog({
     <div className="modal__container">
       <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
         <div
-          className="relative grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4 md:p-6"
+          className="relative grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4"
           ref={wrapperRef}
         >
           <div>
