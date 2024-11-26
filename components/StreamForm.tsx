@@ -267,12 +267,6 @@ export default function StreamForm({
                 defaultValue={stream?.id ?? ""}
                 hidden
               />
-              <input
-                type="text"
-                name="hasDueDate"
-                defaultValue={stream?.hasDueDate ?? hasDueDate}
-                hidden
-              />
               {session.user.role === "teacher" &&
                 session.user.id === classroom.teacherId && (
                   <div className="flex flex-col items-start justify-start gap-2">
