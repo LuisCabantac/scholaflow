@@ -48,12 +48,11 @@ export default function ClassForm({
     const { success, message } = await (type === "create"
       ? createClass(formData)
       : updateClass(updateClassCode, formData));
+    setIsLoading(false);
     if (success) {
-      setIsLoading(false);
       toast.success(message);
       onToggleShowClassForm();
     } else {
-      setIsLoading(false);
       toast.error(message);
     }
   }

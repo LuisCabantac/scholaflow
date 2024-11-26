@@ -54,14 +54,11 @@ export default function NoteForm({
     const { success, message } = await (type === "create"
       ? createNote(isPinned, formData)
       : updateNote(isPinned, currentAttachments, formData));
+    setIsLoading(false);
     if (success) {
-      setIsLoading(false);
       toast.success(message);
       onToggleShowNotesForm();
-    } else {
-      setIsLoading(false);
-      toast.error(message);
-    }
+    } else toast.error(message);
   }
 
   function handleSetAttachmentImages(
