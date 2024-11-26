@@ -21,6 +21,7 @@ export default function SignInForm() {
     event.preventDefault();
     if (honeyPot) return;
     setIsLoading(true);
+    setShowPassword(false);
     const formData = new FormData(event.target as HTMLFormElement);
     const data = await signInCredentialsAction(formData);
     setError(data ?? false);
