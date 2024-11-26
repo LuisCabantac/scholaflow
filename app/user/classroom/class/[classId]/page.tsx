@@ -14,6 +14,7 @@ import {
 } from "@/lib/data-service";
 
 import StreamsSection from "@/components/StreamsSection";
+import { deleteClass } from "@/lib/classroom-actions";
 
 export async function generateMetadata({
   params,
@@ -96,6 +97,11 @@ export default async function Page({ params }: { params: Params }) {
     return comments;
   }
 
+  async function handleDeleteClassByClassId(classId: string) {
+    "use server";
+    await deleteClass(classId);
+  }
+
   const enrolledClasses = await getAllEnrolledClassesByClassId(classId);
 
   const allTopics = await getAllClassTopicsByClassId(classId);
@@ -106,6 +112,7 @@ export default async function Page({ params }: { params: Params }) {
       session={session}
       classroom={classroom}
       enrolledClasses={enrolledClasses}
+      onDeleteClass={handleDeleteClassByClassId}
       onGetAllComments={handleGetAllCommentsByStreamId}
       onGetAllClassStreams={handleGetAllClassStreams}
     />
