@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { format, parse, subHours } from "date-fns";
+import { format, parse, parseISO, subHours } from "date-fns";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -424,7 +424,7 @@ export async function createClassStreamPost(
     ),
     scheduledAt: formData.get("scheduledAt")
       ? format(
-          formData.get("scheduledAt") as string,
+          subHours(parseISO(formData.get("scheduledAt") as string), 8),
           "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
         )
       : null,
@@ -496,7 +496,7 @@ export async function updateClassStreamPost(
   const newTopicId = formData.get("topicId");
   const newScheduledAt = formData.get("scheduledAt")
     ? format(
-        formData.get("scheduledAt") as string,
+        subHours(parseISO(formData.get("scheduledAt") as string), 8),
         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
       )
     : null;
