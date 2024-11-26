@@ -87,7 +87,7 @@ export default function TopicCard({
     <li className="grid gap-2">
       <ul className="flex items-center justify-between">
         <li
-          className="underline__container flex w-full cursor-pointer items-center gap-2 font-semibold"
+          className="flex w-full cursor-pointer items-center gap-2 font-semibold"
           onClick={handleToggleExpandTopic}
         >
           {classworks?.filter(
@@ -114,7 +114,7 @@ export default function TopicCard({
               />
             </svg>
           ) : null}
-          <h4 className="underline__text text-base">{topic.topicName}</h4>
+          <h4 className="text-base">{topic.topicName}</h4>
         </li>
         <li>
           <ul className="flex items-center">
