@@ -76,7 +76,7 @@ export default function EditProfileForm({
     () => {
       handleSetShowEditProfileForm(false);
     },
-    false,
+    isLoading,
   );
 
   return (
@@ -115,7 +115,7 @@ export default function EditProfileForm({
               </svg>
             </button>
           </div>
-          <div className="grid px-4 pb-4 md:gap-4 md:px-8 md:pb-8">
+          <div className="grid gap-2 px-4 pb-4 md:gap-4 md:px-8 md:pb-8">
             <input type="text" name="userId" defaultValue={user?.id} hidden />
             <div className="grid gap-2">
               <label className="font-medium">Profile photo</label>
@@ -237,15 +237,6 @@ export default function EditProfileForm({
                   </svg>
                 </button>
               </div>
-              {/* <input
-                required
-                disabled={isLoading}
-                name="password"
-                type="password"
-                defaultValue={user?.password ?? ""}
-                placeholder="Update password..."
-                className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
-              />*/}
             </div>
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
