@@ -25,7 +25,6 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 - [Date-fns](https://date-fns.org/)
 - [React Hot Toast](https://react-hot-toast.com/)
 - [React Linkify](https://www.npmjs.com/package/react-linkify)
-- [Framer Motion](https://motion.dev/)
 
 ## Getting Started
 

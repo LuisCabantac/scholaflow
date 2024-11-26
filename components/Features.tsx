@@ -1,12 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import * as motion from "framer-motion/client";
 
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
 import commentAvatar2 from "@/public/landing_page/comment-2-avatar.jpg";
 import commentAvatar3 from "@/public/landing_page/comment-3-avatar.jpg";
-
-import { fadeInUp, containerVariants } from "@/components/Hero";
 
 export default function Features({
   featuresSectionRef,
@@ -14,28 +11,19 @@ export default function Features({
   featuresSectionRef: React.MutableRefObject<HTMLDivElement | null>;
 }) {
   return (
-    <motion.section
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+    <section
       ref={featuresSectionRef}
       className="mx-6 mb-36 grid gap-6 pt-36 md:mx-10 md:gap-8"
     >
-      <motion.div
-        variants={fadeInUp}
-        className="flex flex-col items-center justify-center gap-2 md:gap-4"
-      >
+      <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
         <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           Features
         </h2>
         <p className="px-10 text-center text-lg">
           Manage your classroom with ease in a few simple steps.
         </p>
-      </motion.div>
-      <motion.div
-        variants={fadeInUp}
-        className="flex w-full flex-col items-center justify-center gap-4 md:grid md:grid-cols-2 md:grid-rows-2"
-      >
+      </div>
+      <div className="flex w-full flex-col items-center justify-center gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
         <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <h4 className="text-lg font-semibold">Real-time chat</h4>
@@ -337,7 +325,7 @@ export default function Features({
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 }

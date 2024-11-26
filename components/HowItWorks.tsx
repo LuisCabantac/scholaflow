@@ -1,35 +1,21 @@
 import Image from "next/image";
-import * as motion from "framer-motion/client";
 
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
 import commentAvatar2 from "@/public/landing_page/comment-2-avatar.jpg";
 import commentAvatar3 from "@/public/landing_page/comment-3-avatar.jpg";
 
-import { fadeInUp, containerVariants } from "@/components/Hero";
-
 export default function HowItWorks() {
   return (
-    <motion.section
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="mx-6 my-36 grid items-center justify-center gap-6 md:mx-0 md:gap-8"
-    >
-      <motion.div
-        variants={fadeInUp}
-        className="flex flex-col items-center justify-center gap-2 md:gap-4"
-      >
+    <section className="mx-6 my-36 grid items-center justify-center gap-6 md:mx-0 md:gap-8">
+      <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
         <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           How it works
         </h2>
         <p className="px-10 text-center text-base">
           Manage your classroom with ease in a few simple steps.
         </p>
-      </motion.div>
-      <motion.div
-        variants={fadeInUp}
-        className="flex flex-col flex-wrap items-center justify-center gap-4 md:flex-row"
-      >
+      </div>
+      <div className="flex flex-col flex-wrap items-center justify-center gap-4 md:flex-row">
         <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
@@ -245,7 +231,7 @@ export default function HowItWorks() {
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 }
