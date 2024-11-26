@@ -40,6 +40,7 @@ import {
   getUserByUserId,
 } from "@/lib/data-service";
 import { IStream } from "@/app/user/classroom/class/[classId]/page";
+import { IClass } from "@/components/ClassroomSection";
 
 export async function createClass(formData: FormData) {
   const session = await auth();
@@ -66,7 +67,10 @@ export async function createClass(formData: FormData) {
     classCode: generateClassCode(),
   };
 
-  const { error } = await supabase.from("classroom").insert([newClass]);
+  const { data, error } = await supabase
+    .from("classroom")
+    .insert([newClass])
+    .select();
 
   if (error) {
     return { success: false, message: error.message };
@@ -74,7 +78,11 @@ export async function createClass(formData: FormData) {
 
   revalidatePath("/user/classroom");
 
-  return { success: true, message: "Class created successfully!" };
+  return {
+    success: true,
+    message: "Class created successfully!",
+    classUrl: `/user/classroom/class/${(data[0] as IClass).classroomId}`,
+  };
 }
 
 export async function updateClass(
@@ -172,11 +180,16 @@ export async function updateClass(
     revalidatePath(`/user/classroom/class/${currentClassroom.classroomId}`);
     revalidatePath("/user/classroom");
 
-    return { success: true, message: "Class updated successfully!" };
+    return {
+      success: true,
+      message: "Class updated successfully!",
+      classUrl: `/user/classroom/class/${classroomId}`,
+    };
   }
   return {
     success: true,
     message: `No changes were made to the class.`,
+    classUrl: "",
   };
 }
 

@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import { ISession } from "@/lib/auth";
 import { createClass, updateClass } from "@/lib/classroom-actions";
@@ -48,15 +49,18 @@ export default function ClassForm({
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
-    const { success, message } = await (type === "create"
+    const response = await (type === "create"
       ? createClass(formData)
       : updateClass(updateClassCode, formData));
     setIsLoading(false);
-    if (success) {
-      toast.success(message);
+    if (response.success) {
+      toast.success(response.message);
       onToggleShowClassForm();
+      if (response.classUrl) {
+        router.push(response.classUrl);
+      }
     } else {
-      toast.error(message);
+      toast.error(response.message);
     }
   }
 
@@ -361,14 +365,14 @@ export default function ClassForm({
               <div></div>
             )}
             <div className="flex gap-2">
-            {!isLoading && (
-              <Button type="secondary" onClick={onToggleShowClassForm}>
-                Cancel
+              {!isLoading && (
+                <Button type="secondary" onClick={onToggleShowClassForm}>
+                  Cancel
+                </Button>
+              )}
+              <Button type="primary" isLoading={isLoading}>
+                {type === "edit" ? "Save changes" : "Create"}
               </Button>
-            )}
-            <Button type="primary" isLoading={isLoading}>
-              {type === "edit" ? "Save changes" : "Create"}
-            </Button>
             </div>
           </div>
         </form>
