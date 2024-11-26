@@ -423,10 +423,7 @@ export async function createClassStreamPost(
       "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
     ),
     scheduledAt: formData.get("scheduledAt")
-      ? format(
-          formData.get("scheduledAt") as string,
-          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
-        )
+      ? new Date(formData.get("scheduledAt") as string).toISOString()
       : null,
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
