@@ -422,6 +422,26 @@ export async function getAllClassworksByUserId(
   return data;
 }
 
+export async function getAllClassworksByClassAndUserId(
+  userId: string,
+  classId: string,
+): Promise<IClasswork[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const classroom = await getClassByClassId(classId);
+  if (!classroom) return null;
+
+  const { data } = await supabase
+    .from("classworks")
+    .select("*")
+    .eq("userId", userId)
+    .eq("classroomId", classId);
+
+  return data;
+}
+
 export async function getClassworkByClassAndUserId(
   userId: string,
   classId: string,

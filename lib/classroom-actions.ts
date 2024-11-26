@@ -19,6 +19,7 @@ import {
 } from "@/lib/utils";
 import {
   getAllClassStreamsByClassId,
+  getAllClassworksByClassAndUserId,
   getAllClassworksByStreamId,
   getAllClassworkStreamsByTopicId,
   getAllCommentsByStreamId,
@@ -294,8 +295,14 @@ export async function deleteClass(classId: string) {
     return;
   }
 
-  const data = await getEnrolledClassByClassAndSessionId(classId);
-  if (!data) throw new Error("This class doesn't exist.");
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
+
+  if (!enrolledClass) throw new Error("This class doesn't exist.");
+
+  await deleteAllClassworkByClassAndUserId(
+    enrolledClass.classroomId,
+    enrolledClass.userId,
+  );
 
   const { error } = await supabase
     .from("enrolledClass")
@@ -308,6 +315,36 @@ export async function deleteClass(classId: string) {
   if (error) throw new Error(error.message);
 
   return;
+}
+
+export async function deleteAllClassworkByClassAndUserId(
+  classId: string,
+  userId: string,
+) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const classworks = await getAllClassworksByClassAndUserId(userId, classId);
+
+  if (!classworks || !classworks.length) return;
+
+  const attachments = classworks.map((chat) => chat.attachment).flat();
+
+  if (attachments.length) {
+    const classworkAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractClassworkFilePath(file),
+    );
+    await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
+  }
+
+  const { error } = await supabase
+    .from("classworks")
+    .delete()
+    .eq("userId", userId)
+    .eq("classroomId", classId);
+
+  if (error) throw new Error(error.message);
 }
 
 export async function deleteMultipleEnrolledClass(classId: string[]) {
