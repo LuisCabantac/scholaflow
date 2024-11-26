@@ -22,6 +22,7 @@ import { ITopic } from "@/components/TopicDialog";
 
 export default function StreamForm({
   topics,
+  search,
   stream,
   session,
   formType,
@@ -32,6 +33,7 @@ export default function StreamForm({
   onToggleShowStreamForm,
 }: {
   topics: ITopic[] | null;
+  search?: string;
   stream?: IStream;
   session: ISession;
   formType: "create" | "edit";
@@ -106,13 +108,15 @@ export default function StreamForm({
     setIsLoading(false);
     if (success) {
       toast.success(message);
-      onToggleShowStreamForm();
       queryClient.invalidateQueries({
         queryKey: [
+          `classworks--${classroom.classroomId}`,
           `streams--${classroom.classroomId}`,
           `topics--${classroom.classroomId}`,
+          search,
         ],
       });
+      onToggleShowStreamForm();
     } else toast.error(message);
   }
 

@@ -52,7 +52,7 @@ export default function ClassworksSection({
   const [showCreateClasswork, setShowCreateClasswork] = useState(false);
 
   const { data: classworks, isPending: classworksIsPending } = useQuery({
-    queryKey: [`streams--${classroom.classroomId}`, search],
+    queryKey: [`classworks--${classroom.classroomId}`, search],
     queryFn: () => onGetAllClassworkStreams(classroom.classroomId, search),
   });
 
@@ -60,12 +60,13 @@ export default function ClassworksSection({
     useMutation({
       mutationFn: deleteClassStreamPost,
       onSuccess: () => {
-        toast.success("Post has been successfully deleted!");
+        toast.success("Classwork has been successfully deleted!");
 
         queryClient.invalidateQueries({
           queryKey: [
-            `streams--${classroom.classroomId}`,
+            `classworks--${classroom.classroomId}`,
             `topics--${classroom.classroomId}`,
+            search,
           ],
         });
       },
@@ -86,7 +87,7 @@ export default function ClassworksSection({
         queryClient.invalidateQueries({
           queryKey: [
             `topics--${classroom.classroomId}`,
-            `streams--${classroom.classroomId}`,
+            `classworks--${classroom.classroomId}`,
           ],
         });
       },
@@ -303,6 +304,7 @@ export default function ClassworksSection({
                   .map((stream) => (
                     <StreamCard
                       key={stream.id}
+                      search={search}
                       topics={topics as ITopic[] | null}
                       stream={stream}
                       session={session}
@@ -347,6 +349,7 @@ export default function ClassworksSection({
         <StreamForm
           topics={topics as ITopic[] | null}
           session={session}
+          search={search}
           formType="create"
           classroom={classroom}
           streamType={classworkType}

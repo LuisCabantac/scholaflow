@@ -35,6 +35,7 @@ import CommentsLoading from "@/components/CommentsLoading";
 export default function StreamCard({
   topics,
   stream,
+  search,
   session,
   classroom,
   showComments,
@@ -45,6 +46,7 @@ export default function StreamCard({
 }: {
   topics: ITopic[] | null;
   stream: IStream;
+  search?: string;
   session: ISession;
   classroom: IClass;
   showComments?: boolean;
@@ -651,6 +653,7 @@ export default function StreamCard({
         <StreamForm
           topics={topics}
           stream={stream}
+          search={search}
           session={session}
           formType="edit"
           classroom={classroom}
