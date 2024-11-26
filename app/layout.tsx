@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 import Provider from "./Provider";
 import "@/styles/globals.css";
@@ -30,6 +31,20 @@ export default function RootLayout({
         className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-sm text-[#474c50] antialiased`}
       >
         <Provider>{children}</Provider>
+        <Toaster
+          position="top-center"
+          gutter={12}
+          toastOptions={{
+            success: { duration: 3000 },
+            error: { duration: 5000 },
+            style: {
+              color: "#5c7cfa",
+              backgroundColor: "#f3f6ff",
+              fontWeight: 500,
+              padding: "0.75rem 1.25rem",
+            },
+          }}
+        />
       </body>
     </html>
   );

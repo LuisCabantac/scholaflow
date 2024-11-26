@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import { Toaster } from "react-hot-toast";
 import { redirect } from "next/navigation";
 
 import Provider from "@/app/Provider";
@@ -64,20 +63,6 @@ export default async function RootLayout({
           <div className="px-4 pb-4 md:px-8">{children}</div>
         </main>
       </Provider>
-      <Toaster
-        position="top-center"
-        gutter={12}
-        toastOptions={{
-          success: { duration: 3000 },
-          error: { duration: 5000 },
-          style: {
-            color: "#5c7cfa",
-            backgroundColor: "#f3f6ff",
-            fontWeight: 500,
-            padding: "0.75rem 1.25rem",
-          },
-        }}
-      />
     </div>
   );
 }
