@@ -69,7 +69,7 @@ export default function ProfileIcon({
         >
           {role}
         </p>
-        <li className="mt-0.5 border-t-2 border-[#dbe4ff]">
+        <li className="mt-0.5 border-t-2 border-[#dbe4ff] pt-0.5">
           <Link
             href="/user/profile"
             className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"
