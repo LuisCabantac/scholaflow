@@ -252,7 +252,19 @@ export default function ClassworksSection({
                     ))}
                 </>
               )}
-              {!optimisticClassworks?.length &&
+              {!optimisticClassworks?.filter(
+                (stream) =>
+                  ((stream.announceTo.includes(session.user.id) &&
+                    stream.announceToAll === false) ||
+                    stream.announceToAll ||
+                    stream.author === session.user.id ||
+                    classroom.teacherId === session.user.id) &&
+                  !stream.topicId &&
+                  ((stream.scheduledAt
+                    ? new Date(stream.scheduledAt) < new Date()
+                    : true) ||
+                    classroom.teacherId === session.user.id),
+              ).length &&
               !optimisticTopics?.length &&
               !classworksIsPending ? (
                 <li className="flex h-[30rem] w-full flex-col items-center justify-center gap-3 md:h-[25rem] md:gap-2">
