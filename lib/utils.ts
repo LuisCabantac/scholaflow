@@ -30,6 +30,11 @@ export function extractNoteFilePath(url: string): string {
   return match![1];
 }
 
+export function extractAvatarFilePath(url: string): string {
+  const match = url.match(/\/avatars\/(.+)/);
+  return match![1];
+}
+
 export function extractStreamFilePath(url: string): string {
   const match = url.match(/\/streams\/(.+)/);
   return match![1];
