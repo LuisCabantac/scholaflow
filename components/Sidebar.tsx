@@ -6,6 +6,7 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { IClass } from "@/components/ClassroomSection";
 import Logo from "@/components/Logo";
 import SidebarLinks from "@/components/SidebarLinks";
+import Link from "next/link";
 
 export default function Sidebar({
   session,
@@ -30,7 +31,9 @@ export default function Sidebar({
         className={`fixed h-screen overflow-y-auto ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} left-0 top-0 z-30 rounded-r-md border-r-2 border-[#d6e0fd] bg-[#dbe4ff] py-5 transition-all duration-300 ease-in-out md:static`}
       >
         <div className="flex items-center justify-between pl-3">
-          <Logo showText={sidebarExpand} />
+          <Link href="/" className="cursor-pointer">
+            <Logo showText={sidebarExpand} />
+          </Link>
           <button
             onClick={handleSidebarExpand}
             className={sidebarExpand ? "block" : "hidden"}
