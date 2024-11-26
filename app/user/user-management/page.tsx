@@ -41,10 +41,8 @@ export default async function Page() {
 
   async function handleCheckEmail(formData: FormData) {
     "use server";
-    const {
-      success: { status },
-    } = await checkEmail(formData);
-    return status;
+    const { success } = await checkEmail(formData);
+    return success;
   }
 
   return (

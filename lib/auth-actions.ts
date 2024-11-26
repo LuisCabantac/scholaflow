@@ -11,6 +11,11 @@ interface ICheckToken {
   expires: string;
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const fullNameRegex =
+  /^[A-Za-z]+([' -]?[A-Za-z]+)* [A-Za-z]+([' -]?[A-Za-z]+)*$/;
+
 export async function signInCredentialsAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -102,100 +107,51 @@ export async function checkVerificationToken(formData: FormData) {
   return (data as ICheckToken[])[0].token === otp;
 }
 
-// export async function signUpAction(formData: FormData) {
-//   const fullName = formData.get("fullName") as string;
-//   const email = formData.get("email") as string;
-//   const password = formData.get("password") as string;
-//   const otp = formData.get("otp") as string;
+export async function signUpAction(formData: FormData) {
+  const fullName = formData.get("fullName") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-//   const data = await getVerificationToken(email);
+  if (!fullNameRegex.test(fullName))
+    return {
+      success: false,
+      message: "Please enter a valid full name.",
+    };
 
-//   console.log(data);
+  if (!emailRegex.test(email))
+    return {
+      success: false,
+      message: "Invalid email address.",
+    };
 
-//   if (otp === verificationToken[0].token) {
-//     await deleteVerificationToken(email);
-//     await createUser({
-//       email: email,
-//       fullName: fullName,
-//       password: password,
-//       role: "student",
-//       emailVerified: true,
-//     });
-//   }
-// }
+  if (password.length < 8)
+    return {
+      success: false,
+      message: "Your password must be a minimum of 8 characters in length.",
+    };
 
-// const user = await getUserEmail(email);
-// if (!user && email) {
-//   const verificationToken = await generateVerificationToken(email);
+  const userExist = await getUserByEmail(email);
 
-//   await sendVerificationEmail(email, verificationToken[0].token);
+  if (userExist)
+    return { success: false, message: "This email is already in use." };
 
-//   console.log(otp, verificationToken[0].token);
-//   if (otp === verificationToken[0].token) {
-//     await deleteVerificationToken(email);
-//     await createUser({
-//       email: email,
-//       fullName: fullName,
-//       password: password,
-//       role: "student",
-//       emailVerified: true,
-//     });
-//   }
+  const newUser = {
+    fullName,
+    email,
+    password,
+  };
 
-//   return {
-//     type: "verification",
-//     success: {
-//       status: true,
-//       message: "Email Verification was sent",
-//     },
-//   };
-// } else {
-//   return {
-//     type: "email",
-//     success: {
-//       status: false,
-//       message: "This email has already been taken.",
-//     },
-//   };
-// }
+  const { error } = await supabase.from("users").insert([newUser]);
 
-// export async function signUpAction(formData: FormData, otp: string) {
-//   const fullName = formData.get("fullName") as string;
-//   const email = formData.get("email") as string;
-//   const password = formData.get("password") as string;
+  if (error)
+    return {
+      success: false,
+      message:
+        "We encountered a problem creating your account. Please try again.",
+    };
 
-//   const user = await getUserEmail(email);
-//   if (!user && email) {
-//     const verificationToken = await generateVerificationToken(email);
-
-//     await sendVerificationEmail(email, verificationToken[0].token);
-
-//     console.log(otp, verificationToken[0].token);
-//     if (otp === verificationToken[0].token) {
-//       await deleteVerificationToken(email);
-//       await createUser({
-//         email: email,
-//         fullName: fullName,
-//         password: password,
-//         role: "student",
-//         emailVerified: true,
-//       });
-//     }
-
-//     return {
-//       type: "verification",
-//       success: {
-//         status: true,
-//         message: "Email Verification was sent",
-//       },
-//     };
-//   } else {
-//     return {
-//       type: "email",
-//       success: {
-//         status: false,
-//         message: "This email has already been taken.",
-//       },
-//     };
-//   }
-// }
+  return {
+    success: true,
+    message: "Account created! You can now start learning.",
+  };
+}

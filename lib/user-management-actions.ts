@@ -8,7 +8,7 @@ import { extractAvatarFilePath, hasUser } from "@/lib/utils";
 import { getUserByEmail, getUserByUserId } from "@/lib/data-service";
 import { uploadAttachments } from "@/lib/classroom-actions";
 
-const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function createUser(newGuest: object) {
   const session = await auth();
@@ -115,7 +115,7 @@ export async function updateProfile(formData: FormData) {
     currentUserData.schoolName !== newSchoolName ||
     attachment
   ) {
-    if (!pattern.test(newEmail))
+    if (!emailRegex.test(newEmail))
       return {
         success: false,
         message: "Invalid email address.",

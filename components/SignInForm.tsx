@@ -6,7 +6,7 @@ import { signInCredentialsAction } from "@/lib/auth-actions";
 
 import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +117,6 @@ export default function SignInForm() {
           </p>
         ) : null}
       </div>
-
       <SignInCredentialsButton isLoading={isLoading}>
         Sign in
       </SignInCredentialsButton>
