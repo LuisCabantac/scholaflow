@@ -28,9 +28,16 @@ export default function HomeNav({ session }: { session: Session | null }) {
           role={session.user.role}
         />
       ) : (
-        <Button href="/signin" type="primary">
-          Sign in
-        </Button>
+        <div className="flex gap-2">
+          <div className="hidden md:block">
+            <Button href="/signin" type="secondary">
+              Log in
+            </Button>
+          </div>
+          <Button href="/signup" type="primary">
+            Sign up
+          </Button>
+        </div>
       )}
     </nav>
   );
