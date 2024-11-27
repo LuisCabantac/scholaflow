@@ -277,7 +277,13 @@ export default function StreamSubmissionsSection({
                         user.isTurnedIn || (stream.points && user.isGraded),
                     )
                     .map((user) => (
-                      <li key={user.id} onClick={handleToggleExpandUserWork}>
+                      <li
+                        key={user.id}
+                        onClick={() => {
+                          handleToggleExpandUserWork();
+                          setGrade(classwork?.userPoints ?? "");
+                        }}
+                      >
                         <Link
                           href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                           className="underline__container flex items-center justify-between"
@@ -314,7 +320,13 @@ export default function StreamSubmissionsSection({
                 <ul className="grid gap-2">
                   {stream.announceToAll
                     ? enrolledUsers?.map((user) => (
-                        <li key={user.id} onClick={handleToggleExpandUserWork}>
+                        <li
+                          key={user.id}
+                          onClick={() => {
+                            handleToggleExpandUserWork();
+                            setGrade(classwork?.userPoints ?? "");
+                          }}
+                        >
                           <Link
                             href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                             className="underline__container flex items-center justify-between"
@@ -363,7 +375,10 @@ export default function StreamSubmissionsSection({
                         .map((user) => (
                           <li
                             key={user.id}
-                            onClick={handleToggleExpandUserWork}
+                            onClick={() => {
+                              handleToggleExpandUserWork();
+                              setGrade(classwork?.userPoints ?? "");
+                            }}
                           >
                             <Link
                               href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
