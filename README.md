@@ -30,9 +30,17 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 
 ### Prerequisites
 
-- Node.js v16 or higher
+- Node.js v20
 - npm or yarn
 - A Supabase account (sign up for free at [https://supabase.com/](https://supabase.com/))
+
+## Try ScholaFlow
+
+Want to experience ScholaFlow firsthand? Join our demo class:
+
+**Class Code:** `ebeqdca9`
+
+**Join Link:** [https://scholaflow.vercel.app/join-class/ebeqdca9](https://scholaflow.vercel.app/join-class/ebeqdca9)
 
 ### Installation
 
