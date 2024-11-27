@@ -240,7 +240,8 @@ export default function StreamSubmissionsSection({
             <div className="flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm">
               <div>
                 <p className="text-2xl font-semibold">
-                  {turnedInUsers?.filter((users) => users.isTurnedIn).length}
+                  {turnedInUsers?.filter((users) => users.isTurnedIn).length ||
+                    0}
                 </p>
                 <h4 className="text-xs font-medium text-[#616572]">
                   Turned in
@@ -249,9 +250,9 @@ export default function StreamSubmissionsSection({
               <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
               <div>
                 <p className="text-2xl font-semibold">
-                  {stream?.announceToAll
+                  {(stream?.announceToAll
                     ? enrolledUsers?.length
-                    : stream.announceTo.length}
+                    : stream.announceTo.length) || 0}
                 </p>
                 <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
               </div>
