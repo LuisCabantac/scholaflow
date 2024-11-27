@@ -204,7 +204,7 @@ export default function ClassChatSection({
       </div>
       <div className="flex w-full flex-col rounded-md md:border-2 md:border-[#dbe4ff] md:bg-[#f3f6ff] md:p-4">
         <div className="relative pb-16">
-          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[55dvh]">
+          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
               <>
                 <li className="justify-self-end">
