@@ -198,8 +198,8 @@ export default function NoteForm({
                   <Image
                     src={image}
                     alt={image}
-                    width={100}
-                    height={100}
+                    width={500}
+                    height={500}
                     className="mb-2 w-auto cursor-pointer break-inside-avoid rounded-md object-cover"
                     onClick={() => openZoomedImage(image)}
                   />
