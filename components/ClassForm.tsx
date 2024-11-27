@@ -352,7 +352,7 @@ export default function ClassForm({
             {type === "edit" ? (
               <Button
                 type="secondary"
-                bg="text-[#f03e3e] hover:text-[#c92a2a]"
+                bg="text-[#f03e3e] hover:text-[#c92a2a] bg-[#fff5f5] hover:bg-[#ffe3e3]"
                 onClick={() => {
                   onDeleteClass(classroom?.classroomId ?? "");
                   onToggleShowClassForm();
