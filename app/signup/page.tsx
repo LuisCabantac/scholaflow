@@ -23,7 +23,7 @@ export default async function Page() {
 
   return (
     <div className="absolute top-0 z-[-2] h-screen w-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
-      <section className="relative flex items-center justify-center px-8 py-[8rem] md:grid md:grid-cols-[55%_45%] md:px-24 md:py-14">
+      <section className="relative flex h-full items-center justify-center px-8 md:grid md:grid-cols-[55%_45%] md:px-24">
         <div className="relative mx-0 my-auto w-0 md:w-[70%]">
           <Image
             src={signUpPageImage}
