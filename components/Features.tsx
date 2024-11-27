@@ -198,14 +198,14 @@ export default function Features({
                 <div className="mt-0.5 flex overflow-hidden">
                   <div className="h-1 w-7"></div>
                   <div className="flex w-full items-center justify-between rounded-md border border-[#dbe4ff] px-2 py-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex w-full items-center gap-2 overflow-hidden">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="size-4"
+                        className="hidden size-4 md:block"
                       >
                         <path
                           strokeLinecap="round"
@@ -213,7 +213,7 @@ export default function Features({
                           d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"
                         />
                       </svg>
-                      <p className="text-xs">
+                      <p className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
                         Electron_Transport_Chain_Diagram.pdf
                       </p>
                     </div>
@@ -302,7 +302,7 @@ export default function Features({
                 </h6>
               </div>
               <div className="mx-3 mt-2 grid gap-1">
-                <p className="text-xs font-medium">
+                <p className="text-xs">
                   PSII absorbs a photon to produce a so-called high energy
                   electron which transfers via an electron transport chain to
                   cytochrome b6f and then to PSI. The then-reduced PSI, absorbs
