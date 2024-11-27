@@ -180,6 +180,7 @@ export default function StreamSubmissionsSection({
     if (success) {
       toast.success(message);
       handleToggleShowGradeModal();
+      queryClient.invalidateQueries({ queryKey: [userId] });
     } else toast.error(message);
   }
 
