@@ -68,24 +68,34 @@ export default async function Page({ params }: { params: Params }) {
     return privateComments;
   }
 
-  const turnedInUsers = await getAllAssignedClassworksByStreamAndClassroomId(
-    classroom?.classroomId ?? "",
-    streamId,
-  );
+  async function handleGetAllAssignedClassworks(
+    classId: string,
+    streamId: string,
+  ) {
+    "use server";
+    const turnedInUsers = await getAllAssignedClassworksByStreamAndClassroomId(
+      classId,
+      streamId,
+    );
+    return turnedInUsers;
+  }
 
-  const enrolledUsers = await getAllEnrolledClassesByClassAndSessionId(
-    classroom?.classroomId,
-  );
+  async function handleGetAllEnrolledUsers(classId: string) {
+    "use server";
+    const enrolledUsers =
+      await getAllEnrolledClassesByClassAndSessionId(classId);
+    return enrolledUsers;
+  }
 
   return (
     <StreamSubmissionsSection
       stream={stream}
       session={session}
       classroom={classroom}
-      turnedInUsers={turnedInUsers}
-      enrolledUsers={enrolledUsers}
       onGetAssignedUserClasswork={getAssignedUserClasswork}
       onGetAllPrivateComments={handleGetAllPrivateComments}
+      onGetAllAssignedClassworks={handleGetAllAssignedClassworks}
+      onGetAllEnrolledUsers={handleGetAllEnrolledUsers}
     />
   );
 }

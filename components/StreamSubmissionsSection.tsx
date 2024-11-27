@@ -32,19 +32,22 @@ export default function StreamSubmissionsSection({
   stream,
   session,
   classroom,
-  turnedInUsers,
-  enrolledUsers,
+  onGetAllEnrolledUsers,
   onGetAllPrivateComments,
+  onGetAllAssignedClassworks,
   onGetAssignedUserClasswork,
 }: {
   stream: IStream;
   session: ISession;
   classroom: IClass;
-  turnedInUsers: IClasswork[] | null;
-  enrolledUsers: IClass[] | null;
+  onGetAllEnrolledUsers: (classId: string) => Promise<IClass[] | null>;
   onGetAllPrivateComments: (
     streamId: string,
   ) => Promise<IStreamComment[] | null>;
+  onGetAllAssignedClassworks: (
+    classId: string,
+    streamId: string,
+  ) => Promise<IClasswork[] | null>;
   onGetAssignedUserClasswork: (
     userId: string,
     classId: string,
@@ -72,7 +75,17 @@ export default function StreamSubmissionsSection({
       onGetAssignedUserClasswork(userId ?? "", stream.classroomId, stream.id),
   });
 
-  const [grade, setGrade] = useState(classwork?.userPoints ?? "");
+  const { data: enrolledUsers } = useQuery({
+    queryKey: [classroom.classroomId],
+    queryFn: () => onGetAllEnrolledUsers(classroom.classroomId),
+  });
+
+  const { data: turnedInUsers } = useQuery({
+    queryKey: [classroom.classroomId, stream.id],
+    queryFn: () => onGetAllAssignedClassworks(classroom.classroomId, stream.id),
+  });
+
+  const [grade, setGrade] = useState("");
 
   const { data: privateComments, isPending: privateCommentsIsPending } =
     useQuery({
@@ -496,25 +509,25 @@ export default function StreamSubmissionsSection({
                         <input
                           type="text"
                           name="classworkId"
-                          value={classwork?.id}
+                          defaultValue={classwork?.id}
                           hidden
                         />
                         <input
                           type="text"
                           name="classroomId"
-                          value={classroom.classroomId}
+                          defaultValue={classroom.classroomId}
                           hidden
                         />
                         <input
                           type="text"
                           name="streamId"
-                          value={stream.id}
+                          defaultValue={stream.id}
                           hidden
                         />
                         <input
                           type="text"
                           name="userId"
-                          value={userId ?? ""}
+                          defaultValue={userId ?? ""}
                           hidden
                         />
                         <input
