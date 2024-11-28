@@ -16,6 +16,7 @@ import { IClass } from "@/components/ClassroomSection";
 import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
+import { IRoleRequest } from "@/components/RoleRequestDialog";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -703,6 +704,26 @@ export async function getVerificationToken(email: string) {
     .from("verificationTokens")
     .select("*")
     .eq("email", email);
+
+  return data;
+}
+
+export async function getRoleRequest(
+  userId: string,
+): Promise<IRoleRequest | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const user = await getUserByUserId(userId);
+
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("roleRequests")
+    .select("*")
+    .eq("userId", userId)
+    .single();
 
   return data;
 }

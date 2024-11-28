@@ -9,17 +9,23 @@ import { ISession } from "@/lib/auth";
 
 import { IUser } from "@/components/UserManagementSection";
 import EditProfileForm from "@/components/EditProfileForm";
+import RoleRequestDialog, {
+  IRoleRequest,
+} from "@/components/RoleRequestDialog";
 
 export default function ProfileSection({
   session,
   onGetUser,
   onCloseProfile,
+  existingRequest,
 }: {
   session: ISession;
   onGetUser: (email: string) => Promise<IUser | null>;
   onCloseProfile: (userId: string) => Promise<void>;
+  existingRequest: IRoleRequest | null;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
+  const [showRoleRequest, setShowRoleRequest] = useState(false);
 
   const { data: user, isPending: userIsPending } = useQuery({
     queryKey: [`profile--${session.user.id}`],
@@ -28,6 +34,10 @@ export default function ProfileSection({
 
   function handleToggleShowEditProfileForm() {
     setShowEditProfileForm(!showEditProfileForm);
+  }
+
+  function handleToggleShowRoleRequest() {
+    setShowRoleRequest(!showRoleRequest);
   }
 
   return (
@@ -56,8 +66,8 @@ export default function ProfileSection({
               {!userIsPending && (
                 <button
                   type="button"
-                  className="font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763]"
                   onClick={handleToggleShowEditProfileForm}
+                  className="font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763]"
                 >
                   Edit profile
                 </button>
@@ -67,11 +77,21 @@ export default function ProfileSection({
           {userIsPending ? (
             <div className="h-6 w-12 animate-pulse rounded-md bg-[#dbe4ff]"></div>
           ) : (
-            <p
-              className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "teacher" ? "teacher" : user?.role === "student" ? "student" : "guest"} `}
-            >
-              {user?.role}
-            </p>
+            <>
+              {user?.role === "teacher" ? (
+                <p className="role teacher flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase">
+                  {user?.role}
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleToggleShowRoleRequest}
+                  className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "student" ? "student" : "guest"} `}
+                >
+                  {user?.role}
+                </button>
+              )}
+            </>
           )}
         </div>
         <div className="grid gap-2 md:flex md:items-center">
@@ -114,6 +134,14 @@ export default function ProfileSection({
           onCloseProfile={onCloseProfile}
           handleSetShowEditProfileForm={setShowEditProfileForm}
           onToggleShowEditProfileForm={handleToggleShowEditProfileForm}
+        />
+      )}
+      {showRoleRequest && (
+        <RoleRequestDialog
+          session={session}
+          existingRequest={existingRequest}
+          onToggleShowRoleRequest={handleToggleShowRoleRequest}
+          handleSetShowRoleRequest={setShowRoleRequest}
         />
       )}
     </section>

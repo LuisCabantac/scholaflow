@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
-import { getUserByEmail, getUserByUserId } from "@/lib/data-service";
+import {
+  getRoleRequest,
+  getUserByEmail,
+  getUserByUserId,
+} from "@/lib/data-service";
 import { closeAccount } from "@/lib/user-management-actions";
 
 import ProfileSection from "@/components/ProfileSection";
@@ -36,11 +40,14 @@ export default async function Page() {
     await closeAccount(userId);
   }
 
+  const existingRequest = await getRoleRequest(session.user.id);
+
   return (
     <ProfileSection
       session={session}
       onGetUser={handleGetUser}
       onCloseProfile={handleCloseProfile}
+      existingRequest={existingRequest}
     />
   );
 }

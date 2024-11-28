@@ -10,6 +10,7 @@ import {
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
   getAllNotesBySession,
+  getRoleRequest,
   getUserByEmail,
   getUserByUserId,
 } from "@/lib/data-service";
@@ -266,4 +267,44 @@ export async function deleteFileFromBucket(
     throw new Error(
       `${filePath} cannot be deleted from the ${bucketName} bucket`,
     );
+}
+
+export async function roleRequest(formData: FormData) {
+  const session = await auth();
+  if (!hasUser(session))
+    return { success: false, message: "You must be logged in." };
+
+  const userId = formData.get("userId") as string;
+
+  const userData = await getUserByUserId(userId);
+  if (!userData) return { success: false, message: "User does not exist." };
+
+  if (userData.role === "teacher")
+    return { success: false, message: "You are already a teacher." };
+
+  const existingRequest = await getRoleRequest(userId);
+
+  if (existingRequest)
+    return {
+      success: false,
+      message:
+        "Request already submitted. Please wait for it to be approved or denied.",
+    };
+
+  const request = {
+    userId: formData.get("userId"),
+    userName: formData.get("userName"),
+  };
+
+  const { error } = await supabase.from("roleRequests").insert([request]);
+
+  if (error) {
+    return { success: false, message: "Request could not be created." };
+  }
+  revalidatePath("/user/profile");
+  return {
+    success: true,
+    message:
+      "Your request to become a Teacher has been submitted. The status of your request will be updated here.",
+  };
 }
