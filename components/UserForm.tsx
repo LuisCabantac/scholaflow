@@ -134,7 +134,7 @@ export default function UserForm({
                 />
                 <button
                   onClick={handleShowPassword}
-                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-3 pr-5 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

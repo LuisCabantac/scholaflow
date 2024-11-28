@@ -67,27 +67,17 @@ export default function UserManagementSection({
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-medium">All users</h2>
-        <div className="flex gap-2">
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search..."
-            className="hidden rounded-md border-2 border-[#bec2cc] bg-[#f3f6ff] px-5 py-3 text-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:inline md:w-48"
-          />
-          <Button type="primary" onClick={handleToggleShowUserForm}>
-            Add user
-          </Button>
-        </div>
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search..."
+          className="w-[60%] rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
+        />
+        <Button type="primary" onClick={handleToggleShowUserForm}>
+          Add user
+        </Button>
       </div>
-      <input
-        type="search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search..."
-        className="mb-4 block w-full rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-5 py-3 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:hidden"
-      />
       {(!users?.data || users?.data.length === 0) && !usersIsPending ? (
         <UserNotFound />
       ) : (
