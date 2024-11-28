@@ -294,7 +294,7 @@ export default function StreamForm({
                       <div className="modal__container">
                         <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                           <div
-                            className="grid w-full gap-2 rounded-md bg-[#f3f6ff] p-6 md:w-[25rem]"
+                            className="grid w-full gap-2 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem]"
                             ref={selectUsersModalWrapperRef}
                           >
                             <div className="grid gap-4">
