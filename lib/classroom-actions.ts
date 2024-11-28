@@ -379,7 +379,8 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
 
   if (!hasUser(session)) return redirect("/signin");
 
-  const enrolledClass = getEnrolledClassByEnrolledClassId(enrolledClassId);
+  const enrolledClass =
+    await getEnrolledClassByEnrolledClassId(enrolledClassId);
   if (!enrolledClass) throw new Error("You are not a member of this class.");
 
   const classroom = await getClassByClassId(classId);
@@ -387,6 +388,11 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
 
   if (classroom.teacherId !== session.user.id)
     throw new Error("You're not authorized to remove this user.");
+
+  await deleteAllClassworkByClassAndUserId(
+    enrolledClass.classroomId,
+    enrolledClass.userId,
+  );
 
   const { error } = await supabase
     .from("enrolledClass")
