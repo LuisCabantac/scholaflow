@@ -96,7 +96,7 @@ export default function PeopleSection({
             />
           )}
         </div>
-        <ul className="users__list rounded-md border-2 border-[#dbe4ff]">
+        <ul className="users__list rounded-md">
           {enrolledUsersIsPending ? (
             <>
               {Array(11)
