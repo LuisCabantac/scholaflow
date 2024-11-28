@@ -3,7 +3,7 @@ export default function UserListsLoading() {
     <>
       <tr className="bg-[#f3f6ff]">
         <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
-          <div className="h-8 w-8 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+          <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
           <div className="h-5 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>
         </td>
         <td data-cell="Email:" className="px-4 py-2">
@@ -38,8 +38,8 @@ export default function UserListsLoading() {
       </tr>
       <tr className="bg-[#f3f6ff]">
         <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
-          <div className="h-8 w-8 rounded-md bg-[#dbe4ff]"></div>
-          <div className="h-5 w-28 rounded-md bg-[#dbe4ff]"></div>
+          <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+          <div className="h-5 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>
         </td>
         <td data-cell="Email:" className="px-4 py-2">
           <div className="h-4 w-36 animate-pulse rounded-md bg-[#dbe4ff]"></div>
@@ -73,8 +73,8 @@ export default function UserListsLoading() {
       </tr>
       <tr className="bg-[#f3f6ff]">
         <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
-          <div className="h-8 w-8 rounded-md bg-[#dbe4ff]"></div>
-          <div className="h-5 w-28 rounded-md bg-[#dbe4ff]"></div>
+          <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+          <div className="h-5 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>
         </td>
         <td data-cell="Email:" className="px-4 py-2">
           <div className="h-4 w-36 animate-pulse rounded-md bg-[#dbe4ff]"></div>
@@ -108,8 +108,8 @@ export default function UserListsLoading() {
       </tr>
       <tr className="bg-[#f3f6ff]">
         <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
-          <div className="h-8 w-8 rounded-md bg-[#dbe4ff]"></div>
-          <div className="h-5 w-28 rounded-md bg-[#dbe4ff]"></div>
+          <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+          <div className="h-5 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>
         </td>
         <td data-cell="Email:" className="px-4 py-2">
           <div className="h-4 w-36 animate-pulse rounded-md bg-[#dbe4ff]"></div>
