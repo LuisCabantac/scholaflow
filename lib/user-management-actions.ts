@@ -247,6 +247,8 @@ export async function closeAccount(userId: string): Promise<void> {
     }
   }
 
+  await removeRoleRequestByUserId(userId);
+
   if (!user.avatar.startsWith("https://lh3.googleusercontent.com/")) {
     const filePath = extractAvatarFilePath(user.avatar);
     await deleteFileFromBucket("avatars", filePath);
@@ -373,6 +375,22 @@ export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
     .delete()
     .eq("userId", request.userId)
     .eq("id", request.id);
+
+  if (error) throw new Error(error.message);
+}
+
+async function removeRoleRequestByUserId(userId: string): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  const userRequest = await getRoleRequest(userId);
+
+  if (!userRequest) throw new Error("Request does not exist.");
+
+  const { error } = await supabase
+    .from("roleRequests")
+    .delete()
+    .eq("userId", userId);
 
   if (error) throw new Error(error.message);
 }
