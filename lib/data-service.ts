@@ -728,6 +728,24 @@ export async function getRoleRequest(
   return data;
 }
 
+export async function getAllRoleRequest(
+  status: "pending" | "rejected",
+): Promise<IRoleRequest[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  if (session.user.role !== "admin") return null;
+
+  const { data } = await supabase
+    .from("roleRequests")
+    .select("*")
+    .eq("status", status)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
 export async function generateVerificationToken(email: string) {
   const token = generateOTP();
   const expires = new Date().getTime() + 1000 * 60 * 60 * 1;

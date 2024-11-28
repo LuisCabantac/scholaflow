@@ -9,10 +9,12 @@ import Button from "@/components/Button";
 
 export interface IRoleRequest {
   id: string;
+  avatar: string;
   userId: string;
-  created_at: string;
   userName: string;
-  status: "pending" | "approved";
+  userEmail: string;
+  created_at: string;
+  status: "pending" | "rejected";
 }
 
 export default function RoleRequestDialog({
@@ -90,6 +92,18 @@ export default function RoleRequestDialog({
                 type="text"
                 name="userName"
                 defaultValue={session.user.name}
+                hidden
+              />
+              <input
+                type="text"
+                name="userEmail"
+                defaultValue={session.user.email}
+                hidden
+              />
+              <input
+                type="text"
+                name="avatar"
+                defaultValue={session.user.image}
                 hidden
               />
               <div className="flex items-center justify-end gap-2">

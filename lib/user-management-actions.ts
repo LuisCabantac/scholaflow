@@ -20,6 +20,7 @@ import {
   uploadAttachments,
 } from "@/lib/classroom-actions";
 import { deleteNote } from "@/lib/notes-actions";
+import { IRoleRequest } from "@/components/RoleRequestDialog";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -293,6 +294,8 @@ export async function roleRequest(formData: FormData) {
   const request = {
     userId: formData.get("userId"),
     userName: formData.get("userName"),
+    userEmail: formData.get("userEmail"),
+    avatar: formData.get("avatar"),
   };
 
   const { error } = await supabase.from("roleRequests").insert([request]);
@@ -306,4 +309,87 @@ export async function roleRequest(formData: FormData) {
     message:
       "Your request to become a Teacher has been submitted. The status of your request will be updated here.",
   };
+}
+
+export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  if (session.user.role !== "admin")
+    throw new Error("Only an admin can perform this action.");
+
+  const userRequest = await getRoleRequest(request.userId);
+
+  if (!userRequest) throw new Error("Request does not exist.");
+
+  await setTeacherUserRole(request.userId);
+
+  const { error } = await supabase
+    .from("roleRequests")
+    .delete()
+    .eq("userId", request.userId)
+    .eq("id", request.id);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  if (session.user.role !== "admin")
+    throw new Error("Only an admin can perform this action.");
+
+  const userRequest = await getRoleRequest(request.userId);
+
+  if (!userRequest) throw new Error("Request does not exist.");
+
+  const rejectedRequest = {
+    status: "rejected",
+  };
+
+  const { error } = await supabase
+    .from("roleRequests")
+    .update([rejectedRequest])
+    .eq("userId", request.userId)
+    .eq("id", request.id);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  if (session.user.role !== "admin")
+    throw new Error("Only an admin can perform this action.");
+
+  const userRequest = await getRoleRequest(request.userId);
+
+  if (!userRequest) throw new Error("Request does not exist.");
+
+  const { error } = await supabase
+    .from("roleRequests")
+    .delete()
+    .eq("userId", request.userId)
+    .eq("id", request.id);
+
+  if (error) throw new Error(error.message);
+}
+
+async function setTeacherUserRole(userId: string): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  if (session.user.role !== "admin")
+    throw new Error("Only an admin can perform this action.");
+
+  const updatedUserRole = { role: "teacher" };
+
+  const { error } = await supabase
+    .from("users")
+    .update([updatedUserRole])
+    .eq("id", userId);
+
+  if (error) throw new Error(error.message);
 }
