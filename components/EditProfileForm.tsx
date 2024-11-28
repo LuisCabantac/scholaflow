@@ -9,16 +9,19 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import { IUser } from "@/components/UserManagementSection";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function EditProfileForm({
   user,
   session,
+  onCloseProfile,
   onToggleShowEditProfileForm,
   handleSetShowEditProfileForm,
 }: {
   user: IUser | null | undefined;
   session: ISession;
   onToggleShowEditProfileForm: () => void;
+  onCloseProfile: (userId: string) => Promise<void>;
   handleSetShowEditProfileForm: Dispatch<SetStateAction<boolean>>;
 }) {
   const queryClient = useQueryClient();
@@ -32,6 +35,7 @@ export default function EditProfileForm({
   );
   const [showPassword, setShowPassword] = useState(false);
   const [validPassword, setValidPassword] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleSubmitEditProfile(event: React.FormEvent) {
     event.preventDefault();
@@ -75,6 +79,10 @@ export default function EditProfileForm({
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     setShowPassword(!showPassword);
+  }
+
+  function handleToggleShowConfirmation() {
+    setShowConfirmation(!showConfirmation);
   }
 
   useClickOutsideHandler(
@@ -244,6 +252,16 @@ export default function EditProfileForm({
                 </button>
               </div>
             </div>
+            <div className="flex justify-start">
+              <button
+                type="button"
+                disabled={isLoading}
+                className="flex h-10 items-center gap-1 rounded-md bg-[#f03e3e] px-4 py-2 text-sm font-medium text-[#edf2ff] shadow-sm transition-colors hover:bg-[#c92a2a] disabled:cursor-not-allowed"
+                onClick={handleToggleShowConfirmation}
+              >
+                Close account
+              </button>
+            </div>
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
             {!isLoading && (
@@ -256,6 +274,20 @@ export default function EditProfileForm({
             </Button>
           </div>
         </form>
+        {showConfirmation && (
+          <ConfirmationModal
+            type="delete"
+            btnLabel="Close account"
+            isLoading={isLoading}
+            handleCancel={handleToggleShowConfirmation}
+            handleAction={() => {
+              setIsLoading(true);
+              onCloseProfile(session.user.id);
+            }}
+          >
+            Are you sure your want to close your account?
+          </ConfirmationModal>
+        )}
       </div>
     </div>
   );

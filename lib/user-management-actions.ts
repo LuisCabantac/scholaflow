@@ -1,16 +1,32 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { extractAvatarFilePath, hasUser } from "@/lib/utils";
-import { getUserByEmail, getUserByUserId } from "@/lib/data-service";
-import { uploadAttachments } from "@/lib/classroom-actions";
+import {
+  getAllClassesByTeacherId,
+  getAllEnrolledClassesByUserId,
+  getAllNotesBySession,
+  getUserByEmail,
+  getUserByUserId,
+} from "@/lib/data-service";
+import {
+  deleteAllMessagesByUserId,
+  deleteClass,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
+  uploadAttachments,
+} from "@/lib/classroom-actions";
+import { deleteNote } from "@/lib/notes-actions";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export async function createUser(newGuest: object) {
+export async function createUser(newGuest: object): Promise<{
+  success: boolean;
+  message: string;
+}> {
   const session = await auth();
   if (!hasUser(session))
     return { success: false, message: "You must be logged in." };
@@ -30,7 +46,10 @@ export async function createUser(newGuest: object) {
   return { success: true, message: "User created successfully!" };
 }
 
-export async function updateUser(formData: FormData) {
+export async function updateUser(formData: FormData): Promise<{
+  success: boolean;
+  message: string;
+}> {
   const session = await auth();
   if (!hasUser(session))
     return { success: false, message: "You must be logged in." };
@@ -84,7 +103,10 @@ export async function updateUser(formData: FormData) {
   };
 }
 
-export async function updateProfile(formData: FormData) {
+export async function updateProfile(formData: FormData): Promise<{
+  success: boolean;
+  message: string;
+}> {
   const session = await auth();
   if (!hasUser(session))
     return { success: false, message: "You must be logged in." };
@@ -176,16 +198,62 @@ export async function updateProfile(formData: FormData) {
   };
 }
 
-export async function deleteUser(userId: string) {
+export async function deleteUser(userId: string): Promise<void> {
   const session = await auth();
   if (!hasUser(session)) throw new Error("You must be logged in.");
 
-  if (session.user.role !== "admin")
+  if (!(session.user.role === "admin" || session.user.id === userId))
     throw new Error("You need be an admin to delete this user.");
+
+  const user = await getUserByUserId(userId);
+  if (!user) throw new Error("User does not exist.");
 
   const { error } = await supabase.from("users").delete().eq("id", userId);
 
   if (error) throw new Error(error.message);
+}
+
+export async function closeAccount(userId: string): Promise<void> {
+  const session = await auth();
+  if (!hasUser(session)) throw new Error("You must be logged in.");
+
+  const user = await getUserByUserId(userId);
+  if (!user) throw new Error("User does not exist.");
+
+  await deleteAllMessagesByUserId(userId);
+
+  const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
+  if (enrolledClasses?.length) {
+    for (const enrolledClass of enrolledClasses) {
+      await deleteEnrolledClassbyClassAndEnrolledClassId(
+        enrolledClass.id,
+        enrolledClass.classroomId,
+      );
+    }
+  }
+
+  const createdClasses = await getAllClassesByTeacherId(userId);
+  if (createdClasses?.length) {
+    for (const createdClass of createdClasses) {
+      await deleteClass(createdClass.classroomId);
+    }
+  }
+
+  const allNotes = await getAllNotesBySession();
+  if (allNotes?.length) {
+    for (const note of allNotes) {
+      await deleteNote(note.id);
+    }
+  }
+
+  if (!user.avatar.startsWith("https://lh3.googleusercontent.com/")) {
+    const filePath = extractAvatarFilePath(user.avatar);
+    await deleteFileFromBucket("avatars", filePath);
+  }
+
+  await deleteUser(user.id);
+
+  return redirect("/");
 }
 
 export async function deleteFileFromBucket(

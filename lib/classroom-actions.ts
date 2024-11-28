@@ -26,6 +26,7 @@ import {
   getAllEnrolledClassesByClassAndSessionId,
   getAllEnrolledClassesByClassId,
   getAllMessagesByClassId,
+  getAllMessagesByUserId,
   getAllPrivateCommentsByStreamId,
   getClassByClassId,
   getClassStreamByStreamId,
@@ -330,6 +331,31 @@ export async function deleteClass(classId: string) {
   return;
 }
 
+export async function deleteAllMessagesByUserId(userId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const messages = await getAllMessagesByUserId(userId);
+
+  if (!messages || !messages.length) return;
+
+  const attachments = messages.map((chat) => chat.attachment).flat();
+
+  if (attachments.length) {
+    const chatAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractMessagesFilePath(file),
+    );
+    await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
+  }
+
+  const { error } = await supabase.from("chat").delete().eq("author", userId);
+
+  if (error) throw new Error(error.message);
+
+  return;
+}
+
 export async function deleteAllClassworkByClassAndUserId(
   classId: string,
   userId: string,
@@ -386,7 +412,12 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
   const classroom = await getClassByClassId(classId);
   if (!classroom) throw new Error("This class doesn't exist.");
 
-  if (classroom.teacherId !== session.user.id)
+  if (
+    !(
+      classroom.teacherId === session.user.id ||
+      enrolledClass.userId === session.user.id
+    )
+  )
     throw new Error("You're not authorized to remove this user.");
 
   await deleteAllClassworkByClassAndUserId(

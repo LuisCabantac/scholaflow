@@ -602,6 +602,22 @@ export async function getAllMessagesByClassId(
   return data;
 }
 
+export async function getAllMessagesByUserId(
+  userId: string,
+): Promise<IChat[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const user = await getUserByUserId(userId);
+
+  if (!user) return null;
+
+  const { data } = await supabase.from("chat").select("*").eq("author", userId);
+
+  return data;
+}
+
 export async function getClassTopicByTopicId(
   topicId: string,
 ): Promise<ITopic | null> {

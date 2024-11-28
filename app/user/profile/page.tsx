@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import { getUserByEmail, getUserByUserId } from "@/lib/data-service";
+import { closeAccount } from "@/lib/user-management-actions";
 
 import ProfileSection from "@/components/ProfileSection";
 
@@ -30,5 +31,16 @@ export default async function Page() {
     return user;
   }
 
-  return <ProfileSection session={session} onGetUser={handleGetUser} />;
+  async function handleCloseProfile(userId: string) {
+    "use server";
+    await closeAccount(userId);
+  }
+
+  return (
+    <ProfileSection
+      session={session}
+      onGetUser={handleGetUser}
+      onCloseProfile={handleCloseProfile}
+    />
+  );
 }

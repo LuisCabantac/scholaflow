@@ -3,18 +3,21 @@
 import { useState } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+
+import { ISession } from "@/lib/auth";
 
 import { IUser } from "@/components/UserManagementSection";
 import EditProfileForm from "@/components/EditProfileForm";
-import { useQuery } from "@tanstack/react-query";
-import { ISession } from "@/lib/auth";
 
 export default function ProfileSection({
   session,
   onGetUser,
+  onCloseProfile,
 }: {
   session: ISession;
   onGetUser: (email: string) => Promise<IUser | null>;
+  onCloseProfile: (userId: string) => Promise<void>;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
 
@@ -108,6 +111,7 @@ export default function ProfileSection({
         <EditProfileForm
           user={user}
           session={session}
+          onCloseProfile={onCloseProfile}
           handleSetShowEditProfileForm={setShowEditProfileForm}
           onToggleShowEditProfileForm={handleToggleShowEditProfileForm}
         />
