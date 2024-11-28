@@ -17,7 +17,7 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 - **Intuitive Interface:** Minimize the learning curve with a familiar design.
 - **Efficient Workflow:** Streamline tasks and communication for both teachers and students
 
-## Tech stack
+## Built with
 
 - [Next.js 14](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
