@@ -391,7 +391,7 @@ export default function NoteForm({
             type="delete"
             btnLabel="Delete"
             isLoading={deleteNoteIsPending}
-            handleCancel={onToggleShowNotesForm}
+            handleCancel={handleToggleShowConfirmation}
             handleAction={() => onDeleteNote(note?.id ?? "")}
           >
             Are you sure your want remove this note?
