@@ -2,6 +2,8 @@
 
 ScholaFlow is an open-source learning management system (LMS) that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
 
+![prismify-render-1732824603368](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
+
 ## Key Differences:
 
 - **Visual Feedback:** Embed images directly in comments. Because sometimes a picture is worth a thousand words (especially in feedback).
@@ -15,7 +17,7 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 - **Intuitive Interface:** Minimize the learning curve with a familiar design.
 - **Efficient Workflow:** Streamline tasks and communication for both teachers and students
 
-## Built with
+## Tech stack
 
 - [Next.js 14](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
@@ -78,15 +80,6 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 ## Contributing
 
 We welcome contributions to ScholaFlow! Whether you're fixing bugs, adding new features, or improving documentation, your help is valuable.
-
-**How to Contribute:**
-
-1. **Fork the Repository:** Fork the ScholaFlow repository to your GitHub account.
-2. **Create a Branch:** Create a new branch for your feature or bug fix: `git checkout -b feature/your-feature-name` or `git checkout -b bugfix/bug-description`.
-3. **Make Changes:** Implement your changes, following the coding style guidelines (see below).
-4. **Commit Your Changes:** Commit your changes with clear and descriptive commit messages: `git commit -m "Add feature: Your feature description"`.
-5. **Push to Your Fork:** Push your changes to your forked repository: `git push origin feature/your-feature-name`.
-6. **Create a Pull Request:** Open a pull request against the main branch of the ScholaFlow repository. Provide a detailed description of your changes and why they are necessary.
 
 **Reporting Bugs:**
 
