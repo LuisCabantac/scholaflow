@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -254,7 +253,7 @@ export async function closeAccount(userId: string): Promise<void> {
 
   await deleteUser(user.id);
 
-  return redirect("/");
+  return;
 }
 
 export async function deleteFileFromBucket(
