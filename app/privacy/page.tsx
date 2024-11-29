@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "This Privacy Policy outlines how we collects, uses, and protects your personal information when you use our services. Learn about your rights and how we ensure your data privacy. We explain what data we collect, why we collect it, and how you can control your information.",
+    "This Privacy Policy outlines how we collects, uses, and protects your personal information when you use our website/services. Learn about your rights and how we ensure your data privacy. We explain what data we collect, why we collect it, and how you can control your information.",
 };
 
 export default function Page() {
