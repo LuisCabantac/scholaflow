@@ -18,7 +18,7 @@ export default function Features({
   return (
     <section
       ref={featuresSectionRef}
-      className="mx-6 mb-36 grid gap-6 pt-36 md:mx-24 md:gap-8"
+      className="mx-6 mb-36 grid gap-6 md:mx-24 md:gap-8"
     >
       <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
         <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
