@@ -6,7 +6,7 @@ import commentAvatar3 from "@/public/landing_page/comment-3-avatar.jpg";
 
 export default function HowItWorks() {
   return (
-    <section className="mx-6 my-36 grid items-center justify-center gap-6 md:mx-0 md:gap-8">
+    <section className="mx-6 mb-12 mt-36 grid items-center justify-center gap-6 md:mx-0 md:gap-8">
       <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
         <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           How it works
