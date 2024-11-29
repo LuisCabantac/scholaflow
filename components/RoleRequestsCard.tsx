@@ -1,10 +1,12 @@
 import Image from "next/image";
-
-import { IRoleRequest } from "@/components/RoleRequestDialog";
-import Button from "@/components/Button";
 import { UseMutateFunction } from "@tanstack/react-query";
 
+import { IRoleRequest } from "@/components/RoleRequestDialog";
+import SpinnerMini from "@/components/SpinnerMini";
+import { StatusType } from "@/components/RoleRequestsSection";
+
 export default function RoleRequestsCard({
+  status,
   request,
   approveRequest,
   rejectRequest,
@@ -13,6 +15,7 @@ export default function RoleRequestsCard({
   rejectRequestIsPending,
   removeRequestIsPending,
 }: {
+  status: StatusType;
   request: IRoleRequest;
   approveRequest: UseMutateFunction<void, Error, IRoleRequest, unknown>;
   rejectRequest: UseMutateFunction<void, Error, IRoleRequest, unknown>;
@@ -41,41 +44,44 @@ export default function RoleRequestsCard({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <Button
-          type="primary"
-          bg="bg-[#37b24d] hover:bg-[#2f9e44]"
-          isLoading={
+        <button
+          type="button"
+          className="flex h-10 items-center gap-1 rounded-md bg-[#37b24d] px-4 py-2 font-medium text-[#edf2ff] shadow-sm transition-colors hover:bg-[#2f9e44] disabled:cursor-not-allowed disabled:bg-[#2b8a3e] md:gap-2"
+          disabled={
             approveRequestIsPending ||
             rejectRequestIsPending ||
             removeRequestIsPending
           }
           onClick={() => approveRequest(request)}
         >
-          Approve
-        </Button>
-        <Button
-          type="primary"
-          bg="bg-[#f03e3e] hover:bg-[#c92a2a]"
-          isLoading={
-            approveRequestIsPending ||
-            rejectRequestIsPending ||
-            removeRequestIsPending
-          }
-          onClick={() => rejectRequest(request)}
-        >
-          Reject
-        </Button>
-        <Button
-          type="secondary"
-          isLoading={
+          {approveRequestIsPending && <SpinnerMini />}Approve
+        </button>
+        {status === "pending" && (
+          <button
+            type="button"
+            className="flex h-10 items-center gap-1 rounded-md bg-[#f03e3e] px-4 py-2 font-medium text-[#edf2ff] shadow-sm transition-colors hover:bg-[#e03131] disabled:cursor-not-allowed disabled:bg-[#c92a2a] md:gap-2"
+            disabled={
+              approveRequestIsPending ||
+              rejectRequestIsPending ||
+              removeRequestIsPending
+            }
+            onClick={() => rejectRequest(request)}
+          >
+            {rejectRequestIsPending && <SpinnerMini />}Reject
+          </button>
+        )}
+        <button
+          type="button"
+          className="flex h-10 items-center gap-1 rounded-md bg-[#e1e7f5] px-4 py-2 font-medium text-[#22317c] shadow-sm transition-colors hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6] md:gap-2"
+          disabled={
             approveRequestIsPending ||
             rejectRequestIsPending ||
             removeRequestIsPending
           }
           onClick={() => removeRequest(request)}
         >
-          Remove
-        </Button>
+          {removeRequestIsPending && <SpinnerMini />}Remove
+        </button>
       </div>
     </li>
   );

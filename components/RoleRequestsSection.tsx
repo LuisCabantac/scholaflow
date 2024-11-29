@@ -16,7 +16,7 @@ import noRequest from "@/public/app/no-role-requests.svg";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
 import RoleRequestsCard from "@/components/RoleRequestsCard";
 
-type StatusType = "pending" | "rejected";
+export type StatusType = "pending" | "rejected";
 
 export default function RoleRequestsSection({
   onGetAllRequests,
@@ -133,6 +133,11 @@ export default function RoleRequestsSection({
               {requests?.map((request) => (
                 <RoleRequestsCard
                   key={request.id}
+                  status={
+                    searchParams.get("sort") === null
+                      ? "pending"
+                      : (searchParams.get("sort") as StatusType)
+                  }
                   request={request}
                   approveRequest={approveRequest}
                   rejectRequest={rejectRequest}
