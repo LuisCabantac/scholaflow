@@ -8,6 +8,20 @@ import "@/styles/globals.css";
 export const metadata: Metadata = {
   title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
   description: "Your All-in-One Learning Platform.",
+  openGraph: {
+    type: "website",
+    url: "https://scholaflow.vercel.app",
+    title: "ScholaFlow",
+    description: "Your All-in-One Learning Platform.",
+    siteName: "ScholaFlow",
+    images: [
+      {
+        url: "https://github.com/user-attachments/assets/45ab4040-3e8b-4aea-9925-a944167168b8",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 
 const beVietnamPro = Be_Vietnam_Pro({
