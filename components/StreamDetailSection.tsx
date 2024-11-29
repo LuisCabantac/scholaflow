@@ -266,7 +266,7 @@ export default function StreamDetailSection({
                   </div>
                   <div>
                     <p className="font-medium">{stream.authorName}</p>
-                    <p className="flex items-center gap-1 text-[#616572]">
+                    <p className="flex items-center gap-1 text-xs text-[#616572]">
                       Posted{" "}
                       {isToday(stream.created_at)
                         ? "today"
