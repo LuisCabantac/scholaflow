@@ -15,7 +15,8 @@ import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
-  description: "Your All-in-One Learning Platform.",
+  description:
+    "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
 };
 
 export default async function RootLayout({

@@ -1,6 +1,10 @@
 import LandingPage from "@/components/LandingPage";
 import Nav from "@/components/Nav";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "ScholaFlow - Your All-in-One Learning Platform",
+};
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">

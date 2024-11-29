@@ -6,13 +6,18 @@ import Provider from "./Provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
-  description: "Your All-in-One Learning Platform.",
+  title: {
+    template: "%s | ScholaFlow",
+    default: "ScholaFlow",
+  },
+  description:
+    "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
   openGraph: {
     type: "website",
     url: "https://scholaflow.vercel.app",
     title: "ScholaFlow",
-    description: "Your All-in-One Learning Platform.",
+    description:
+      "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
     siteName: "ScholaFlow",
     images: [
       {
