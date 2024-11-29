@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://scholaflow.vercel.app",
-    title: "ScholaFlow",
+    title: "ScholaFlow - Your All-in-One Learning Platform",
     description:
       "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
     siteName: "ScholaFlow",
