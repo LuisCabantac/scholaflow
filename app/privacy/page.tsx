@@ -2,6 +2,7 @@ import { Metadata } from "next";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -14,6 +15,23 @@ export default function Page() {
     <section className="relative min-h-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
       <Nav showButton={true} />
       <div className="mx-4 mb-4 grid gap-4 md:mx-8 md:mb-8">
+        <Link href="/">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+        </Link>
+
         <div className="grid gap-1">
           <h1 className="text-2xl font-semibold">Privacy Policy</h1>
           <p className="text-base">
