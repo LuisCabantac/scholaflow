@@ -77,54 +77,55 @@ export default function ProfileSection({
           {userIsPending ? (
             <div className="h-6 w-12 animate-pulse rounded-md bg-[#dbe4ff]"></div>
           ) : (
-            <>
-              {user?.role === "teacher" ? (
-                <p className="role teacher flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase">
-                  {user?.role}
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleToggleShowRoleRequest}
-                  className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "student" ? "student" : "guest"} `}
-                >
-                  {user?.role}
-                </button>
-              )}
-            </>
+            <p
+              className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "student" ? "student" : user?.role === "teacher" ? "teacher" : "guest"}`}
+            >
+              {user?.role}
+            </p>
           )}
         </div>
-        <div className="grid gap-2 md:flex md:items-center">
-          <div>
-            {userIsPending ? (
-              <div className="mb-1 h-[0.875rem] w-48 animate-pulse rounded-md bg-[#dbe4ff]"></div>
-            ) : (
-              <p className="font-medium">{user?.email}</p>
-            )}
-            <h4 className="text-xs font-medium text-[#616572]">Email</h4>
+        <div className="flex flex-col items-start justify-start gap-2 md:flex-row md:items-center md:justify-between">
+          <div className="grid gap-2 md:flex md:items-center">
+            <div>
+              {userIsPending ? (
+                <div className="mb-1 h-[0.875rem] w-48 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              ) : (
+                <p className="font-medium">{user?.email}</p>
+              )}
+              <h4 className="text-xs font-medium text-[#616572]">Email</h4>
+            </div>
+            <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
+            <div>
+              {userIsPending ? (
+                <div className="mb-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              ) : (
+                <p className="font-medium">
+                  {user?.schoolName ? user?.schoolName : "N/A"}
+                </p>
+              )}
+              <h4 className="text-xs font-medium text-[#616572]">School</h4>
+            </div>
+            <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
+            <div>
+              {userIsPending ? (
+                <div className="mb-1 h-[0.875rem] w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              ) : (
+                <p className="font-medium">
+                  {format(user?.created_at ?? "", "MMMM dd, yyyy")}
+                </p>
+              )}
+              <h4 className="text-xs font-medium text-[#616572]">Joined</h4>
+            </div>
           </div>
-          <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
-          <div>
-            {userIsPending ? (
-              <div className="mb-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
-            ) : (
-              <p className="font-medium">
-                {user?.schoolName ? user?.schoolName : "N/A"}
-              </p>
-            )}
-            <h4 className="text-xs font-medium text-[#616572]">School</h4>
-          </div>
-          <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
-          <div>
-            {userIsPending ? (
-              <div className="mb-1 h-[0.875rem] w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
-            ) : (
-              <p className="font-medium">
-                {format(user?.created_at ?? "", "MMMM dd, yyyy")}
-              </p>
-            )}
-            <h4 className="text-xs font-medium text-[#616572]">Joined</h4>
-          </div>
+          {!userIsPending && session.user.role !== "teacher" && (
+            <button
+              type="button"
+              onClick={handleToggleShowRoleRequest}
+              className="font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763]"
+            >
+              Switch to teacher role
+            </button>
+          )}
         </div>
       </div>
       {showEditProfileForm && (
