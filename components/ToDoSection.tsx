@@ -27,12 +27,12 @@ export default function ToDoSection({
   const searchParams = useSearchParams();
 
   const { data: enrolledClassworks } = useQuery({
-    queryKey: ["enrolledClassesClassworks"],
+    queryKey: [`enrolledClassesClassworks--${session.user.id}`],
     queryFn: () => onGetAllEnrolledClassesClassworks(session.user.id),
   });
 
   const { data: classworks } = useQuery({
-    queryKey: ["classworks"],
+    queryKey: [`classworks--${session.user.id}`],
     queryFn: () => onGetAllClassworks(session.user.id),
   });
 
