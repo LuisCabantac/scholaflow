@@ -1,5 +1,5 @@
-import { useOptimistic } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
+import { Dispatch, SetStateAction, useOptimistic } from "react";
 
 import { IUser } from "@/components/UserManagementSection";
 import UserCard from "@/components/UserCard";
@@ -8,6 +8,7 @@ export default function UserLists({
   results,
   onCheckEmail,
   handleDeleteUser,
+  onSetShowUserForm,
   deleteUserIsPending,
 }: {
   results:
@@ -16,6 +17,7 @@ export default function UserLists({
     | undefined;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   handleDeleteUser: UseMutateFunction<void, Error, string, unknown>;
+  onSetShowUserForm: Dispatch<SetStateAction<boolean>>;
   deleteUserIsPending: boolean;
 }) {
   const [optimisticUser, optimisticDelete] = useOptimistic(
@@ -39,6 +41,7 @@ export default function UserLists({
               userData={user}
               onCheckEmail={onCheckEmail}
               onDeleteUser={handleUserDelete}
+              onSetShowUserForm={onSetShowUserForm}
               deleteUserIsPending={deleteUserIsPending}
             />
           ))

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { format } from "date-fns";
 import Image from "next/image";
 
@@ -15,11 +15,13 @@ export default function UserCard({
   userData,
   onDeleteUser,
   onCheckEmail,
+  onSetShowUserForm,
   deleteUserIsPending,
 }: {
   userData: IUser;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   onDeleteUser: (userId: string) => void;
+  onSetShowUserForm: Dispatch<SetStateAction<boolean>>;
   deleteUserIsPending: boolean;
 }) {
   const { useClickOutsideHandler } = useClickOutside();
@@ -150,6 +152,7 @@ export default function UserCard({
           <UserForm
             type="edit"
             user={userData}
+            onSetShowUserForm={onSetShowUserForm}
             onCheckEmail={onCheckEmail}
             onShowUserForm={handleToggleShowUserForm}
           />

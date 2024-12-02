@@ -97,6 +97,7 @@ export default function UserManagementSection({
                 results={users}
                 onCheckEmail={onCheckEmail}
                 handleDeleteUser={deleteUser}
+                onSetShowUserForm={setShowUserForm}
                 deleteUserIsPending={deleteUserIsPending}
               />
             ) : null}
