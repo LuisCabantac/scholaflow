@@ -1,6 +1,6 @@
 # ScholaFlow
 
-ScholaFlow is an open-source learning management system (LMS) that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
+ScholaFlow is a learning management system (LMS) that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
 
 ![prismify-render-1732824603368](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
 
@@ -16,6 +16,14 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 
 - **Intuitive Interface:** Minimize the learning curve with a familiar design.
 - **Efficient Workflow:** Streamline tasks and communication for both teachers and students
+
+## Try ScholaFlow
+
+Want to experience ScholaFlow firsthand? Join our demo class:
+
+**Class Code:** `ebeqdca9`
+
+**Join Link:** [https://scholaflow.vercel.app/join-class/ebeqdca9](https://scholaflow.vercel.app/join-class/ebeqdca9)
 
 ## Built with
 
@@ -35,14 +43,6 @@ ScholaFlow offers the core functionality you expect from an LMS (assignments, gr
 - Node.js v20
 - npm or yarn
 - A Supabase account (sign up for free at [https://supabase.com/](https://supabase.com/))
-
-## Try ScholaFlow
-
-Want to experience ScholaFlow firsthand? Join our demo class:
-
-**Class Code:** `ebeqdca9`
-
-**Join Link:** [https://scholaflow.vercel.app/join-class/ebeqdca9](https://scholaflow.vercel.app/join-class/ebeqdca9)
 
 ### Installation
 
