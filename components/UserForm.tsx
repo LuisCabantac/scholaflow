@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
 import toast from "react-hot-toast";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { createUser, updateUser } from "@/lib/user-management-actions";
 
 import Button from "@/components/Button";
@@ -15,12 +16,16 @@ export default function UserForm({
   user,
   onCheckEmail,
   onShowUserForm,
+  onSetShowUserForm,
 }: {
   type: "edit" | "create";
   user?: IUser;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   onShowUserForm: () => void;
+  onSetShowUserForm: Dispatch<SetStateAction<boolean>>;
 }) {
+  const { useClickOutsideHandler } = useClickOutside();
+  const userFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [validPassword, setValidPassword] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,8 +53,8 @@ export default function UserForm({
     if (user?.email !== email) {
       const status = await onCheckEmail(formData);
       setEmailExists(status);
+      setIsLoading(false);
       if (!status) {
-        setIsLoading(false);
         toast.error("This email has already been taken.");
         return;
       }
@@ -58,8 +63,8 @@ export default function UserForm({
     const { success, message } = await (type === "create"
       ? onCreateUser(formData)
       : updateUser(formData));
+    setIsLoading(false);
     if (success) {
-      setIsLoading(false);
       toast.success(message);
       onShowUserForm();
     } else toast.error(message);
@@ -70,20 +75,52 @@ export default function UserForm({
     setShowPassword(!showPassword);
   }
 
+  useClickOutsideHandler(
+    userFormModalWrapperRef,
+    () => {
+      onSetShowUserForm(false);
+    },
+    isLoading,
+  );
+
   return (
     <div className="modal__container">
-      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[60%]">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-[#f3f6ff]"
+        ref={userFormModalWrapperRef}
+      >
         <form
-          className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] shadow-sm"
+          className="min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleCreateUser}
         >
-          <div className="flex items-center justify-between px-4 py-4">
-            <h3 className="text-xl font-medium md:text-2xl">
-              {type === "edit" ? "Edit" : "Create"} user
+          <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
+            <h3 className="text-lg font-semibold tracking-tight">
+              {type === "edit" ? "Edit " : "Create "} user
             </h3>
+            <button
+              className="disabled:cursor-not-allowed"
+              type="button"
+              disabled={isLoading}
+              onClick={onShowUserForm}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="size-5 transition-all hover:stroke-[#656b70]"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
             <input type="text" name="userId" defaultValue={user?.id} hidden />
           </div>
-          <div className="grid gap-4 px-4 pb-4">
+          <div className="grid gap-4 px-4 pb-4 md:px-8 md:pb-8">
             <div className="grid gap-2">
               <label className="text-sm font-medium">
                 Full name <span className="text-red-400">*</span>
@@ -204,14 +241,14 @@ export default function UserForm({
                 </label>
               </div>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
               {!isLoading && (
                 <Button type="secondary" onClick={onShowUserForm}>
                   Cancel
                 </Button>
               )}
               <Button type="primary" isLoading={isLoading}>
-                {type === "edit" ? "Save changes" : "Add"}
+                {type === "edit" ? "Save changes" : "Create"}
               </Button>
             </div>
           </div>

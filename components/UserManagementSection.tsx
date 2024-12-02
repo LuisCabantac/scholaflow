@@ -107,6 +107,7 @@ export default function UserManagementSection({
         <UserForm
           type="create"
           onCheckEmail={onCheckEmail}
+          onSetShowUserForm={setShowUserForm}
           onShowUserForm={handleToggleShowUserForm}
         />
       )}
