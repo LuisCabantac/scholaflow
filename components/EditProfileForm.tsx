@@ -254,26 +254,26 @@ export default function EditProfileForm({
                 </button>
               </div>
             </div>
-            <div className="flex justify-start">
-              <button
-                type="button"
-                disabled={isLoading}
-                className="flex h-10 items-center gap-1 rounded-md bg-[#f03e3e] px-4 py-2 text-sm font-medium text-[#edf2ff] shadow-sm transition-colors hover:bg-[#c92a2a] disabled:cursor-not-allowed"
-                onClick={handleToggleShowConfirmation}
-              >
-                Close account
-              </button>
-            </div>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
-            {!isLoading && (
-              <Button type="secondary" onClick={onToggleShowEditProfileForm}>
-                Cancel
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+            <button
+              type="button"
+              disabled={isLoading}
+              className="flex h-10 items-center gap-1 rounded-md bg-[#f03e3e] px-4 py-2 text-sm font-medium text-[#edf2ff] shadow-sm transition-colors hover:bg-[#c92a2a] disabled:cursor-not-allowed"
+              onClick={handleToggleShowConfirmation}
+            >
+              Close account
+            </button>
+            <div className="flex gap-2">
+              {!isLoading && (
+                <Button type="secondary" onClick={onToggleShowEditProfileForm}>
+                  Cancel
+                </Button>
+              )}
+              <Button type="primary" isLoading={isLoading}>
+                Save changes
               </Button>
-            )}
-            <Button type="primary" isLoading={isLoading}>
-              Save changes
-            </Button>
+            </div>
           </div>
         </form>
         {showConfirmation && (
