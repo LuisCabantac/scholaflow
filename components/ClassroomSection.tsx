@@ -395,14 +395,14 @@ export default function ClassroomSection({
               </p>
               <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
             </Link>
-            <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+            <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
             <Link href="/user/to-do?filter=missing">
               <p className="text-2xl font-semibold">
                 {missingClassworks?.length ?? 0}
               </p>
               <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
             </Link>
-            <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+            <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
             <Link href="/user/to-do?filter=done">
               <p className="text-2xl font-semibold">
                 {doneClassworks?.length ?? 0}
