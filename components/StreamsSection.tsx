@@ -465,11 +465,15 @@ export default function StreamsSection({
               (!optimisticStreams
                 ?.filter(
                   (stream) =>
-                    (stream.announceTo.includes(session.user.id) &&
+                    ((stream.announceTo.includes(session.user.id) &&
                       stream.announceToAll === false) ||
-                    stream.announceToAll ||
-                    stream.author === session.user.id ||
-                    classroom.teacherId === session.user.id,
+                      stream.announceToAll ||
+                      stream.author === session.user.id ||
+                      classroom.teacherId === session.user.id) &&
+                    ((stream.scheduledAt
+                      ? new Date(stream.scheduledAt) < new Date()
+                      : true) ||
+                      classroom.teacherId === session.user.id),
                 )
                 .filter((stream) =>
                   !(
