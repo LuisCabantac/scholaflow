@@ -19,6 +19,7 @@ import {
 } from "@/lib/utils";
 import {
   getAllClassStreamsByClassId,
+  getAllClassTopicsByClassId,
   getAllClassworksByClassAndUserId,
   getAllClassworksByStreamId,
   getAllClassworkStreamsByTopicId,
@@ -293,6 +294,14 @@ export async function deleteClass(classId: string) {
     if (streams?.length) {
       for (const stream of streams) {
         await deleteClassStreamPost(stream.id);
+      }
+    }
+
+    const topics = await getAllClassTopicsByClassId(classId);
+
+    if (topics?.length) {
+      for (const topic of topics) {
+        await deleteTopic(topic.topicId);
       }
     }
 
