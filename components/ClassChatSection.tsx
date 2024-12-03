@@ -204,7 +204,7 @@ export default function ClassChatSection({
       </div>
       <div className="flex w-full flex-col rounded-md md:border md:border-[#dddfe6] md:bg-[#f3f6ff] md:p-4">
         <div className="relative pb-16">
-          <ul className="grid h-[75dvh] items-start gap-2 overflow-auto rounded-md md:h-[65dvh]">
+          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
               <>
                 <li className="justify-self-end">
@@ -239,8 +239,7 @@ export default function ClassChatSection({
                 </li>
               </>
             )}
-            {messages?.length &&
-              !messagesIsPending &&
+            {messages?.length && !messagesIsPending ? (
               messages.map((message, index) => {
                 const showAvatar =
                   index === messages.length - 1 ||
@@ -335,13 +334,12 @@ export default function ClassChatSection({
                     </div>
                   </li>
                 );
-              })}
-            {!messagesIsPending && !messages && (
+              })
+            ) : !messagesIsPending && !messages?.length ? (
               <li className="flex items-center justify-center">
                 No messages has been sent yet.
               </li>
-            )}
-
+            ) : null}
             <li ref={messagesEndRef} className="h-0 w-0"></li>
           </ul>
           <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-[#f3f6ff] md:pt-0">
