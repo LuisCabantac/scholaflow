@@ -2,7 +2,6 @@ import { Metadata } from "next";
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -14,26 +13,10 @@ export default function Page() {
   return (
     <section className="relative min-h-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
       <Nav showButton={true} />
-      <div className="mx-4 mb-4 grid gap-4 md:mx-8 md:mb-8">
-        <Link href="/">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="size-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
-          </svg>
-        </Link>
-
+      <div className="mx-4 mb-4 grid gap-5 md:mx-8 md:mb-8">
         <div className="grid gap-1">
           <h1 className="text-2xl font-semibold">Privacy Policy</h1>
+          <p className="mb-1 text-[#616572]">Last updated December 04, 2024</p>
           <p className="text-base">
             This Privacy Policy describes how we collects, uses, and shares your
             personal information when you use our free learning management
@@ -41,7 +24,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">Information We Collect</h4>
+          <h4 className="mb-1 text-xl font-semibold">Information We Collect</h4>
           <p className="text-base">
             We collect personal information, including your name, email address,
             profile picture, and institutional affiliation. Instructors may
@@ -58,7 +41,9 @@ export default function Page() {
         </div>
 
         <div>
-          <h4 className="text-lg font-semibold">How We Use Your Information</h4>
+          <h4 className="mb-1 text-xl font-semibold">
+            How We Use Your Information
+          </h4>
           <p className="text-base">
             We use your information to operate and improve the Service,
             personalize your experience, communicate with you, and ensure
@@ -66,7 +51,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">
+          <h4 className="mb-1 text-xl font-semibold">
             How We Share Your Information
           </h4>
           <p className="text-base">
@@ -82,7 +67,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">Security</h4>
+          <h4 className="mb-1 text-xl font-semibold">Security</h4>
           <p className="text-base">
             We implement industry-standard security measures to protect your
             data. However, no method of transmission over the internet or
@@ -90,7 +75,9 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">Children&apos;s Privacy</h4>
+          <h4 className="mb-1 text-xl font-semibold">
+            Children&apos;s Privacy
+          </h4>
           <p className="text-base">
             Our Service is not intended for children under 13. We do not
             knowingly collect personal information from children. If you believe
@@ -98,7 +85,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">
+          <h4 className="mb-1 text-xl font-semibold">
             Your Choices & Data Deletion
           </h4>
           <p className="text-base">
@@ -108,7 +95,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">
+          <h4 className="mb-1 text-xl font-semibold">
             Changes to this Privacy Policy
           </h4>
           <p className="text-base">
@@ -117,7 +104,7 @@ export default function Page() {
           </p>
         </div>
         <div>
-          <h4 className="text-lg font-semibold">Contact Us</h4>
+          <h4 className="mb-1 text-xl font-semibold">Contact Us</h4>
           <p className="text-base">
             If you have any questions or concerns about this Privacy Policy, you
             can contact us at{" "}
