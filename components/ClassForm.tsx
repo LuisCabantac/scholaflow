@@ -349,7 +349,7 @@ export default function ClassForm({
             )}
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
-            {type === "edit" ? (
+            {type === "edit" && !isLoading ? (
               <Button
                 type="primary"
                 bg="bg-[#f03e3e] hover:bg-[#c92a2a] text-[#fff5f5] hover:text-[#ffe3e3]"
