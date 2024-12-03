@@ -18,27 +18,23 @@ export default function Features({
   return (
     <section
       ref={featuresSectionRef}
-      className="mx-6 mb-36 grid gap-6 pt-24 md:mx-24 md:gap-8"
+      className="mx-8 mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24"
     >
-      <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
-        <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
-          Features
-        </h2>
-        <p className="px-2 text-center text-lg">
-          Streamline your academic workflow with intuitive features built for
-          students and educators.
-        </p>
-      </div>
-      <div className="flex w-full flex-col items-center justify-center gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
-          <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
-            <h4 className="text-lg font-semibold">Visual feedback</h4>
-            <p className="text-base">
-              Go beyond text. Embed images directly in comments and provide
-              clearer, more nuanced feedback that truly connects with students.
-            </p>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
+      <h2 className="text-center text-[#616572]">Features</h2>
+      <div className="grid w-full items-start gap-x-12 gap-y-4 md:grid-cols-2 md:gap-y-24">
+        <div className="flex flex-col items-start gap-2">
+          <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
+            Make feedback more impactful
+          </p>
+          <h4 className="text-3xl font-medium md:text-4xl">Visual feedback</h4>
+          <p>
+            Streamline your academic workflow with powerful, intuitive tools
+            designed to meet the needs of both students and educators. From
+            feedback to communication, everything you need is built right in.
+          </p>
+        </div>
+        <div className="relative overflow-hidden">
+          <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
               <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
               <div className="mx-3 mt-1 flex cursor-text items-center justify-between gap-2 rounded-md border border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
@@ -136,16 +132,23 @@ export default function Features({
               </div>
             </div>
           </div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/60 to-transparent"></div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
-          <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
-            <h4 className="text-lg font-semibold">Centralized communication</h4>
-            <p className="text-base">
-              Stay effortlessly connected and focused with integrated group
-              chat, completely eliminating the need for external messaging apps.
-            </p>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
+        <div className="mt-12 flex flex-col items-start gap-2 md:order-2 md:mt-0">
+          <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
+            All conversations in one place
+          </p>
+          <h4 className="text-3xl font-medium md:text-4xl">
+            Centralized communication
+          </h4>
+          <p>
+            Say goodbye to juggling multiple platforms. With integrated group
+            chat, you can discuss projects, answer questions, and share updates
+            without the distraction of external messaging apps.
+          </p>
+        </div>
+        <div className="relative overflow-hidden md:order-1">
+          <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] pr-3 shadow-sm">
               <div className="ml-3 mt-3 grid gap-0.5">
                 <div className="flex">
@@ -232,59 +235,64 @@ export default function Features({
                     </svg>
                   </div>
                 </div>
-              </div>
-              <div className="ml-3 mt-3 grid gap-0.5">
-                <div className="flex">
-                  <div className="h-1 w-7"></div>
-                  <p className="text-xs font-medium">Gerald Yoder</p>
-                </div>
-                <div className="flex gap-1">
-                  <div className="relative h-6 w-6 flex-shrink-0">
-                    <Image
-                      src={commentAvatar4}
-                      fill
-                      className="rounded-full"
-                      alt="comment 1 avatar"
-                    />
+                <div className="ml-3 mt-3 grid gap-0.5">
+                  <div className="flex">
+                    <div className="h-1 w-7"></div>
+                    <p className="text-xs font-medium">Gerald Yoder</p>
                   </div>
-                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
-                    Oh, now I see how the energy transfers step by step!
-                  </p>
-                </div>
-              </div>
-              <div className="ml-3 mt-3 grid gap-0.5">
-                <div className="flex">
-                  <div className="h-1 w-7"></div>
-                  <p className="text-xs font-medium">Zachariah Wheeler</p>
-                </div>
-                <div className="flex gap-1">
-                  <div className="relative h-6 w-6 flex-shrink-0">
-                    <Image
-                      src={commentAvatar2}
-                      fill
-                      className="rounded-full"
-                      alt="comment 2 avatar"
-                    />
+                  <div className="flex gap-1">
+                    <div className="relative h-6 w-6 flex-shrink-0">
+                      <Image
+                        src={commentAvatar4}
+                        fill
+                        className="rounded-full"
+                        alt="comment 1 avatar"
+                      />
+                    </div>
+                    <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
+                      Oh, now I see how the energy transfers step by step!
+                    </p>
                   </div>
-                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
-                    Wait, so what exactly happens to those excited electrons? Do
-                    they just go back to their original state?
-                  </p>
+                </div>
+                <div className="ml-3 mt-3 grid gap-0.5">
+                  <div className="flex">
+                    <div className="h-1 w-7"></div>
+                    <p className="text-xs font-medium">Zachariah Wheeler</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <div className="relative h-6 w-6 flex-shrink-0">
+                      <Image
+                        src={commentAvatar2}
+                        fill
+                        className="rounded-full"
+                        alt="comment 2 avatar"
+                      />
+                    </div>
+                    <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
+                      Wait, so what exactly happens to those excited electrons?
+                      Do they just go back to their original state?
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
-          <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
-            <h4 className="text-lg font-semibold">Personal note hub</h4>
-            <p className="text-base">
-              Capture, organize, and manage your academic thoughts with a
-              built-in note-taking system. Your ideas, always at your
-              fingertips.
-            </p>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
+        <div className="mt-12 flex flex-col items-start gap-2 md:order-1 md:mt-0">
+          <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
+            Your thoughts, organized and accessible
+          </p>
+          <h4 className="text-3xl font-medium md:text-4xl">
+            Personal note hub
+          </h4>
+          <p>
+            Capture, organize, and manage your academic thoughts with a built-in
+            note-taking system. Your ideas, always at your fingertips.
+          </p>
+        </div>
+        <div className="relative overflow-hidden md:order-2">
+          <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
               <div className="ml-3 mt-3 flex flex-col gap-1">
                 <Image
@@ -326,18 +334,26 @@ export default function Features({
               </div>
             </div>
           </div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
-          <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
-            <h4 className="text-lg font-semibold">
-              Familiar yet refined workflow
-            </h4>
-            <p className="text-base">
-              Enjoy core LMS functionalities with an intuitive interface that
-              reduces complexity and makes classroom management effortless.
-            </p>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
+        <div className="mt-12 flex flex-col items-start gap-2 md:order-4 md:mt-0">
+          <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
+            Simplified classroom management
+          </p>
+          <h4 className="text-3xl font-medium md:text-4xl">
+            Familiar yet refined workflow
+          </h4>
+          <p>
+            Experience the core functionalities of a learning management system
+            in a way that feels familiar yet more efficient. With an intuitive
+            interface, you&apos;ll navigate through tasks, assignments, and
+            communication with ease. The refined workflow reduces complexity,
+            allowing you to focus on what really matters—managing your classroom
+            effectively without unnecessary distractions.
+          </p>
+        </div>
+        <div className="relative overflow-hidden md:order-3">
+          <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] px-3 py-3 shadow-sm">
               <div className="relative h-24 w-full overflow-hidden rounded-md bg-[#a7adcb] px-2 py-2 text-[#F5F5F5] shadow-sm">
                 <p className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold md:w-full">
@@ -459,6 +475,7 @@ export default function Features({
               </div>
             </div>
           </div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
       </div>
     </section>
