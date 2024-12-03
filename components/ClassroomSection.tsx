@@ -388,7 +388,7 @@ export default function ClassroomSection({
               </div>
             </div>
           </div>
-          <div className="mt-2 flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
+          <div className="mt-2 flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
             <Link href="/user/to-do?filter=assigned">
               <p className="text-2xl font-semibold">
                 {assignedClassworks?.length ?? 0}
@@ -448,7 +448,7 @@ export default function ClassroomSection({
             </div>
           )}
         </div>
-        <div className="hidden overflow-hidden rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:block">
+        <div className="hidden overflow-hidden rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:block">
           <h3 className="text-lg font-medium tracking-tight">To-do</h3>
           <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
             <button
@@ -477,7 +477,7 @@ export default function ClassroomSection({
                     <li key={assignedClasswork.id}>
                       <Link
                         href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
                           <svg
@@ -540,7 +540,7 @@ export default function ClassroomSection({
                     <li key={missingClasswork.id}>
                       <Link
                         href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
-                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
                           <svg
@@ -598,7 +598,7 @@ export default function ClassroomSection({
                   <li key={doneClasswork.id}>
                     <Link
                       href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
-                      className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                      className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                     >
                       <div className="flex gap-2">
                         <svg

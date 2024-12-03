@@ -90,7 +90,7 @@ export default function UserForm({
         ref={userFormModalWrapperRef}
       >
         <form
-          className="min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
+          className="min-h-screen w-full rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleCreateUser}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
@@ -132,7 +132,7 @@ export default function UserForm({
                 name="fullName"
                 placeholder="Enter the user's name"
                 defaultValue={user?.fullName}
-                className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
               />
             </div>
             <div className="grid gap-2">
@@ -146,7 +146,7 @@ export default function UserForm({
                 name="email"
                 placeholder="Set up user's email"
                 value={email}
-                className={`${!emailExists && "border-red-500"} w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none`}
+                className={`${!emailExists && "border-red-500"} w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none`}
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
@@ -161,7 +161,7 @@ export default function UserForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Set up the user's password"
                   disabled={isLoading}
-                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
                   defaultValue={user?.password}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setValidPassword(
@@ -171,14 +171,14 @@ export default function UserForm({
                 />
                 <button
                   onClick={handleShowPassword}
-                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={2}
-                    className="size-6 stroke-[#bec2cc]"
+                    className="size-6 stroke-[#616572]"
                   >
                     <path
                       strokeLinecap="round"
@@ -241,7 +241,7 @@ export default function UserForm({
                 </label>
               </div>
             </div>
-            <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+            <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
               {!isLoading && (
                 <Button type="secondary" onClick={onShowUserForm}>
                   Cancel

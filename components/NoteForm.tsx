@@ -144,7 +144,7 @@ export default function NoteForm({
         ref={notesFormModalWrapperRef}
       >
         <form
-          className="relative min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
+          className="relative min-h-screen w-full rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleSubmitNote}
         >
           <button
@@ -277,7 +277,7 @@ export default function NoteForm({
               onChange={(event) => setDescription(event.target.value)}
             ></textarea>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-4 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-4 border-t-2 border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <label
               className={` ${
                 isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"

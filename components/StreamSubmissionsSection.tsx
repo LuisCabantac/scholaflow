@@ -250,7 +250,7 @@ export default function StreamSubmissionsSection({
             <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium md:text-xl">
               {stream.title}
             </h2>
-            <div className="flex items-center justify-around rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm">
+            <div className="flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm">
               <div>
                 <p className="text-2xl font-semibold">
                   {turnedInUsers?.filter((users) => users.isTurnedIn).length ||
@@ -447,7 +447,7 @@ export default function StreamSubmissionsSection({
             ) : null}
           </div>
           <div
-            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll border-[#dbe4ff] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border-2 md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
+            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll border-[#dddfe6] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
           >
             <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
               <button
@@ -534,7 +534,7 @@ export default function StreamSubmissionsSection({
                           type="number"
                           name="userPoints"
                           required
-                          className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
+                          className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
                           disabled={isLoading}
                           value={grade}
                           onChange={handleGradeChange}
@@ -630,11 +630,11 @@ export default function StreamSubmissionsSection({
               )}
               <div className="hidden flex-col bg-[#f3f6ff] md:flex">
                 <div>
-                  <div className="mt-2 border-t-2 border-[#dbe4ff] pt-2">
+                  <div className="mt-2 border-t-2 border-[#dddfe6] pt-2">
                     <p className="font-medium">Private comments</p>
                     <div className="w-full bg-[#f3f6ff] py-2">
                       <form
-                        className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                        className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                         onSubmit={handleCommentSubmit}
                       >
                         <input
@@ -791,7 +791,7 @@ export default function StreamSubmissionsSection({
               </div>
               <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] md:static md:hidden">
                 <div>
-                  <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dbe4ff] px-3 pt-2 md:mt-2 md:px-0">
+                  <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dddfe6] px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(
@@ -856,7 +856,7 @@ export default function StreamSubmissionsSection({
                 </div>
                 <div className="z-10 w-full bg-[#f3f6ff] px-3 pb-3 pt-1 md:px-0 md:pb-0">
                   <form
-                    className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input

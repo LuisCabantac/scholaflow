@@ -178,7 +178,7 @@ export default function ClassworksSection({
           {session.user.id === classroom.teacherId && (
             <input
               type="search"
-              className="w-[60%] rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
+              className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -234,7 +234,7 @@ export default function ClassworksSection({
           {session.user.id !== classroom.teacherId && (
             <input
               type="search"
-              className="w-full rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
+              className="w-full rounded-md border border-[#dddfe6] bg-[#eef3ff] bg-transparent px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -251,7 +251,7 @@ export default function ClassworksSection({
                     .map((_, index) => (
                       <li
                         key={index}
-                        className="flex flex-col gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                        className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                       >
                         <div className="h-4 w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
                         <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
@@ -319,7 +319,7 @@ export default function ClassworksSection({
               )}
               {optimisticTopics?.length ? (
                 <li
-                  className={`mt-1 ${optimisticClassworks?.length ? "border-t-2 border-[#dbe4ff] pt-2" : ""}`}
+                  className={`mt-1 ${optimisticClassworks?.length ? "border-t border-[#dddfe6] pt-2" : ""}`}
                 >
                   <ul className="grid gap-4">
                     {optimisticTopics.map((topic) => (

@@ -287,7 +287,7 @@ export default function StreamDetailsUserWork({
   );
 
   return (
-    <article className="fixed bottom-3 left-3 right-3 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
+    <article className="fixed bottom-3 left-3 right-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
       <div
         className="flex cursor-pointer items-center justify-between md:cursor-auto"
         onClick={handleToggleExpandModalView}
@@ -344,7 +344,7 @@ export default function StreamDetailsUserWork({
         newUrlLinks.length) &&
       !expandModalView ? (
         <div
-          className="flex items-center gap-1 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-3 text-sm shadow-sm md:hidden md:p-4 md:text-base"
+          className="flex items-center gap-1 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-3 text-sm shadow-sm md:hidden md:p-4 md:text-base"
           onClick={handleToggleExpandModalView}
         >
           <svg
@@ -506,7 +506,7 @@ export default function StreamDetailsUserWork({
           </div>
           <div className="mt-1 w-full">
             <form
-              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -705,7 +705,7 @@ export default function StreamDetailsUserWork({
         )}
         {showEditSubmission && (
           <button
-            className="flex w-full items-center justify-center gap-1 rounded-md border-2 border-[#dbe4ff] bg-[#e1e7f5] px-[1.12rem] py-[0.65rem] text-sm font-semibold text-[#22317c] shadow-sm transition-colors hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6] md:gap-2"
+            className="flex h-10 w-full items-center justify-center gap-1 rounded-md bg-[#e1e7f5] px-4 py-2 text-sm font-semibold text-[#22317c] shadow-sm transition-colors hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6] md:gap-2"
             onClick={handleUnsubmitClasswork}
             disabled={isLoading}
           >
@@ -716,7 +716,7 @@ export default function StreamDetailsUserWork({
           <label className="text-sm font-medium">Private comments</label>
           <div className="mt-1">
             <form
-              className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -928,7 +928,7 @@ export default function StreamDetailsUserWork({
                 </h4>
                 <input
                   type="text"
-                  className="w-full rounded-md border-2 bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Enter a url..."
                   required
                   value={url}

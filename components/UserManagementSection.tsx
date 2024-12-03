@@ -72,7 +72,7 @@ export default function UserManagementSection({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search..."
-          className="w-[60%] rounded-md border-2 border-[#dbe4ff] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
+          className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
         />
         <Button type="primary" onClick={handleToggleShowUserForm}>
           Add user

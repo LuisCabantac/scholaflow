@@ -25,7 +25,7 @@ export default function NoteCard({
   }
 
   return (
-    <li className="mb-2 w-full break-inside-avoid break-all rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff]">
+    <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] shadow-sm">
       <div
         onClick={handleToggleShowNotesForm}
         className="grid cursor-pointer gap-2 p-3 md:p-4"

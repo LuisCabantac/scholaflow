@@ -41,7 +41,7 @@ export default function ProfileIcon({
         className="profile__icon flex cursor-pointer items-center gap-2 rounded-md transition-colors"
         onClick={handleToggleOpenPopover}
       >
-        <div className="relative h-10 w-10 cursor-pointer rounded-full border-2 border-[#dbe4ff] transition-all">
+        <div className="relative h-10 w-10 cursor-pointer rounded-full border border-[#dddfe6] transition-all">
           <Image
             src={avatar}
             alt="profile image"
@@ -53,7 +53,7 @@ export default function ProfileIcon({
       <ul
         className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
       >
-        <div className="relative flex cursor-default flex-col items-start gap-2 border-b-2 border-[#dbe4ff] px-2 pb-2">
+        <div className="relative flex cursor-default flex-col items-start gap-2 border-b border-[#dddfe6] px-2 pb-2">
           <div className="flex gap-2 pb-2">
             <li className="relative h-8 w-8 flex-shrink-0">
               <Image src={avatar} fill className="rounded-full" alt="avatar" />
@@ -69,7 +69,7 @@ export default function ProfileIcon({
         >
           {role}
         </p>
-        <li className="mt-0.5 border-t-2 border-[#dbe4ff] pt-0.5">
+        <li className="mt-0.5 border-t border-[#dddfe6] pt-0.5">
           <Link
             href="/user/profile"
             className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"

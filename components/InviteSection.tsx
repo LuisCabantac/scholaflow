@@ -36,7 +36,7 @@ export default function InviteSection({
   }
 
   return (
-    <section className="z-10 mx-8 grid w-full gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
+    <section className="z-10 mx-8 grid w-full gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
       <div className="w-full">
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
           {classroom.className}
@@ -46,7 +46,7 @@ export default function InviteSection({
           {classroom.section}
         </p>
       </div>
-      <div className="flex gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] px-4 py-2">
+      <div className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] px-4 py-2">
         <div className="relative h-8 w-8 rounded-full">
           <Image
             src={session.user.image}

@@ -47,7 +47,7 @@ export default function JoinClassDialog({
               type="text"
               name="classCode"
               maxLength={8}
-              className="focus:outline-t-2 w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
+              className="focus:outline-t-2 w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
               placeholder="Enter code here..."
             />
             <div className="flex items-center justify-end gap-2">

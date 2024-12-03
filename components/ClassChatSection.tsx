@@ -202,32 +202,45 @@ export default function ClassChatSection({
           </Link>
         </div>
       </div>
-      <div className="flex w-full flex-col rounded-md md:border-2 md:border-[#dbe4ff] md:bg-[#f3f6ff] md:p-4">
+      <div className="flex w-full flex-col rounded-md md:border md:border-[#dddfe6] md:bg-[#f3f6ff] md:p-4">
         <div className="relative pb-16">
-          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
+          <ul className="grid h-[75dvh] items-start gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
               <>
                 <li className="justify-self-end">
-                  <div className="h-4 w-[50%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
                 <li className="justify-self-start">
-                  <div className="h-4 w-[30%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
                 <li className="justify-self-start">
-                  <div className="h-4 w-[80%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                </li>
+                <li className="justify-self-start">
+                  <div className="h-4 w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                </li>
+                <li className="justify-self-start">
+                  <div className="h-4 w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
                 <li className="justify-self-end">
-                  <div className="h-4 w-[20%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-56 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
                 <li className="justify-self-end">
-                  <div className="h-4 w-[50%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                </li>
+                <li className="justify-self-end">
+                  <div className="h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
                 <li className="justify-self-start">
-                  <div className="h-4 w-[20%] animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                  <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                </li>
+                <li className="justify-self-start">
+                  <div className="h-4 w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
               </>
             )}
-            {messages?.length && !messagesIsPending ? (
+            {messages?.length &&
+              !messagesIsPending &&
               messages.map((message, index) => {
                 const showAvatar =
                   index === messages.length - 1 ||
@@ -270,7 +283,7 @@ export default function ClassChatSection({
                             componentDecorator={captionLinksDecorator}
                           >
                             <div
-                              className={`max-w-full whitespace-pre-line rounded-lg border-2 border-[#dbe4ff] px-3 py-2 ${message.author === session.user.id && "bg-[#dbe4ff]"}`}
+                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.author === session.user.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
                             >
                               <p className={`max-w-full whitespace-pre-line`}>
                                 {message.message}
@@ -322,18 +335,19 @@ export default function ClassChatSection({
                     </div>
                   </li>
                 );
-              })
-            ) : (
+              })}
+            {!messagesIsPending && !messages && (
               <li className="flex items-center justify-center">
                 No messages has been sent yet.
               </li>
             )}
+
             <li ref={messagesEndRef} className="h-0 w-0"></li>
           </ul>
           <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-[#f3f6ff] md:pt-0">
             {attachmentNames.length ? (
               <>
-                <div className="flex justify-between border-t-2 border-[#dbe4ff] pt-2">
+                <div className="flex justify-between border-t border-[#dddfe6] pt-2">
                   <p className="font-medium">Attachments</p>
                   <button type="button" onClick={handleToggleExpandAttachments}>
                     <svg
@@ -354,7 +368,7 @@ export default function ClassChatSection({
                 </div>
                 {!expandAttachments && (
                   <div
-                    className="flex cursor-pointer items-center gap-1 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-3 shadow-sm md:p-4"
+                    className="flex cursor-pointer items-center gap-1 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-3 shadow-sm md:p-4"
                     onClick={handleToggleExpandAttachments}
                   >
                     <svg
@@ -428,7 +442,7 @@ export default function ClassChatSection({
                   </svg>
                 </label>
                 <div
-                  className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${message.length > 50 ? "items-end" : "items-center"}`}
+                  className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${message.length > 50 ? "items-end" : "items-center"}`}
                 >
                   <input
                     type="text"

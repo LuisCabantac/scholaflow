@@ -471,7 +471,7 @@ export default function StreamDetailSection({
               classroom.teacherId === session.user.id ||
               commentsIsPending ||
               optimisticComments?.length ? (
-                <li className="border-t-2 border-[#dbe4ff] pt-2 text-sm font-medium">
+                <li className="border-t border-[#dddfe6] pt-2 text-sm font-medium">
                   Comments
                 </li>
               ) : null}
@@ -479,7 +479,7 @@ export default function StreamDetailSection({
                 classroom.teacherId === session.user.id) && (
                 <li>
                   <form
-                    className={`comment__form flex w-full rounded-md border-2 border-[#dbe4ff] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input

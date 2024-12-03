@@ -220,7 +220,7 @@ export default function StreamForm({
   return (
     <div className="modal__container">
       <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff]"
         ref={streamFormModalWrapperRef}
       >
         <form
@@ -284,7 +284,7 @@ export default function StreamForm({
                       onClick={handleToggleShowSelectUsersModal}
                       type="button"
                       disabled={isLoading}
-                      className="w-full rounded-md border-2 border-[#dbe4ff] px-4 py-2 text-start focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
+                      className="w-full rounded-md border border-[#dddfe6] px-4 py-2 text-start focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
                     >
                       {enrolledClasses?.length === audience.length
                         ? "All users"
@@ -415,7 +415,7 @@ export default function StreamForm({
                     type="text"
                     defaultValue={stream?.title ?? ""}
                     placeholder="Add a descriptive title"
-                    className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   />
                 </div>
               )}
@@ -432,7 +432,7 @@ export default function StreamForm({
                 <textarea
                   required={streamType === "stream"}
                   name="caption"
-                  className="h-[10rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                  className="h-[10rem] w-full resize-none rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   placeholder="Add relevant details or instructions"
                   disabled={isLoading}
                   defaultValue={stream?.caption ?? ""}
@@ -451,7 +451,7 @@ export default function StreamForm({
                           ? format(stream.scheduledAt, "yyyy-MM-dd'T'HH:mm")
                           : ""
                       }
-                      className="w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                      className="w-full cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     />
                   </div>
                 )}
@@ -531,7 +531,7 @@ export default function StreamForm({
                           <select
                             disabled={isLoading}
                             name="levels"
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                            className="level__select w-full cursor-pointer rounded-md border border-[#dddfe6] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             onChange={(event) =>
                               setIsGraded(event.target.value)
                             }
@@ -545,7 +545,7 @@ export default function StreamForm({
                           <input
                             type="number"
                             name="totalPoints"
-                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                            className="cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={grade}
                             defaultValue="100"
                             onChange={handleGradeChange}
@@ -561,7 +561,7 @@ export default function StreamForm({
                         <div className="relative w-full">
                           <select
                             disabled={isLoading}
-                            className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                            className="level__select w-full cursor-pointer rounded-md border border-[#dddfe6] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             onChange={(event) =>
                               setHasDueDate(event.target.value)
                             }
@@ -576,7 +576,7 @@ export default function StreamForm({
                             type="datetime-local"
                             disabled={isLoading}
                             name="dueDate"
-                            className="cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                            className="cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={dueDate}
                             onChange={(event) => setDueDate(event.target.value)}
                           />
@@ -591,7 +591,7 @@ export default function StreamForm({
                     <select
                       disabled={isLoading}
                       name="topicId"
-                      className="level__select w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
+                      className="level__select w-full cursor-pointer rounded-md border border-[#dddfe6] px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
                       defaultValue={stream?.topicId ?? "no-topic"}
                     >
                       <option value="no-topic">No topic</option>
@@ -616,7 +616,7 @@ export default function StreamForm({
                         ? format(stream.scheduledAt, "yyyy-MM-dd'T'HH:mm")
                         : ""
                     }
-                    className="w-full cursor-pointer rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    className="w-full cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   />
                 </div>
                 {streamType !== "material" && (
@@ -658,7 +658,7 @@ export default function StreamForm({
               </div>
             )}
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <div className="mr-2 flex gap-4">
               <label className="input__file__label flex cursor-pointer gap-1">
                 <input
@@ -712,7 +712,7 @@ export default function StreamForm({
                 <div className="modal__container">
                   <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                     <div
-                      className="grid w-full gap-4 rounded-md border-[#dbe4ff] bg-[#f3f6ff] p-4 md:w-[25rem]"
+                      className="grid w-full gap-4 rounded-md border-[#dddfe6] bg-[#f3f6ff] p-4 md:w-[25rem]"
                       ref={addLinkModalWrapperRef}
                     >
                       <div className="grid gap-2">
@@ -721,7 +721,7 @@ export default function StreamForm({
                         </h4>
                         <input
                           type="text"
-                          className="w-full rounded-md border-2 bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
+                          className="w-full rounded-md border bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed"
                           placeholder="Enter a url..."
                           required
                           value={url}

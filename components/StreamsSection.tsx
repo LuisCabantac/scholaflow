@@ -152,7 +152,7 @@ export default function StreamsSection({
       </div>
       <div className="grid gap-2">
         <div
-          className="relative h-[9rem] rounded-md md:h-[10rem]"
+          className="relative h-[9rem] rounded-md shadow-sm md:h-[10rem]"
           style={{ backgroundColor: classroom.classCardBackgroundColor }}
         >
           <div className="absolute left-3 top-3 w-[80%] text-balance drop-shadow-sm md:left-4 md:top-4">
@@ -264,7 +264,7 @@ export default function StreamsSection({
               session.user.role === "teacher") &&
               classroom.allowStudentsToPost) ? (
               <div
-                className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
               >
                 <div className="relative h-10 w-10 flex-shrink-0">
@@ -447,16 +447,16 @@ export default function StreamsSection({
                     .map((_, index) => (
                       <li
                         key={index}
-                        className="flex flex-col gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                        className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                       >
                         <div className="flex gap-2">
-                          <div className="h-10 w-10 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+                          <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
                           <div className="grid gap-2">
-                            <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                            <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                            <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                            <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                           </div>
                         </div>
-                        <div className="h-4 w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                        <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
                       </li>
                     ))}
                 </>
@@ -521,7 +521,7 @@ export default function StreamsSection({
           </div>
           <aside className="hidden gap-2 md:grid">
             {session.user.id === classroom.teacherId && (
-              <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
+              <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
                 <h4 className="pb-2 text-base font-medium tracking-tight">
                   Class code
                 </h4>
@@ -553,7 +553,7 @@ export default function StreamsSection({
                 </div>
               </div>
             )}
-            <div className="rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-4">
+            <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
               <h4 className="pb-2 text-base font-medium tracking-tight">
                 Recent work
               </h4>
@@ -561,7 +561,7 @@ export default function StreamsSection({
                 <div key={assignedClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">
                       <svg

@@ -98,7 +98,7 @@ export default function EditProfileForm({
   return (
     <div className="modal__container">
       <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t-2 border-[#dddfe6] bg-[#f3f6ff]"
         ref={editProfileFormModalWrapperRef}
       >
         <form
@@ -174,7 +174,7 @@ export default function EditProfileForm({
                 type="text"
                 defaultValue={user?.fullName ?? ""}
                 placeholder="Add your full name..."
-                className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />
             </div>
             <div className="grid gap-2">
@@ -185,7 +185,7 @@ export default function EditProfileForm({
                 type="text"
                 defaultValue={user?.schoolName ?? ""}
                 placeholder="Add your school's name..."
-                className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />
             </div>
             <div className="grid gap-2">
@@ -199,7 +199,7 @@ export default function EditProfileForm({
                 type="email"
                 defaultValue={user?.email ?? ""}
                 placeholder="Update your email address..."
-                className="rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />
             </div>
             <div className="grid gap-2">
@@ -213,7 +213,7 @@ export default function EditProfileForm({
                   type={showPassword ? "text" : "password"}
                   placeholder="Set up the user's password"
                   disabled={isLoading}
-                  className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none ${!validPassword && "border-[#f03e3e]"}`}
                   defaultValue={user?.password}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setValidPassword(
@@ -223,14 +223,14 @@ export default function EditProfileForm({
                 />
                 <button
                   onClick={handleShowPassword}
-                  className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
+                  className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 ${!validPassword && "border-[#f03e3e]"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={2}
-                    className="size-6 stroke-[#bec2cc]"
+                    className="size-6 stroke-[#616572]"
                   >
                     <path
                       strokeLinecap="round"
@@ -255,7 +255,7 @@ export default function EditProfileForm({
               </div>
             </div>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <button
               type="button"
               disabled={isLoading}

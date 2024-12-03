@@ -7,7 +7,7 @@ export default function CTA() {
         <h4 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           Learning without the hassle
         </h4>
-        <p className="px-10 text-center text-lg">
+        <p className="px-2 text-center text-lg">
           Ditch the bloated, overcomplicated platforms. We&apos;re building
           something that just works.
         </p>

@@ -42,7 +42,7 @@ export default function ProfileSection({
 
   return (
     <section>
-      <div className="grid gap-4 rounded-md border-2 border-[#dbe4ff] bg-[#f3f6ff] p-3 md:p-4">
+      <div className="grid gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             {userIsPending ? (

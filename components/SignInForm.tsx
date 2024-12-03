@@ -45,7 +45,7 @@ export default function SignInForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
-          className={`rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
+          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setValidEmail(emailRegex.test(event.target.value))
           }
@@ -62,7 +62,7 @@ export default function SignInForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y-2 border-l-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValidPassword(event.target.value.length >= 8 ? true : false)
             }
@@ -71,7 +71,7 @@ export default function SignInForm() {
             type="button"
             disabled={isLoading}
             onClick={handleShowPassword}
-            className={`show__password rounded-r-md border-y-2 border-r-2 border-[#dbe4ff] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

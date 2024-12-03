@@ -19,7 +19,7 @@ export default function AttachmentFileCard({
   onRemoveAttachment?: (index: number) => void;
 }) {
   return (
-    <li className="relative flex w-full items-center overflow-hidden rounded-md border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+    <li className="relative flex w-full items-center overflow-hidden rounded-md border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
       <a
         href={file}
         target="_blank"

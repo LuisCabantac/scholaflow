@@ -107,8 +107,8 @@ export default function PeopleSection({
                     className="flex items-center justify-between bg-[#f3f6ff] p-2"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 animate-pulse rounded-full bg-[#dbe4ff]"></div>
-                      <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                      <div className="h-8 w-8 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+                      <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     </div>
                   </li>
                 ))}

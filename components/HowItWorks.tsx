@@ -16,7 +16,7 @@ export default function HowItWorks() {
         </p>
       </div>
       <div className="flex flex-col flex-wrap items-center justify-center gap-4 md:flex-row">
-        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               01
@@ -28,27 +28,27 @@ export default function HowItWorks() {
               Easily create assignments, share resources, and set deadlines.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
             <h6 className="ml-3 mt-3 text-base font-medium">
               Create assignment
             </h6>
             <p className="ml-3 mt-3 text-xs font-medium">Assign to</p>
-            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               All users
             </div>
             <p className="ml-3 mt-3 text-xs font-medium">
               Title<span className="text-red-400"> *</span>
             </p>
-            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               Add a descriptive title...
             </div>
             <p className="ml-3 mt-3 text-xs font-medium">Description</p>
-            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 cursor-text rounded-l-md border-b border-l border-t border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
               Add relevant details or instructions...
             </div>
           </div>
         </div>
-        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               02
@@ -61,9 +61,9 @@ export default function HowItWorks() {
               discussions.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff]">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dddfe6] bg-[#f5f8ff]">
             <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
-            <div className="ml-3 mt-1 flex cursor-text items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-3 text-xs text-[#616572] hover:border-[#384689]">
+            <div className="ml-3 mt-1 flex cursor-text items-center gap-2 rounded-l-md border-y border-l border-[#dddfe6] py-2 pl-3 text-xs text-[#616572] hover:border-[#384689]">
               Add class comment...
             </div>
             <div className="ml-3 mt-2 flex items-start gap-2">
@@ -120,7 +120,7 @@ export default function HowItWorks() {
             </div>
           </div>
         </div>
-        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
+        <div className="relative h-[22rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm md:w-[22rem]">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <p className="rounded-md bg-[#c7d2f1] px-1.5 py-1 text-xs font-medium text-[#384689]">
               03
@@ -133,7 +133,7 @@ export default function HowItWorks() {
               grading.
             </p>
           </div>
-          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+          <div className="absolute bottom-0 right-0 h-[60%] w-[90%] rounded-tl-md border-l border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
             <div className="ml-3 mt-3 flex justify-between">
               <h6 className="text-base font-medium">Shelby Berry</h6>
               <div className="mr-2 flex items-center gap-1">
@@ -156,7 +156,7 @@ export default function HowItWorks() {
             </div>
             <div className="ml-3 mt-4 grid gap-1">
               <p className="text-xs font-medium">Attachments</p>
-              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dddfe6] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -173,7 +173,7 @@ export default function HowItWorks() {
                 </svg>
                 <p className="text-xs">assignment-1.pdf</p>
               </div>
-              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dddfe6] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -190,7 +190,7 @@ export default function HowItWorks() {
                 </svg>
                 <p className="text-xs">assignment-2.pdf</p>
               </div>
-              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dddfe6] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -209,7 +209,7 @@ export default function HowItWorks() {
                   https://drive.scholaflow.vercel.app/drive/folders/1b1fFaWmvj
                 </p>
               </div>
-              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dbe4ff] py-2 pl-2">
+              <div className="flex items-center gap-2 rounded-l-md border-y border-l border-[#dddfe6] py-2 pl-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

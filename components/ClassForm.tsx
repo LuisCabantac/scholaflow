@@ -83,7 +83,7 @@ export default function ClassForm({
         ref={classFormModalWrapperRef}
       >
         <form
-          className="min-h-screen w-full rounded-t-md border-t-2 border-[#dbe4ff] bg-[#f3f6ff] pb-[6rem] shadow-sm"
+          className="min-h-screen w-full rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff] pb-[6rem] shadow-sm"
           onSubmit={handleSubmitClass}
         >
           <div className="flex items-center justify-between px-4 py-4 md:px-8 md:py-8">
@@ -210,7 +210,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="className"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Add your class name..."
                   value={className}
                   onChange={(event) => setClassName(event.target.value)}
@@ -225,7 +225,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="section"
-                  className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                   placeholder="Add a subject name..."
                   value={section}
                   onChange={(event) => setSection(event.target.value)}
@@ -238,7 +238,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -254,7 +254,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -267,7 +267,7 @@ export default function ClassForm({
                   </label>
                   <textarea
                     name="classDescription"
-                    className="h-[5.3rem] w-full resize-none rounded-md border-2 border-[#dbe4ff] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
+                    className="h-[5.3rem] w-full resize-none rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     placeholder="Add a class description..."
                     defaultValue={classroom?.classDescription}
                   ></textarea>
@@ -348,7 +348,7 @@ export default function ClassForm({
               </div>
             )}
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dbe4ff] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             {type === "edit" ? (
               <Button
                 type="primary"

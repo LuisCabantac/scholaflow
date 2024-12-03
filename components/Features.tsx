@@ -24,13 +24,13 @@ export default function Features({
         <h2 className="text-3xl font-semibold tracking-tighter md:text-5xl">
           Features
         </h2>
-        <p className="px-10 text-center text-lg">
+        <p className="px-2 text-center text-lg">
           Streamline your academic workflow with intuitive features built for
           students and educators.
         </p>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <h4 className="text-lg font-semibold">Visual feedback</h4>
             <p className="text-base">
@@ -39,9 +39,9 @@ export default function Features({
             </p>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
               <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
-              <div className="mx-3 mt-1 flex cursor-text items-center justify-between gap-2 rounded-md border border-[#dbe4ff] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
+              <div className="mx-3 mt-1 flex cursor-text items-center justify-between gap-2 rounded-md border border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
                 <span>Add class comment...</span>
                 <div className="flex items-center gap-2">
                   <svg
@@ -137,7 +137,7 @@ export default function Features({
             </div>
           </div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <h4 className="text-lg font-semibold">Centralized communication</h4>
             <p className="text-base">
@@ -146,7 +146,7 @@ export default function Features({
             </p>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dbe4ff] bg-[#f5f8ff] pr-3 shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] pr-3 shadow-sm">
               <div className="ml-3 mt-3 grid gap-0.5">
                 <div className="flex">
                   <div className="h-1 w-7"></div>
@@ -161,7 +161,7 @@ export default function Features({
                       alt="comment 1 avatar"
                     />
                   </div>
-                  <p className="rounded-md border border-[#dbe4ff] px-2 py-1 text-xs">
+                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     So the energy is basically being transformed from light to
                     chemical energy?
                   </p>
@@ -181,7 +181,7 @@ export default function Features({
                       alt="comment 3 avatar"
                     />
                   </div>
-                  <p className="rounded-md border border-[#dbe4ff] px-2 py-1 text-xs">
+                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     Exactly!
                   </p>
                 </div>
@@ -197,7 +197,7 @@ export default function Features({
                 </div>
                 <div className="mt-0.5 flex overflow-hidden">
                   <div className="h-1 w-7"></div>
-                  <div className="flex w-full items-center justify-between rounded-md border border-[#dbe4ff] px-2 py-2">
+                  <div className="flex w-full items-center justify-between rounded-md border border-[#dddfe6] px-2 py-2">
                     <div className="flex w-full items-center gap-2 overflow-hidden">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -247,7 +247,7 @@ export default function Features({
                       alt="comment 1 avatar"
                     />
                   </div>
-                  <p className="rounded-md border border-[#dbe4ff] px-2 py-1 text-xs">
+                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     Oh, now I see how the energy transfers step by step!
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export default function Features({
                       alt="comment 2 avatar"
                     />
                   </div>
-                  <p className="rounded-md border border-[#dbe4ff] px-2 py-1 text-xs">
+                  <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     Wait, so what exactly happens to those excited electrons? Do
                     they just go back to their original state?
                   </p>
@@ -275,7 +275,7 @@ export default function Features({
             </div>
           </div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <h4 className="text-lg font-semibold">Personal note hub</h4>
             <p className="text-base">
@@ -285,7 +285,7 @@ export default function Features({
             </p>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
               <div className="ml-3 mt-3 flex flex-col gap-1">
                 <Image
                   src={notesImage1}
@@ -327,7 +327,7 @@ export default function Features({
             </div>
           </div>
         </div>
-        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border-2 border-[#dbe4ff] bg-[#f5f8ff] shadow-sm">
+        <div className="relative h-[30rem] w-full overflow-hidden rounded-lg border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
           <div className="absolute left-4 right-4 top-4 flex flex-col items-start gap-2">
             <h4 className="text-lg font-semibold">
               Familiar yet refined workflow
@@ -338,7 +338,7 @@ export default function Features({
             </p>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-[65%] px-6 md:h-[70%]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dbe4ff] bg-[#f5f8ff] px-3 py-3 shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] px-3 py-3 shadow-sm">
               <div className="relative h-24 w-full overflow-hidden rounded-md bg-[#a7adcb] px-2 py-2 text-[#F5F5F5] shadow-sm">
                 <p className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold md:w-full">
                   Calculus and Analytical Geometry
