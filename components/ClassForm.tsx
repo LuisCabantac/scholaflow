@@ -210,7 +210,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="className"
-                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
                   placeholder="Add your class name..."
                   value={className}
                   onChange={(event) => setClassName(event.target.value)}
@@ -225,7 +225,7 @@ export default function ClassForm({
                   required
                   type="text"
                   name="section"
-                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                  className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
                   placeholder="Add a subject name..."
                   value={section}
                   onChange={(event) => setSection(event.target.value)}
@@ -238,7 +238,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
@@ -254,7 +254,7 @@ export default function ClassForm({
                   <input
                     type="text"
                     name="subject"
-                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
+                    className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
                     placeholder="Add your class subject..."
                     value={subject}
                     onChange={(event) => setSubject(event.target.value)}
