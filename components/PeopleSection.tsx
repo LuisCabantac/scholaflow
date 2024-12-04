@@ -117,14 +117,13 @@ export default function PeopleSection({
             <>
               <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
                 <div className="flex items-center gap-2">
-                  <div className="relative h-8 w-8">
-                    <Image
-                      src={classroom.teacherAvatar}
-                      alt={`${classroom.teacherName}'s image`}
-                      fill
-                      className="rounded-full"
-                    />
-                  </div>
+                  <Image
+                    src={classroom.teacherAvatar}
+                    alt={`${classroom.teacherName}'s image`}
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 flex-shrink-0 rounded-full"
+                  />
                   <p>{classroom.teacherName}</p>
                   <span className="role teacher mt-1 flex items-center justify-center rounded-md px-2 py-1 text-[0.65rem] font-semibold">
                     TEACHER

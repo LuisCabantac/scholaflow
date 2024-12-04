@@ -45,14 +45,13 @@ export default function PeopleCard({
   return (
     <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
       <div className="flex items-center gap-2">
-        <div className="relative h-8 w-8">
-          <Image
-            src={user.userAvatar}
-            alt={`${user.userName}'s image`}
-            fill
-            className="rounded-full"
-          />
-        </div>
+        <Image
+          src={user.userAvatar}
+          alt={`${user.userName}'s image`}
+          width={32}
+          height={32}
+          className="h-8 w-8 flex-shrink-0 rounded-full"
+        />
         <p>{user.userName}</p>
       </div>
       {classroom.teacherId === sessionId && (

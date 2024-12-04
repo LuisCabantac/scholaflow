@@ -173,14 +173,14 @@ export default function ClassForm({
                     </p>
                   </div>
                   <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
-                    <div className="relative h-6 w-6 rounded-full md:h-8 md:w-8">
-                      <Image
-                        src={session.user.image}
-                        fill
-                        alt={`${session.user.name}'s avatar`}
-                        className="rounded-full"
-                      />
-                    </div>
+                    <Image
+                      src={session.user.image}
+                      width={24}
+                      height={24}
+                      alt={`${session.user.name}'s avatar`}
+                      className="h-6 w-6 flex-shrink-0 rounded-full md:h-8 md:w-8"
+                    />
+
                     <div className="text-sm">
                       <p>{session.user.name}</p>
                       <p className="text-xs font-medium">Instructor</p>

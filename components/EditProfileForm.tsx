@@ -136,14 +136,13 @@ export default function EditProfileForm({
             <div className="grid gap-2">
               <label className="font-medium">Profile photo</label>
               <div className="flex items-center gap-2">
-                <div className="relative h-20 w-20 rounded-full">
-                  <Image
-                    src={attachmentPreview}
-                    alt={`${user?.fullName}'s image`}
-                    fill
-                    className="rounded-full"
-                  />
-                </div>
+                <Image
+                  src={attachmentPreview}
+                  alt={`${user?.fullName}'s image`}
+                  width={80}
+                  height={80}
+                  className="h-20 w-20 flex-shrink-0 rounded-full"
+                />
                 <label
                   className={`font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763] ${
                     isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"

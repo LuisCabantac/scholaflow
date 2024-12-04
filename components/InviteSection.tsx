@@ -47,14 +47,13 @@ export default function InviteSection({
         </p>
       </div>
       <div className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] px-4 py-2">
-        <div className="relative h-8 w-8 rounded-full">
-          <Image
-            src={session.user.image}
-            alt={`${session.user.name}'s avatar`}
-            fill
-            className="rounded-full"
-          />
-        </div>
+        <Image
+          src={session.user.image}
+          alt={`${session.user.name}'s avatar`}
+          width={32}
+          height={32}
+          className="h-8 w-8 flex-shrink-0 rounded-full"
+        />
         <div>
           <p className="text-sm font-medium">{session.user.name}</p>
           <p className="text-xs">{session.user.email}</p>

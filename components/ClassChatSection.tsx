@@ -259,14 +259,13 @@ export default function ClassChatSection({
                   >
                     <div className="flex items-end justify-end gap-2">
                       {message.author !== session.user.id && showAvatar ? (
-                        <div className="relative mb-1 h-8 w-8 flex-shrink-0 rounded-full">
-                          <Image
-                            src={message.authorAvatar}
-                            alt={`${message.authorName}'s avatar`}
-                            fill
-                            className="rounded-full object-contain"
-                          />
-                        </div>
+                        <Image
+                          src={message.authorAvatar}
+                          alt={`${message.authorName}'s avatar`}
+                          width={32}
+                          height={32}
+                          className="mb-1 h-8 w-8 flex-shrink-0 rounded-full object-contain"
+                        />
                       ) : message.author !== session.user.id && !showAvatar ? (
                         <div className="mb-1 h-8 w-8 flex-shrink-0 rounded-full"></div>
                       ) : null}
@@ -311,8 +310,8 @@ export default function ClassChatSection({
                                     <Image
                                       src={attachment}
                                       alt={attachment}
-                                      width={500}
-                                      height={500}
+                                      width={250}
+                                      height={250}
                                       className="w-[10rem] rounded-md object-cover md:w-[15rem]"
                                     />
                                   </div>

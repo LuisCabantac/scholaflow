@@ -71,14 +71,13 @@ export default function Features({
                 </div>
               </div>
               <div className="ml-3 mt-2 flex items-start gap-2 pr-3">
-                <div className="relative h-6 w-6 flex-shrink-0">
-                  <Image
-                    src={commentAvatar2}
-                    fill
-                    className="rounded-full"
-                    alt="comment 2 avatar"
-                  />
-                </div>
+                <Image
+                  src={commentAvatar2}
+                  width={150}
+                  height={150}
+                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  alt="comment 2 avatar"
+                />
                 <div>
                   <p className="mb-0.5 text-xs font-medium">
                     Zachariah Wheeler
@@ -92,14 +91,13 @@ export default function Features({
                 </div>
               </div>
               <div className="ml-3 mt-2 flex items-start gap-2">
-                <div className="relative h-6 w-6 flex-shrink-0">
-                  <Image
-                    src={commentAvatar}
-                    fill
-                    className="rounded-full"
-                    alt="comment 1 avatar"
-                  />
-                </div>
+                <Image
+                  src={commentAvatar}
+                  width={150}
+                  height={150}
+                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  alt="comment 1 avatar"
+                />
                 <div>
                   <p className="mb-0.5 text-xs font-medium">Elissa Patrick</p>
                   <p className="text-xs">
@@ -107,7 +105,7 @@ export default function Features({
                   </p>
                   <Image
                     src={commentImage1}
-                    width={500}
+                    width={150}
                     height={500}
                     className="mt-1 w-[10rem] rounded-md object-cover"
                     alt="comment 1 image"
@@ -115,14 +113,13 @@ export default function Features({
                 </div>
               </div>
               <div className="ml-3 mt-2 flex items-start gap-2">
-                <div className="relative h-6 w-6 flex-shrink-0">
-                  <Image
-                    src={commentAvatar3}
-                    fill
-                    className="rounded-full"
-                    alt="comment 3 avatar"
-                  />
-                </div>
+                <Image
+                  src={commentAvatar3}
+                  width={150}
+                  height={150}
+                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  alt="comment 3 avatar"
+                />
                 <div>
                   <p className="mb-0.5 text-xs font-medium">Lori Cantrell</p>
                   <p className="text-xs">
@@ -156,14 +153,13 @@ export default function Features({
                   <p className="text-xs font-medium">Gerald Yoder</p>
                 </div>
                 <div className="flex gap-1">
-                  <div className="relative h-6 w-6 flex-shrink-0">
-                    <Image
-                      src={commentAvatar4}
-                      fill
-                      className="rounded-full"
-                      alt="comment 1 avatar"
-                    />
-                  </div>
+                  <Image
+                    src={commentAvatar4}
+                    width={150}
+                    height={500}
+                    className="h-6 w-6 flex-shrink-0 rounded-full"
+                    alt="comment 1 avatar"
+                  />
                   <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     So the energy is basically being transformed from light to
                     chemical energy?
@@ -176,14 +172,13 @@ export default function Features({
                   <p className="mb-0.5 text-xs font-medium">Lori Cantrell</p>
                 </div>
                 <div className="flex gap-1">
-                  <div className="relative h-6 w-6 flex-shrink-0">
-                    <Image
-                      src={commentAvatar3}
-                      fill
-                      className="rounded-full"
-                      alt="comment 3 avatar"
-                    />
-                  </div>
+                  <Image
+                    src={commentAvatar3}
+                    width={150}
+                    height={500}
+                    className="h-6 w-6 flex-shrink-0 rounded-full"
+                    alt="comment 3 avatar"
+                  />
                   <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                     Exactly!
                   </p>
@@ -193,7 +188,7 @@ export default function Features({
                   <Image
                     src={chatImage1}
                     alt="chat image 1"
-                    width={500}
+                    width={150}
                     height={500}
                     className="w-[12rem] rounded-md object-cover"
                   />
@@ -235,20 +230,19 @@ export default function Features({
                     </svg>
                   </div>
                 </div>
-                <div className="ml-3 mt-3 grid gap-0.5">
+                <div className="mt-3 grid gap-0.5">
                   <div className="flex">
                     <div className="h-1 w-7"></div>
                     <p className="text-xs font-medium">Gerald Yoder</p>
                   </div>
                   <div className="flex gap-1">
-                    <div className="relative h-6 w-6 flex-shrink-0">
-                      <Image
-                        src={commentAvatar4}
-                        fill
-                        className="rounded-full"
-                        alt="comment 1 avatar"
-                      />
-                    </div>
+                    <Image
+                      src={commentAvatar4}
+                      width={24}
+                      height={24}
+                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      alt="comment 1 avatar"
+                    />
                     <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                       Oh, now I see how the energy transfers step by step!
                     </p>
@@ -260,14 +254,13 @@ export default function Features({
                     <p className="text-xs font-medium">Zachariah Wheeler</p>
                   </div>
                   <div className="flex gap-1">
-                    <div className="relative h-6 w-6 flex-shrink-0">
-                      <Image
-                        src={commentAvatar2}
-                        fill
-                        className="rounded-full"
-                        alt="comment 2 avatar"
-                      />
-                    </div>
+                    <Image
+                      src={commentAvatar2}
+                      width={150}
+                      height={150}
+                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      alt="comment 2 avatar h-6 w-6 flex-shrink-0"
+                    />
                     <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
                       Wait, so what exactly happens to those excited electrons?
                       Do they just go back to their original state?
@@ -297,8 +290,8 @@ export default function Features({
               <div className="ml-3 mt-3 flex flex-col gap-1">
                 <Image
                   src={notesImage1}
-                  width={500}
-                  height={500}
+                  width={150}
+                  height={150}
                   className="w-[12rem] rounded-md object-cover"
                   alt="notes image 1"
                 />
@@ -376,14 +369,13 @@ export default function Features({
                 </div>
               </div>
               <div className="mt-2 flex items-center gap-2 rounded-md border px-2 py-2 text-xs text-[#616572] shadow-sm">
-                <div className="relative h-6 w-6 flex-shrink-0">
-                  <Image
-                    src={commentAvatar5}
-                    fill
-                    className="rounded-full"
-                    alt="comment 5 avatar"
-                  />
-                </div>
+                <Image
+                  src={commentAvatar5}
+                  width={150}
+                  height={150}
+                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  alt="comment 5 avatar"
+                />
                 <p>Share with your class...</p>
               </div>
               <div className="mt-2 flex items-center gap-2 rounded-md border px-2 py-2 text-xs font-medium shadow-sm">

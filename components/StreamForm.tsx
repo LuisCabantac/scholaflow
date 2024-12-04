@@ -375,14 +375,13 @@ export default function StreamForm({
                                           }
                                         }}
                                       />
-                                      <div className="relative h-6 w-6">
-                                        <Image
-                                          src={user.userAvatar}
-                                          alt={`${user.userName}'s image`}
-                                          fill
-                                          className="rounded-full"
-                                        />
-                                      </div>
+                                      <Image
+                                        src={user.userAvatar}
+                                        alt={`${user.userName}'s image`}
+                                        width={24}
+                                        height={24}
+                                        className="h-6 w-6 rounded-full"
+                                      />
                                       {user.userName}
                                     </label>
                                   </li>

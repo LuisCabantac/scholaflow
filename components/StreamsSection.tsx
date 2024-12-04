@@ -267,14 +267,13 @@ export default function StreamsSection({
                 className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
               >
-                <div className="relative h-10 w-10 flex-shrink-0">
-                  <Image
-                    src={session.user.image}
-                    alt="user's avatar"
-                    className="rounded-full"
-                    fill
-                  />
-                </div>
+                <Image
+                  src={session.user.image}
+                  alt="user's avatar"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 flex-shrink-0 rounded-full"
+                />
                 <p className="text-[#616572]">Share with your class...</p>
               </div>
             ) : null}

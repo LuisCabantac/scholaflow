@@ -12,9 +12,13 @@ const quicksand: FontType = Quicksand({
 export default function Logo({ showText = true }: { showText?: boolean }) {
   return (
     <div className="flex items-center justify-start gap-1">
-      <div className="relative h-7 w-7 md:h-8 md:w-8">
-        <Image src={scholaflowLogo} alt="logo" fill className="object-cover" />
-      </div>
+      <Image
+        src={scholaflowLogo}
+        alt="logo"
+        width={200}
+        height={200}
+        className="h-7 w-7 flex-shrink-0 object-cover md:h-8 md:w-8"
+      />
       {showText && (
         <p
           className={`${quicksand.className} cursor-default text-xl font-bold text-[#22317c] md:text-2xl`}

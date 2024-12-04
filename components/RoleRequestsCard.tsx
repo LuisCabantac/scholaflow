@@ -30,14 +30,13 @@ export default function RoleRequestsCard({
       key={request.created_at}
     >
       <div className="flex items-center gap-2">
-        <div className="relative h-8 w-8">
-          <Image
-            src={request.avatar}
-            alt={`${request.userName}'s image`}
-            fill
-            className="rounded-full"
-          />
-        </div>
+        <Image
+          src={request.avatar}
+          alt={`${request.userName}'s image`}
+          width={32}
+          height={32}
+          className="h-8 w-8 flex-shrink-0 rounded-full"
+        />
         <div>
           <p className="font-medium">{request.userName}</p>
           <p className="text-xs">{request.userEmail}</p>

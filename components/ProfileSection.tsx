@@ -48,14 +48,13 @@ export default function ProfileSection({
             {userIsPending ? (
               <div className="h-20 w-20 animate-pulse rounded-full bg-[#dbe4ff]"></div>
             ) : (
-              <div className="relative h-20 w-20 rounded-full">
-                <Image
-                  src={user?.avatar ?? ""}
-                  alt={`${user?.fullName}'s photo`}
-                  fill
-                  className="h-full w-full rounded-full"
-                />
-              </div>
+              <Image
+                src={user?.avatar ?? ""}
+                alt={`${user?.fullName}'s photo`}
+                width={80}
+                height={80}
+                className="h-20 w-20 flex-shrink-0 rounded-full"
+              />
             )}
             <div className="flex flex-col items-start justify-start">
               {userIsPending ? (

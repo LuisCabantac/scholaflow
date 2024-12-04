@@ -216,14 +216,13 @@ export default function StreamCard({
               href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
             >
               <div className="flex gap-2 pb-2">
-                <div className="relative h-10 w-10">
-                  <Image
-                    src={stream.avatar}
-                    alt={`${stream.authorName}'s image`}
-                    fill
-                    className="rounded-full"
-                  />
-                </div>
+                <Image
+                  src={stream.avatar}
+                  alt={`${stream.authorName}'s image`}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 flex-shrink-0 rounded-full"
+                />
                 <div>
                   <p className="font-medium">{stream.authorName}</p>
                   <p className="flex items-center gap-1 text-xs text-[#616572]">

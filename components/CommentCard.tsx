@@ -91,15 +91,14 @@ export default function CommentCard({
       key={comment.id}
       className="relative flex items-center justify-between break-all"
     >
-      <div className="grid grid-cols-[1.6rem_1fr] gap-4">
-        <div className="relative h-8 w-8 rounded-full">
-          <Image
-            src={comment.authorAvatar}
-            fill
-            className="rounded-full"
-            alt={`${comment.authorName}'s image`}
-          />
-        </div>
+      <div className="grid grid-cols-[2rem_1fr] gap-2">
+        <Image
+          src={comment.authorAvatar}
+          width={32}
+          height={32}
+          className="h-8 w-8 rounded-full"
+          alt={`${comment.authorName}'s image`}
+        />
         <div>
           <div className="flex items-center gap-1">
             <h6 className="text-sm font-medium">{comment.authorName}</h6>
@@ -123,8 +122,8 @@ export default function CommentCard({
                   <Image
                     src={image}
                     alt={image}
-                    width={500}
-                    height={500}
+                    width={250}
+                    height={250}
                     className="w-[10rem] rounded-md object-cover md:w-[15rem]"
                   />
                 </li>

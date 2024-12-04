@@ -41,26 +41,33 @@ export default function ProfileIcon({
         className="profile__icon flex cursor-pointer items-center gap-2 rounded-md transition-colors"
         onClick={handleToggleOpenPopover}
       >
-        <div className="relative h-10 w-10 cursor-pointer rounded-full border border-[#dddfe6] transition-all">
-          <Image
-            src={avatar}
-            alt="profile image"
-            fill
-            className="rounded-full object-cover"
-          />
-        </div>
+        <Image
+          src={avatar}
+          alt="profile image"
+          width={40}
+          height={40}
+          className="h-10 w-10 cursor-pointer rounded-full border border-[#dddfe6] object-cover transition-all"
+        />
       </div>
-      <ul
+      <div
         className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
       >
         <div className="relative flex cursor-default flex-col items-start gap-2 border-b border-[#dddfe6] px-2 pb-2">
           <div className="flex gap-2 pb-2">
-            <li className="relative h-8 w-8 flex-shrink-0">
-              <Image src={avatar} fill className="rounded-full" alt="avatar" />
-            </li>
-            <div className="flex flex-col items-start justify-start">
-              <p className="flex-shrink-0 font-semibold">{fullName}</p>
-              <li className="break-words text-xs text-[#6e7280]">{email}</li>
+            <Image
+              src={avatar}
+              width={32}
+              height={32}
+              alt="avatar"
+              className="h-8 w-8 flex-shrink-0 rounded-full"
+            />
+            <div className="overflow-hidden">
+              <p className="flex-shrink-0 overflow-hidden text-ellipsis font-semibold">
+                {fullName}
+              </p>
+              <p className="overflow-hidden text-ellipsis text-xs text-[#6e7280]">
+                {email}
+              </p>
             </div>
           </div>
         </div>
@@ -69,7 +76,7 @@ export default function ProfileIcon({
         >
           {role}
         </p>
-        <li className="mt-0.5 border-t border-[#dddfe6] pt-0.5">
+        <div className="mt-0.5 border-t border-[#dddfe6] pt-0.5">
           <Link
             href="/user/profile"
             className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"
@@ -84,11 +91,11 @@ export default function ProfileIcon({
             </svg>
             <span>Profile</span>
           </Link>
-        </li>
-        <li>
+        </div>
+        <div>
           <SignOutButton />
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 }
