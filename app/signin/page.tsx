@@ -57,9 +57,9 @@ export default async function Page() {
             <SignInForm />
             <SignInGoogleButton />
           </div>
-          <p className="mx-auto my-0">
+          <p className="mx-auto my-0 text-xs">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-medium underline">
+            <Link href="/signup" className="font-medium">
               Sign up
             </Link>
           </p>

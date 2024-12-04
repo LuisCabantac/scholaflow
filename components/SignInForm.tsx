@@ -34,7 +34,10 @@ export default function SignInForm() {
   }
 
   return (
-    <form className="grid gap-3 text-sm" onSubmit={handleSignInAction}>
+    <form
+      className="grid gap-3 border-b border-[#dddfe6] pb-3"
+      onSubmit={handleSignInAction}
+    >
       <div className="grid gap-2">
         <label className="font-medium">
           Email <span className="text-red-400">*</span>

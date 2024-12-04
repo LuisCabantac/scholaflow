@@ -41,7 +41,10 @@ export default function SignUpForm() {
   }
 
   return (
-    <form className="grid gap-3" onSubmit={handleSignUpAction}>
+    <form
+      className="grid gap-3 border-b border-[#dddfe6] pb-3"
+      onSubmit={handleSignUpAction}
+    >
       <div className="grid gap-2">
         <label className="font-medium">
           Full name <span className="text-red-400">*</span>
