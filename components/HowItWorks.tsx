@@ -1,6 +1,6 @@
 export default function HowItWorks() {
   return (
-    <section className="mx-6 mt-20 grid items-center justify-center gap-16 md:mx-10 md:mb-12 md:mt-24 md:gap-24">
+    <section className="mx-6 mb-4 mt-20 grid items-center justify-center gap-16 md:mx-10 md:mb-12 md:mt-24 md:gap-24">
       <h2 className="text-center text-[#616572]">How it works</h2>
       <div className="grid items-start gap-8 md:grid-cols-3 md:gap-12">
         <div className="w-full">
