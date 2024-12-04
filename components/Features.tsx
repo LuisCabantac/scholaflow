@@ -272,7 +272,7 @@ export default function Features({
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
-        <div className="mt-12 flex flex-col items-start gap-2 md:order-1 md:mt-0">
+        <div className="mt-12 flex flex-col items-start gap-2 md:order-3 md:mt-0">
           <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
             Your thoughts, organized and accessible
           </p>
@@ -284,7 +284,7 @@ export default function Features({
             note-taking system. Your ideas, always at your fingertips.
           </p>
         </div>
-        <div className="relative overflow-hidden md:order-2">
+        <div className="relative overflow-hidden md:order-4">
           <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff]">
               <div className="ml-3 mt-3 flex flex-col gap-1">
@@ -329,7 +329,7 @@ export default function Features({
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
-        <div className="mt-12 flex flex-col items-start gap-2 md:order-4 md:mt-0">
+        <div className="mt-12 flex flex-col items-start gap-2 md:order-6 md:mt-0">
           <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
             Simplified classroom management
           </p>
@@ -345,7 +345,7 @@ export default function Features({
             effectively without unnecessary distractions.
           </p>
         </div>
-        <div className="relative overflow-hidden md:order-3">
+        <div className="relative overflow-hidden md:order-5">
           <div className="h-[20rem]">
             <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] px-3 py-3">
               <div className="relative h-24 w-full overflow-hidden rounded-md bg-[#a7adcb] px-2 py-2 text-[#F5F5F5] shadow-sm">
