@@ -36,9 +36,10 @@ export default async function Page({ params }: { params: Params }) {
 
   if (session.user.role === "admin") return redirect("/");
 
-  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
   const classroom = await getClassByClassId(classId);
   if (!classroom) return redirect("/user/classroom");
+
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
   if (!enrolledClass && classroom?.teacherId !== session.user.id)
     return redirect("/user/classroom");
 
