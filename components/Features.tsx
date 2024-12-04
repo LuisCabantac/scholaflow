@@ -35,7 +35,7 @@ export default function Features({
         </div>
         <div className="relative overflow-hidden">
           <div className="h-[20rem]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff]">
               <p className="ml-3 mt-3 text-xs font-medium">Comments</p>
               <div className="mx-3 mt-1 flex cursor-text items-center justify-between gap-2 rounded-md border border-[#dddfe6] px-3 py-2 text-xs text-[#616572] hover:border-[#384689]">
                 <span>Add class comment...</span>
@@ -132,7 +132,7 @@ export default function Features({
               </div>
             </div>
           </div>
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/60 to-transparent"></div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#edf2ff]/50 to-transparent"></div>
         </div>
         <div className="mt-12 flex flex-col items-start gap-2 md:order-2 md:mt-0">
           <p className="rounded-md border bg-[#c7d2f1] px-2 py-1 text-xs text-[#384689] shadow-sm">
@@ -149,7 +149,7 @@ export default function Features({
         </div>
         <div className="relative overflow-hidden md:order-1">
           <div className="h-[20rem]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] pr-3 shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] pr-3">
               <div className="ml-3 mt-3 grid gap-0.5">
                 <div className="flex">
                   <div className="h-1 w-7"></div>
@@ -293,7 +293,7 @@ export default function Features({
         </div>
         <div className="relative overflow-hidden md:order-2">
           <div className="h-[20rem]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff]">
               <div className="ml-3 mt-3 flex flex-col gap-1">
                 <Image
                   src={notesImage1}
@@ -354,7 +354,7 @@ export default function Features({
         </div>
         <div className="relative overflow-hidden md:order-3">
           <div className="h-[20rem]">
-            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] px-3 py-3 shadow-sm">
+            <div className="h-full overflow-hidden text-pretty rounded-t-md border-x border-t border-[#dddfe6] bg-[#f5f8ff] px-3 py-3">
               <div className="relative h-24 w-full overflow-hidden rounded-md bg-[#a7adcb] px-2 py-2 text-[#F5F5F5] shadow-sm">
                 <p className="w-[70%] overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold md:w-full">
                   Calculus and Analytical Geometry
