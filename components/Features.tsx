@@ -2,12 +2,12 @@ import React from "react";
 import Image from "next/image";
 
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
-import commentImage1 from "@/public/landing_page/comment-1-image.png";
+import commentImage1 from "@/public/landing_page/comment-1-image.jpg";
 import commentAvatar2 from "@/public/landing_page/comment-2-avatar.jpg";
 import commentAvatar3 from "@/public/landing_page/comment-3-avatar.jpg";
 import commentAvatar4 from "@/public/landing_page/comment-4-avatar.jpg";
 import commentAvatar5 from "@/public/landing_page/comment-5-avatar.jpg";
-import chatImage1 from "@/public/landing_page/chat-1-image.jpeg";
+import chatImage1 from "@/public/landing_page/chat-1-image.jpg";
 import notesImage1 from "@/public/landing_page/notes-1-image.svg";
 
 export default function Features({
@@ -18,7 +18,7 @@ export default function Features({
   return (
     <section
       ref={featuresSectionRef}
-      className="mx-8 mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24"
+      className="mx-6 mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24"
     >
       <h2 className="text-center text-[#616572]">Features</h2>
       <div className="grid w-full items-start gap-x-12 gap-y-4 md:grid-cols-2 md:gap-y-24">
