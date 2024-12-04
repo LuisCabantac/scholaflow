@@ -630,7 +630,7 @@ export default function StreamSubmissionsSection({
               )}
               <div className="hidden flex-col bg-[#f3f6ff] md:flex">
                 <div>
-                  <div className="mt-2 border-t-2 border-[#dddfe6] pt-2">
+                  <div className="mt-2 border-t border-[#dddfe6] pt-2">
                     <p className="font-medium">Private comments</p>
                     <div className="w-full bg-[#f3f6ff] py-2">
                       <form
@@ -791,7 +791,7 @@ export default function StreamSubmissionsSection({
               </div>
               <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] md:static md:hidden">
                 <div>
-                  <div className="flex-end flex flex-col gap-2 border-t-2 border-[#dddfe6] px-3 pt-2 md:mt-2 md:px-0">
+                  <div className="flex-end flex flex-col gap-2 border-t border-[#dddfe6] px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(

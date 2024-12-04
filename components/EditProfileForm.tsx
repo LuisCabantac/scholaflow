@@ -98,7 +98,7 @@ export default function EditProfileForm({
   return (
     <div className="modal__container">
       <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t-2 border-[#dddfe6] bg-[#f3f6ff]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff]"
         ref={editProfileFormModalWrapperRef}
       >
         <form
@@ -254,7 +254,7 @@ export default function EditProfileForm({
               </div>
             </div>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t-2 border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <button
               type="button"
               disabled={isLoading}

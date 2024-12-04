@@ -277,7 +277,7 @@ export default function NoteForm({
               onChange={(event) => setDescription(event.target.value)}
             ></textarea>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-4 border-t-2 border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-4 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <label
               className={` ${
                 isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"
