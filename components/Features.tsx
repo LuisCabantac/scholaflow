@@ -155,8 +155,8 @@ export default function Features({
                 <div className="flex gap-1">
                   <Image
                     src={commentAvatar4}
-                    width={150}
-                    height={150}
+                    width={24}
+                    height={24}
                     className="h-6 w-6 flex-shrink-0 rounded-full"
                     alt="comment 1 avatar"
                   />
