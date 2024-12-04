@@ -319,14 +319,15 @@ export default function ClassChatSection({
                                 );
                               } else
                                 return (
-                                  <AttachmentFileCard
-                                    file={attachment}
-                                    index={index}
-                                    type="newFile"
-                                    location="form"
-                                    isLoading={false}
-                                    key={attachment}
-                                  />
+                                  <div key={attachment} className="mt-2">
+                                    <AttachmentFileCard
+                                      file={attachment}
+                                      index={index}
+                                      type="curFile"
+                                      location="stream"
+                                      isLoading={false}
+                                    />
+                                  </div>
                                 );
                             })
                           : null}
