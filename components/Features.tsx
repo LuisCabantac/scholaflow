@@ -73,8 +73,8 @@ export default function Features({
               <div className="ml-3 mt-2 flex items-start gap-2 pr-3">
                 <Image
                   src={commentAvatar2}
-                  width={150}
-                  height={150}
+                  width={24}
+                  height={24}
                   className="h-6 w-6 flex-shrink-0 rounded-full"
                   alt="comment 2 avatar"
                 />
@@ -93,8 +93,8 @@ export default function Features({
               <div className="ml-3 mt-2 flex items-start gap-2">
                 <Image
                   src={commentAvatar}
-                  width={150}
-                  height={150}
+                  width={24}
+                  height={24}
                   className="h-6 w-6 flex-shrink-0 rounded-full"
                   alt="comment 1 avatar"
                 />
@@ -106,7 +106,7 @@ export default function Features({
                   <Image
                     src={commentImage1}
                     width={150}
-                    height={500}
+                    height={150}
                     className="mt-1 w-[10rem] rounded-md object-cover"
                     alt="comment 1 image"
                   />
@@ -115,8 +115,8 @@ export default function Features({
               <div className="ml-3 mt-2 flex items-start gap-2">
                 <Image
                   src={commentAvatar3}
-                  width={150}
-                  height={150}
+                  width={24}
+                  height={24}
                   className="h-6 w-6 flex-shrink-0 rounded-full"
                   alt="comment 3 avatar"
                 />
@@ -156,7 +156,7 @@ export default function Features({
                   <Image
                     src={commentAvatar4}
                     width={150}
-                    height={500}
+                    height={150}
                     className="h-6 w-6 flex-shrink-0 rounded-full"
                     alt="comment 1 avatar"
                   />
@@ -174,8 +174,8 @@ export default function Features({
                 <div className="flex gap-1">
                   <Image
                     src={commentAvatar3}
-                    width={150}
-                    height={500}
+                    width={24}
+                    height={24}
                     className="h-6 w-6 flex-shrink-0 rounded-full"
                     alt="comment 3 avatar"
                   />
@@ -189,7 +189,7 @@ export default function Features({
                     src={chatImage1}
                     alt="chat image 1"
                     width={150}
-                    height={500}
+                    height={150}
                     className="w-[12rem] rounded-md object-cover"
                   />
                 </div>
@@ -256,8 +256,8 @@ export default function Features({
                   <div className="flex gap-1">
                     <Image
                       src={commentAvatar2}
-                      width={150}
-                      height={150}
+                      width={24}
+                      height={24}
                       className="h-6 w-6 flex-shrink-0 rounded-full"
                       alt="comment 2 avatar h-6 w-6 flex-shrink-0"
                     />
@@ -371,8 +371,8 @@ export default function Features({
               <div className="mt-2 flex items-center gap-2 rounded-md border px-2 py-2 text-xs text-[#616572] shadow-sm">
                 <Image
                   src={commentAvatar5}
-                  width={150}
-                  height={150}
+                  width={24}
+                  height={24}
                   className="h-6 w-6 flex-shrink-0 rounded-full"
                   alt="comment 5 avatar"
                 />
