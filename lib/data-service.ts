@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { auth } from "@/lib/auth";
-import { generateOTP, hasUser } from "@/lib/utils";
+import { hasUser } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import {
   createVerificationToken,
   deleteVerificationToken,
+  IVerification,
 } from "@/lib/auth-actions";
 import {
   IStream,
@@ -17,6 +20,7 @@ import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
+// import { format, parseISO, subHours } from "date-fns";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -708,6 +712,18 @@ export async function getVerificationToken(email: string) {
   return data;
 }
 
+export async function getVerificationTokenByToken(
+  token: string,
+): Promise<IVerification | null> {
+  const { data } = await supabase
+    .from("verificationTokens")
+    .select("*")
+    .eq("token", token)
+    .single();
+
+  return data;
+}
+
 export async function getRoleRequest(
   userId: string,
 ): Promise<IRoleRequest | null> {
@@ -746,9 +762,11 @@ export async function getAllRoleRequest(
   return data;
 }
 
-export async function generateVerificationToken(email: string) {
-  const token = generateOTP();
-  const expires = new Date().getTime() + 1000 * 60 * 60 * 1;
+export async function generateVerificationToken(
+  email: string,
+): Promise<IVerification | null> {
+  const token = uuidv4();
+  // const expires = new Date().getTime() + 1000 * 60 * 60 * 1;
 
   const existingToken = await getVerificationToken(email);
 
@@ -759,7 +777,6 @@ export async function generateVerificationToken(email: string) {
   const verificationToken = await createVerificationToken({
     email,
     token,
-    expires: new Date(expires),
   });
 
   return verificationToken;

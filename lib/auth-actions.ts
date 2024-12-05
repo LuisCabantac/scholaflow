@@ -2,10 +2,21 @@
 
 import { signIn, signOut } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { getUserByEmail, getVerificationToken } from "@/lib/data-service";
+import {
+  generateVerificationToken,
+  getUserByEmail,
+  getVerificationToken,
+  getVerificationTokenByToken,
+} from "@/lib/data-service";
 
 interface ICheckToken {
   id: string;
+  email: string;
+  token: string;
+  expires: string;
+}
+
+export interface IVerification {
   email: string;
   token: string;
   expires: string;
@@ -22,17 +33,31 @@ export async function signInCredentialsAction(formData: FormData) {
 
   const user = await getUserByEmail(email);
   if (user) {
+    if (!user.emailVerified)
+      return {
+        success: false,
+        message:
+          "This email address isn't verified yet. Please check your inbox for a verification email and click the link to activate your account.",
+      };
     if (user.password === password) {
       await signIn("credentials", {
         email,
         password,
         redirectTo: "/user/classroom?toast=Signed+in+successfully!",
       });
-      return false;
+      return { success: true, message: "Signed in successfully!" };
     } else {
-      return true;
+      return {
+        success: false,
+        message: "Incorrect password. Please try again.",
+      };
     }
-  } else return true;
+  } else
+    return {
+      success: false,
+      message:
+        "No account found with that email address. Double-check your spelling or sign up for a new account.",
+    };
 }
 
 export async function signInGoogleAction() {
@@ -86,11 +111,15 @@ export async function deleteVerificationToken(email: string) {
   await supabase.from("verificationTokens").delete().eq("email", email);
 }
 
-export async function createVerificationToken(newVerification: object) {
+export async function createVerificationToken(newVerification: {
+  email: string;
+  token: string;
+}): Promise<IVerification | null> {
   const { data, error } = await supabase
     .from("verificationTokens")
     .insert([newVerification])
-    .select();
+    .select()
+    .single();
 
   if (error) {
     throw new Error("Verification Token could not be created");
@@ -143,15 +172,80 @@ export async function signUpAction(formData: FormData) {
 
   const { error } = await supabase.from("users").insert([newUser]);
 
-  if (error)
+  const verification = await generateVerificationToken(email);
+
+  if (!verification)
     return {
       success: false,
       message:
         "We encountered a problem creating your account. Please try again.",
     };
 
+  if (error)
+    return {
+      success: false,
+      message:
+        "We encountered a problem creating your account. Please try again.",
+      token: "",
+      email: "",
+    };
+
   return {
     success: true,
-    message: "Account created! You can now start learning.",
+    message: `Your account is almost ready! We sent a verification email to ${email}. Please confirm your email to activate your account and start learning.`,
+    token: verification.token,
+    email,
+  };
+}
+
+export async function newVerification(token: string): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  const tokenData = await getVerificationTokenByToken(token);
+
+  if (!tokenData)
+    return {
+      success: false,
+      message:
+        "Invalid link. This verification link may be incorrect or expired. Please request a new one.",
+    };
+
+  // const hasExpired = new Date(tokenData.expires) < new Date();
+
+  // if (hasExpired)
+  //   return {
+  //     success: false,
+  //     message: "This link has expired. Please request a new verification link.",
+  //   };
+
+  const user = await getUserByEmail(tokenData.email);
+
+  if (!user)
+    return {
+      success: false,
+      message:
+        "No account found for this email address. Please double-check your spelling or create a new account.",
+    };
+
+  const { error: userUpdateError } = await supabase
+    .from("users")
+    .update([{ emailVerified: true }])
+    .eq("id", user.id);
+
+  if (userUpdateError)
+    return { success: false, message: userUpdateError.message };
+
+  const { error: tokenDeleteError } = await supabase
+    .from("verificationTokens")
+    .delete()
+    .eq("email", user.email);
+
+  if (tokenDeleteError)
+    return { success: false, message: tokenDeleteError.message };
+
+  return {
+    success: true,
+    message: "Your email is confirmed! Your learning journey begins now.",
   };
 }

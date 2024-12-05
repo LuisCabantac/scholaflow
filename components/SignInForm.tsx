@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import React, { useState } from "react";
 
 import { signInCredentialsAction } from "@/lib/auth-actions";
@@ -10,7 +11,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +24,10 @@ export default function SignInForm() {
     setShowPassword(false);
     const formData = new FormData(event.target as HTMLFormElement);
     const data = await signInCredentialsAction(formData);
-    setError(data ?? false);
     setIsLoading(false);
+    if (data) {
+      toast.error(data.message);
+    }
   }
 
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
@@ -48,7 +50,7 @@ export default function SignInForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
-          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail && !error ? "" : "border-[#f03e3e]"}`}
+          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validEmail ? "" : "border-[#f03e3e]"}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setValidEmail(emailRegex.test(event.target.value))
           }
@@ -65,7 +67,7 @@ export default function SignInForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${validPassword ? "" : "border-[#f03e3e]"}`}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValidPassword(event.target.value.length >= 8 ? true : false)
             }
@@ -74,7 +76,7 @@ export default function SignInForm() {
             type="button"
             disabled={isLoading}
             onClick={handleShowPassword}
-            className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${validPassword && !error ? "" : "border-[#f03e3e]"}`}
+            className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${validPassword ? "" : "border-[#f03e3e]"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -113,13 +115,6 @@ export default function SignInForm() {
             />
           </div>
         </div>
-        {error ? (
-          <p className="text-xs text-[#f03e3e]">
-            Incorrect password or account doesn&apos;t exist. Check your
-            password, sign up, or try signing in with Google to manage your
-            password.
-          </p>
-        ) : null}
       </div>
       <SignInCredentialsButton isLoading={isLoading}>
         Sign in

@@ -1,6 +1,6 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { Account, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
+import { AdapterAccount, AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -59,9 +59,21 @@ const authConfig = {
     }),
   ],
   callbacks: {
-    async signIn({ user }: { user: User | AdapterUser }) {
+    async signIn({
+      user,
+      account,
+    }: {
+      user: User | AdapterUser;
+      account: Account | AdapterAccount | null;
+    }) {
       try {
         const existingUser = await getUserByEmail((user as IUser).email);
+        if (
+          !existingUser?.emailVerified &&
+          account?.provider === "credentials"
+        ) {
+          return false;
+        }
         if (!existingUser) {
           await createUser({
             email: user.email,

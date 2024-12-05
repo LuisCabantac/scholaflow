@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 import { useRouter } from "next/navigation";
 
 import { signUpAction } from "@/lib/auth-actions";
@@ -11,6 +12,19 @@ import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 const fullNameRegex =
   /^[A-Za-z]+([' -]?[A-Za-z]+)* [A-Za-z]+([' -]?[A-Za-z]+)*$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+async function sendEmail(templateParams: {
+  to_email: string;
+  to_name: string;
+  message: string;
+}) {
+  await emailjs.send(
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
+    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "",
+    templateParams,
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
+  );
+}
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -27,9 +41,15 @@ export default function SignUpForm() {
     setIsLoading(true);
     if (honeyPot) return;
     const formData = new FormData(event.target as HTMLFormElement);
-    const { success, message } = await signUpAction(formData);
+    const { success, message, token, email } = await signUpAction(formData);
     setIsLoading(false);
     if (success) {
+      const templateParams = {
+        to_email: email ?? "",
+        to_name: (formData.get("fullName") as string).split(" ")[0],
+        message: `http://localhost:3000/verify?token=${token}`,
+      };
+      await sendEmail(templateParams);
       toast.success(message);
       router.push("/signin");
     } else toast.error(message);
