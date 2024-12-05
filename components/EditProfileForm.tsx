@@ -259,7 +259,7 @@ export default function EditProfileForm({
             <button
               type="button"
               disabled={isLoading}
-              className="flex h-10 items-center gap-1 rounded-md bg-[#edf2ff] px-4 py-2 text-sm font-medium text-[#f03e3e] shadow-sm transition-colors hover:text-[#c92a2a] disabled:cursor-not-allowed"
+              className="flex h-10 items-center gap-1 rounded-md bg-[#e1e7f5] px-4 py-2 text-sm font-medium text-[#f03e3e] shadow-sm transition-colors hover:bg-[#d9dfee] hover:text-[#c92a2a] disabled:cursor-not-allowed disabled:bg-[#c5cde6]"
               onClick={handleToggleShowConfirmation}
             >
               Close account
