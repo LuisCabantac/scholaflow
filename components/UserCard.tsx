@@ -76,7 +76,7 @@ export default function UserCard({
         {format(new Date(userData.created_at), "MMMM d, yyyy")}
       </td>
       <td data-cell="Verified:" className="px-4 py-2">
-        {userData.verified ? (
+        {userData.emailVerified ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

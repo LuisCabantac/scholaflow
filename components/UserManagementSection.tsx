@@ -17,12 +17,11 @@ export interface IUser {
   fullName: string;
   avatar: string;
   role: "student" | "teacher" | "admin";
-  verified: boolean;
   emailVerified: boolean;
   created_at: string;
   gender: string;
   updatedProfile: boolean;
-  schoolName: string;
+  schoolName: string | null;
 }
 
 export default function UserManagementSection({

@@ -13,9 +13,7 @@ export interface ISession {
     id: string;
     name: string;
     email: string;
-    schoolName: string | null;
     image: string;
-    verified: boolean;
     role: "student" | "teacher" | "admin";
   };
   expires: string;
@@ -100,8 +98,6 @@ const authConfig = {
       (session as ISession).user.name = user.fullName;
       (session as ISession).user.image = user.avatar;
       (session as ISession).user.role = user.role;
-      (session as ISession).user.schoolName = user.schoolName;
-      (session as ISession).user.verified = user.verified;
       return session;
     },
   },
