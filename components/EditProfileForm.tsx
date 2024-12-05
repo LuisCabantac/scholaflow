@@ -30,6 +30,7 @@ export default function EditProfileForm({
   const { useClickOutsideHandler } = useClickOutside();
   const editProfileFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isClosingAccount, setIsClosingAccount] = useState(false);
 
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string>(
@@ -263,16 +264,11 @@ export default function EditProfileForm({
             >
               Close account
             </button>
-            <div className="flex gap-2">
-              {!isLoading && (
-                <Button type="secondary" onClick={onToggleShowEditProfileForm}>
-                  Cancel
-                </Button>
-              )}
+            {!isClosingAccount && (
               <Button type="primary" isLoading={isLoading}>
                 Save changes
               </Button>
-            </div>
+            )}
           </div>
         </form>
         {showConfirmation && (
@@ -283,6 +279,7 @@ export default function EditProfileForm({
             handleCancel={handleToggleShowConfirmation}
             handleAction={() => {
               setIsLoading(true);
+              setIsClosingAccount(true);
               onCloseProfile(session.user.id);
               router.push("/");
             }}
