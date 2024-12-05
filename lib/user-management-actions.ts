@@ -385,7 +385,7 @@ async function removeRoleRequestByUserId(userId: string): Promise<void> {
 
   const userRequest = await getRoleRequest(userId);
 
-  if (!userRequest) throw new Error("Request does not exist.");
+  if (!userRequest) return;
 
   const { error } = await supabase
     .from("roleRequests")
