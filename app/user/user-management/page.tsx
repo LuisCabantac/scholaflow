@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
 import { checkEmail } from "@/lib/auth-actions";
 import { getAllUser, getUsersFilter } from "@/lib/data-service";
-import { deleteUser } from "@/lib/user-management-actions";
+import { closeAccount } from "@/lib/user-management-actions";
 
 import UserManagementSection from "@/components/UserManagementSection";
 
@@ -36,7 +36,7 @@ export default async function Page() {
 
   async function handleDeleteUser(userId: string) {
     "use server";
-    await deleteUser(userId);
+    await closeAccount(userId);
   }
 
   async function handleCheckEmail(formData: FormData) {

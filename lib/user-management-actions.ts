@@ -221,6 +221,9 @@ export async function closeAccount(userId: string): Promise<void> {
   const user = await getUserByUserId(userId);
   if (!user) throw new Error("User does not exist.");
 
+  if (!(session.user.id === user.id || session.user.role === "admin"))
+    throw new Error("User does not exist.");
+
   await deleteAllMessagesByUserId(userId);
 
   const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
