@@ -47,7 +47,7 @@ export default function SignUpForm() {
       const templateParams = {
         to_email: email ?? "",
         to_name: (formData.get("fullName") as string).split(" ")[0],
-        message: `http://localhost:3000/verify?token=${token}`,
+        message: `https://scholaflow.vercel.app/verify?token=${token}`,
       };
       await sendEmail(templateParams);
       toast.success(message);
