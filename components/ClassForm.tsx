@@ -351,21 +351,21 @@ export default function ClassForm({
           <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             {type === "edit" && !isLoading ? (
               <Button
-                type="primary"
-                bg="bg-[#f03e3e] hover:bg-[#c92a2a] text-[#fff5f5] hover:text-[#ffe3e3]"
+                type="secondary"
+                bg="text-[#f03e3e] hover:text-[#c92a2a]"
                 onClick={() => {
                   onDeleteClass(classroom?.classroomId ?? "");
                   onToggleShowClassForm();
                 }}
                 isLoading={isLoading}
               >
-                Delete
+                Delete class
               </Button>
             ) : (
               <div></div>
             )}
             <div className="flex gap-2">
-              {!isLoading && (
+              {!isLoading && type === "create" && (
                 <Button type="secondary" onClick={onToggleShowClassForm}>
                   Cancel
                 </Button>
