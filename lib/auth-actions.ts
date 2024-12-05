@@ -32,32 +32,33 @@ export async function signInCredentialsAction(formData: FormData) {
   const password = formData.get("password") as string;
 
   const user = await getUserByEmail(email);
-  if (user) {
-    if (!user.emailVerified)
-      return {
-        success: false,
-        message:
-          "This email address isn't verified yet. Please check your inbox for a verification email and click the link to activate your account.",
-      };
-    if (user.password === password) {
-      await signIn("credentials", {
-        email,
-        password,
-        redirectTo: "/user/classroom?toast=Signed+in+successfully!",
-      });
-      return { success: true, message: "Signed in successfully!" };
-    } else {
-      return {
-        success: false,
-        message: "Incorrect password. Please try again.",
-      };
-    }
-  } else
+
+  if (!user)
     return {
       success: false,
       message:
         "No account found with that email address. Double-check your spelling or sign up for a new account.",
     };
+
+  if (!user.emailVerified)
+    return {
+      success: false,
+      message:
+        "This email address isn't verified yet. Please check your inbox for a verification email and click the link to activate your account.",
+    };
+
+  if (user.password !== password)
+    return {
+      success: false,
+      message: "Incorrect password. Please try again.",
+    };
+
+  await signIn("credentials", {
+    email,
+    password,
+    redirectTo: "/user/classroom?toast=Signed+in+successfully!",
+  });
+  return { success: true, message: "Signed in successfully!" };
 }
 
 export async function signInGoogleAction() {
