@@ -222,7 +222,7 @@ export async function closeAccount(userId: string): Promise<void> {
   if (!user) throw new Error("User does not exist.");
 
   if (!(session.user.id === user.id || session.user.role === "admin"))
-    throw new Error("User does not exist.");
+    throw new Error("You do not have permission to close this account.");
 
   await deleteAllMessagesByUserId(userId);
 
