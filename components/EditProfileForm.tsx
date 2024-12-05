@@ -194,7 +194,7 @@ export default function EditProfileForm({
               </label>
               <input
                 required
-                disabled={isLoading}
+                disabled
                 name="email"
                 type="email"
                 defaultValue={user?.email ?? ""}
