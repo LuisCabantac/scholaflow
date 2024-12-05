@@ -192,7 +192,7 @@ export async function signUpAction(formData: FormData) {
 
   return {
     success: true,
-    message: `Your account is almost ready! We sent a verification email to ${email}. Please confirm your email to activate your account and start learning.`,
+    message: `Your account is nearly ready! Check your email ${email} for a verification link to activate your account.`,
     token: verification.token,
     email,
   };
