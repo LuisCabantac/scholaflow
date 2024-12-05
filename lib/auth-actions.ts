@@ -85,10 +85,6 @@ export async function checkEmail(formData: FormData) {
 
   const user = await getUserByEmail(email);
   if (!user) {
-    //These two are for the otp signup feature
-    // const verificationToken = await generateVerificationToken(email);
-    // await sendVerificationEmail(email, verificationToken[0].token);
-
     return {
       type: "verification",
       success: {
@@ -192,7 +188,7 @@ export async function signUpAction(formData: FormData) {
 
   return {
     success: true,
-    message: `Your account is nearly ready! Check your email ${email} for a verification link to activate your account.`,
+    message: `Your account is nearly ready! Check your email for a verification link to activate your account.`,
     token: verification.token,
     email,
   };
