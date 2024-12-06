@@ -1,7 +1,7 @@
 export default function ClassLoading() {
   return (
     <ul className="contents">
-      <li className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
+      <li className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
         <div className="absolute left-3 top-3 grid w-[90%] gap-2 md:left-4 md:top-4">
           <div className="h-[1.125rem] w-[90%] animate-pulse rounded-md bg-[#e0e7ff]"></div>
           <div className="h-[0.875rem] w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
@@ -14,7 +14,7 @@ export default function ClassLoading() {
           </div>
         </div>
       </li>
-      <li className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
+      <li className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
         <div className="absolute left-3 top-3 grid w-[90%] gap-2 md:left-4 md:top-4">
           <div className="h-[1.125rem] w-[90%] animate-pulse rounded-md bg-[#e0e7ff]"></div>
           <div className="h-[0.875rem] w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>

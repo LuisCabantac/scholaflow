@@ -246,15 +246,18 @@ export default function ClassworksSection({
             <ul className="flex flex-col gap-2">
               {classworksIsPending && (
                 <>
-                  {Array(11)
+                  {Array(6)
                     .fill(undefined)
                     .map((_, index) => (
                       <li
                         key={index}
-                        className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                        className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                       >
-                        <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="grid gap-2">
+                          <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                          <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        </div>
                       </li>
                     ))}
                 </>
