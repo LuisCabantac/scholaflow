@@ -253,8 +253,8 @@ export default function ClassworksSection({
                         key={index}
                         className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                       >
-                        <div className="h-4 w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                        <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                       </li>
                     ))}
                 </>
