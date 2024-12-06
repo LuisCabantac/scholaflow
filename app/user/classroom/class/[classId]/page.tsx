@@ -12,9 +12,9 @@ import {
   getEnrolledClassByClassAndSessionId,
   getAllClassTopicsByClassId,
 } from "@/lib/data-service";
+import { deleteClass } from "@/lib/classroom-actions";
 
 import StreamsSection from "@/components/StreamsSection";
-import { deleteClass } from "@/lib/classroom-actions";
 
 export async function generateMetadata({
   params,
