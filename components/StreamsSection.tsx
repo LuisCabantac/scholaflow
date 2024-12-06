@@ -611,7 +611,7 @@ export default function StreamsSection({
                   </Link>
                 </div>
               ) : (
-                <p className="flex h-[10rem] items-center justify-center text-center font-medium">
+                <p className="flex h-[8rem] items-center justify-center text-center font-medium">
                   No classworks have been given yet.
                 </p>
               )}
