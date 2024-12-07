@@ -131,7 +131,7 @@ export default function ToDoSection({
                 <li key={assignedClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -202,7 +202,7 @@ export default function ToDoSection({
                 <li key={missingClasswork.id}>
                   <Link
                     href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
+                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -264,7 +264,7 @@ export default function ToDoSection({
               <li key={doneClasswork.id}>
                 <Link
                   href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
-                  className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
+                  className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 >
                   <div className="flex gap-2">
                     <svg
