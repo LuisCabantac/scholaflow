@@ -184,6 +184,13 @@ export function extractFirstUuid(url: string): string | null {
   return match ? match[0] : null;
 }
 
+export function extractStreamIdFromUrl(url: string): string | null {
+  const streamIdPattern = /\/stream\/([^\/]+)/;
+  const match = url.match(streamIdPattern);
+
+  return match ? match[1] : null;
+}
+
 export function getFileExtension(url: string): string {
   const match = url.match(/\.([a-z0-9]+)(?:\?|$)/i);
   return match ? match[1] : "";

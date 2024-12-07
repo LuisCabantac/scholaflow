@@ -107,7 +107,9 @@ export default function ClassSuspense({
       {route === "classwork" && (
         <div>
           <div className="flex items-center justify-between">
-            <div className="h-10 w-full animate-pulse rounded-md bg-[#e0e7ff] md:w-[50%]"></div>
+            <div className="w-full animate-pulse cursor-not-allowed rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 text-[#616572] shadow-sm md:w-[50%]">
+              Search...
+            </div>
           </div>
           <div className="mt-2">
             <ul className="flex flex-col gap-2">
@@ -130,7 +132,7 @@ export default function ClassSuspense({
         </div>
       )}
       {route === "people" && (
-        <div className="grid gap-2">
+        <div className="grid gap-3">
           <div className="flex items-center justify-between">
             <div className="mt-1 h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
           </div>
