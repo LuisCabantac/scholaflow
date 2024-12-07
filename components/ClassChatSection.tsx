@@ -318,7 +318,7 @@ export default function ClassChatSection({
                                 );
                               } else
                                 return (
-                                  <div key={attachment} className="mt-2">
+                                  <ul key={attachment} className="mt-2">
                                     <AttachmentFileCard
                                       file={attachment}
                                       index={index}
@@ -326,7 +326,7 @@ export default function ClassChatSection({
                                       location="stream"
                                       isLoading={false}
                                     />
-                                  </div>
+                                  </ul>
                                 );
                             })
                           : null}
