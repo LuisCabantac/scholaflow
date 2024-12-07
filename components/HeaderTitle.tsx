@@ -19,13 +19,6 @@ export default function HeaderTitle({
     queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
   });
 
-  if (pathname.includes("/user/announcements/edit/"))
-    return (
-      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
-        Edit post
-      </h1>
-    );
-
   if (pathname === "/user/classroom/class/")
     return (
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
@@ -46,10 +39,10 @@ export default function HeaderTitle({
       </>
     );
 
-  if (pathname.includes("/user/admin/user-management/edit-user"))
+  if (pathname.includes("/user/to-do"))
     return (
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
-        Edit user
+        To-do
       </h1>
     );
 
