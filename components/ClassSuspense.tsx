@@ -11,7 +11,7 @@ export default function ClassSuspense({
       <ClassTabsStatic />
       {route === "stream" && (
         <div className="grid gap-2">
-          <li className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
+          <div className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
             <div className="absolute left-3 top-3 grid w-[90%] gap-2 md:left-4 md:top-4">
               <div className="h-[1.125rem] w-[90%] animate-pulse rounded-md bg-[#e0e7ff] md:h-[1.5rem]"></div>
               <div className="h-[0.875rem] w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
@@ -22,14 +22,14 @@ export default function ClassSuspense({
                 <div className="h-[0.875rem] w-14 animate-pulse rounded-md bg-[#e0e7ff]"></div>
               </div>
             </div>
-          </li>
+          </div>
           <div className="grid items-start gap-2 md:grid-cols-[1fr_15rem]">
             <div>
-              <div className="mb-2 flex items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+              <div className="mb-2.5 flex items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
                 <div className="h-10 w-10 flex-shrink-0 animate-pulse rounded-full bg-[#e0e7ff]" />
                 <div className="h-[0.875rem] w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
               </div>
-              <div className="flex items-start justify-start">
+              <div className="mb-0.5 flex items-start justify-start">
                 <div className="relative mb-2 flex items-center justify-between gap-1 text-nowrap rounded-md md:gap-2">
                   <div className="flex items-center gap-2 font-medium md:gap-4">
                     <div className="h-[0.875rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
