@@ -75,7 +75,8 @@ export default function NotesSection({
         </div>
       </div>
       {notesIsPending && (
-        <ul className="mt-2 columns-2 gap-2 md:columns-4">
+        <ul className="mt-2 columns-2 gap-2 md:columns-4" role="status">
+          <li className="sr-only">Loading…</li>
           <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
             <div className="grid gap-2">
               <div className="h-4 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>

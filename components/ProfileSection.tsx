@@ -46,7 +46,12 @@ export default function ProfileSection({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             {userIsPending ? (
-              <div className="h-20 w-20 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+              <div
+                className="h-20 w-20 animate-pulse rounded-full bg-[#dbe4ff]"
+                role="status"
+              >
+                <span className="sr-only">Loading…</span>
+              </div>
             ) : (
               <Image
                 src={user?.avatar ?? ""}
@@ -58,7 +63,12 @@ export default function ProfileSection({
             )}
             <div className="flex flex-col items-start justify-start">
               {userIsPending ? (
-                <div className="h-[1.125rem] w-40 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div
+                  className="h-[1.125rem] w-40 animate-pulse rounded-md bg-[#dbe4ff]"
+                  role="status"
+                >
+                  <span className="sr-only">Loading…</span>
+                </div>
               ) : (
                 <h2 className="text-lg font-semibold">{user?.fullName}</h2>
               )}
@@ -74,7 +84,12 @@ export default function ProfileSection({
             </div>
           </div>
           {userIsPending ? (
-            <div className="h-6 w-12 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+            <div
+              className="h-6 w-12 animate-pulse rounded-md bg-[#dbe4ff]"
+              role="status"
+            >
+              <span className="sr-only">Loading…</span>
+            </div>
           ) : (
             <p
               className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "student" ? "student" : user?.role === "teacher" ? "teacher" : "guest"}`}
@@ -87,7 +102,12 @@ export default function ProfileSection({
           <div className="grid gap-2 md:flex md:items-center">
             <div>
               {userIsPending ? (
-                <div className="mb-1 h-[0.875rem] w-48 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div
+                  className="mb-1 h-[0.875rem] w-48 animate-pulse rounded-md bg-[#dbe4ff]"
+                  role="status"
+                >
+                  <span className="sr-only">Loading…</span>
+                </div>
               ) : (
                 <p className="font-medium">{user?.email}</p>
               )}
@@ -96,7 +116,12 @@ export default function ProfileSection({
             <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
             <div>
               {userIsPending ? (
-                <div className="mb-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div
+                  className="mb-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"
+                  role="status"
+                >
+                  <span className="sr-only">Loading…</span>
+                </div>
               ) : (
                 <p className="font-medium">
                   {user?.schoolName ? user?.schoolName : "N/A"}
@@ -107,7 +132,12 @@ export default function ProfileSection({
             <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
             <div>
               {userIsPending ? (
-                <div className="mb-1 h-[0.875rem] w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div
+                  className="mb-1 h-[0.875rem] w-24 animate-pulse rounded-md bg-[#dbe4ff]"
+                  role="status"
+                >
+                  <span className="sr-only">Loading…</span>
+                </div>
               ) : (
                 <p className="font-medium">
                   {format(user?.created_at ?? "", "MMMM dd, yyyy")}

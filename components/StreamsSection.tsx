@@ -441,7 +441,11 @@ export default function StreamsSection({
             <ul className="flex flex-col gap-2">
               {streamsIsPending && (
                 <>
-                  <li className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
                       <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
                       <div className="grid gap-2">
@@ -451,14 +455,22 @@ export default function StreamsSection({
                     </div>
                     <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
                   </li>
-                  <li className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     <div className="grid gap-2">
                       <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                       <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     </div>
                   </li>
-                  <li className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
                       <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
                       <div className="grid gap-2">
@@ -468,14 +480,22 @@ export default function StreamsSection({
                     </div>
                     <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
                   </li>
-                  <li className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     <div className="grid gap-2">
                       <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                       <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     </div>
                   </li>
-                  <li className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
                       <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
                       <div className="grid gap-2">
@@ -485,7 +505,11 @@ export default function StreamsSection({
                     </div>
                     <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
                   </li>
-                  <li className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+                  <li
+                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
                     <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                     <div className="grid gap-2">
                       <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>

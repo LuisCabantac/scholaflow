@@ -87,20 +87,16 @@ export default async function Page() {
   }
 
   return (
-    <section>
-      <ClassroomSection
-        role={session.user.role}
-        session={session}
-        onGetClass={handleGetClassByClassCode}
-        onDeleteClass={handleDeleteClassByClassId}
-        onGetAllClasses={handleGetAllClassesByTeacher}
-        onGetAllClassworks={handleGetAllClassworks}
-        onGetEnrolledClass={handleGetEnrolledClassByClassAndSessionId}
-        onGetAllEnrolledClasses={handleGetAllEnrolledClassesByUserId}
-        onGetAllEnrolledClassesClassworks={
-          handleGetAllEnrolledClassesClassworks
-        }
-      />
-    </section>
+    <ClassroomSection
+      role={session.user.role}
+      session={session}
+      onGetClass={handleGetClassByClassCode}
+      onDeleteClass={handleDeleteClassByClassId}
+      onGetAllClasses={handleGetAllClassesByTeacher}
+      onGetAllClassworks={handleGetAllClassworks}
+      onGetEnrolledClass={handleGetEnrolledClassByClassAndSessionId}
+      onGetAllEnrolledClasses={handleGetAllEnrolledClassesByUserId}
+      onGetAllEnrolledClassesClassworks={handleGetAllEnrolledClassesClassworks}
+    />
   );
 }

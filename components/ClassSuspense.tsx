@@ -6,7 +6,8 @@ export default function ClassSuspense({
   route: "stream" | "classwork" | "people" | "chat";
 }) {
   return (
-    <section className="relative">
+    <div className="relative" role="status">
+      <span className="sr-only">Loading…</span>
       <ClassTabsStatic />
       {route === "stream" && (
         <div className="grid gap-2">
@@ -206,6 +207,6 @@ export default function ClassSuspense({
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

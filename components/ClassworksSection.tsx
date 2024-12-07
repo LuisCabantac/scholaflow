@@ -252,7 +252,9 @@ export default function ClassworksSection({
                       <li
                         key={index}
                         className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                        role="status"
                       >
+                        <span className="sr-only">Loading…</span>
                         <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                         <div className="grid gap-2">
                           <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>

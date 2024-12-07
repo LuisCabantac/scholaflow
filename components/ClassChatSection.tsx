@@ -207,34 +207,44 @@ export default function ClassChatSection({
           <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
               <>
-                <li className="justify-self-end">
+                <li className="justify-self-end" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end">
+                <li className="justify-self-end" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-56 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end">
+                <li className="justify-self-end" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end">
+                <li className="justify-self-end" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start">
+                <li className="justify-self-start" role="status">
+                  <span className="sr-only">Loading…</span>
                   <div className="h-4 w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
               </>

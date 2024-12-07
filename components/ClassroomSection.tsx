@@ -245,7 +245,7 @@ export default function ClassroomSection({
   );
 
   return (
-    <div className="relative overflow-hidden">
+    <section className="relative overflow-hidden">
       <div className="grid items-start gap-4 md:grid-cols-[1fr_18rem]">
         <div>
           <div className="flex items-center justify-between">
@@ -685,6 +685,6 @@ export default function ClassroomSection({
           setShowJoinClass={setShowJoinClass}
         />
       )}
-    </div>
+    </section>
   );
 }

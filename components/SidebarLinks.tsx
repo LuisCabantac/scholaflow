@@ -154,7 +154,8 @@ export default function SidebarLinks({
               {Array(2)
                 .fill(undefined)
                 .map((_, index) => (
-                  <li key={index} className="px-4 py-4">
+                  <li key={index} className="px-4 py-4" role="status">
+                    <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
                       <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
                       <div className="grid gap-1">
@@ -209,7 +210,8 @@ export default function SidebarLinks({
                     {Array(2)
                       .fill(undefined)
                       .map((_, index) => (
-                        <li key={index} className="px-4 py-4">
+                        <li key={index} className="px-4 py-4" role="status">
+                          <span className="sr-only">Loading…</span>
                           <div className="flex gap-2">
                             <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
                             <div className="grid gap-1">
