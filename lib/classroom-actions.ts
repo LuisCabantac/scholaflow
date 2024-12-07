@@ -24,11 +24,13 @@ import {
   getAllClassworksByStreamId,
   getAllClassworkStreamsByTopicId,
   getAllCommentsByStreamId,
+  getAllCommentsByUserId,
   getAllEnrolledClassesByClassAndSessionId,
   getAllEnrolledClassesByClassId,
   getAllMessagesByClassId,
   getAllMessagesByUserId,
   getAllPrivateCommentsByStreamId,
+  getAllPrivateCommentsByUserId,
   getClassByClassId,
   getClassStreamByStreamId,
   getClassTopicByTopicId,
@@ -42,6 +44,7 @@ import {
   getUserByUserId,
 } from "@/lib/data-service";
 import { IStream } from "@/app/user/classroom/class/[classId]/page";
+
 import { IClass } from "@/components/ClassroomSection";
 
 export async function createClass(formData: FormData) {
@@ -359,6 +362,62 @@ export async function deleteAllMessagesByUserId(userId: string) {
   }
 
   const { error } = await supabase.from("chat").delete().eq("author", userId);
+
+  if (error) throw new Error(error.message);
+
+  return;
+}
+
+export async function deleteAllCommentsByUserId(userId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const comments = await getAllCommentsByUserId(userId);
+
+  if (!comments || !comments.length) return;
+
+  const attachments = comments.map((comment) => comment.attachment).flat();
+
+  if (attachments.length) {
+    const chatAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractCommentFilePath(file),
+    );
+    await deleteFilesFromBucket("comments", chatAttachmentsFilePath);
+  }
+
+  const { error } = await supabase
+    .from("classComments")
+    .delete()
+    .eq("author", userId);
+
+  if (error) throw new Error(error.message);
+
+  return;
+}
+
+export async function deleteAllPrivateCommentsByUserId(userId: string) {
+  const session = await auth();
+
+  if (!hasUser(session)) return;
+
+  const comments = await getAllPrivateCommentsByUserId(userId);
+
+  if (!comments || !comments.length) return;
+
+  const attachments = comments.map((comment) => comment.attachment).flat();
+
+  if (attachments.length) {
+    const chatAttachmentsFilePath: string[] = attachments.map((file) =>
+      extractCommentFilePath(file),
+    );
+    await deleteFilesFromBucket("comments", chatAttachmentsFilePath);
+  }
+
+  const { error } = await supabase
+    .from("classPrivateComments")
+    .delete()
+    .eq("author", userId);
 
   if (error) throw new Error(error.message);
 
