@@ -28,7 +28,7 @@ export default function Loading() {
         </div>
         <div className="mt-1.5 grid w-full items-start gap-8 md:grid-cols-[1fr_2fr]">
           <div className="grid w-full gap-2">
-            <div className="h-[1.125rem] w-full animate-pulse rounded-md bg-[#e0e7ff] md:h-[1.25rem]"></div>
+            <div className="h-[1.125rem] w-[90%] animate-pulse rounded-md bg-[#e0e7ff] md:h-[1.25rem]"></div>
             <div className="mt-1 flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:mt-0.5">
               <div className="mt-1 grid gap-2">
                 <div className="h-6 w-6 animate-pulse rounded-md bg-[#e0e7ff]"></div>
