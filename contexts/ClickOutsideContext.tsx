@@ -4,7 +4,7 @@ import React, { createContext, RefObject, useContext, useEffect } from "react";
 
 interface SidebarType {
   useClickOutsideHandler: (
-    ref: RefObject<HTMLElement>,
+    ref: RefObject<HTMLElement | null>,
     onClickOutside: () => void,
     isLoading: boolean,
   ) => void;
@@ -18,7 +18,7 @@ const ClickOutsideContext = createContext(clickOutsideDefaultValue);
 
 function ClickOutsideProvider({ children }: { children: React.ReactNode }) {
   function useClickOutsideHandler(
-    ref: RefObject<HTMLElement>,
+    ref: RefObject<HTMLElement | null>,
     onClickOutside: () => void,
     isLoading: boolean,
   ) {

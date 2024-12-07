@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
@@ -19,9 +18,9 @@ import ClassworksSection from "@/components/ClassworksSection";
 export async function generateMetadata({
   params,
 }: {
-  params: Params;
+  params: Promise<{ classId: string }>;
 }): Promise<Metadata> {
-  const { classId } = params;
+  const { classId } = await params;
 
   const classroom = await getClassByClassId(classId);
 
@@ -51,8 +50,12 @@ export interface IClasswork {
   turnedInDate: string;
 }
 
-export default async function Page({ params }: { params: Params }) {
-  const { classId } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ classId: string }>;
+}) {
+  const { classId } = await params;
   const session = await auth();
 
   if (!hasUser(session)) return redirect("/signin");

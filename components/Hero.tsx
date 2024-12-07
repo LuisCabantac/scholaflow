@@ -9,8 +9,8 @@ export default function Hero({
   featuresSectionRef,
   onScrollToSection,
 }: {
-  featuresSectionRef: React.MutableRefObject<HTMLDivElement | null>;
-  onScrollToSection(ref: React.RefObject<HTMLElement>): void;
+  featuresSectionRef: React.RefObject<HTMLDivElement | null>;
+  onScrollToSection(ref: React.RefObject<HTMLElement | null>): void;
 }) {
   return (
     <section className="z-10 flex flex-col items-center gap-10 md:gap-14">

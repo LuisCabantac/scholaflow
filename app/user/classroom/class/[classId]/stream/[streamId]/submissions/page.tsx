@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 import { auth } from "@/lib/auth";
 import { hasUser } from "@/lib/utils";
@@ -18,9 +17,9 @@ import StreamSubmissionsSection from "@/components/StreamSubmissionsSection";
 export async function generateMetadata({
   params,
 }: {
-  params: Params;
+  params: Promise<{ streamId: string }>;
 }): Promise<Metadata> {
-  const { streamId } = params;
+  const { streamId } = await params;
 
   const stream = await getClassStreamByStreamId(streamId);
 
@@ -30,8 +29,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: Params }) {
-  const { streamId } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ streamId: string }>;
+}) {
+  const { streamId } = await params;
 
   const session = await auth();
 

@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { extractAvatarFilePath, hasUser } from "@/lib/utils";
 import {
   getAllClassesByTeacherId,
+  getAllClassesStreamByUserId,
   getAllEnrolledClassesByUserId,
   getAllNotesBySession,
   getRoleRequest,
@@ -14,12 +15,16 @@ import {
   getUserByUserId,
 } from "@/lib/data-service";
 import {
+  deleteAllCommentsByUserId,
   deleteAllMessagesByUserId,
+  deleteAllPrivateCommentsByUserId,
   deleteClass,
+  deleteClassStreamPost,
   deleteEnrolledClassbyClassAndEnrolledClassId,
   uploadAttachments,
 } from "@/lib/classroom-actions";
 import { deleteNote } from "@/lib/notes-actions";
+
 import { IRoleRequest } from "@/components/RoleRequestDialog";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -225,6 +230,17 @@ export async function closeAccount(userId: string): Promise<void> {
     throw new Error("You do not have permission to close this account.");
 
   await deleteAllMessagesByUserId(userId);
+
+  await deleteAllCommentsByUserId(userId);
+
+  await deleteAllPrivateCommentsByUserId(userId);
+
+  const posts = await getAllClassesStreamByUserId(session.user.id);
+  if (posts?.length) {
+    for (const post of posts) {
+      await deleteClassStreamPost(post.id);
+    }
+  }
 
   const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
   if (enrolledClasses?.length) {

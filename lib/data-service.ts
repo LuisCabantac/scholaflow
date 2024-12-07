@@ -20,7 +20,6 @@ import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
-// import { format, parseISO, subHours } from "date-fns";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -338,6 +337,21 @@ export async function getClassStreamByStreamId(
   return data;
 }
 
+export async function getAllClassesStreamByUserId(
+  userId: string,
+): Promise<IStream[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("streams")
+    .select("*")
+    .eq("author", userId);
+
+  return data;
+}
+
 export async function getAllClassworkStreamsByClassId(
   classId: string,
 ): Promise<IStream[] | null> {
@@ -537,6 +551,21 @@ export async function getAllCommentsByStreamId(
   return data;
 }
 
+export async function getAllCommentsByUserId(
+  userId: string,
+): Promise<IStreamComment[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classComments")
+    .select("*")
+    .eq("author", userId);
+
+  return data;
+}
+
 export async function getAllPrivateCommentsByStreamId(
   streamId: string,
 ): Promise<IStreamComment[] | null> {
@@ -548,6 +577,21 @@ export async function getAllPrivateCommentsByStreamId(
     .from("classPrivateComments")
     .select("*")
     .eq("streamId", streamId);
+
+  return data;
+}
+
+export async function getAllPrivateCommentsByUserId(
+  userId: string,
+): Promise<IStreamComment[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("classPrivateComments")
+    .select("*")
+    .eq("author", userId);
 
   return data;
 }

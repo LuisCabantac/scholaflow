@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 export default function LandingPage() {
   const featuresSectionRef = useRef<HTMLDivElement | null>(null);
 
-  function scrollToSection(ref: React.RefObject<HTMLElement>) {
+  function scrollToSection(ref: React.RefObject<HTMLElement | null>) {
     if (ref && ref.current) {
       ref.current.scrollIntoView({ block: "start", behavior: "smooth" });
     }
