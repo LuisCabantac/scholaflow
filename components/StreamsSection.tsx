@@ -615,11 +615,14 @@ export default function StreamsSection({
               </div>
             )}
             <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
-              <h4 className="pb-2 text-base font-medium tracking-tight">
+              <Link
+                href={`/user/classroom/class/${classroom.classroomId}/classwork`}
+                className="text-base font-medium tracking-tight hover:underline"
+              >
                 Recent work
-              </h4>
+              </Link>
               {assignedClasswork ? (
-                <div key={assignedClasswork.id}>
+                <div className="mt-2">
                   <Link
                     href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
@@ -673,12 +676,6 @@ export default function StreamsSection({
                   No classworks have been given yet.
                 </p>
               )}
-              <Link
-                href={`/user/classroom/class/${classroom.classroomId}/classwork`}
-                className="mt-2 flex justify-end font-medium text-[#22317c]"
-              >
-                View all
-              </Link>
             </div>
           </aside>
         </div>
