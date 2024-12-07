@@ -62,9 +62,11 @@ export default async function Page({ params }: { params: Params }) {
   const classroom = await getClassByClassId(classId);
   if (!classroom) return redirect("/user/classroom");
 
-  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
-  if (!enrolledClass && classroom?.teacherId !== session.user.id)
-    return redirect("/user/classroom");
+  const isTeacher = classroom.teacherId === session.user.id;
+  const isEnrolled =
+    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+
+  if (!isTeacher && !isEnrolled) return redirect("/user/classroom");
 
   async function handleGetAllClassworkStreamsByClassId(
     classId: string,
