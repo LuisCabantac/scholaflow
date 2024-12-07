@@ -1,4 +1,4 @@
-import ClassTabsStatic from "@/components/ClassTabsStatic";
+import SkeletonTabsStatic from "@/components/SkeletonTabsStatic";
 
 export default function ClassSuspense({
   route,
@@ -8,7 +8,7 @@ export default function ClassSuspense({
   return (
     <div className="relative" role="status">
       <span className="sr-only">Loading…</span>
-      <ClassTabsStatic />
+      <SkeletonTabsStatic skeletonRoute="class" />
       {route === "stream" && (
         <div className="grid gap-2">
           <div className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md bg-[#f3f6ff] p-4 shadow-sm md:h-[10rem]">
@@ -25,17 +25,26 @@ export default function ClassSuspense({
           </div>
           <div className="grid items-start gap-2 md:grid-cols-[1fr_15rem]">
             <div>
-              <div className="mb-2.5 flex items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+              <div className="mb-2 flex items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
                 <div className="h-10 w-10 flex-shrink-0 animate-pulse rounded-full bg-[#e0e7ff]" />
                 <div className="h-[0.875rem] w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
               </div>
-              <div className="mb-0.5 flex items-start justify-start">
-                <div className="relative mb-2 flex items-center justify-between gap-1 text-nowrap rounded-md md:gap-2">
-                  <div className="flex items-center gap-2 font-medium md:gap-4">
-                    <div className="h-[0.875rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                    <div className="h-4 w-6 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                  </div>
-                </div>
+              <div className="mb-2 flex cursor-not-allowed items-center gap-2 font-medium text-[#595e62] md:gap-4">
+                <span>All</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={3}
+                  stroke="currentColor"
+                  className="size-4 rotate-0 transition-transform"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
               </div>
               <ul className="flex flex-col gap-2">
                 <li className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
@@ -93,11 +102,16 @@ export default function ClassSuspense({
             </div>
             <aside className="hidden gap-2 md:grid">
               <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
-                <div className="my-1.5 h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                <div className="mt-4 grid gap-2 rounded-md border border-[#dddfe6] p-4 font-medium shadow-sm">
-                  <div className="h-[0.875rem] w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                  <div className="h-[0.75rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                  <div className="h-[0.75rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                <h4 className="pb-2 text-base font-medium tracking-tight">
+                  Recent work
+                </h4>
+                <div className="flex gap-2 rounded-md border border-[#dddfe6] p-4 font-medium shadow-sm">
+                  <div className="size-6 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="grid gap-2">
+                    <div className="h-[0.875rem] w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="h-[0.75rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="h-[0.75rem] w-10 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  </div>
                 </div>
               </div>
             </aside>
@@ -107,7 +121,7 @@ export default function ClassSuspense({
       {route === "classwork" && (
         <div>
           <div className="flex items-center justify-between">
-            <div className="w-full animate-pulse cursor-not-allowed rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 text-[#616572] shadow-sm md:w-[50%]">
+            <div className="w-full cursor-not-allowed rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 text-[#575b67] shadow-sm md:w-[50%]">
               Search...
             </div>
           </div>
@@ -132,9 +146,9 @@ export default function ClassSuspense({
         </div>
       )}
       {route === "people" && (
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <div className="flex items-center justify-between">
-            <div className="mt-1 h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+            <p className="text-base font-medium">All users</p>
           </div>
           <ul className="users__list rounded-md">
             {Array(6)
