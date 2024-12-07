@@ -52,23 +52,14 @@ export default function ProfileIcon({
       <div
         className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
       >
-        <div className="relative flex cursor-default flex-col items-start gap-2 border-b border-[#dddfe6] px-2 pb-2">
-          <div className="flex gap-2 pb-2">
-            <Image
-              src={avatar}
-              width={32}
-              height={32}
-              alt="avatar"
-              className="h-8 w-8 flex-shrink-0 rounded-full"
-            />
-            <div className="overflow-hidden">
-              <p className="flex-shrink-0 overflow-hidden text-ellipsis font-semibold">
-                {fullName}
-              </p>
-              <p className="overflow-hidden text-ellipsis text-xs text-[#6e7280]">
-                {email}
-              </p>
-            </div>
+        <div className="relative flex cursor-default flex-col items-start gap-2">
+          <div className="overflow-hidden">
+            <p className="flex-shrink-0 overflow-hidden text-ellipsis font-semibold">
+              {fullName}
+            </p>
+            <p className="overflow-hidden text-ellipsis text-xs text-[#6e7280]">
+              {email}
+            </p>
           </div>
         </div>
         <p
@@ -76,7 +67,7 @@ export default function ProfileIcon({
         >
           {role}
         </p>
-        <div className="mt-0.5 border-t border-[#dddfe6] pt-0.5">
+        <div className="mt-0.5">
           <Link
             href="/user/profile"
             className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"
