@@ -356,18 +356,16 @@ export default function ClassroomSection({
               </ul>
             </div>
             <div className="relative" ref={btnWrapperRef}>
-              {role === "teacher" ? (
-                <Button
-                  type="primary"
-                  onClick={handleToggleShowAddClassPopover}
-                >
-                  Add class
-                </Button>
-              ) : (
-                <Button type="primary" onClick={handleToggleShowJoinClass}>
-                  Join class
-                </Button>
-              )}
+              <Button
+                type="primary"
+                onClick={
+                  role === "teacher"
+                    ? handleToggleShowAddClassPopover
+                    : handleToggleShowJoinClass
+                }
+              >
+                Add class
+              </Button>
               <div
                 className={`${showAddClassPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] rounded-md bg-[#f3f6ff] p-2 font-medium shadow-md transition-all ease-in-out`}
               >
