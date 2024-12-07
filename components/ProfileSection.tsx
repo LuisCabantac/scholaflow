@@ -44,10 +44,10 @@ export default function ProfileSection({
     <section>
       <div className="grid gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {userIsPending ? (
               <div
-                className="h-20 w-20 animate-pulse rounded-full bg-[#dbe4ff]"
+                className="h-12 w-12 animate-pulse rounded-full bg-[#dbe4ff]"
                 role="status"
               >
                 <span className="sr-only">Loading…</span>
@@ -56,9 +56,9 @@ export default function ProfileSection({
               <Image
                 src={user?.avatar ?? ""}
                 alt={`${user?.fullName}'s photo`}
-                width={80}
-                height={80}
-                className="h-20 w-20 flex-shrink-0 rounded-full"
+                width={48}
+                height={48}
+                className="h-12 w-12 flex-shrink-0 rounded-full"
               />
             )}
             <div className="flex flex-col items-start justify-start">

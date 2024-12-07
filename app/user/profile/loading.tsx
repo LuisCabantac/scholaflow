@@ -5,7 +5,7 @@ export default function Loading() {
       <div className="grid gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="h-20 w-20 animate-pulse rounded-full bg-[#dbe4ff]"></div>
+            <div className="h-12 w-12 animate-pulse rounded-full bg-[#dbe4ff]"></div>
             <div className="flex flex-col items-start justify-start">
               <div className="h-[1.125rem] w-40 animate-pulse rounded-md bg-[#dbe4ff]"></div>
             </div>

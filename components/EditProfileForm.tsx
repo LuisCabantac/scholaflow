@@ -140,9 +140,9 @@ export default function EditProfileForm({
                 <Image
                   src={attachmentPreview}
                   alt={`${user?.fullName}'s image`}
-                  width={80}
-                  height={80}
-                  className="h-20 w-20 flex-shrink-0 rounded-full"
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 flex-shrink-0 rounded-full"
                 />
                 <label
                   className={`font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763] ${
