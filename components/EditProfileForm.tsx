@@ -1,5 +1,6 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
@@ -24,6 +25,7 @@ export default function EditProfileForm({
   onCloseProfile: (userId: string) => Promise<void>;
   handleSetShowEditProfileForm: Dispatch<SetStateAction<boolean>>;
 }) {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const editProfileFormModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -279,6 +281,7 @@ export default function EditProfileForm({
               setIsLoading(true);
               setIsClosingAccount(true);
               onCloseProfile(session.user.id);
+              router.push("/");
             }}
           >
             Are you sure your want to close your account?
