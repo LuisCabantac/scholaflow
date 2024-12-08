@@ -20,7 +20,7 @@ export default function HomeNav({ session }: { session: Session | null }) {
       <Link href="/" className="cursor-pointer">
         <Logo />
       </Link>
-      {hasUser(session) ? (
+      {session && hasUser(session) ? (
         <ProfileIcon
           avatar={session.user.image}
           email={session.user.email}

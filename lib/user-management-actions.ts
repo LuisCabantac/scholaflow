@@ -26,6 +26,7 @@ import {
 import { deleteNote } from "@/lib/notes-actions";
 
 import { IRoleRequest } from "@/components/RoleRequestDialog";
+import { redirect } from "next/navigation";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -275,7 +276,7 @@ export async function closeAccount(userId: string): Promise<void> {
 
   await deleteUser(user.id);
 
-  return;
+  return redirect("/");
 }
 
 export async function deleteFileFromBucket(
