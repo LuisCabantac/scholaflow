@@ -50,9 +50,9 @@ export default function ProfileIcon({
         />
       </div>
       <div
-        className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
+        className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex w-[12rem] transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
       >
-        <div className="relative flex cursor-default flex-col items-start gap-2">
+        <div className="relative grid cursor-default items-start gap-2">
           <div className="overflow-hidden">
             <p className="flex-shrink-0 overflow-hidden text-ellipsis font-semibold">
               {fullName}
