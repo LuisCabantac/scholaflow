@@ -1,21 +1,15 @@
 # ScholaFlow
 
-ScholaFlow is a learning management system (LMS) that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
+ScholaFlow is a learning platform that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
 
 ![prismify-render-1732824603368](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
 
-## Key Differences:
+## Key Features:
 
-- **Visual Feedback:** Embed images directly in comments. Because sometimes a picture is worth a thousand words (especially in feedback).
-- **Seamless Communication:** Integrated group chat eliminates the need for external communication tools. Keep conversations centralized and focused.
-- **Integrated Note-Taking:** A built-in personal notes section (think Google Keep) helps students and educators stay organized within the platform.
-
-## Beyond the Basics:
-
-ScholaFlow offers the core functionality you expect from an LMS (assignments, grading, announcements), but with a focus on:
-
-- **Intuitive Interface:** Minimize the learning curve with a familiar design.
-- **Efficient Workflow:** Streamline tasks and communication for both teachers and students
+1. **Course Management:** Create courses, lessons, assignments, manage students.
+2. **Grading & Feedback:** Grade assignments, provide feedback (with image embedding).
+3. **Communication:** Integrated group chat for centralized discussions.
+4. **Personal Notes:** A built-in personal notes section helps students and educators stay organized within the platform.
 
 ## Try ScholaFlow
 
@@ -35,6 +29,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 - [Date-fns](https://date-fns.org/)
 - [React Hot Toast](https://react-hot-toast.com/)
 - [React Linkify](https://www.npmjs.com/package/react-linkify)
+- [EmailJS](https://www.emailjs.com/)
 
 ## Getting Started
 
