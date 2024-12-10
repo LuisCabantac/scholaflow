@@ -21,7 +21,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 
 ## Built with
 
-- [Next.js 14](https://nextjs.org/)
+- [Next.js 15](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Supabase](https://supabase.com/)
 - [Auth.js](https://authjs.dev/getting-started)
