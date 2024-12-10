@@ -6,23 +6,31 @@ import { useQuery } from "@tanstack/react-query";
 import { extractFirstUuid, getLastRouteName } from "@/lib/utils";
 
 import { IClass } from "@/components/ClassroomSection";
+import { IForm } from "@/components/FormsSection";
 
 export default function HeaderTitle({
-  onGetClassByClassId,
+  onGetForm,
+  onGetClass,
 }: {
-  onGetClassByClassId: (classId: string) => Promise<IClass | null>;
+  onGetForm: (formId: string) => Promise<IForm | null>;
+  onGetClass: (classId: string) => Promise<IClass | null>;
 }) {
   const pathname = usePathname();
 
-  const { data } = useQuery({
+  const { data: classData } = useQuery({
     queryKey: [`class--${extractFirstUuid(pathname)}`],
-    queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
+    queryFn: () => onGetClass(extractFirstUuid(pathname) ?? ""),
   });
 
-  if (pathname === "/user/classroom/class/")
+  const { data: formData } = useQuery({
+    queryKey: [`form--${extractFirstUuid(pathname)}`],
+    queryFn: () => onGetForm(extractFirstUuid(pathname) ?? ""),
+  });
+
+  if (pathname.includes(`/user/forms/${formData?.id}`))
     return (
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
-        Classroom
+        {formData ? formData.title : "Form"}
       </h1>
     );
 
@@ -30,11 +38,11 @@ export default function HeaderTitle({
     return (
       <>
         <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:block md:text-2xl">
-          {data ? data.className : "Classroom"}
+          {classData ? classData.className : "Classroom"}
         </h1>
 
         <h1 className="block overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:hidden md:text-2xl">
-          {data?.className ?? "Classroom"}
+          {classData?.className ?? "Classroom"}
         </h1>
       </>
     );
