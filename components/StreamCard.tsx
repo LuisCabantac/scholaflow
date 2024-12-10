@@ -445,7 +445,10 @@ export default function StreamCard({
               showEdit={session.user.id === stream.author}
               clipboardUrl={`scholaflow.vercel.app/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               showEllipsis={ellipsis}
-              showDelete={session.user.id === stream.author}
+              showDelete={
+                session.user.id === stream.author ||
+                session.user.id === classroom.teacherId
+              }
               onToggleEllipsis={handleToggleEllipsis}
               onShowEditForm={handleToggleShowStreamForm}
               onShowConfirmationModal={handleToggleShowStreamConfirmation}
