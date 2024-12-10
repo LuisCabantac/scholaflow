@@ -20,6 +20,7 @@ import { IUser } from "@/components/UserManagementSection";
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
+import { IForm } from "@/components/FormsSection";
 
 export async function getUser(email: string) {
   const { data } = await supabase
@@ -824,4 +825,54 @@ export async function generateVerificationToken(
   });
 
   return verificationToken;
+}
+
+export async function getAllFormsByUserId(
+  userId: string,
+): Promise<IForm[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  if (session.user.role !== "teacher") return null;
+
+  const { data } = await supabase
+    .from("forms")
+    .select("*")
+    .eq("author", userId)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getAllFormsResponsesByFormId(
+  formId: string,
+): Promise<IForm[] | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  if (session.user.role !== "teacher") return null;
+
+  const { data } = await supabase
+    .from("formResponses")
+    .select("*")
+    .eq("formId", formId)
+    .order("created_at", { ascending: false });
+
+  return data;
+}
+
+export async function getFormByFormId(formId: string): Promise<IForm | null> {
+  const session = await auth();
+
+  if (!hasUser(session)) return null;
+
+  const { data } = await supabase
+    .from("forms")
+    .select("*")
+    .eq("id", formId)
+    .single();
+
+  return data;
 }
