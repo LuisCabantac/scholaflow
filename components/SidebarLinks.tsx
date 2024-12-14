@@ -149,7 +149,7 @@ export default function SidebarLinks({
           <li>
             <Link
               href="/user/forms"
-              className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/forms" ? activeLinkStyle : inactiveLinkStyle}`}
+              className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname.includes("/user/forms") ? activeLinkStyle : inactiveLinkStyle}`}
               onClick={() => !isMobile && handleSidebarExpand()}
             >
               <svg
