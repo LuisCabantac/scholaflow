@@ -6,6 +6,7 @@ import Provider from "./Provider";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://scholaflow.vercel.app/"),
   title: {
     template: "%s | ScholaFlow",
     default: "ScholaFlow",
