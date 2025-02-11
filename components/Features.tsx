@@ -18,7 +18,7 @@ export default function Features({
   return (
     <section
       ref={featuresSectionRef}
-      className="mx-6 mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24"
+      className="mx-6 mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24 lg:mx-24"
     >
       <h2 className="text-center text-[#616572]">Features</h2>
       <div className="grid w-full items-start gap-x-12 gap-y-4 md:grid-cols-2 md:gap-y-24">
