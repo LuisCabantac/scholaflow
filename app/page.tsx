@@ -1,6 +1,7 @@
-import LandingPage from "@/components/LandingPage";
-import Nav from "@/components/Nav";
 import { Metadata } from "next";
+
+import Nav from "@/components/Nav";
+import LandingPage from "@/components/LandingPage";
 
 export const metadata: Metadata = {
   title: "ScholaFlow - Your All-in-One Learning Platform",
