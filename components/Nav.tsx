@@ -10,7 +10,7 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
 
   if (!showButton)
     return (
-      <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:pb-5 md:pt-[1.6rem]">
+      <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:pb-5 md:pt-[1.6rem] lg:px-12">
         <Link href="/" className="cursor-pointer">
           <Logo />
         </Link>

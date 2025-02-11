@@ -15,7 +15,7 @@ export default function HomeNav({ session }: { session: Session | null }) {
 
   return (
     <nav
-      className={`sticky top-0 z-10 flex items-center justify-between transition-all ${isSticky && "bg-[#edf2ffe5] backdrop-blur-md"} px-4 py-4 md:px-8`}
+      className={`sticky top-0 z-10 flex items-center justify-between transition-all ${isSticky && "bg-[#edf2ffe5] backdrop-blur-md"} px-4 py-4 md:px-8 lg:px-12`}
     >
       <Link href="/" className="cursor-pointer">
         <Logo />

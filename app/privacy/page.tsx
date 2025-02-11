@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <section className="relative min-h-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
       <Nav showButton={true} />
-      <div className="mx-6 mb-6 grid gap-5 md:mx-10 md:mb-10">
+      <div className="mx-6 mb-6 grid gap-5 md:mx-10 md:mb-10 lg:mx-14">
         <div className="grid gap-1">
           <h1 className="text-2xl font-semibold">Privacy Policy</h1>
           <p className="mb-1 text-[#616572]">Last updated December 04, 2024</p>
