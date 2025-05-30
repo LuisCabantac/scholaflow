@@ -59,7 +59,7 @@ export default async function Page({
   return (
     <ClassChatSection
       classId={classId}
-      session={session}
+      session={session.user}
       onGetAllMessages={getAllMessages}
     />
   );

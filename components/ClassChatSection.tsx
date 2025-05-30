@@ -7,7 +7,6 @@ import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
 import { formatMessageDate, getFileExtension } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { addMessageToChat } from "@/lib/classroom-actions";
@@ -44,7 +43,17 @@ export default function ClassChatSection({
   onGetAllMessages,
 }: {
   classId: string;
-  session: ISession;
+  session: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    image?: string | null | undefined | undefined;
+    role: string;
+    schoolName?: string | null | undefined;
+  };
   onGetAllMessages: (classId: string) => Promise<IChat[] | null>;
 }) {
   const queryClient = useQueryClient();
@@ -262,13 +271,13 @@ export default function ClassChatSection({
                   <li
                     key={message.id}
                     className={`${messageMargin} ${
-                      message.author === session.user.id
+                      message.author === session.id
                         ? "justify-self-end"
                         : "justify-self-start"
                     }`}
                   >
                     <div className="flex items-end justify-end gap-2">
-                      {message.author !== session.user.id && showAvatar ? (
+                      {message.author !== session.id && showAvatar ? (
                         <Image
                           src={message.authorAvatar}
                           alt={`${message.authorName}'s avatar`}
@@ -276,11 +285,11 @@ export default function ClassChatSection({
                           height={32}
                           className="mb-1 h-8 w-8 flex-shrink-0 rounded-full object-contain"
                         />
-                      ) : message.author !== session.user.id && !showAvatar ? (
+                      ) : message.author !== session.id && !showAvatar ? (
                         <div className="mb-1 h-8 w-8 flex-shrink-0 rounded-full"></div>
                       ) : null}
                       <div>
-                        {message.author !== session.user.id &&
+                        {message.author !== session.id &&
                           message.author !== messages[index - 1]?.author && (
                             <p className="mb-1 text-xs font-semibold">
                               {message.authorName}
@@ -291,13 +300,13 @@ export default function ClassChatSection({
                             componentDecorator={captionLinksDecorator}
                           >
                             <div
-                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.author === session.user.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
+                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.author === session.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
                             >
                               <p className={`max-w-full whitespace-pre-line`}>
                                 {message.message}
                               </p>
                               <p
-                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.user.id === message.author ? "text-left" : "text-right"}`}
+                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.id === message.author ? "text-left" : "text-right"}`}
                               >
                                 {formatMessageDate(message.created_at)}
                               </p>
