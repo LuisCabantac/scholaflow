@@ -1,16 +1,29 @@
 "use client";
 
-import { Session } from "next-auth";
 import Link from "next/link";
 
-import { hasUser } from "@/lib/utils";
 import { useNav } from "@/contexts/NavContext";
 
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import ProfileIcon from "@/components/ProfileIcon";
 
-export default function HomeNav({ session }: { session: Session | null }) {
+export default function HomeNav({
+  session,
+}: {
+  session:
+    | {
+        id: string;
+        name: string;
+        email: string;
+        emailVerified: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+        role: string;
+        image?: string | null | undefined | undefined;
+      }
+    | undefined;
+}) {
   const { isSticky } = useNav();
 
   return (
@@ -20,12 +33,12 @@ export default function HomeNav({ session }: { session: Session | null }) {
       <Link href="/" className="cursor-pointer">
         <Logo />
       </Link>
-      {hasUser(session) ? (
+      {session ? (
         <ProfileIcon
-          avatar={session.user.image}
-          email={session.user.email}
-          fullName={session.user.name}
-          role={session.user.role}
+          avatar={session.image ?? ""}
+          email={session.email}
+          fullName={session.name}
+          role={session.role}
         />
       ) : (
         <div className="flex gap-2">

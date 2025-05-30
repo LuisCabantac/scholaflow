@@ -1,15 +1,17 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 
 import Nav from "@/components/Nav";
 import VerifySection from "@/components/VerifySection";
 
 export default async function Page() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (hasUser(session)) return redirect("/user/classroom");
+  if (session) return redirect("/user/classroom");
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">

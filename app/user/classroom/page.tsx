@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 
 import {
   getClassByClassCode,
@@ -23,14 +23,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await auth();
-  if (!hasUser(session)) return redirect("/signin");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/");
 
   async function handleGetAllClassesByTeacher(id: string) {
     "use server";
-    if (hasUser(session) && session.user.role === "teacher") {
+    if (session && session.user.role === "teacher") {
       const data = await getAllClassesByTeacherId(id);
       return data;
     } else return null;
@@ -39,7 +42,7 @@ export default async function Page() {
   async function handleGetAllEnrolledClassesByUserId(id: string) {
     "use server";
     if (
-      hasUser(session) &&
+      session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
       const data = await getAllEnrolledClassesByUserId(id);
@@ -50,7 +53,7 @@ export default async function Page() {
   async function handleGetClassByClassCode(code: string) {
     "use server";
     if (
-      hasUser(session) &&
+      session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
       const data = await getClassByClassCode(code);
@@ -61,7 +64,7 @@ export default async function Page() {
   async function handleGetEnrolledClassByClassAndSessionId(classId: string) {
     "use server";
     if (
-      hasUser(session) &&
+      session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
       const data = await getEnrolledClassByClassAndSessionId(classId);

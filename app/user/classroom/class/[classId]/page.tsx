@@ -1,8 +1,9 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
+
 import {
   getClassByClassId,
   getAllCommentsByStreamId,
@@ -76,9 +77,11 @@ export default async function Page({
   params: Promise<{ classId: string }>;
 }) {
   const { classId } = await params;
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/user/classroom");
 

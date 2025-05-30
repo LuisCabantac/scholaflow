@@ -5,8 +5,6 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
-
 import { IUser } from "@/components/UserManagementSection";
 import EditProfileForm from "@/components/EditProfileForm";
 import RoleRequestDialog, {
@@ -19,7 +17,17 @@ export default function ProfileSection({
   onCloseProfile,
   existingRequest,
 }: {
-  session: ISession;
+  session: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    image?: string | null | undefined | undefined;
+    role: string;
+    schoolName?: string | null | undefined;
+  };
   onGetUser: (email: string) => Promise<IUser | null>;
   onCloseProfile: (userId: string) => Promise<void>;
   existingRequest: IRoleRequest | null;
@@ -28,8 +36,8 @@ export default function ProfileSection({
   const [showRoleRequest, setShowRoleRequest] = useState(false);
 
   const { data: user, isPending: userIsPending } = useQuery({
-    queryKey: [`profile--${session.user.id}`],
-    queryFn: () => onGetUser(session.user.email),
+    queryKey: [`profile--${session.id}`],
+    queryFn: () => onGetUser(session.email),
   });
 
   function handleToggleShowEditProfileForm() {
@@ -54,8 +62,8 @@ export default function ProfileSection({
               </div>
             ) : (
               <Image
-                src={user?.avatar ?? ""}
-                alt={`${user?.fullName}'s photo`}
+                src={session.image ?? ""}
+                alt={`${session.name}'s photo`}
                 width={48}
                 height={48}
                 className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -70,7 +78,7 @@ export default function ProfileSection({
                   <span className="sr-only">Loading…</span>
                 </div>
               ) : (
-                <h2 className="text-lg font-semibold">{user?.fullName}</h2>
+                <h2 className="text-lg font-semibold">{session.name}</h2>
               )}
               {!userIsPending && (
                 <button
@@ -92,9 +100,9 @@ export default function ProfileSection({
             </div>
           ) : (
             <p
-              className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${user?.role === "admin" ? "admin" : user?.role === "student" ? "student" : user?.role === "teacher" ? "teacher" : "guest"}`}
+              className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${session.role === "admin" ? "admin" : session.role === "student" ? "student" : session.role === "teacher" ? "teacher" : "guest"}`}
             >
-              {user?.role}
+              {session.role}
             </p>
           )}
         </div>
@@ -109,7 +117,7 @@ export default function ProfileSection({
                   <span className="sr-only">Loading…</span>
                 </div>
               ) : (
-                <p className="font-medium">{user?.email}</p>
+                <p className="font-medium">{session.email}</p>
               )}
               <h4 className="text-xs font-medium text-[#616572]">Email</h4>
             </div>
@@ -124,7 +132,7 @@ export default function ProfileSection({
                 </div>
               ) : (
                 <p className="font-medium">
-                  {user?.schoolName ? user?.schoolName : "N/A"}
+                  {session.schoolName ? session.schoolName : "N/A"}
                 </p>
               )}
               <h4 className="text-xs font-medium text-[#616572]">School</h4>
@@ -140,13 +148,13 @@ export default function ProfileSection({
                 </div>
               ) : (
                 <p className="font-medium">
-                  {format(user?.created_at ?? "", "MMMM dd, yyyy")}
+                  {format(session.createdAt ?? "", "MMMM dd, yyyy")}
                 </p>
               )}
               <h4 className="text-xs font-medium text-[#616572]">Joined</h4>
             </div>
           </div>
-          {!userIsPending && session.user.role !== "teacher" && (
+          {!userIsPending && session.role !== "teacher" && (
             <button
               type="button"
               onClick={handleToggleShowRoleRequest}

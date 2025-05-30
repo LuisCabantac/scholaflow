@@ -1,8 +1,8 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 import { getAllRoleRequest } from "@/lib/data-service";
 
 import RoleRequestsSection from "@/components/RoleRequestsSection";
@@ -13,9 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) redirect("/signin");
+  if (!session) redirect("/signin");
 
   if (session.user.role !== "admin") redirect("/user/classroom");
 

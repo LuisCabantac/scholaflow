@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { supabase } from "@/lib/supabase";
-import { extractAvatarFilePath, hasUser } from "@/lib/utils";
+import { extractAvatarFilePath } from "@/lib/utils";
 import {
   getAllClassesByTeacherId,
   getAllClassesStreamByUserId,
@@ -33,9 +34,10 @@ export async function createUser(newGuest: object): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   if (session.user.role !== "admin")
     return {
@@ -56,9 +58,10 @@ export async function updateUser(formData: FormData): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   if (session.user.role !== "admin")
     return {
@@ -113,9 +116,10 @@ export async function updateProfile(formData: FormData): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   const userId = formData.get("userId") as string;
 
@@ -205,8 +209,10 @@ export async function updateProfile(formData: FormData): Promise<{
 }
 
 export async function deleteUser(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (!(session.user.role === "admin" || session.user.id === userId))
     throw new Error("You need be an admin to delete this user.");
@@ -220,8 +226,10 @@ export async function deleteUser(userId: string): Promise<void> {
 }
 
 export async function closeAccount(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   const user = await getUserByUserId(userId);
   if (!user) throw new Error("User does not exist.");
@@ -291,9 +299,10 @@ export async function deleteFileFromBucket(
 }
 
 export async function roleRequest(formData: FormData) {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   const userId = formData.get("userId") as string;
 
@@ -333,8 +342,10 @@ export async function roleRequest(formData: FormData) {
 }
 
 export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -355,8 +366,10 @@ export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -379,8 +392,10 @@ export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -399,8 +414,10 @@ export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 async function removeRoleRequestByUserId(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   const userRequest = await getRoleRequest(userId);
 
@@ -415,8 +432,10 @@ async function removeRoleRequestByUserId(userId: string): Promise<void> {
 }
 
 async function setTeacherUserRole(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");

@@ -1,6 +1,5 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
   generateVerificationToken,
@@ -53,22 +52,7 @@ export async function signInCredentialsAction(formData: FormData) {
       message: "Incorrect password. Please try again.",
     };
 
-  await signIn("credentials", {
-    email,
-    password,
-    redirectTo: "/user/classroom?toast=Signed+in+successfully!",
-  });
   return { success: true, message: "Signed in successfully!" };
-}
-
-export async function signInGoogleAction() {
-  await signIn("google", {
-    redirectTo: "/user/classroom?toast=Signed+in+successfully!",
-  });
-}
-
-export async function signOutAction() {
-  await signOut({ redirectTo: "/" });
 }
 
 export async function createUser(newUser: object) {

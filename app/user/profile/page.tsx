@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
+
 import {
   getRoleRequest,
   getUserByEmail,
@@ -13,7 +14,9 @@ import { closeAccount } from "@/lib/user-management-actions";
 import ProfileSection from "@/components/ProfileSection";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   const user = await getUserByUserId(session?.user?.id ?? "");
 
@@ -25,9 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   async function handleGetUser(email: string) {
     "use server";
@@ -44,7 +49,7 @@ export default async function Page() {
 
   return (
     <ProfileSection
-      session={session}
+      session={session.user}
       onGetUser={handleGetUser}
       onCloseProfile={handleCloseProfile}
       existingRequest={existingRequest}
