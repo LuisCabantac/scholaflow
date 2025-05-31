@@ -1,7 +1,7 @@
 "use client";
 
-import { useOptimistic, useState } from "react";
 import toast from "react-hot-toast";
+import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ISession } from "@/lib/auth";
@@ -25,7 +25,7 @@ export default function NotesSection({
   const [search, setSearch] = useState("");
 
   const { data: notes, isPending: notesIsPending } = useQuery({
-    queryKey: [`notes--${session.user.id}`, search],
+    queryKey: [`notes--${session.id}`, search],
     queryFn: () => onGetNotes(search),
   });
 
@@ -36,7 +36,7 @@ export default function NotesSection({
         toast.success("Notes removed");
 
         queryClient.invalidateQueries({
-          queryKey: [`notes--${session.user.id}`, search],
+          queryKey: [`notes--${session.id}`, search],
         });
       },
       onError: (error) => toast.error(error.message),

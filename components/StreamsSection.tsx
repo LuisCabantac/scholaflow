@@ -8,8 +8,8 @@ import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
-import { deleteClassStreamPost } from "@/lib/classroom-actions";
 import { ISession } from "@/lib/auth";
+import { deleteClassStreamPost } from "@/lib/classroom-actions";
 import {
   IStream,
   IStreamComment,
@@ -83,20 +83,20 @@ export default function StreamsSection({
 
   const assignedClasswork = optimisticStreams?.filter(
     (stream) =>
-      ((stream.announceTo.includes(session.user.id) &&
+      ((stream.announceTo.includes(session.id) &&
         stream.announceToAll === false) ||
         stream.announceToAll ||
-        stream.author === session.user.id ||
-        classroom.teacherId === session.user.id) &&
+        stream.author === session.id ||
+        classroom.teacherId === session.id) &&
       ((stream.scheduledAt
         ? new Date(stream.scheduledAt) < new Date()
         : true) ||
-        classroom.teacherId === session.user.id) &&
+        classroom.teacherId === session.id) &&
       !(stream.type === "stream" || stream.type === "material"),
   )[0];
 
   function handleToggleShowClassForm() {
-    if (session.user.role === "teacher") setShowClassForm(!showClassForm);
+    if (session.role === "teacher") setShowClassForm(!showClassForm);
   }
 
   function handleToggleShowStreamForm() {
@@ -228,7 +228,7 @@ export default function StreamsSection({
               />
             </svg>
           </div>
-          {classroom.teacherId === session.user.id && (
+          {classroom.teacherId === session.id && (
             <button
               className="absolute right-3 top-3"
               type="button"
@@ -258,17 +258,16 @@ export default function StreamsSection({
         </div>
         <div className="grid items-start gap-2 md:grid-cols-[1fr_15rem]">
           <div>
-            {(session.user.role === "teacher" &&
-              session.user.id === classroom.teacherId) ||
-            ((session.user.role === "student" ||
-              session.user.role === "teacher") &&
+            {(session.role === "teacher" &&
+              session.id === classroom.teacherId) ||
+            ((session.role === "student" || session.role === "teacher") &&
               classroom.allowStudentsToPost) ? (
               <div
                 className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
               >
                 <Image
-                  src={session.user.image}
+                  src={session.image ?? ""}
                   alt="user's avatar"
                   width={40}
                   height={40}
@@ -522,15 +521,15 @@ export default function StreamsSection({
               (!optimisticStreams
                 ?.filter(
                   (stream) =>
-                    ((stream.announceTo.includes(session.user.id) &&
+                    ((stream.announceTo.includes(session.id) &&
                       stream.announceToAll === false) ||
                       stream.announceToAll ||
-                      stream.author === session.user.id ||
-                      classroom.teacherId === session.user.id) &&
+                      stream.author === session.id ||
+                      classroom.teacherId === session.id) &&
                     ((stream.scheduledAt
                       ? new Date(stream.scheduledAt) < new Date()
                       : true) ||
-                      classroom.teacherId === session.user.id),
+                      classroom.teacherId === session.id),
                 )
                 .filter((stream) =>
                   !(
@@ -546,15 +545,15 @@ export default function StreamsSection({
               {optimisticStreams
                 ?.filter(
                   (stream) =>
-                    ((stream.announceTo.includes(session.user.id) &&
+                    ((stream.announceTo.includes(session.id) &&
                       stream.announceToAll === false) ||
                       stream.announceToAll ||
-                      stream.author === session.user.id ||
-                      classroom.teacherId === session.user.id) &&
+                      stream.author === session.id ||
+                      classroom.teacherId === session.id) &&
                     ((stream.scheduledAt
                       ? new Date(stream.scheduledAt) < new Date()
                       : true) ||
-                      classroom.teacherId === session.user.id),
+                      classroom.teacherId === session.id),
                 )
                 .filter((stream) =>
                   !(
@@ -581,7 +580,7 @@ export default function StreamsSection({
             </ul>
           </div>
           <aside className="hidden gap-2 md:grid">
-            {session.user.id === classroom.teacherId && (
+            {session.id === classroom.teacherId && (
               <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
                 <h4 className="pb-2 text-base font-medium tracking-tight">
                   Class code

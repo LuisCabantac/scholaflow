@@ -53,7 +53,7 @@ export default function EditProfileForm({
       toast.success(message);
       onToggleShowEditProfileForm();
       queryClient.invalidateQueries({
-        queryKey: [`profile--${session.user.id}`],
+        queryKey: [`profile--${session.id}`],
       });
     } else toast.error(message);
   }
@@ -280,7 +280,7 @@ export default function EditProfileForm({
             handleAction={() => {
               setIsLoading(true);
               setIsClosingAccount(true);
-              onCloseProfile(session.user.id);
+              onCloseProfile(session.id);
               router.push("/");
             }}
           >

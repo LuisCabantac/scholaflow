@@ -7,6 +7,7 @@ import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { ISession } from "@/lib/auth";
 import { formatMessageDate, getFileExtension } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { addMessageToChat } from "@/lib/classroom-actions";
@@ -43,17 +44,7 @@ export default function ClassChatSection({
   onGetAllMessages,
 }: {
   classId: string;
-  session: {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    image?: string | null | undefined | undefined;
-    role: string;
-    schoolName?: string | null | undefined;
-  };
+  session: ISession;
   onGetAllMessages: (classId: string) => Promise<IChat[] | null>;
 }) {
   const queryClient = useQueryClient();

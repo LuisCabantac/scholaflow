@@ -37,7 +37,7 @@ export default function UserForm({
 
   async function onCreateUser(formData: FormData) {
     const status = await createUser({
-      fullName: formData.get("fullName"),
+      name: formData.get("fullName"),
       email: formData.get("email"),
       password: formData.get("password"),
       role: userRole,
