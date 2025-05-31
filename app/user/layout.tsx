@@ -55,7 +55,7 @@ export default async function RootLayout({
       <Provider>
         {session && (
           <Sidebar
-            session={session ? session : null}
+            session={session ? session.user : null}
             onGetAllClassesByTeacherId={handleGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={
               handleGetAllEnrolledClassesByUserId
