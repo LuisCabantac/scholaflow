@@ -92,7 +92,7 @@ export default async function Page() {
   return (
     <ClassroomSection
       role={session.user.role}
-      session={session}
+      session={session.user}
       onGetClass={handleGetClassByClassCode}
       onDeleteClass={handleDeleteClassByClassId}
       onGetAllClasses={handleGetAllClassesByTeacher}

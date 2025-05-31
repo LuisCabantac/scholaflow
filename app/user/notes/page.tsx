@@ -44,5 +44,5 @@ export default async function Page() {
     return notes;
   }
 
-  return <NotesSection onGetNotes={handleGetAllNotes} session={session} />;
+  return <NotesSection onGetNotes={handleGetAllNotes} session={session.user} />;
 }

@@ -39,7 +39,7 @@ export default async function Page() {
 
   return (
     <ToDoSection
-      session={session}
+      session={session.user}
       onGetAllClassworks={handleGetAllClassworks}
       onGetAllEnrolledClassesClassworks={handleGetAllEnrolledClassesClassworks}
     />

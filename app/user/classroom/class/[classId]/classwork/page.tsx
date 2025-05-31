@@ -103,7 +103,7 @@ export default async function Page({
 
   return (
     <ClassworksSection
-      session={session}
+      session={session.user}
       classroom={classroom}
       enrolledClasses={enrolledClasses}
       onGetAllComments={handleGetAllCommentsByStreamId}
