@@ -99,7 +99,7 @@ export default async function Page({
       <StreamDetailSection
         topics={allTopics}
         stream={stream}
-        session={session}
+        session={session.user}
         classroom={classroom}
         classwork={classwork}
         enrolledClasses={enrolledClasses}

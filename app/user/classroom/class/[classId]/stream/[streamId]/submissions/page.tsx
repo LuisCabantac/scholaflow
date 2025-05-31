@@ -96,7 +96,7 @@ export default async function Page({
   return (
     <StreamSubmissionsSection
       stream={stream}
-      session={session}
+      session={session.user}
       classroom={classroom}
       onGetAssignedUserClasswork={getAssignedUserClasswork}
       onGetAllPrivateComments={handleGetAllPrivateComments}

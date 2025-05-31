@@ -118,7 +118,7 @@ export default async function Page({
   return (
     <StreamsSection
       topics={allTopics}
-      session={session}
+      session={session.user}
       classroom={classroom}
       enrolledClasses={enrolledClasses}
       onDeleteClass={handleDeleteClassByClassId}
