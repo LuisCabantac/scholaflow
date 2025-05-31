@@ -56,7 +56,7 @@ export async function signInCredentialsAction(formData: FormData) {
 }
 
 export async function createUser(newUser: object) {
-  const { data, error } = await supabase.from("users").insert([newUser]);
+  const { data, error } = await supabase.from("user").insert([newUser]);
 
   if (error) {
     throw new Error("User could not be created");
@@ -151,7 +151,7 @@ export async function signUpAction(formData: FormData) {
     password,
   };
 
-  const { error } = await supabase.from("users").insert([newUser]);
+  const { error } = await supabase.from("user").insert([newUser]);
 
   const verification = await generateVerificationToken(email);
 
@@ -210,7 +210,7 @@ export async function newVerification(token: string): Promise<{
     };
 
   const { error: userUpdateError } = await supabase
-    .from("users")
+    .from("user")
     .update([{ emailVerified: true }])
     .eq("id", user.id);
 

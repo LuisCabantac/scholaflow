@@ -23,7 +23,7 @@ import { IRoleRequest } from "@/components/RoleRequestDialog";
 
 export async function getUser(email: string) {
   const { data } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .eq("email", email)
     .single();
@@ -33,7 +33,7 @@ export async function getUser(email: string) {
 
 export async function getUserByUserId(userId: string): Promise<IUser | null> {
   const { data } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .eq("id", userId)
     .single();
@@ -43,7 +43,7 @@ export async function getUserByUserId(userId: string): Promise<IUser | null> {
 
 export async function getUserByEmail(email: string): Promise<IUser | null> {
   const { data } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .eq("email", email)
     .single();
@@ -60,7 +60,7 @@ export async function getAllUser() {
     return { success: false, message: "Error getting all users", data: null };
 
   const { data, error } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -79,7 +79,7 @@ export async function getUsersFilter(name: string) {
     return { success: false, message: "Error getting all users", data: null };
 
   const { data, error } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .ilike("fullName", `%${name}%`);
 

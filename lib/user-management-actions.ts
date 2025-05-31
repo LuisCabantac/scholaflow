@@ -45,7 +45,7 @@ export async function createUser(newGuest: object): Promise<{
       message: "You need be an admin to edit this post.",
     };
 
-  const { error } = await supabase.from("users").insert([newGuest]);
+  const { error } = await supabase.from("user").insert([newGuest]);
 
   if (error) {
     return { success: false, message: "User could not be created" };
@@ -95,7 +95,7 @@ export async function updateUser(formData: FormData): Promise<{
     };
 
     const { error } = await supabase
-      .from("users")
+      .from("user")
       .update([updatedGuest])
       .eq("id", userId);
 
@@ -191,7 +191,7 @@ export async function updateProfile(formData: FormData): Promise<{
     };
 
     const { error } = await supabase
-      .from("users")
+      .from("user")
       .update([updatedGuest])
       .eq("id", userId);
 
@@ -220,7 +220,7 @@ export async function deleteUser(userId: string): Promise<void> {
   const user = await getUserByUserId(userId);
   if (!user) throw new Error("User does not exist.");
 
-  const { error } = await supabase.from("users").delete().eq("id", userId);
+  const { error } = await supabase.from("user").delete().eq("id", userId);
 
   if (error) throw new Error(error.message);
 }
@@ -443,7 +443,7 @@ async function setTeacherUserRole(userId: string): Promise<void> {
   const updatedUserRole = { role: "teacher" };
 
   const { error } = await supabase
-    .from("users")
+    .from("user")
     .update([updatedUserRole])
     .eq("id", userId);
 
