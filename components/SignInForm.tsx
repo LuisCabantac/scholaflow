@@ -3,9 +3,8 @@
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 
-import { signInCredentialsAction } from "@/lib/auth-actions";
-
 import SignInCredentialsButton from "@/components/SignInCredentialsButton";
+import { authClient } from "@/lib/auth-client";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,11 +22,32 @@ export default function SignInForm() {
     setIsLoading(true);
     setShowPassword(false);
     const formData = new FormData(event.target as HTMLFormElement);
-    const data = await signInCredentialsAction(formData);
-    setIsLoading(false);
-    if (data) {
-      toast.error(data.message);
-    }
+    await authClient.signIn.email(
+      {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        callbackURL: "/user/classroom",
+      },
+      {
+        onRequest: () => {
+          setIsLoading(false);
+        },
+        onResponse: () => {
+          setIsLoading(true);
+        },
+        onSuccess: () => {
+          toast.success(
+            "Account created successfully! Please sign in to continue.",
+          );
+        },
+        onError: (ctx) => {
+          if (ctx.error.status === 403) {
+            toast.error("Please verify your email address");
+          }
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   }
 
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
