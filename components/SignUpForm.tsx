@@ -72,7 +72,7 @@ export default function SignUpForm() {
         <input
           required
           disabled={isLoading}
-          name="fullName"
+          name="name"
           type="text"
           placeholder="Your full name"
           className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${!validFullName && "border-[#f03e3e]"}`}
