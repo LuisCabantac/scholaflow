@@ -24,6 +24,9 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 8,
+    maxPasswordLength: 20,
+    requireEmailVerification: true,
   },
   socialProviders: {
     google: {
@@ -60,7 +63,6 @@ export const auth = betterAuth({
         },
       },
     }),
-
     nextCookies(),
   ],
 });
