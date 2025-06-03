@@ -77,20 +77,20 @@ export async function updateUser(formData: FormData): Promise<{
     return { success: false, message: "User does not exist." };
 
   const newEmail = formData.get("email");
-  const newPassword = formData.get("password");
+  // const newPassword = formData.get("password");
   const newFullName = formData.get("fullName");
   const newUserRole = formData.get("userRole");
 
   if (
     currentUserData.email !== newEmail ||
-    currentUserData.fullName !== newFullName ||
-    currentUserData.password !== newPassword ||
+    currentUserData.name !== newFullName ||
+    // currentUserData.password !== newPassword ||
     currentUserData.role !== newUserRole
   ) {
     const updatedGuest = {
       fullName: newFullName,
       email: newEmail,
-      password: newPassword,
+      // password: newPassword,
       role: newUserRole,
     };
 
@@ -142,8 +142,8 @@ export async function updateProfile(formData: FormData): Promise<{
 
   if (
     currentUserData.email !== newEmail ||
-    currentUserData.fullName !== newFullName ||
-    currentUserData.password !== newPassword ||
+    currentUserData.name !== newFullName ||
+    // currentUserData.password !== newPassword ||
     currentUserData.schoolName !== newSchoolName ||
     attachment
   ) {
@@ -161,24 +161,24 @@ export async function updateProfile(formData: FormData): Promise<{
         message: "Email address already in use.",
       };
 
-    if (
-      currentUserData.password !== newPassword &&
-      (newPassword as string).length < 8
-    )
-      return {
-        success: false,
-        message: "Your password must be a minimum of 8 characters in length.",
-      };
+    // if (
+    //   currentUserData.password !== newPassword &&
+    //   (newPassword as string).length < 8
+    // )
+    //   return {
+    //     success: false,
+    //     message: "Your password must be a minimum of 8 characters in length.",
+    //   };
 
     const newProfilePhoto = attachment
       ? await uploadAttachments("avatars", session.user.id, attachment as File)
-      : currentUserData.avatar;
+      : currentUserData.image;
 
     if (
       attachment &&
-      !currentUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
+      !currentUserData.image.startsWith("https://lh3.googleusercontent.com/")
     ) {
-      const filePath = extractAvatarFilePath(currentUserData.avatar);
+      const filePath = extractAvatarFilePath(currentUserData.image);
       await deleteFileFromBucket("avatars", filePath);
     }
 
@@ -276,8 +276,8 @@ export async function closeAccount(userId: string): Promise<void> {
 
   await removeRoleRequestByUserId(userId);
 
-  if (!user.avatar.startsWith("https://lh3.googleusercontent.com/")) {
-    const filePath = extractAvatarFilePath(user.avatar);
+  if (!user.image.startsWith("https://lh3.googleusercontent.com/")) {
+    const filePath = extractAvatarFilePath(user.image);
     await deleteFileFromBucket("avatars", filePath);
   }
 
