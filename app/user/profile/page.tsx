@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const user = await getUserByUserId(session?.user?.id ?? "");
 
   return {
-    title: user?.fullName,
+    title: user?.name,
     description:
       "View and manage your profile information, settings, and connected accounts.",
   };
