@@ -14,7 +14,7 @@ export interface IUser {
   id: string;
   email: string;
   password: string;
-  fullName: string;
+  name: string;
   avatar: string;
   role: "student" | "teacher" | "admin";
   email_verified: boolean;

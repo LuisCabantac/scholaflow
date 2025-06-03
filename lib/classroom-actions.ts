@@ -1227,7 +1227,7 @@ export async function addUserToClass(formData: FormData): Promise<{
 
   const newClass = {
     userId: user.id,
-    userName: user.fullName,
+    userName: user.name,
     userAvatar: user.avatar,
     classroomId: classroom.classroomId,
     subject: classroom.subject,
@@ -1636,7 +1636,7 @@ export async function createEmptyClasswork(
     classroomName: classroom.className,
     streamCreated: stream.created_at,
     classworkTitle: stream.title,
-    userName: user.fullName,
+    userName: user.name,
     userAvatar: user.avatar,
     isTurnedIn: false,
   };

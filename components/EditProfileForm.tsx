@@ -139,7 +139,7 @@ export default function EditProfileForm({
               <div className="flex items-center gap-2">
                 <Image
                   src={attachmentPreview}
-                  alt={`${user?.fullName}'s image`}
+                  alt={`${user?.name}'s image`}
                   width={48}
                   height={48}
                   className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -172,7 +172,7 @@ export default function EditProfileForm({
                 disabled={isLoading}
                 name="fullName"
                 type="text"
-                defaultValue={user?.fullName ?? ""}
+                defaultValue={user?.name ?? ""}
                 placeholder="Add your full name..."
                 className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />

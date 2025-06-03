@@ -55,12 +55,12 @@ export default function UserCard({
       <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
         <Image
           src={userData.avatar}
-          alt={userData.fullName}
+          alt={userData.name}
           width={30}
           height={30}
           className="rounded-full"
         />
-        <p className="text-balance font-medium">{userData.fullName}</p>
+        <p className="text-balance font-medium">{userData.name}</p>
       </td>
       <td data-cell="Email:" className="px-4 py-2">
         <p>{userData.email}</p>

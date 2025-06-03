@@ -37,7 +37,7 @@ export default function UserForm({
 
   async function onCreateUser(formData: FormData) {
     const status = await createUser({
-      name: formData.get("fullName"),
+      name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
       role: userRole,
@@ -129,9 +129,9 @@ export default function UserForm({
                 disabled={isLoading}
                 required
                 type="text"
-                name="fullName"
+                name="name"
                 placeholder="Enter the user's name"
-                defaultValue={user?.fullName}
+                defaultValue={user?.name}
                 className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
               />
             </div>
