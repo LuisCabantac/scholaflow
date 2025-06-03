@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { format, parseISO, subHours } from "date-fns";
 
 import { auth } from "@/lib/auth";
@@ -15,7 +16,6 @@ import {
   extractMessagesFilePath,
   extractStreamFilePath,
   generateClassCode,
-  hasUser,
 } from "@/lib/utils";
 import {
   getAllClassStreamsByClassId,
@@ -48,9 +48,11 @@ import { IStream } from "@/app/user/classroom/class/[classId]/page";
 import { IClass } from "@/components/ClassroomSection";
 
 export async function createClass(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role !== "teacher") {
     return {
@@ -94,9 +96,11 @@ export async function updateClass(
   updateClassCode: boolean,
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role !== "teacher") {
     return {
@@ -164,7 +168,7 @@ export async function updateClass(
       for (const enrolledClass of enrolledClasses) {
         await updateEnrolledClass(enrolledClass.id, {
           teacherName: session.user.name,
-          teacherAvatar: session.user.image,
+          teacherAvatar: session.user.image ?? "",
           className: newClassName as string,
           subject: newSubject as string,
           section: newSection as string,
@@ -209,9 +213,11 @@ async function updateEnrolledClass(
     classCardBackgroundColor: string | null;
   },
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role !== "teacher")
     throw new Error("Only teachers can update the enrolled class information.");
@@ -225,9 +231,11 @@ async function updateEnrolledClass(
 }
 
 export async function joinClass(classId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -270,8 +278,10 @@ export async function joinClass(classId: string) {
 }
 
 export async function deleteClass(classId: string) {
-  const session = await auth();
-  if (!hasUser(session)) return redirect("/signin");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin")
     throw new Error("Only the teacher who created this class can delete it.");
@@ -344,9 +354,11 @@ export async function deleteClass(classId: string) {
 }
 
 export async function deleteAllMessagesByUserId(userId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const messages = await getAllMessagesByUserId(userId);
 
@@ -369,9 +381,11 @@ export async function deleteAllMessagesByUserId(userId: string) {
 }
 
 export async function deleteAllCommentsByUserId(userId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const comments = await getAllCommentsByUserId(userId);
 
@@ -397,9 +411,11 @@ export async function deleteAllCommentsByUserId(userId: string) {
 }
 
 export async function deleteAllPrivateCommentsByUserId(userId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const comments = await getAllPrivateCommentsByUserId(userId);
 
@@ -428,9 +444,11 @@ export async function deleteAllClassworkByClassAndUserId(
   classId: string,
   userId: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const classworks = await getAllClassworksByClassAndUserId(userId, classId);
 
@@ -469,9 +487,11 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
   enrolledClassId: string,
   classId: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const enrolledClass =
     await getEnrolledClassByEnrolledClassId(enrolledClassId);
@@ -509,9 +529,11 @@ export async function createClassStreamPost(
   audienceIsAll: boolean,
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -616,9 +638,11 @@ export async function updateClassStreamPost(
   curAttachments: string[],
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -772,9 +796,11 @@ export async function updateClassStreamPost(
 }
 
 export async function deleteClassStreamPost(streamId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const stream = await getClassStreamByStreamId(streamId);
 
@@ -814,9 +840,11 @@ export async function deleteClassStreamPost(streamId: string) {
 }
 
 export async function deleteAllClassworkByStreamId(streamId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const classworks = await getAllClassworksByStreamId(streamId);
 
@@ -840,9 +868,11 @@ export async function deleteAllClassworkByStreamId(streamId: string) {
 }
 
 export async function deleteAllMessagesByClassId(classId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return;
+  if (!session) return;
 
   const messages = await getAllMessagesByClassId(classId);
 
@@ -917,9 +947,11 @@ export async function deleteStreamComment(
   streamId: string,
   commentId: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroom = await getClassByClassId(clasroomId);
 
@@ -958,9 +990,11 @@ export async function deleteStreamComment(
 }
 
 export async function addCommentToStream(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroom = await getClassByClassId(
     formData.get("classroomId") as string,
@@ -1015,9 +1049,11 @@ export async function addCommentToStream(formData: FormData) {
 }
 
 export async function addPrivateComment(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroomId = formData.get("classroomId") as string;
   const streamId = formData.get("streamId") as string;
@@ -1088,9 +1124,11 @@ export async function deletePrivateComment(
   streamId: string,
   commentId: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroom = await getClassByClassId(clasroomId);
 
@@ -1132,9 +1170,11 @@ export async function addUserToClass(formData: FormData): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin" || session.user.role === "student") {
     return {
@@ -1187,8 +1227,8 @@ export async function addUserToClass(formData: FormData): Promise<{
 
   const newClass = {
     userId: user.id,
-    userName: user.fullName,
-    userAvatar: user.avatar,
+    userName: user.name,
+    userAvatar: user.image,
     classroomId: classroom.classroomId,
     subject: classroom.subject,
     className: classroom.className,
@@ -1256,9 +1296,11 @@ export async function submitClasswork(
   streamId: string,
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -1333,9 +1375,11 @@ export async function updateClasswork(
   curAttachments: string[],
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -1430,9 +1474,11 @@ export async function unsubmitClasswork(
   classroomId: string,
   streamId: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") {
     return {
@@ -1472,9 +1518,11 @@ export async function unsubmitClasswork(
 }
 
 export async function addGradeClasswork(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role !== "teacher") {
     return {
@@ -1552,9 +1600,11 @@ export async function createEmptyClasswork(
   streamId: string,
   userPoints?: string,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroom = await getClassByClassId(classId);
 
@@ -1586,8 +1636,8 @@ export async function createEmptyClasswork(
     classroomName: classroom.className,
     streamCreated: stream.created_at,
     classworkTitle: stream.title,
-    userName: user.fullName,
-    userAvatar: user.avatar,
+    userName: user.name,
+    userAvatar: user.image,
     isTurnedIn: false,
   };
 
@@ -1603,9 +1653,11 @@ export async function createEmptyClasswork(
 }
 
 export async function addMessageToChat(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroom = await getClassByClassId(
     formData.get("classroomId") as string,
@@ -1655,9 +1707,11 @@ export async function addMessageToChat(formData: FormData) {
 }
 
 export async function createTopic(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroomId = formData.get("classroomId") as string;
 
@@ -1696,9 +1750,11 @@ export async function createTopic(formData: FormData) {
 }
 
 export async function updateTopic(formData: FormData) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const classroomId = formData.get("classroomId") as string;
 
@@ -1771,9 +1827,11 @@ export async function updateTopic(formData: FormData) {
 }
 
 export async function deleteTopic(topicId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const topic = await getClassTopicByTopicId(topicId);
 

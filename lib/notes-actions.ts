@@ -1,12 +1,13 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { getNoteByNoteIdSession } from "@/lib/data-service";
-import { arraysAreEqual, extractNoteFilePath, hasUser } from "@/lib/utils";
+import { arraysAreEqual, extractNoteFilePath } from "@/lib/utils";
 import {
   deleteFilesFromBucket,
   uploadAttachments,
@@ -19,9 +20,11 @@ export async function createNote(
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const attachments = formData.getAll("attachments");
   const noteAttachments = Array.isArray(attachments)
@@ -70,9 +73,11 @@ export async function updateNote(
   curAttachments: string[],
   formData: FormData,
 ) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const noteId = formData.get("noteId") as string;
 
@@ -161,9 +166,11 @@ export async function updateNote(
 }
 
 export async function deleteNote(noteId: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const note = await getNoteByNoteIdSession(noteId);
 

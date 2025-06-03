@@ -1,8 +1,8 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 import {
   getAllClassworksByUserId,
   getAllEnrolledClassesClassworks,
@@ -17,8 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await auth();
-  if (!hasUser(session)) return redirect("/signin");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/");
 
@@ -36,7 +39,7 @@ export default async function Page() {
 
   return (
     <ToDoSection
-      session={session}
+      session={session.user}
       onGetAllClassworks={handleGetAllClassworks}
       onGetAllEnrolledClassesClassworks={handleGetAllEnrolledClassesClassworks}
     />

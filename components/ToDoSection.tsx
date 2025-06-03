@@ -27,13 +27,13 @@ export default function ToDoSection({
   const searchParams = useSearchParams();
 
   const { data: enrolledClassworks } = useQuery({
-    queryKey: [`enrolledClassesClassworks--${session.user.id}`],
-    queryFn: () => onGetAllEnrolledClassesClassworks(session.user.id),
+    queryKey: [`enrolledClassesClassworks--${session.id}`],
+    queryFn: () => onGetAllEnrolledClassesClassworks(session.id),
   });
 
   const { data: classworks } = useQuery({
-    queryKey: [`classworks--${session.user.id}`],
-    queryFn: () => onGetAllClassworks(session.user.id),
+    queryKey: [`classworks--${session.id}`],
+    queryFn: () => onGetAllClassworks(session.id),
   });
 
   const assignedClassworks = enrolledClassworks
@@ -47,7 +47,7 @@ export default function ToDoSection({
             new Date(classwork.dueDate ?? "") > new Date())) &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))) &&
+            classwork.announceTo.includes(session.id))) &&
         (classwork.scheduledAt
           ? new Date(classwork.scheduledAt) < new Date()
           : true),
@@ -71,7 +71,7 @@ export default function ToDoSection({
         new Date(classwork.dueDate ?? "") < new Date() &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))) &&
+            classwork.announceTo.includes(session.id))) &&
         (classwork.scheduledAt
           ? new Date(classwork.scheduledAt) < new Date()
           : true),

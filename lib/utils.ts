@@ -1,4 +1,3 @@
-import { Session } from "next-auth";
 import {
   format,
   formatDistanceToNow,
@@ -8,12 +7,6 @@ import {
   isYesterday,
   parseISO,
 } from "date-fns";
-
-import { ISession } from "@/lib/auth";
-
-export function hasUser(session: Session | null): session is ISession {
-  return !!session?.user;
-}
 
 export function extractImagePath(url: string): string {
   const match = url.match(/\/([^\/]+)$/);

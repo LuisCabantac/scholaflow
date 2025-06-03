@@ -64,8 +64,8 @@ export default function Sidebar({
         </div>
         {session && (
           <SidebarLinks
-            userId={session.user.id}
-            role={session.user.role}
+            userId={session.id}
+            role={session.role}
             onGetAllClassesByTeacherId={onGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={onGetAllEnrolledClassesByUserId}
           />

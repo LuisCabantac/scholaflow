@@ -1,114 +1,68 @@
-import NextAuth, { Account, Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import { AdapterAccount, AdapterUser } from "next-auth/adapters";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-
-import { createUser } from "@/lib/auth-actions";
-import { getUser, getUserByEmail } from "@/lib/data-service";
-import { generatePassword } from "@/lib/utils";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/drizzle/index";
+import { schema } from "@/drizzle/schema";
+import { inferAdditionalFields } from "better-auth/client/plugins";
+import { nextCookies } from "better-auth/next-js";
 
 export interface ISession {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image: string;
-    role: "student" | "teacher" | "admin";
-  };
-  expires: string;
-}
-
-interface IUser extends User {
   id: string;
   name: string;
   email: string;
-  image: string;
-  role?: "student" | "teacher" | "admin";
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null | undefined | undefined;
+  role: string;
+  schoolName?: string | null | undefined;
 }
 
-const authConfig = {
-  session: {
-    strategy: "jwt" as const,
+export const auth = betterAuth({
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: schema,
+  }),
+  emailAndPassword: {
+    enabled: true,
+    minPasswordLength: 8,
+    maxPasswordLength: 20,
+    requireEmailVerification: true,
   },
-  providers: [
-    CredentialsProvider({
-      async authorize(credentials: Partial<Record<string, unknown>>) {
-        if (!credentials.email) return null;
-        const email = credentials.email as string;
-        const user = await getUserByEmail(email);
-        if (user && user.password === credentials.password) {
-          return user;
-        } else {
-          return null;
-        }
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: true,
+        defaultValue: "student",
       },
-    }),
-    GoogleProvider({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
+      schoolName: {
+        type: "string",
+        required: false,
+        defaultValue: null,
+      },
+    },
+  },
+  plugins: [
+    inferAdditionalFields({
+      user: {
+        role: {
+          type: "string",
+          required: true,
+          defaultValue: "student",
+        },
+        schoolName: {
+          type: "string",
+          required: false,
+          defaultValue: null,
         },
       },
     }),
+    nextCookies(),
   ],
-  callbacks: {
-    async signIn({
-      user,
-      account,
-    }: {
-      user: User | AdapterUser;
-      account: Account | AdapterAccount | null;
-    }) {
-      try {
-        const existingUser = await getUserByEmail((user as IUser).email);
-        if (
-          !existingUser?.emailVerified &&
-          account?.provider === "credentials"
-        ) {
-          return false;
-        }
-        if (!existingUser) {
-          await createUser({
-            email: user.email,
-            fullName: user.name,
-            avatar: user.image,
-            role: "student",
-            emailVerified: true,
-            password: generatePassword(8),
-          });
-        }
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    async jwt({ token, user }: { token: JWT; user?: User | AdapterUser }) {
-      if (user) token.role = (user as IUser).role;
-      return token;
-    },
-    async session({ session }: { session: Session }) {
-      const user = await getUser((session as ISession).user.email);
-
-      (session as ISession).user.id = user.id;
-      (session as ISession).user.name = user.fullName;
-      (session as ISession).user.image = user.avatar;
-      (session as ISession).user.role = user.role;
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/signin",
-  },
-};
-
-export const {
-  auth,
-  signIn,
-  signOut,
-  handlers: { GET, POST },
-} = NextAuth(authConfig);
+});

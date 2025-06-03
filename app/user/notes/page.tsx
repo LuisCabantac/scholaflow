@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
+
 import {
   getAllNotesBySession,
   getAllNotesBySessionQuery,
@@ -28,8 +29,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const session = await auth();
-  if (!hasUser(session)) return redirect("/signin");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return redirect("/signin");
 
   async function handleGetAllNotes(query: string): Promise<INotes[] | null> {
     "use server";
@@ -41,5 +44,5 @@ export default async function Page() {
     return notes;
   }
 
-  return <NotesSection onGetNotes={handleGetAllNotes} session={session} />;
+  return <NotesSection onGetNotes={handleGetAllNotes} session={session.user} />;
 }

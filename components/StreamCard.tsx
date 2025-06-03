@@ -442,12 +442,12 @@ export default function StreamCard({
               </svg>
             </button>
             <EllipsisPopover
-              showEdit={session.user.id === stream.author}
+              showEdit={session.id === stream.author}
               clipboardUrl={`scholaflow.vercel.app/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               showEllipsis={ellipsis}
               showDelete={
-                session.user.id === stream.author ||
-                session.user.id === classroom.teacherId
+                session.id === stream.author ||
+                session.id === classroom.teacherId
               }
               onToggleEllipsis={handleToggleEllipsis}
               onShowEditForm={handleToggleShowStreamForm}
@@ -513,7 +513,7 @@ export default function StreamCard({
             </ul>
           </div>
           {(classroom.allowStudentsToComment ||
-            classroom.teacherId === session.user.id) && (
+            classroom.teacherId === session.id) && (
             <>
               <Link
                 href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}

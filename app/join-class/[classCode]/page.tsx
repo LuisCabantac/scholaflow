@@ -1,8 +1,8 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 
 import {
   getClassByClassCode,
@@ -33,9 +33,11 @@ export default async function Page({
 }: {
   params: Promise<{ classCode: string }>;
 }) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   const { classCode } = await params;
 
@@ -55,7 +57,7 @@ export default async function Page({
       <div className="absolute left-0 top-1.5 md:-top-0.5">
         <Nav showButton={false} />
       </div>
-      <InviteSection classroom={classroom} session={session} />
+      <InviteSection classroom={classroom} session={session.user} />
     </div>
   );
 }

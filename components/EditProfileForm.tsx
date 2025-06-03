@@ -9,7 +9,6 @@ import { updateProfile } from "@/lib/user-management-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
-import { IUser } from "@/components/UserManagementSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function EditProfileForm({
@@ -19,7 +18,7 @@ export default function EditProfileForm({
   onToggleShowEditProfileForm,
   handleSetShowEditProfileForm,
 }: {
-  user: IUser | null | undefined;
+  user: ISession | undefined;
   session: ISession;
   onToggleShowEditProfileForm: () => void;
   onCloseProfile: (userId: string) => Promise<void>;
@@ -34,10 +33,10 @@ export default function EditProfileForm({
 
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string>(
-    user?.avatar ?? "",
+    user?.image ?? "",
   );
-  const [showPassword, setShowPassword] = useState(false);
-  const [validPassword, setValidPassword] = useState(true);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [validPassword, setValidPassword] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleSubmitEditProfile(event: React.FormEvent) {
@@ -53,7 +52,7 @@ export default function EditProfileForm({
       toast.success(message);
       onToggleShowEditProfileForm();
       queryClient.invalidateQueries({
-        queryKey: [`profile--${session.user.id}`],
+        queryKey: [`profile--${session.id}`],
       });
     } else toast.error(message);
   }
@@ -79,10 +78,10 @@ export default function EditProfileForm({
     }
   }
 
-  function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
-    setShowPassword(!showPassword);
-  }
+  // function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
+  //   event.preventDefault();
+  //   setShowPassword(!showPassword);
+  // }
 
   function handleToggleShowConfirmation() {
     setShowConfirmation(!showConfirmation);
@@ -139,7 +138,7 @@ export default function EditProfileForm({
               <div className="flex items-center gap-2">
                 <Image
                   src={attachmentPreview}
-                  alt={`${user?.fullName}'s image`}
+                  alt={`${user?.name}'s image`}
                   width={48}
                   height={48}
                   className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -172,7 +171,7 @@ export default function EditProfileForm({
                 disabled={isLoading}
                 name="fullName"
                 type="text"
-                defaultValue={user?.fullName ?? ""}
+                defaultValue={user?.name ?? ""}
                 placeholder="Add your full name..."
                 className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />
@@ -202,7 +201,7 @@ export default function EditProfileForm({
                 className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
               />
             </div>
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <label className="font-medium">
                 Password <span className="text-red-400">*</span>
               </label>
@@ -253,7 +252,7 @@ export default function EditProfileForm({
                   </svg>
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
             <button
@@ -280,7 +279,7 @@ export default function EditProfileForm({
             handleAction={() => {
               setIsLoading(true);
               setIsClosingAccount(true);
-              onCloseProfile(session.user.id);
+              onCloseProfile(session.id);
               router.push("/");
             }}
           >

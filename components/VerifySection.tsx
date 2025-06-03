@@ -21,8 +21,11 @@ export default function VerifySection() {
       setIsLoading(false);
       setSuccess(data.success);
       setMessage(data.message);
+      if (data.success) {
+        setTimeout(() => router.push("/signin"), 2000);
+      }
     });
-  }, [token]);
+  }, [token, router]);
 
   useEffect(() => {
     onSubmit();

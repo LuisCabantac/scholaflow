@@ -8,13 +8,13 @@ import Image from "next/image";
 
 import noClasworks from "@/public/app/no_classworks.svg";
 import { deleteClassStreamPost, deleteTopic } from "@/lib/classroom-actions";
-import { ISession } from "@/lib/auth";
 import {
   IStream,
   IStreamComment,
 } from "@/app/user/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
+import { ISession } from "@/lib/auth";
 import { IClass } from "@/components/ClassroomSection";
 import StreamCard from "@/components/StreamCard";
 import Button from "@/components/Button";
@@ -175,7 +175,7 @@ export default function ClassworksSection({
       </div>
       <div>
         <div className="flex items-center justify-between">
-          {session.user.id === classroom.teacherId && (
+          {session.id === classroom.teacherId && (
             <input
               type="search"
               className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
@@ -184,7 +184,7 @@ export default function ClassworksSection({
               onChange={(e) => setSearch(e.target.value)}
             />
           )}
-          {session.user.id === classroom.teacherId && (
+          {session.id === classroom.teacherId && (
             <div className="relative" ref={btnWrapperRef}>
               <Button type="primary" onClick={handleToggleShowCreateClasswork}>
                 Create
@@ -231,7 +231,7 @@ export default function ClassworksSection({
               </div>
             </div>
           )}
-          {session.user.id !== classroom.teacherId && (
+          {session.id !== classroom.teacherId && (
             <input
               type="search"
               className="w-full rounded-md border border-[#dddfe6] bg-[#eef3ff] bg-transparent px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
@@ -266,16 +266,16 @@ export default function ClassworksSection({
               )}
               {!optimisticClassworks?.filter(
                 (stream) =>
-                  ((stream.announceTo.includes(session.user.id) &&
+                  ((stream.announceTo.includes(session.id) &&
                     stream.announceToAll === false) ||
                     stream.announceToAll ||
-                    stream.author === session.user.id ||
-                    classroom.teacherId === session.user.id) &&
+                    stream.author === session.id ||
+                    classroom.teacherId === session.id) &&
                   !stream.topicId &&
                   ((stream.scheduledAt
                     ? new Date(stream.scheduledAt) < new Date()
                     : true) ||
-                    classroom.teacherId === session.user.id),
+                    classroom.teacherId === session.id),
               ).length &&
               !optimisticTopics?.length &&
               !classworksIsPending ? (
@@ -295,16 +295,16 @@ export default function ClassworksSection({
                 optimisticClassworks
                   ?.filter(
                     (stream) =>
-                      ((stream.announceTo.includes(session.user.id) &&
+                      ((stream.announceTo.includes(session.id) &&
                         stream.announceToAll === false) ||
                         stream.announceToAll ||
-                        stream.author === session.user.id ||
-                        classroom.teacherId === session.user.id) &&
+                        stream.author === session.id ||
+                        classroom.teacherId === session.id) &&
                       !stream.topicId &&
                       ((stream.scheduledAt
                         ? new Date(stream.scheduledAt) < new Date()
                         : true) ||
-                        classroom.teacherId === session.user.id),
+                        classroom.teacherId === session.id),
                   )
                   .map((stream) => (
                     <StreamCard

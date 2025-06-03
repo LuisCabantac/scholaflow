@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import ReactLinkify from "react-linkify";
 
-import { formatDate } from "@/lib/utils";
 import { ISession } from "@/lib/auth";
+import { formatDate } from "@/lib/utils";
 import {
   IStream,
   IStreamComment,
@@ -132,8 +132,8 @@ export default function CommentCard({
           ) : null}
         </div>
       </div>
-      {(session.user.id === comment.author ||
-        session.user.id === classroom.teacherId) && (
+      {(session.id === comment.author ||
+        session.id === classroom.teacherId) && (
         <div className="absolute right-0 top-0">
           <div className="relative" ref={commentEllipsisWrapperRef}>
             <button onClick={handleToggleCommentEllipsis} type="button">
@@ -155,8 +155,8 @@ export default function CommentCard({
             <EllipsisPopover
               showEdit={false}
               showDelete={
-                session.user.id === comment.author ||
-                session.user.id === classroom.teacherId
+                session.id === comment.author ||
+                session.id === classroom.teacherId
               }
               onToggleEllipsis={handleToggleCommentEllipsis}
               showEllipsis={commentEllipsis}

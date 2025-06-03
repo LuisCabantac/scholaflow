@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
+import { headers } from "next/headers";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/drizzle/index";
+import { user, verification } from "@/drizzle/schema";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import {
   createVerificationToken,
@@ -16,14 +19,14 @@ import { INotes } from "@/app/user/notes/page";
 import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
-import { IUser } from "@/components/UserManagementSection";
+
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
 
 export async function getUser(email: string) {
   const { data } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .eq("email", email)
     .single();
@@ -31,51 +34,44 @@ export async function getUser(email: string) {
   return data;
 }
 
-export async function getUserByUserId(userId: string): Promise<IUser | null> {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", userId)
-    .single();
+export async function getUserByUserId(userId: string) {
+  const [data] = await db.select().from(user).where(eq(user.id, userId));
 
-  return data;
+  return data || null;
 }
 
-export async function getUserByEmail(email: string): Promise<IUser | null> {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", email)
-    .single();
+export async function getUserByEmail(email: string) {
+  const [data] = await db.select().from(user).where(eq(user.email, email));
 
-  return data;
+  return data || null;
 }
 
 export async function getAllUser() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session))
-    return { success: false, message: "Error getting all users", data: null };
+  if (!session)
+    return { success: false, message: "Error getting all users", data: [] };
 
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const data = await db.select().from(user).orderBy(asc(user.createdAt));
 
-  if (error)
-    return { success: false, message: "Error getting all users", data: null };
+  if (!data)
+    return { success: false, message: "Error getting all users", data: data };
 
   return { success: true, message: "Fetch success", data };
 }
 
 export async function getUsersFilter(name: string) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session))
+  if (!session)
     return { success: false, message: "Error getting all users", data: null };
 
   const { data, error } = await supabase
-    .from("users")
+    .from("user")
     .select("*")
     .ilike("fullName", `%${name}%`);
 
@@ -88,9 +84,11 @@ export async function getUsersFilter(name: string) {
 export async function getAllClassesByTeacherId(
   id: string,
 ): Promise<IClass[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classroom")
@@ -104,9 +102,11 @@ export async function getAllClassesByTeacherId(
 export async function getClassNameByClassId(id: string): Promise<{
   className: string;
 } | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classroom")
@@ -118,9 +118,11 @@ export async function getClassNameByClassId(id: string): Promise<{
 }
 
 export async function getClassByClassId(id: string): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classroom")
@@ -134,9 +136,11 @@ export async function getClassByClassId(id: string): Promise<IClass | null> {
 export async function getClassByClassCode(
   code: string,
 ): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classroom")
@@ -150,9 +154,11 @@ export async function getClassByClassCode(
 export async function getEnrolledClassByClassAndSessionId(
   classId: string,
 ): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -167,9 +173,11 @@ export async function getEnrolledClassByClassAndSessionId(
 export async function getEnrolledClassByEnrolledClassId(
   enrolledClassId: string,
 ): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -183,9 +191,11 @@ export async function getEnrolledClassByEnrolledClassId(
 export async function getAllEnrolledClassesByClassAndSessionId(
   classId: string,
 ): Promise<IClass[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   if (session.user.role !== "teacher") return null;
 
@@ -200,9 +210,11 @@ export async function getAllEnrolledClassesByClassAndSessionId(
 export async function getAllEnrolledClassesByClassAndCurrentSessionId(
   classId: string,
 ): Promise<IClass[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -217,9 +229,11 @@ export async function getEnrolledClassByClassAndUserId(
   userId: string,
   classId: string,
 ): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   if (session.user.role !== "teacher") return null;
 
@@ -236,9 +250,11 @@ export async function getEnrolledClassByClassAndUserId(
 export async function getAllEnrolledClassesByUserId(
   userId: string,
 ): Promise<IClass[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -252,9 +268,11 @@ export async function getAllEnrolledClassesByUserId(
 export async function getAllEnrolledClassesByClassId(
   classId: string,
 ): Promise<IClass[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -268,9 +286,11 @@ export async function getEnrolledClassByUserAndClassId(
   userId: string,
   classId: string,
 ): Promise<IClass | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("enrolledClass")
@@ -285,9 +305,11 @@ export async function getEnrolledClassByUserAndClassId(
 export async function getAllClassStreamsByClassId(
   classId: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("streams")
@@ -301,9 +323,11 @@ export async function getAllClassStreamsByClassId(
 export async function getAllEnrolledClassesClassworks(
   userId: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
 
@@ -324,9 +348,11 @@ export async function getAllEnrolledClassesClassworks(
 export async function getClassStreamByStreamId(
   streamId: string,
 ): Promise<IStream | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("streams")
@@ -340,9 +366,11 @@ export async function getClassStreamByStreamId(
 export async function getAllClassesStreamByUserId(
   userId: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("streams")
@@ -355,9 +383,11 @@ export async function getAllClassesStreamByUserId(
 export async function getAllClassworkStreamsByClassId(
   classId: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classId);
 
@@ -376,9 +406,11 @@ export async function getAllClassworkStreamsByClassId(
 export async function getAllClassworkStreamsByTopicId(
   topicId: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const topic = await getClassTopicByTopicId(topicId);
 
@@ -397,9 +429,11 @@ export async function getAllClassworkStreamsByTopicId(
 export async function getAllClassworksByClassId(
   classId: string,
 ): Promise<IClasswork[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classworks")
@@ -412,9 +446,11 @@ export async function getAllClassworksByClassId(
 export async function getAllClassworksByStreamId(
   streamId: string,
 ): Promise<IClasswork[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classworks")
@@ -427,9 +463,11 @@ export async function getAllClassworksByStreamId(
 export async function getAllClassworksByUserId(
   userId: string,
 ): Promise<IClasswork[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classworks")
@@ -443,9 +481,11 @@ export async function getAllClassworksByClassAndUserId(
   userId: string,
   classId: string,
 ): Promise<IClasswork[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classId);
   if (!classroom) return null;
@@ -464,9 +504,11 @@ export async function getClassworkByClassAndUserId(
   classId: string,
   streamId: string,
 ): Promise<IClasswork | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classId);
   if (!classroom) return null;
@@ -492,9 +534,11 @@ export async function getClassworksByClassIdQuery(
   classId: string,
   query: string,
 ): Promise<IStream[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classId);
 
@@ -515,9 +559,11 @@ export async function getAllAssignedClassworksByStreamAndClassroomId(
   classId: string,
   streamId: string,
 ): Promise<IClasswork[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classId);
   if (!classroom) return null;
@@ -539,9 +585,11 @@ export async function getAllAssignedClassworksByStreamAndClassroomId(
 export async function getAllCommentsByStreamId(
   streamId: string,
 ): Promise<IStreamComment[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classComments")
@@ -554,9 +602,11 @@ export async function getAllCommentsByStreamId(
 export async function getAllCommentsByUserId(
   userId: string,
 ): Promise<IStreamComment[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classComments")
@@ -569,9 +619,11 @@ export async function getAllCommentsByUserId(
 export async function getAllPrivateCommentsByStreamId(
   streamId: string,
 ): Promise<IStreamComment[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classPrivateComments")
@@ -584,9 +636,11 @@ export async function getAllPrivateCommentsByStreamId(
 export async function getAllPrivateCommentsByUserId(
   userId: string,
 ): Promise<IStreamComment[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classPrivateComments")
@@ -599,9 +653,11 @@ export async function getAllPrivateCommentsByUserId(
 export async function getStreamCommentByCommentId(
   commentId: string,
 ): Promise<IStreamComment | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classComments")
@@ -615,9 +671,11 @@ export async function getStreamCommentByCommentId(
 export async function getStreamPrivateCommentByCommentId(
   commentId: string,
 ): Promise<IStreamComment | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classPrivateComments")
@@ -631,9 +689,11 @@ export async function getStreamPrivateCommentByCommentId(
 export async function getAllMessagesByClassId(
   classroomId: string,
 ): Promise<IChat[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const classroom = await getClassByClassId(classroomId);
 
@@ -654,9 +714,11 @@ export async function getAllMessagesByClassId(
 export async function getAllMessagesByUserId(
   userId: string,
 ): Promise<IChat[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const user = await getUserByUserId(userId);
 
@@ -670,9 +732,11 @@ export async function getAllMessagesByUserId(
 export async function getClassTopicByTopicId(
   topicId: string,
 ): Promise<ITopic | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classTopic")
@@ -686,9 +750,11 @@ export async function getClassTopicByTopicId(
 export async function getAllClassTopicsByClassId(
   classId: string,
 ): Promise<ITopic[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("classTopic")
@@ -700,9 +766,11 @@ export async function getAllClassTopicsByClassId(
 }
 
 export async function getAllNotesBySession(): Promise<INotes[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("notes")
@@ -716,9 +784,11 @@ export async function getAllNotesBySession(): Promise<INotes[] | null> {
 export async function getNoteByNoteIdSession(
   noteId: string,
 ): Promise<INotes | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("notes")
@@ -733,9 +803,11 @@ export async function getNoteByNoteIdSession(
 export async function getAllNotesBySessionQuery(
   query: string,
 ): Promise<INotes[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const { data } = await supabase
     .from("notes")
@@ -748,32 +820,31 @@ export async function getAllNotesBySessionQuery(
 }
 
 export async function getVerificationToken(email: string) {
-  const { data } = await supabase
-    .from("verificationTokens")
-    .select("*")
-    .eq("email", email);
+  const [data] = await db
+    .select()
+    .from(verification)
+    .where(eq(verification.identifier, email));
 
-  return data;
+  return data || null;
 }
 
-export async function getVerificationTokenByToken(
-  token: string,
-): Promise<IVerification | null> {
-  const { data } = await supabase
-    .from("verificationTokens")
-    .select("*")
-    .eq("token", token)
-    .single();
+export async function getVerificationTokenByToken(token: string) {
+  const [data] = await db
+    .select()
+    .from(verification)
+    .where(eq(verification.value, token));
 
-  return data;
+  return data || null;
 }
 
 export async function getRoleRequest(
   userId: string,
 ): Promise<IRoleRequest | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   const user = await getUserByUserId(userId);
 
@@ -791,9 +862,11 @@ export async function getRoleRequest(
 export async function getAllRoleRequest(
   status: "pending" | "rejected",
 ): Promise<IRoleRequest[] | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return null;
+  if (!session) return null;
 
   if (session.user.role !== "admin") return null;
 
@@ -810,7 +883,7 @@ export async function generateVerificationToken(
   email: string,
 ): Promise<IVerification | null> {
   const token = uuidv4();
-  // const expires = new Date().getTime() + 1000 * 60 * 60 * 1;
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
   const existingToken = await getVerificationToken(email);
 
@@ -818,10 +891,11 @@ export async function generateVerificationToken(
     await deleteVerificationToken(email);
   }
 
-  const verificationToken = await createVerificationToken({
+  const verificationToken = await createVerificationToken(
     email,
     token,
-  });
+    expiresAt,
+  );
 
   return verificationToken;
 }

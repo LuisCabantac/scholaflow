@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
+import { headers } from "next/headers";
+
 import {
   getAllAssignedClassworksByStreamAndClassroomId,
   getAllEnrolledClassesByClassAndSessionId,
@@ -36,9 +37,11 @@ export default async function Page({
 }) {
   const { streamId } = await params;
 
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/");
 
@@ -93,7 +96,7 @@ export default async function Page({
   return (
     <StreamSubmissionsSection
       stream={stream}
-      session={session}
+      session={session.user}
       classroom={classroom}
       onGetAssignedUserClasswork={getAssignedUserClasswork}
       onGetAllPrivateComments={handleGetAllPrivateComments}

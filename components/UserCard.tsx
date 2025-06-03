@@ -54,13 +54,13 @@ export default function UserCard({
     <tr className="bg-[#f3f6ff]">
       <td data-cell="Name:" className="flex items-center gap-2 px-4 py-2">
         <Image
-          src={userData.avatar}
-          alt={userData.fullName}
+          src={userData.image ?? ""}
+          alt={userData.name}
           width={30}
           height={30}
           className="rounded-full"
         />
-        <p className="text-balance font-medium">{userData.fullName}</p>
+        <p className="text-balance font-medium">{userData.name}</p>
       </td>
       <td data-cell="Email:" className="px-4 py-2">
         <p>{userData.email}</p>
@@ -73,10 +73,10 @@ export default function UserCard({
         </span>
       </td>
       <td data-cell="Date added:" className="px-4 py-2">
-        {format(new Date(userData.created_at), "MMMM d, yyyy")}
+        {format(new Date(userData.createdAt), "MMMM d, yyyy")}
       </td>
       <td data-cell="Verified:" className="px-4 py-2">
-        {userData.emailVerified ? (
+        {userData.email_verified ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

@@ -212,7 +212,7 @@ export default function StreamDetailSection({
   return (
     <section className="flex items-start gap-2">
       <div className="flex w-full flex-col items-start gap-2">
-        {session.user.id === classroom.teacherId &&
+        {session.id === classroom.teacherId &&
           stream.type !== "stream" &&
           stream.type !== "material" && (
             <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
@@ -232,7 +232,7 @@ export default function StreamDetailSection({
             </div>
           )}
         <div
-          className={`relative w-full ${session.user.id !== classroom.teacherId && "pb-[12rem]"}`}
+          className={`relative w-full ${session.id !== classroom.teacherId && "pb-[12rem]"}`}
         >
           <div className="flex items-center gap-2">
             <Link href={`/user/classroom/class/${classroom.classroomId}`}>
@@ -467,7 +467,7 @@ export default function StreamDetailSection({
             </div>
             <ul className="grid gap-2">
               {classroom.allowStudentsToComment ||
-              classroom.teacherId === session.user.id ||
+              classroom.teacherId === session.id ||
               commentsIsPending ||
               optimisticComments?.length ? (
                 <li className="border-t border-[#dddfe6] pt-2 text-sm font-medium">
@@ -475,7 +475,7 @@ export default function StreamDetailSection({
                 </li>
               ) : null}
               {(classroom.allowStudentsToComment ||
-                classroom.teacherId === session.user.id) && (
+                classroom.teacherId === session.id) && (
                 <li>
                   <form
                     className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
@@ -616,12 +616,12 @@ export default function StreamDetailSection({
               </button>
               <EllipsisPopover
                 showEdit={
-                  session.user.id === stream.author ||
-                  session.user.id === classroom.teacherId
+                  session.id === stream.author ||
+                  session.id === classroom.teacherId
                 }
                 showDelete={
-                  session.user.id === stream.author ||
-                  session.user.id === classroom.teacherId
+                  session.id === stream.author ||
+                  session.id === classroom.teacherId
                 }
                 clipboardUrl={`scholaflow.vercel.app${pathname}`}
                 onToggleEllipsis={handleToggleEllipsis}
@@ -660,8 +660,8 @@ export default function StreamDetailSection({
           )}
         </div>
       </div>
-      {session.user.id !== classroom.teacherId &&
-        ((stream.announceTo.includes(session.user.id) &&
+      {session.id !== classroom.teacherId &&
+        ((stream.announceTo.includes(session.id) &&
           stream.announceToAll === false) ||
           stream.announceToAll) &&
         stream.type !== "stream" &&
