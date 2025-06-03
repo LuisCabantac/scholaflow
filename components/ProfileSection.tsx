@@ -5,12 +5,12 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 
-import { IUser } from "@/components/UserManagementSection";
+import { ISession } from "@/lib/auth";
+
 import EditProfileForm from "@/components/EditProfileForm";
 import RoleRequestDialog, {
   IRoleRequest,
 } from "@/components/RoleRequestDialog";
-import { ISession } from "@/lib/auth";
 
 export default function ProfileSection({
   session,
@@ -19,7 +19,7 @@ export default function ProfileSection({
   existingRequest,
 }: {
   session: ISession;
-  onGetUser: (email: string) => Promise<IUser | null>;
+  onGetUser: (email: string) => Promise<ISession>;
   onCloseProfile: (userId: string) => Promise<void>;
   existingRequest: IRoleRequest | null;
 }) {
