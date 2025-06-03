@@ -9,7 +9,7 @@ export interface ISession {
   id: string;
   name: string;
   email: string;
-  email_verified: boolean;
+  emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
   image?: string | null | undefined | undefined;
