@@ -47,9 +47,9 @@ Want to experience ScholaFlow firsthand? Join our demo class:
    - Choose a region and name for your project.
    - Wait for the project to be provisioned (this might take a few minutes).
 
-2. **Set up NextAuth.js with Google Provider:**
+2. **Set up Better Auth with Google Provider:**
 
-   - Follow the official NextAuth.js guide for setting up the Google provider: [https://next-auth.js.org/providers/google](https://next-auth.js.org/providers/google)
+   - Follow the official Better Auth guide for setting up the Google provider: [https://www.better-auth.com/docs/authentication/google](https://www.better-auth.com/docs/authentication/google)
 
 3. **Configure Environment Variables:**
 
