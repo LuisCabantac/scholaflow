@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { headers } from "next/headers";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/drizzle/index";
+import { user, verification } from "@/drizzle/schema";
 
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -16,7 +19,7 @@ import { INotes } from "@/app/user/notes/page";
 import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
-import { IUser } from "@/components/UserManagementSection";
+
 import { IChat } from "@/components/ClassChatSection";
 import { ITopic } from "@/components/TopicDialog";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
@@ -31,24 +34,16 @@ export async function getUser(email: string) {
   return data;
 }
 
-export async function getUserByUserId(userId: string): Promise<IUser | null> {
-  const { data } = await supabase
-    .from("user")
-    .select("*")
-    .eq("id", userId)
-    .single();
+export async function getUserByUserId(userId: string) {
+  const [data] = await db.select().from(user).where(eq(user.id, userId));
 
-  return data;
+  return data || null;
 }
 
-export async function getUserByEmail(email: string): Promise<IUser | null> {
-  const { data } = await supabase
-    .from("user")
-    .select("*")
-    .eq("email", email)
-    .single();
+export async function getUserByEmail(email: string) {
+  const [data] = await db.select().from(user).where(eq(user.email, email));
 
-  return data;
+  return data || null;
 }
 
 export async function getAllUser() {
@@ -59,12 +54,9 @@ export async function getAllUser() {
   if (!session)
     return { success: false, message: "Error getting all users", data: null };
 
-  const { data, error } = await supabase
-    .from("user")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const [data] = await db.select().from(user).orderBy(asc(user.createdAt));
 
-  if (error)
+  if (!data)
     return { success: false, message: "Error getting all users", data: null };
 
   return { success: true, message: "Fetch success", data };
@@ -828,24 +820,21 @@ export async function getAllNotesBySessionQuery(
 }
 
 export async function getVerificationToken(email: string) {
-  const { data } = await supabase
-    .from("verificationTokens")
-    .select("*")
-    .eq("email", email);
+  const [data] = await db
+    .select()
+    .from(verification)
+    .where(eq(verification.identifier, email));
 
-  return data;
+  return data || null;
 }
 
-export async function getVerificationTokenByToken(
-  token: string,
-): Promise<IVerification | null> {
-  const { data } = await supabase
-    .from("verificationTokens")
-    .select("*")
-    .eq("token", token)
-    .single();
+export async function getVerificationTokenByToken(token: string) {
+  const [data] = await db
+    .select()
+    .from(verification)
+    .where(eq(verification.value, token));
 
-  return data;
+  return data || null;
 }
 
 export async function getRoleRequest(
@@ -894,7 +883,7 @@ export async function generateVerificationToken(
   email: string,
 ): Promise<IVerification | null> {
   const token = uuidv4();
-  // const expires = new Date().getTime() + 1000 * 60 * 60 * 1;
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
   const existingToken = await getVerificationToken(email);
 
@@ -902,10 +891,11 @@ export async function generateVerificationToken(
     await deleteVerificationToken(email);
   }
 
-  const verificationToken = await createVerificationToken({
+  const verificationToken = await createVerificationToken(
     email,
     token,
-  });
+    expiresAt,
+  );
 
   return verificationToken;
 }

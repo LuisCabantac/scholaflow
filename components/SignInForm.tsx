@@ -3,8 +3,9 @@
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 
-import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 import { authClient } from "@/lib/auth-client";
+
+import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

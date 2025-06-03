@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useRouter } from "next/navigation";
 
-import { signUpAction } from "@/lib/auth-actions";
+import { authClient } from "@/lib/auth-client";
+import { IVerification } from "@/lib/auth-actions";
 
 import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 
@@ -13,20 +14,32 @@ const fullNameRegex =
   /^[A-Za-z]+([' -]?[A-Za-z]+)* [A-Za-z]+([' -]?[A-Za-z]+)*$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-async function sendEmail(templateParams: {
-  to_email: string;
-  to_name: string;
-  message: string;
-}) {
+async function sendEmail(
+  templateParams: {
+    to_email: string;
+    to_name: string;
+  },
+  onGenerateVerificationToken: (email: string) => Promise<IVerification | null>,
+) {
+  const verification = await onGenerateVerificationToken(
+    templateParams.to_email,
+  );
   await emailjs.send(
     process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
     process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "",
-    templateParams,
+    {
+      ...templateParams,
+      message: `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${verification?.value}`,
+    },
     process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
   );
 }
 
-export default function SignUpForm() {
+export default function SignUpForm({
+  onGenerateVerificationToken,
+}: {
+  onGenerateVerificationToken: (email: string) => Promise<IVerification | null>;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
@@ -38,21 +51,41 @@ export default function SignUpForm() {
 
   async function handleSignUpAction(event: React.FormEvent) {
     event.preventDefault();
-    setIsLoading(true);
     if (honeyPot) return;
     const formData = new FormData(event.target as HTMLFormElement);
-    const { success, message, token, email } = await signUpAction(formData);
-    setIsLoading(false);
-    if (success) {
-      const templateParams = {
-        to_email: email ?? "",
-        to_name: (formData.get("fullName") as string).split(" ")[0],
-        message: `https://scholaflow.vercel.app/verify?token=${token}`,
-      };
-      await sendEmail(templateParams);
-      toast.success(message);
-      router.push("/signin");
-    } else toast.error(message);
+    await authClient.signUp.email(
+      {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        name: formData.get("name") as string,
+        callbackURL: "/signin",
+      },
+      {
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onSuccess: async () => {
+          const templateParams = {
+            to_email: (formData.get("email") as string) ?? "",
+            to_name: (formData.get("name") as string).split(" ")[0],
+          };
+          await sendEmail(templateParams, onGenerateVerificationToken);
+          router.push("/signin");
+          toast.success(
+            "Account created successfully! A verification link has been sent to your email. Please check your inbox and verify your account before signing in.",
+          );
+        },
+        onError: (ctx) => {
+          if (ctx.error.status === 403) {
+            toast.error("Please verify your email address");
+          }
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   }
 
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {

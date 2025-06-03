@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { generateVerificationToken } from "@/lib/data-service";
 import signUpPageImage from "@/public/landing_page/signup-page.svg";
 
 import Logo from "@/components/Logo";
@@ -23,6 +24,12 @@ export default async function Page() {
   });
 
   if (session) return redirect("/user/classroom");
+
+  async function generateVerificationTokenClient(email: string) {
+    "use server";
+    const verification = await generateVerificationToken(email);
+    return verification;
+  }
 
   return (
     <div className="absolute top-0 z-[-2] h-screen w-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
@@ -56,7 +63,9 @@ export default async function Page() {
             Create your account
           </h2>
           <div className="grid gap-3">
-            <SignUpForm />
+            <SignUpForm
+              onGenerateVerificationToken={generateVerificationTokenClient}
+            />
             <SignInGoogleButton />
           </div>
           <p className="mx-auto my-0 text-xs">
