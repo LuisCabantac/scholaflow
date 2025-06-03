@@ -44,26 +44,26 @@ export default async function Page({
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role === "admin") return redirect("/user/classroom");
+  if (session.user.role === "admin") return redirect("/classroom");
 
   const stream = await getClassStreamByStreamId(streamId);
-  if (!stream) return redirect("/user/classroom");
+  if (!stream) return redirect("/classroom");
 
   const classroom = await getClassByClassId(stream.classroomId);
-  if (!classroom) return redirect("/user/classroom");
+  if (!classroom) return redirect("/classroom");
 
   const enrolledClass = await getEnrolledClassByClassAndSessionId(
     stream.classroomId,
   );
   if (!enrolledClass && classroom?.teacherId !== session.user.id)
-    return redirect("/user/classroom");
+    return redirect("/classroom");
 
   if (
     stream.scheduledAt &&
     new Date(stream.scheduledAt) > new Date() &&
     classroom?.teacherId !== session.user.id
   )
-    return redirect("/user/classroom");
+    return redirect("/classroom");
 
   async function handleGetAllCommentsByStreamId(streamId: string) {
     "use server";
@@ -108,5 +108,5 @@ export default async function Page({
       />
     );
 
-  return redirect(`/user/classroom/class/${classroom.classroomId}`);
+  return redirect(`/classroom/class/${classroom.classroomId}`);
 }

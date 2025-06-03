@@ -19,14 +19,14 @@ export default function HeaderTitle({
     queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
   });
 
-  if (pathname === "/user/classroom/class/")
+  if (pathname === "/classroom/class/")
     return (
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
         Classroom
       </h1>
     );
 
-  if (pathname.includes("/user/classroom/class/"))
+  if (pathname.includes("/classroom/class/"))
     return (
       <>
         <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:block md:text-2xl">
@@ -39,7 +39,7 @@ export default function HeaderTitle({
       </>
     );
 
-  if (pathname.includes("/user/to-do"))
+  if (pathname.includes("/to-do"))
     return (
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
         To-do

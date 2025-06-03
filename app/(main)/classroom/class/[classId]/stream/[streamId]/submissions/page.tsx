@@ -47,12 +47,11 @@ export default async function Page({
 
   const stream = await getClassStreamByStreamId(streamId);
 
-  if (!stream) return redirect("/user/classroom");
+  if (!stream) return redirect("/classroom");
 
   const classroom = await getClassByClassId(stream.classroomId);
-  if (!classroom) return redirect("/user/classroom");
-  if (classroom?.teacherId !== session.user.id)
-    return redirect("/user/classroom");
+  if (!classroom) return redirect("/classroom");
+  if (classroom?.teacherId !== session.user.id) return redirect("/classroom");
 
   async function getAssignedUserClasswork(
     userId: string,

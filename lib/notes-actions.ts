@@ -60,7 +60,7 @@ export async function createNote(
     };
   }
 
-  revalidatePath(`/user/notes`);
+  revalidatePath(`/notes`);
 
   return {
     success: true,
@@ -152,7 +152,7 @@ export async function updateNote(
       };
     }
 
-    revalidatePath(`/user/notes`);
+    revalidatePath(`/notes`);
 
     return {
       success: true,
@@ -185,7 +185,7 @@ export async function deleteNote(noteId: string) {
 
   const { error } = await supabase.from("notes").delete().eq("id", noteId);
 
-  revalidatePath(`/user/notes`);
+  revalidatePath(`/notes`);
 
   if (error) throw new Error(error.message);
 }

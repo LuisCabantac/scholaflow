@@ -63,16 +63,16 @@ export default async function Page({
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role === "admin") return redirect("/user/classroom");
+  if (session.user.role === "admin") return redirect("/classroom");
 
   const classroom = await getClassByClassId(classId);
-  if (!classroom) return redirect("/user/classroom");
+  if (!classroom) return redirect("/classroom");
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
     (await getEnrolledClassByClassAndSessionId(classId)) !== null;
 
-  if (!isTeacher && !isEnrolled) return redirect("/user/classroom");
+  if (!isTeacher && !isEnrolled) return redirect("/classroom");
 
   async function handleGetAllClassworkStreamsByClassId(
     classId: string,

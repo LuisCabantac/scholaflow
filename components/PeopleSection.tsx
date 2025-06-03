@@ -57,25 +57,25 @@ export default function PeopleSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/user/classroom/class/${classId}`}
+            href={`/classroom/class/${classId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/classwork`}
+            href={`/classroom/class/${classId}/classwork`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/people`}
+            href={`/classroom/class/${classId}/people`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             People
           </Link>
           <Link
-            href={`/user/classroom/class/${classId}/chat`}
+            href={`/classroom/class/${classId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat

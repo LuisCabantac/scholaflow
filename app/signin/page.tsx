@@ -22,7 +22,7 @@ export default async function Page() {
     headers: await headers(),
   });
 
-  if (session) return redirect("/user/classroom");
+  if (session) return redirect("/classroom");
 
   return (
     <div className="absolute top-0 z-[-2] h-screen w-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">

@@ -22,7 +22,7 @@ export default async function Page() {
 
   if (!session) redirect("/signin");
 
-  if (session.user.role !== "admin") redirect("/user/classroom");
+  if (session.user.role !== "admin") redirect("/classroom");
 
   async function handleGetUsers(name: string) {
     "use server";

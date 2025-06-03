@@ -23,7 +23,7 @@ export default async function Page() {
     headers: await headers(),
   });
 
-  if (session) return redirect("/user/classroom");
+  if (session) return redirect("/classroom");
 
   async function generateVerificationTokenClient(email: string) {
     "use server";

@@ -50,7 +50,7 @@ export async function createUser(newGuest: object): Promise<{
   if (error) {
     return { success: false, message: "User could not be created" };
   }
-  revalidatePath("/user/admin/user-management");
+  revalidatePath("/admin/user-management");
   return { success: true, message: "User created successfully!" };
 }
 
@@ -102,7 +102,7 @@ export async function updateUser(formData: FormData): Promise<{
     if (error) {
       return { success: false, message: "User could not be edited." };
     }
-    revalidatePath("/user/admin/user-management");
+    revalidatePath("/admin/user-management");
     return { success: true, message: "User created successfully!" };
   }
 
@@ -198,7 +198,7 @@ export async function updateProfile(formData: FormData): Promise<{
     if (error) {
       return { success: false, message: "Profile could not be edited." };
     }
-    revalidatePath("/user/profile");
+    revalidatePath("/profile");
     return { success: true, message: "Profile updated!" };
   }
 
@@ -333,7 +333,7 @@ export async function roleRequest(formData: FormData) {
   if (error) {
     return { success: false, message: "Request could not be created." };
   }
-  revalidatePath("/user/profile");
+  revalidatePath("/profile");
   return {
     success: true,
     message:

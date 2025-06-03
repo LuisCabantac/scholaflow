@@ -10,8 +10,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ISession } from "@/lib/auth";
 import { joinClass } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IStream } from "@/app/user/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 
 import Button from "@/components/Button";
 import ClassroomLists from "@/components/ClassroomLists";
@@ -209,7 +209,7 @@ export default function ClassroomSection({
       setIsLoading(false);
       toast.success(message);
       handleToggleShowJoinClass();
-      router.push(`/user/classroom/class/${classExists.classroomId}`);
+      router.push(`/classroom/class/${classExists.classroomId}`);
     } else toast.error(message);
   }
 
@@ -282,7 +282,7 @@ export default function ClassroomSection({
               >
                 <li>
                   <Link
-                    href="/user/classroom?sort=all-classes"
+                    href="/classroom?sort=all-classes"
                     className={`${(searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                   >
                     <span>All classes</span>
@@ -308,7 +308,7 @@ export default function ClassroomSection({
                 {role === "teacher" && (
                   <li>
                     <Link
-                      href="/user/classroom?sort=created-classes"
+                      href="/classroom?sort=created-classes"
                       className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
                       <span>Created classes</span>
@@ -333,7 +333,7 @@ export default function ClassroomSection({
                 )}
                 <li>
                   <Link
-                    href="/user/classroom?sort=enrolled-classes"
+                    href="/classroom?sort=enrolled-classes"
                     className={`${searchParams.get("sort") === "enrolled-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                   >
                     <span>Enrolled classes</span>
@@ -389,21 +389,21 @@ export default function ClassroomSection({
             </div>
           </div>
           <div className="mt-2 flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
-            <Link href="/user/to-do?filter=assigned">
+            <Link href="/to-do?filter=assigned">
               <p className="text-2xl font-semibold">
                 {assignedClassworks?.length ?? 0}
               </p>
               <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
             </Link>
             <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
-            <Link href="/user/to-do?filter=missing">
+            <Link href="/to-do?filter=missing">
               <p className="text-2xl font-semibold">
                 {missingClassworks?.length ?? 0}
               </p>
               <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
             </Link>
             <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
-            <Link href="/user/to-do?filter=done">
+            <Link href="/to-do?filter=done">
               <p className="text-2xl font-semibold">
                 {doneClassworks?.length ?? 0}
               </p>
@@ -476,7 +476,7 @@ export default function ClassroomSection({
                   return (
                     <li key={assignedClasswork.id}>
                       <Link
-                        href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                        href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
                         className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
@@ -539,7 +539,7 @@ export default function ClassroomSection({
                   return (
                     <li key={missingClasswork.id}>
                       <Link
-                        href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
+                        href={`/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
                         className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
@@ -597,7 +597,7 @@ export default function ClassroomSection({
               ? doneClassworks.map((doneClasswork) => (
                   <li key={doneClasswork.id}>
                     <Link
-                      href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
+                      href={`/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
                       className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                     >
                       <div className="flex gap-2">

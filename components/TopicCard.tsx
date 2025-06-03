@@ -8,7 +8,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 
 import TopicDialog, { ITopic } from "@/components/TopicDialog";
 import StreamCard from "@/components/StreamCard";

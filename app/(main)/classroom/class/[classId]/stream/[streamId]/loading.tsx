@@ -13,7 +13,7 @@ export default function Loading() {
       <span className="sr-only">Loading…</span>
       <div className="relative w-full">
         <div className="flex items-center gap-2">
-          <Link href={`/user/classroom/class/${extractFirstUuid(pathname)}`}>
+          <Link href={`/classroom/class/${extractFirstUuid(pathname)}`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

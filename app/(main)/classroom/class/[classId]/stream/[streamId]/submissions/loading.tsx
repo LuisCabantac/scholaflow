@@ -14,13 +14,13 @@ export default function Loading() {
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/user/classroom/class/${extractFirstUuid(pathname)}/stream/${extractStreamIdFromUrl(pathname)}`}
+            href={`/classroom/class/${extractFirstUuid(pathname)}/stream/${extractStreamIdFromUrl(pathname)}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Instructions
           </Link>
           <Link
-            href={`/user/classroom/class/${extractFirstUuid(pathname)}/stream/${extractStreamIdFromUrl(pathname)}/submissions`}
+            href={`/classroom/class/${extractFirstUuid(pathname)}/stream/${extractStreamIdFromUrl(pathname)}/submissions`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Submissions

@@ -26,7 +26,7 @@ export default function Hero({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button href="/user/classroom" type="primary">
+            <Button href="/classroom" type="primary">
               Get started
             </Button>
             <button

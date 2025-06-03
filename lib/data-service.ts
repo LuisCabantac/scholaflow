@@ -14,9 +14,9 @@ import {
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
-import { INotes } from "@/app/user/notes/page";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
+import { INotes } from "@/app/(main)/notes/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
 

@@ -26,7 +26,7 @@ export default function SignInForm() {
       {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
-        callbackURL: "/user/classroom",
+        callbackURL: "/classroom",
       },
       {
         onRequest: () => {

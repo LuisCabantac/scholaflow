@@ -14,11 +14,11 @@ import {
   addPrivateComment,
   deletePrivateComment,
 } from "@/lib/classroom-actions";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
@@ -237,13 +237,13 @@ export default function StreamSubmissionsSection({
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}`}
+            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Instructions
           </Link>
           <Link
-            href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions`}
+            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Submissions
@@ -303,7 +303,7 @@ export default function StreamSubmissionsSection({
                         }}
                       >
                         <Link
-                          href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                          href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                           className="underline__container flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2">
@@ -346,7 +346,7 @@ export default function StreamSubmissionsSection({
                           }}
                         >
                           <Link
-                            href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                             className="underline__container flex items-center justify-between"
                           >
                             <div className="flex items-center gap-2">
@@ -399,7 +399,7 @@ export default function StreamSubmissionsSection({
                             }}
                           >
                             <Link
-                              href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                              href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                               className="underline__container flex items-center justify-between"
                             >
                               <div className="flex items-center gap-2">

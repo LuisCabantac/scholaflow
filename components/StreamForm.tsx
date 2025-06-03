@@ -12,7 +12,7 @@ import {
   updateClassStreamPost,
 } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IStream } from "@/app/user/classroom/class/[classId]/page";
+import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
 
 import { IClass } from "@/components/ClassroomSection";
 import Button from "@/components/Button";

@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/utils";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";

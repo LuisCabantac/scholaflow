@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { ISession } from "@/lib/auth";
 import { deleteNote } from "@/lib/notes-actions";
-import { INotes } from "@/app/user/notes/page";
+import { INotes } from "@/app/(main)/notes/page";
 
 import Button from "@/components/Button";
 import NoteForm from "@/components/NoteForm";

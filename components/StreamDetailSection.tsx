@@ -19,8 +19,8 @@ import {
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 
 import { IClass } from "@/components/ClassroomSection";
 import CommentCard from "@/components/CommentCard";
@@ -223,14 +223,14 @@ export default function StreamDetailSection({
           stream.type !== "material" && (
             <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
               <Link
-                href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}`}
+                href={`/classroom/class/${stream.classroomId}/stream/${stream.id}`}
                 className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
               >
                 Instructions
               </Link>
 
               <Link
-                href={`/user/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions/`}
+                href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions/`}
                 className="px-3 py-2 text-[#929bb4] transition-all"
               >
                 Submissions
@@ -241,7 +241,7 @@ export default function StreamDetailSection({
           className={`relative w-full ${session.id !== classroom.teacherId && "pb-[12rem]"}`}
         >
           <div className="flex items-center gap-2">
-            <Link href={`/user/classroom/class/${classroom.classroomId}`}>
+            <Link href={`/classroom/class/${classroom.classroomId}`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

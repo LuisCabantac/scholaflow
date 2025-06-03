@@ -7,8 +7,8 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { ISession } from "@/lib/auth";
-import { IStream } from "@/app/user/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 import noAssigned from "@/public/app/no_assigned.svg";
 import noMissing from "@/public/app/no_missing.svg";
 import noDone from "@/public/app/no_done.svg";
@@ -104,19 +104,19 @@ export default function ToDoSection({
     <section className="flex flex-col items-start justify-start">
       <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
         <Link
-          href="/user/to-do?sort=assigned"
+          href="/to-do?sort=assigned"
           className={`px-3 py-2 transition-all ${searchParams.get("sort") === "assigned" || searchParams.get("sort") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Assigned
         </Link>
         <Link
-          href="/user/to-do?sort=missing"
+          href="/to-do?sort=missing"
           className={`px-3 py-2 transition-all ${searchParams.get("sort") === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Missing
         </Link>
         <Link
-          href="/user/to-do?sort=done"
+          href="/to-do?sort=done"
           className={`px-3 py-2 transition-all ${searchParams.get("sort") === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
         >
           Done
@@ -130,7 +130,7 @@ export default function ToDoSection({
               return (
                 <li key={assignedClasswork.id}>
                   <Link
-                    href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                    href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
@@ -201,7 +201,7 @@ export default function ToDoSection({
               return (
                 <li key={missingClasswork.id}>
                   <Link
-                    href={`/user/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
+                    href={`/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
@@ -263,7 +263,7 @@ export default function ToDoSection({
           ? doneClassworks.map((doneClasswork) => (
               <li key={doneClasswork.id}>
                 <Link
-                  href={`/user/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
+                  href={`/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
                   className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 >
                   <div className="flex gap-2">

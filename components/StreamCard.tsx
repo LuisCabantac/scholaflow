@@ -19,7 +19,7 @@ import {
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
@@ -217,7 +217,7 @@ export default function StreamCard({
         {stream.type === "stream" && (
           <div>
             <Link
-              href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+              href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
             >
               <div className="flex gap-2 pb-2">
                 <Image
@@ -278,7 +278,7 @@ export default function StreamCard({
                 {stream.caption.length > 80 && (
                   <span className="text-[#616572] hover:underline">
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                      href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
                     >
                       {" "}
                       See more
@@ -317,7 +317,7 @@ export default function StreamCard({
         {stream.type !== "stream" && (
           <div>
             <Link
-              href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+              href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               className="underline__container flex gap-2"
             >
               {stream.type === "assignment" && (
@@ -447,7 +447,7 @@ export default function StreamCard({
             </button>
             <EllipsisPopover
               showEdit={session.id === stream.author}
-              clipboardUrl={`scholaflow.vercel.app/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+              clipboardUrl={`scholaflow.vercel.app/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
               showEllipsis={ellipsis}
               showDelete={
                 session.id === stream.author ||
@@ -480,7 +480,7 @@ export default function StreamCard({
             {optimisticComments?.length ? (
               <>
                 <Link
-                  href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                  href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
                   className="mt-2 block font-medium md:hidden"
                 >
                   View all comments
@@ -520,7 +520,7 @@ export default function StreamCard({
             classroom.teacherId === session.id) && (
             <>
               <Link
-                href={`/user/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
                 className="mt-2 flex items-end gap-2 md:hidden"
               >
                 <div className="flex h-9 w-full items-center justify-between rounded-md border border-[#dddfe6] px-4 py-2 text-[#616572]">

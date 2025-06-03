@@ -46,8 +46,8 @@ export default function SidebarLinks({
           <>
             <li>
               <Link
-                href="/user/user-management/"
-                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/user-management" ? activeLinkStyle : inactiveLinkStyle}`}
+                href="/user-management/"
+                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user-management" ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -66,8 +66,8 @@ export default function SidebarLinks({
             </li>
             <li>
               <Link
-                href="/user/role-requests"
-                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/role-requests" ? activeLinkStyle : inactiveLinkStyle}`}
+                href="/role-requests"
+                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/role-requests" ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -90,8 +90,8 @@ export default function SidebarLinks({
           <>
             <li>
               <Link
-                href="/user/classroom"
-                className={`sidebar__links md flex items-center justify-between gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-4 ${pathname === "/user/classroom" || (pathname.includes("/user/classroom") && !sidebarExpand) ? activeLinkStyle : inactiveLinkStyle} `}
+                href="/classroom"
+                className={`sidebar__links md flex items-center justify-between gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-4 ${pathname === "/classroom" || (pathname.includes("/classroom") && !sidebarExpand) ? activeLinkStyle : inactiveLinkStyle} `}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <div className="flex gap-2">
@@ -109,8 +109,8 @@ export default function SidebarLinks({
             </li>
             <li>
               <Link
-                href="/user/to-do"
-                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/to-do" ? activeLinkStyle : inactiveLinkStyle}`}
+                href="/to-do"
+                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/to-do" ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -131,8 +131,8 @@ export default function SidebarLinks({
         )}
         <li>
           <Link
-            href="/user/notes"
-            className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user/notes" ? activeLinkStyle : inactiveLinkStyle}`}
+            href="/notes"
+            className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/notes" ? activeLinkStyle : inactiveLinkStyle}`}
             onClick={() => !isMobile && handleSidebarExpand()}
           >
             <svg viewBox="0 0 24 24" strokeWidth={1.5} className="size-6">
@@ -177,7 +177,7 @@ export default function SidebarLinks({
               {createdClasses?.map((curClass) => (
                 <li key={curClass.classroomId}>
                   <Link
-                    href={`/user/classroom/class/${curClass.classroomId}`}
+                    href={`/classroom/class/${curClass.classroomId}`}
                     className={`${pathname.includes(curClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid items-center rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
@@ -230,7 +230,7 @@ export default function SidebarLinks({
               {enrolledClasses?.map((enrolledClass) => (
                 <li key={enrolledClass.id}>
                   <Link
-                    href={`/user/classroom/class/${enrolledClass.classroomId}`}
+                    href={`/classroom/class/${enrolledClass.classroomId}`}
                     className={`${pathname.includes(enrolledClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >

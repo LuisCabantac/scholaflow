@@ -11,7 +11,7 @@ export default function SignInGoogleButton() {
       onClick={async () => {
         await signIn.social({
           provider: "google",
-          callbackURL: "/user/classroom",
+          callbackURL: "/classroom",
         });
       }}
     >

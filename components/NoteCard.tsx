@@ -2,8 +2,8 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { ISession } from "@/lib/auth";
-import { INotes } from "@/app/user/notes/page";
 import { formatDate } from "@/lib/utils";
+import { INotes } from "@/app/(main)/notes/page";
 
 import NoteForm from "@/components/NoteForm";
 

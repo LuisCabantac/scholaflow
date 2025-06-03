@@ -13,7 +13,7 @@ import { deleteClassStreamPost } from "@/lib/classroom-actions";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { IClass } from "@/components/ClassroomSection";
@@ -127,25 +127,25 @@ export default function StreamsSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}`}
+            href={`/classroom/class/${classroom.classroomId}`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/classwork`}
+            href={`/classroom/class/${classroom.classroomId}/classwork`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/people`}
+            href={`/classroom/class/${classroom.classroomId}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/chat`}
+            href={`/classroom/class/${classroom.classroomId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
@@ -312,7 +312,7 @@ export default function StreamsSection({
                 >
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?sort=all`}
+                      href={`/classroom/class/${classroom.classroomId}?sort=all`}
                       scroll={false}
                       className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -338,7 +338,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?sort=stream`}
+                      href={`/classroom/class/${classroom.classroomId}?sort=stream`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -363,7 +363,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?sort=assignment`}
+                      href={`/classroom/class/${classroom.classroomId}?sort=assignment`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -388,7 +388,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?sort=quiz`}
+                      href={`/classroom/class/${classroom.classroomId}?sort=quiz`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -413,7 +413,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/user/classroom/class/${classroom.classroomId}?sort=material`}
+                      href={`/classroom/class/${classroom.classroomId}?sort=material`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -617,7 +617,7 @@ export default function StreamsSection({
             )}
             <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
               <Link
-                href={`/user/classroom/class/${classroom.classroomId}/classwork`}
+                href={`/classroom/class/${classroom.classroomId}/classwork`}
                 className="text-base font-medium tracking-tight hover:underline"
               >
                 Recent work
@@ -625,7 +625,7 @@ export default function StreamsSection({
               {assignedClasswork ? (
                 <div className="mt-2">
                   <Link
-                    href={`/user/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                    href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">

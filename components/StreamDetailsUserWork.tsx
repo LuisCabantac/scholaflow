@@ -11,11 +11,11 @@ import {
   updateClasswork,
 } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IClasswork } from "@/app/user/classroom/class/[classId]/classwork/page";
+import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 
 import Button from "@/components/Button";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";

@@ -59,7 +59,7 @@ export default function ClassroomCard({
       }}
     >
       <Link
-        href={`/user/classroom/class/${classData.classroomId}`}
+        href={`/classroom/class/${classData.classroomId}`}
         className="relative h-[9rem] md:h-[10rem]"
       >
         <div className="absolute left-3 top-3 w-[88%] text-balance drop-shadow-sm md:left-4 md:top-4">

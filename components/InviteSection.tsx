@@ -31,7 +31,7 @@ export default function InviteSection({
     if (success) {
       setIsSuccessful(true);
       setIsLoading(false);
-      router.push(`/user/classroom/class/${classroomId}`);
+      router.push(`/classroom/class/${classroomId}`);
     } else toast.error(message);
   }
 

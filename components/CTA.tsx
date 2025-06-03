@@ -11,7 +11,7 @@ export default function CTA() {
           Ditch the bloated, overcomplicated platforms. We&apos;re building
           something that just works.
         </p>
-        <Button type="primary" href="/user/classroom">
+        <Button type="primary" href="/classroom">
           Get started for free
         </Button>
       </div>

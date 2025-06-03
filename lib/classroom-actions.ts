@@ -43,7 +43,7 @@ import {
   getUserByEmail,
   getUserByUserId,
 } from "@/lib/data-service";
-import { IStream } from "@/app/user/classroom/class/[classId]/page";
+import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
 
 import { IClass } from "@/components/ClassroomSection";
 
@@ -83,12 +83,12 @@ export async function createClass(formData: FormData) {
     return { success: false, message: error.message };
   }
 
-  revalidatePath("/user/classroom");
+  revalidatePath("/classroom");
 
   return {
     success: true,
     message: "Class created successfully!",
-    classUrl: `/user/classroom/class/${(data[0] as IClass).classroomId}`,
+    classUrl: `/classroom/class/${(data[0] as IClass).classroomId}`,
   };
 }
 
@@ -186,13 +186,13 @@ export async function updateClass(
       return { success: false, message: error.message };
     }
 
-    revalidatePath(`/user/classroom/class/${currentClassroom.classroomId}`);
-    revalidatePath("/user/classroom");
+    revalidatePath(`/classroom/class/${currentClassroom.classroomId}`);
+    revalidatePath("/classroom");
 
     return {
       success: true,
       message: "Class updated successfully!",
-      classUrl: `/user/classroom/class/${classroomId}`,
+      classUrl: `/classroom/class/${classroomId}`,
     };
   }
   return {
@@ -272,7 +272,7 @@ export async function joinClass(classId: string) {
     return { success: false, message: error.message };
   }
 
-  revalidatePath("/user/classroom");
+  revalidatePath("/classroom");
 
   return { success: true, message: "You've successfully joined the class!" };
 }
@@ -324,7 +324,7 @@ export async function deleteClass(classId: string) {
       .eq("classroomId", classId)
       .eq("teacherId", session.user.id);
 
-    revalidatePath("/user/classroom");
+    revalidatePath("/classroom");
 
     if (error) throw new Error(error.message);
 
@@ -346,7 +346,7 @@ export async function deleteClass(classId: string) {
     .eq("classroomId", classId)
     .eq("userId", session.user.id);
 
-  revalidatePath("/user/classroom");
+  revalidatePath("/classroom");
 
   if (error) throw new Error(error.message);
 
@@ -521,7 +521,7 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
 
   if (error) throw new Error(error.message);
 
-  revalidatePath(`/user/classroom/class/${classId}/people`);
+  revalidatePath(`/classroom/class/${classId}/people`);
 }
 
 export async function createClassStreamPost(
@@ -620,10 +620,8 @@ export async function createClassStreamPost(
     return { success: false, message: error.message };
   }
 
-  revalidatePath(`/user/classroom/class/${formData.get("classroomId")}`);
-  revalidatePath(
-    `/user/classroom/class/${formData.get("classroomId")}/classwork`,
-  );
+  revalidatePath(`/classroom/class/${formData.get("classroomId")}`);
+  revalidatePath(`/classroom/class/${formData.get("classroomId")}/classwork`);
 
   return {
     success: true,
@@ -779,10 +777,8 @@ export async function updateClassStreamPost(
       return { success: false, message: error.message };
     }
 
-    revalidatePath(`/user/classroom/class/${formData.get("classroomId")}`);
-    revalidatePath(
-      `/user/classroom/class/${formData.get("classroomId")}/classwork`,
-    );
+    revalidatePath(`/classroom/class/${formData.get("classroomId")}`);
+    revalidatePath(`/classroom/class/${formData.get("classroomId")}/classwork`);
 
     return {
       success: true,
@@ -833,8 +829,8 @@ export async function deleteClassStreamPost(streamId: string) {
 
   const { error } = await supabase.from("streams").delete().eq("id", streamId);
 
-  revalidatePath(`/user/classroom/class/${classroom.classroomId}`);
-  revalidatePath(`/user/classroom/class/${classroom.classroomId}/classwork`);
+  revalidatePath(`/classroom/class/${classroom.classroomId}`);
+  revalidatePath(`/classroom/class/${classroom.classroomId}/classwork`);
 
   if (error) throw new Error(error.message);
 }
@@ -1245,7 +1241,7 @@ export async function addUserToClass(formData: FormData): Promise<{
     return { success: false, message: error.message };
   }
 
-  revalidatePath(`/user/classroom/`);
+  revalidatePath(`/classroom/`);
 
   return {
     success: true,
@@ -1365,7 +1361,7 @@ export async function submitClasswork(
     return { success: false, message: error.message };
   }
 
-  revalidatePath(`/user/classroom/class/${classId}/stream/${streamId}`);
+  revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
 
   return { success: true, message: "Classwork submitted!" };
 }
@@ -1458,7 +1454,7 @@ export async function updateClasswork(
     }
 
     revalidatePath(
-      `/user/classroom/class/${formData.get("classroomId")}/stream/${formData.get("streamId")}`,
+      `/classroom/class/${formData.get("classroomId")}/stream/${formData.get("streamId")}`,
     );
 
     return { success: true, message: "Classwork updated successfully!" };
@@ -1512,7 +1508,7 @@ export async function unsubmitClasswork(
     return { success: false, message: error.message };
   }
 
-  revalidatePath(`/user/classroom/class/${classroomId}/stream/${streamId}`);
+  revalidatePath(`/classroom/class/${classroomId}/stream/${streamId}`);
 
   return { success: true, message: "Your classwork has been unsubmitted." };
 }
@@ -1567,7 +1563,7 @@ export async function addGradeClasswork(formData: FormData) {
     if (!newClasswork)
       return { success: false, message: "User can not be added." };
 
-    revalidatePath(`/user/classroom/class/${classId}/stream/${streamId}`);
+    revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
 
     return { success: true, message: "Grade has been added to this user." };
   }
@@ -1587,7 +1583,7 @@ export async function addGradeClasswork(formData: FormData) {
       return { success: false, message: error.message };
     }
 
-    revalidatePath(`/user/classroom/class/${classId}/stream/${streamId}`);
+    revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
 
     return { success: true, message: "Grade has been added to this user." };
   }
@@ -1744,7 +1740,7 @@ export async function createTopic(formData: FormData) {
     return { success: false, message: error.message };
   }
 
-  revalidatePath("/user/classroom");
+  revalidatePath("/classroom");
 
   return { success: true, message: "Topic created successfully!" };
 }
@@ -1814,9 +1810,7 @@ export async function updateTopic(formData: FormData) {
       return { success: false, message: error.message };
     }
 
-    revalidatePath(
-      `/user/classroom/class/${currentTopic.classroomId}/classworks`,
-    );
+    revalidatePath(`/classroom/class/${currentTopic.classroomId}/classworks`);
 
     return { success: true, message: "Topic updated successfully!" };
   }
@@ -1860,7 +1854,7 @@ export async function deleteTopic(topicId: string) {
     .delete()
     .eq("topicId", topicId);
 
-  revalidatePath(`/user/classroom/class/${topic.classroomId}/classworks`);
+  revalidatePath(`/classroom/class/${topic.classroomId}/classworks`);
 
   if (error) throw new Error(error.message);
 }

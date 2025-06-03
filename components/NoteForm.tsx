@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { ISession } from "@/lib/auth";
 import { createNote, updateNote } from "@/lib/notes-actions";
 import { formatDate } from "@/lib/utils";
-import { INotes } from "@/app/user/notes/page";
+import { INotes } from "@/app/(main)/notes/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";

@@ -11,7 +11,7 @@ import { deleteClassStreamPost, deleteTopic } from "@/lib/classroom-actions";
 import {
   IStream,
   IStreamComment,
-} from "@/app/user/classroom/class/[classId]/page";
+} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { ISession } from "@/lib/auth";
@@ -152,25 +152,25 @@ export default function ClassworksSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}`}
+            href={`/classroom/class/${classroom.classroomId}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/classwork`}
+            href={`/classroom/class/${classroom.classroomId}/classwork`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/people`}
+            href={`/classroom/class/${classroom.classroomId}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/user/classroom/class/${classroom.classroomId}/chat`}
+            href={`/classroom/class/${classroom.classroomId}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
