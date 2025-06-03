@@ -52,12 +52,12 @@ export async function getAllUser() {
   });
 
   if (!session)
-    return { success: false, message: "Error getting all users", data: null };
+    return { success: false, message: "Error getting all users", data: [] };
 
-  const [data] = await db.select().from(user).orderBy(asc(user.createdAt));
+  const data = await db.select().from(user).orderBy(asc(user.createdAt));
 
   if (!data)
-    return { success: false, message: "Error getting all users", data: null };
+    return { success: false, message: "Error getting all users", data: data };
 
   return { success: true, message: "Fetch success", data };
 }
