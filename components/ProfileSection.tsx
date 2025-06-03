@@ -10,6 +10,7 @@ import EditProfileForm from "@/components/EditProfileForm";
 import RoleRequestDialog, {
   IRoleRequest,
 } from "@/components/RoleRequestDialog";
+import { ISession } from "@/lib/auth";
 
 export default function ProfileSection({
   session,
@@ -17,17 +18,7 @@ export default function ProfileSection({
   onCloseProfile,
   existingRequest,
 }: {
-  session: {
-    id: string;
-    name: string;
-    email: string;
-    email_verified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    image?: string | null | undefined | undefined;
-    role: string;
-    schoolName?: string | null | undefined;
-  };
+  session: ISession;
   onGetUser: (email: string) => Promise<IUser | null>;
   onCloseProfile: (userId: string) => Promise<void>;
   existingRequest: IRoleRequest | null;
