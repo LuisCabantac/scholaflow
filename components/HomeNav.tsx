@@ -16,7 +16,7 @@ export default function HomeNav({
         id: string;
         name: string;
         email: string;
-        emailVerified: boolean;
+        email_verified: boolean;
         createdAt: Date;
         updatedAt: Date;
         role: string;

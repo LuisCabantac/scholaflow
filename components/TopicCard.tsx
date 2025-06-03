@@ -34,7 +34,7 @@ export default function TopicCard({
     id: string;
     name: string;
     email: string;
-    emailVerified: boolean;
+    email_verified: boolean;
     createdAt: Date;
     updatedAt: Date;
     image?: string | null | undefined | undefined;

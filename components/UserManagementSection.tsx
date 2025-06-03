@@ -17,7 +17,7 @@ export interface IUser {
   fullName: string;
   avatar: string;
   role: "student" | "teacher" | "admin";
-  emailVerified: boolean;
+  email_verified: boolean;
   created_at: string;
   gender: string;
   updatedProfile: boolean;

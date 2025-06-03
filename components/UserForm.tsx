@@ -41,7 +41,7 @@ export default function UserForm({
       email: formData.get("email"),
       password: formData.get("password"),
       role: userRole,
-      emailVerified: true,
+      email_verified: true,
     });
     return status;
   }
