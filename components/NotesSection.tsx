@@ -39,7 +39,9 @@ export default function NotesSection({
           queryKey: [`notes--${session.id}`, search],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const [optimisticNotes, optimisticDelete] = useOptimistic(

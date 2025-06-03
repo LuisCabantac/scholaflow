@@ -83,7 +83,9 @@ export default function ClassChatSection({
         queryKey: [`${classId}-messages`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   function handleSubmitMessage(event: React.FormEvent) {

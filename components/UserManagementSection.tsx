@@ -54,7 +54,9 @@ export default function UserManagementSection({
         queryKey: [search],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   function handleToggleShowUserForm() {

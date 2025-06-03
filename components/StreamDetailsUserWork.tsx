@@ -116,7 +116,9 @@ export default function StreamDetailsUserWork({
         queryKey: [`stream-${stream.id}-private-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const {
@@ -139,7 +141,9 @@ export default function StreamDetailsUserWork({
         queryKey: [`stream-${stream.id}-private-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(

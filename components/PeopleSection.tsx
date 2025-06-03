@@ -43,7 +43,9 @@ export default function PeopleSection({
         queryKey: ["enrolledUsersClasses"],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   function handleToggleShowAddUserModal() {

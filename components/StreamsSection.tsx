@@ -71,7 +71,9 @@ export default function StreamsSection({
           queryKey: [`streams--${classroom.classroomId}`],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const [optimisticStreams, optimisticDelete] = useOptimistic(

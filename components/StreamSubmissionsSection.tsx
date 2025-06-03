@@ -102,7 +102,9 @@ export default function StreamSubmissionsSection({
         queryKey: [`stream-${stream.id}-private-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const {
@@ -125,7 +127,9 @@ export default function StreamSubmissionsSection({
         queryKey: [`stream-${stream.id}-private-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(

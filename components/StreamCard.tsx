@@ -86,7 +86,9 @@ export default function StreamCard({
         queryKey: [`stream-${stream.id}-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const { mutate: deleteStreamPostComment, isPending: deleteCommentIsPending } =
@@ -107,7 +109,9 @@ export default function StreamCard({
           queryKey: [`stream-${stream.id}-comments`],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(

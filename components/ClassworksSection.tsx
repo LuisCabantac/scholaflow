@@ -70,7 +70,9 @@ export default function ClassworksSection({
           ],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const { data: topics } = useQuery({
@@ -91,7 +93,9 @@ export default function ClassworksSection({
           ],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const [optimisticClassworks, optimisticDeleteClassworks] = useOptimistic(

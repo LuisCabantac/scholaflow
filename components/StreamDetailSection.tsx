@@ -78,7 +78,9 @@ export default function StreamDetailSection({
           queryKey: ["streams"],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const { data: comments, isPending: commentsIsPending } = useQuery({
@@ -95,7 +97,9 @@ export default function StreamDetailSection({
         queryKey: [`stream-${stream.id}-comments`],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const { mutate: deleteStreamPostComment, isPending: deleteCommentIsPending } =
@@ -116,7 +120,9 @@ export default function StreamDetailSection({
           queryKey: [`stream-${stream.id}-comments`],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const [optimisticComments, optimisticDeleteComment] = useOptimistic(

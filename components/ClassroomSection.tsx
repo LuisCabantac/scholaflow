@@ -114,7 +114,9 @@ export default function ClassroomSection({
         ],
       });
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const assignedClassworks = enrolledClassworks

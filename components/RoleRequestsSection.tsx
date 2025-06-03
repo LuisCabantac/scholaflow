@@ -57,7 +57,9 @@ export default function RoleRequestsSection({
           ],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const { mutate: rejectRequest, isPending: rejectRequestIsPending } =
@@ -74,7 +76,9 @@ export default function RoleRequestsSection({
           ],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   const { mutate: removeRequest, isPending: removeRequestIsPending } =
@@ -91,7 +95,9 @@ export default function RoleRequestsSection({
           ],
         });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
 
   return (
