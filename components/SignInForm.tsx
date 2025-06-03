@@ -19,7 +19,6 @@ export default function SignInForm() {
   async function handleSignInAction(event: React.FormEvent) {
     event.preventDefault();
     if (honeyPot) return;
-    setIsLoading(true);
     setShowPassword(false);
     const formData = new FormData(event.target as HTMLFormElement);
     await authClient.signIn.email(
@@ -30,19 +29,24 @@ export default function SignInForm() {
       },
       {
         onRequest: () => {
-          setIsLoading(false);
-        },
-        onResponse: () => {
           setIsLoading(true);
         },
+        onResponse: () => {
+          setIsLoading(false);
+        },
         onSuccess: () => {
-          toast.success(
-            "Account created successfully! Please sign in to continue.",
-          );
+          toast.success("Successfully signed in!");
         },
         onError: (ctx) => {
+          if (ctx.error.status === 401) {
+            toast.error("Invalid email or password. Please try again.");
+            return;
+          }
           if (ctx.error.status === 403) {
-            toast.error("Please verify your email address");
+            toast.error(
+              "Please verify your email address before signing in. Check your inbox for a verification link.",
+            );
+            return;
           }
           toast.error(ctx.error.message);
         },
