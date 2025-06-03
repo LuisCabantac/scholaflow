@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-
 import Logo from "@/components/Logo";
 import HomeNav from "@/components/HomeNav";
 
 export default async function Nav({ showButton }: { showButton: boolean }) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!showButton)
     return (
@@ -17,5 +19,5 @@ export default async function Nav({ showButton }: { showButton: boolean }) {
       </nav>
     );
 
-  return <HomeNav session={session} />;
+  return <HomeNav session={session?.user} />;
 }

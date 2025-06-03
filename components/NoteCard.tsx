@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Image from "next/image";
 
+import { ISession } from "@/lib/auth";
 import { INotes } from "@/app/user/notes/page";
 import { formatDate } from "@/lib/utils";
 
 import NoteForm from "@/components/NoteForm";
-import { ISession } from "@/lib/auth";
 
 export default function NoteCard({
   note,

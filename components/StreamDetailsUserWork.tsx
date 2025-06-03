@@ -459,10 +459,10 @@ export default function StreamDetailsUserWork({
                 <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
-                    (comment.author === session.user.id &&
+                    (comment.author === session.id &&
                       comment.toUserId === classroom.teacherId) ||
                     (comment.author === classroom.teacherId &&
-                      comment.toUserId === session.user.id),
+                      comment.toUserId === session.id),
                 ).length ? (
                   <button
                     onClick={handleToggleExpandPrivateComments}
@@ -484,10 +484,10 @@ export default function StreamDetailsUserWork({
                     optimisticComments
                       ?.filter(
                         (comment) =>
-                          (comment.author === session.user.id &&
+                          (comment.author === session.id &&
                             comment.toUserId === classroom.teacherId) ||
                           (comment.author === classroom.teacherId &&
-                            comment.toUserId === session.user.id),
+                            comment.toUserId === session.id),
                       )
                       .map((comment) => (
                         <CommentCard
@@ -832,20 +832,20 @@ export default function StreamDetailsUserWork({
           )}
           {optimisticComments?.filter(
             (comment) =>
-              (comment.author === session.user.id &&
+              (comment.author === session.id &&
                 comment.toUserId === classroom.teacherId) ||
               (comment.author === classroom.teacherId &&
-                comment.toUserId === session.user.id),
+                comment.toUserId === session.id),
           ).length ? (
             <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
               {!privateCommentsIsPending &&
                 optimisticComments
                   ?.filter(
                     (comment) =>
-                      (comment.author === session.user.id &&
+                      (comment.author === session.id &&
                         comment.toUserId === classroom.teacherId) ||
                       (comment.author === classroom.teacherId &&
-                        comment.toUserId === session.user.id),
+                        comment.toUserId === session.id),
                   )
                   .map((comment) => (
                     <CommentCard

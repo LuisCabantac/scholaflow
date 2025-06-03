@@ -2,7 +2,7 @@
 
 ScholaFlow is a learning platform that aims to improve upon the foundation of existing platforms like Google Classroom. We're not just checking boxes – we're focused on features that genuinely enhance the learning experience.
 
-![prismify-render-1732824603368](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
+![scholaflow og](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
 
 ## Key Features:
 
@@ -24,7 +24,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 - [Next.js 15](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Supabase](https://supabase.com/)
-- [Auth.js](https://authjs.dev/getting-started)
+- [Better Auth](https://www.better-auth.com/)
 - [TanStack Query](https://tanstack.com/query/latest)
 - [Date-fns](https://date-fns.org/)
 - [React Hot Toast](https://react-hot-toast.com/)

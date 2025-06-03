@@ -3,7 +3,7 @@
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 
-import { signInCredentialsAction } from "@/lib/auth-actions";
+import { authClient } from "@/lib/auth-client";
 
 import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 
@@ -20,14 +20,39 @@ export default function SignInForm() {
   async function handleSignInAction(event: React.FormEvent) {
     event.preventDefault();
     if (honeyPot) return;
-    setIsLoading(true);
     setShowPassword(false);
     const formData = new FormData(event.target as HTMLFormElement);
-    const data = await signInCredentialsAction(formData);
-    setIsLoading(false);
-    if (data) {
-      toast.error(data.message);
-    }
+    await authClient.signIn.email(
+      {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        callbackURL: "/user/classroom",
+      },
+      {
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success("Successfully signed in!");
+        },
+        onError: (ctx) => {
+          if (ctx.error.status === 401) {
+            toast.error("Invalid email or password. Please try again.");
+            return;
+          }
+          if (ctx.error.status === 403) {
+            toast.error(
+              "Please verify your email address before signing in. Check your inbox for a verification link.",
+            );
+            return;
+          }
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   }
 
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {

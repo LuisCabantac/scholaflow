@@ -276,8 +276,8 @@ export default function StreamForm({
                 defaultValue={stream?.id ?? ""}
                 hidden
               />
-              {session.user.role === "teacher" &&
-                session.user.id === classroom.teacherId && (
+              {session.role === "teacher" &&
+                session.id === classroom.teacherId && (
                   <div className="flex flex-col items-start justify-start gap-2">
                     <label className="font-medium">Assign to</label>
                     <button
@@ -437,7 +437,7 @@ export default function StreamForm({
                   defaultValue={stream?.caption ?? ""}
                 ></textarea>
               </div>
-              {session.user.id === classroom.teacherId &&
+              {session.id === classroom.teacherId &&
                 streamType === "stream" && (
                   <div className="grid gap-2">
                     <label className="font-medium">Schedule post</label>

@@ -1,9 +1,11 @@
 "use client";
 
-import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { ISession } from "@/lib/auth";
 import { createNote, updateNote } from "@/lib/notes-actions";
 import { formatDate } from "@/lib/utils";
 import { INotes } from "@/app/user/notes/page";
@@ -11,8 +13,6 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import { useQueryClient } from "@tanstack/react-query";
-import { ISession } from "@/lib/auth";
 
 export default function NoteForm({
   note,
@@ -64,7 +64,7 @@ export default function NoteForm({
       toast.success(message);
       onToggleShowNotesForm();
       queryClient.invalidateQueries({
-        queryKey: [`notes--${session.user.id}`],
+        queryKey: [`notes--${session.id}`],
       });
     } else toast.error(message);
   }

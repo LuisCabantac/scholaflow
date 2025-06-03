@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
 import {
@@ -8,7 +9,6 @@ import {
   getEnrolledClassByClassAndSessionId,
 } from "@/lib/data-service";
 import { deleteEnrolledClassbyClassAndEnrolledClassId } from "@/lib/classroom-actions";
-import { hasUser } from "@/lib/utils";
 
 import PeopleSection from "@/components/PeopleSection";
 
@@ -33,9 +33,11 @@ export default async function Page({
   params: Promise<{ classId: string }>;
 }) {
   const { classId } = await params;
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/");
 

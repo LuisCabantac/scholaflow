@@ -756,20 +756,20 @@ export default function StreamSubmissionsSection({
                     )}
                     {optimisticComments?.filter(
                       (comment) =>
-                        (comment.author === session.user.id &&
+                        (comment.author === session.id &&
                           comment.toUserId === userId) ||
                         (comment.author === userId &&
-                          comment.toUserId === session.user.id),
+                          comment.toUserId === session.id),
                     ).length ? (
                       <ul className="mt-1 grid max-h-[20rem] gap-2 overflow-y-auto">
                         {!privateCommentsIsPending &&
                           optimisticComments
                             ?.filter(
                               (comment) =>
-                                (comment.author === session.user.id &&
+                                (comment.author === session.id &&
                                   comment.toUserId === userId) ||
                                 (comment.author === userId &&
-                                  comment.toUserId === session.user.id),
+                                  comment.toUserId === session.id),
                             )
                             .map((comment) => (
                               <CommentCard
@@ -796,10 +796,10 @@ export default function StreamSubmissionsSection({
                       <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(
                         (comment) =>
-                          (comment.author === session.user.id &&
+                          (comment.author === session.id &&
                             comment.toUserId === userId) ||
                           (comment.author === userId &&
-                            comment.toUserId === session.user.id),
+                            comment.toUserId === session.id),
                       ).length ? (
                         <button
                           onClick={handleToggleExpandPrivateComments}
@@ -820,10 +820,10 @@ export default function StreamSubmissionsSection({
                     )}
                     {optimisticComments?.filter(
                       (comment) =>
-                        (comment.author === session.user.id &&
+                        (comment.author === session.id &&
                           comment.toUserId === userId) ||
                         (comment.author === userId &&
-                          comment.toUserId === session.user.id),
+                          comment.toUserId === session.id),
                     ).length ? (
                       <ul
                         className={`grid gap-2 ${expandPrivateComments ? "max-h-[15rem] overflow-y-auto" : "max-h-0"}`}
@@ -832,10 +832,10 @@ export default function StreamSubmissionsSection({
                           optimisticComments
                             ?.filter(
                               (comment) =>
-                                (comment.author === session.user.id &&
+                                (comment.author === session.id &&
                                   comment.toUserId === userId) ||
                                 (comment.author === userId &&
-                                  comment.toUserId === session.user.id),
+                                  comment.toUserId === session.id),
                             )
                             .map((comment) => (
                               <CommentCard

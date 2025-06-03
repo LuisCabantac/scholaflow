@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { supabase } from "@/lib/supabase";
-import { extractAvatarFilePath, hasUser } from "@/lib/utils";
+import { extractAvatarFilePath } from "@/lib/utils";
 import {
   getAllClassesByTeacherId,
   getAllClassesStreamByUserId,
@@ -33,9 +34,10 @@ export async function createUser(newGuest: object): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   if (session.user.role !== "admin")
     return {
@@ -43,7 +45,7 @@ export async function createUser(newGuest: object): Promise<{
       message: "You need be an admin to edit this post.",
     };
 
-  const { error } = await supabase.from("users").insert([newGuest]);
+  const { error } = await supabase.from("user").insert([newGuest]);
 
   if (error) {
     return { success: false, message: "User could not be created" };
@@ -56,9 +58,10 @@ export async function updateUser(formData: FormData): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   if (session.user.role !== "admin")
     return {
@@ -74,25 +77,25 @@ export async function updateUser(formData: FormData): Promise<{
     return { success: false, message: "User does not exist." };
 
   const newEmail = formData.get("email");
-  const newPassword = formData.get("password");
+  // const newPassword = formData.get("password");
   const newFullName = formData.get("fullName");
   const newUserRole = formData.get("userRole");
 
   if (
     currentUserData.email !== newEmail ||
-    currentUserData.fullName !== newFullName ||
-    currentUserData.password !== newPassword ||
+    currentUserData.name !== newFullName ||
+    // currentUserData.password !== newPassword ||
     currentUserData.role !== newUserRole
   ) {
     const updatedGuest = {
       fullName: newFullName,
       email: newEmail,
-      password: newPassword,
+      // password: newPassword,
       role: newUserRole,
     };
 
     const { error } = await supabase
-      .from("users")
+      .from("user")
       .update([updatedGuest])
       .eq("id", userId);
 
@@ -113,9 +116,10 @@ export async function updateProfile(formData: FormData): Promise<{
   success: boolean;
   message: string;
 }> {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   const userId = formData.get("userId") as string;
 
@@ -138,8 +142,8 @@ export async function updateProfile(formData: FormData): Promise<{
 
   if (
     currentUserData.email !== newEmail ||
-    currentUserData.fullName !== newFullName ||
-    currentUserData.password !== newPassword ||
+    currentUserData.name !== newFullName ||
+    // currentUserData.password !== newPassword ||
     currentUserData.schoolName !== newSchoolName ||
     attachment
   ) {
@@ -157,24 +161,24 @@ export async function updateProfile(formData: FormData): Promise<{
         message: "Email address already in use.",
       };
 
-    if (
-      currentUserData.password !== newPassword &&
-      (newPassword as string).length < 8
-    )
-      return {
-        success: false,
-        message: "Your password must be a minimum of 8 characters in length.",
-      };
+    // if (
+    //   currentUserData.password !== newPassword &&
+    //   (newPassword as string).length < 8
+    // )
+    //   return {
+    //     success: false,
+    //     message: "Your password must be a minimum of 8 characters in length.",
+    //   };
 
     const newProfilePhoto = attachment
       ? await uploadAttachments("avatars", session.user.id, attachment as File)
-      : currentUserData.avatar;
+      : currentUserData.image;
 
     if (
       attachment &&
-      !currentUserData.avatar.startsWith("https://lh3.googleusercontent.com/")
+      !currentUserData.image.startsWith("https://lh3.googleusercontent.com/")
     ) {
-      const filePath = extractAvatarFilePath(currentUserData.avatar);
+      const filePath = extractAvatarFilePath(currentUserData.image);
       await deleteFileFromBucket("avatars", filePath);
     }
 
@@ -187,7 +191,7 @@ export async function updateProfile(formData: FormData): Promise<{
     };
 
     const { error } = await supabase
-      .from("users")
+      .from("user")
       .update([updatedGuest])
       .eq("id", userId);
 
@@ -205,8 +209,10 @@ export async function updateProfile(formData: FormData): Promise<{
 }
 
 export async function deleteUser(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (!(session.user.role === "admin" || session.user.id === userId))
     throw new Error("You need be an admin to delete this user.");
@@ -214,14 +220,16 @@ export async function deleteUser(userId: string): Promise<void> {
   const user = await getUserByUserId(userId);
   if (!user) throw new Error("User does not exist.");
 
-  const { error } = await supabase.from("users").delete().eq("id", userId);
+  const { error } = await supabase.from("user").delete().eq("id", userId);
 
   if (error) throw new Error(error.message);
 }
 
 export async function closeAccount(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   const user = await getUserByUserId(userId);
   if (!user) throw new Error("User does not exist.");
@@ -268,8 +276,8 @@ export async function closeAccount(userId: string): Promise<void> {
 
   await removeRoleRequestByUserId(userId);
 
-  if (!user.avatar.startsWith("https://lh3.googleusercontent.com/")) {
-    const filePath = extractAvatarFilePath(user.avatar);
+  if (!user.image.startsWith("https://lh3.googleusercontent.com/")) {
+    const filePath = extractAvatarFilePath(user.image);
     await deleteFileFromBucket("avatars", filePath);
   }
 
@@ -291,9 +299,10 @@ export async function deleteFileFromBucket(
 }
 
 export async function roleRequest(formData: FormData) {
-  const session = await auth();
-  if (!hasUser(session))
-    return { success: false, message: "You must be logged in." };
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) return { success: false, message: "You must be logged in." };
 
   const userId = formData.get("userId") as string;
 
@@ -333,8 +342,10 @@ export async function roleRequest(formData: FormData) {
 }
 
 export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -355,8 +366,10 @@ export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -379,8 +392,10 @@ export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -399,8 +414,10 @@ export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
 }
 
 async function removeRoleRequestByUserId(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   const userRequest = await getRoleRequest(userId);
 
@@ -415,8 +432,10 @@ async function removeRoleRequestByUserId(userId: string): Promise<void> {
 }
 
 async function setTeacherUserRole(userId: string): Promise<void> {
-  const session = await auth();
-  if (!hasUser(session)) throw new Error("You must be logged in.");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) throw new Error("You must be logged in.");
 
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
@@ -424,7 +443,7 @@ async function setTeacherUserRole(userId: string): Promise<void> {
   const updatedUserRole = { role: "teacher" };
 
   const { error } = await supabase
-    .from("users")
+    .from("user")
     .update([updatedUserRole])
     .eq("id", userId);
 

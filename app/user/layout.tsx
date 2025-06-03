@@ -1,10 +1,11 @@
 import React from "react";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import Provider from "@/app/Provider";
 import { auth } from "@/lib/auth";
-import { hasUser } from "@/lib/utils";
+
 import {
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
@@ -24,13 +25,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!hasUser(session)) return redirect("/signin");
+  if (!session) return redirect("/signin");
 
   async function handleGetAllClassesByTeacherId(id: string) {
     "use server";
-    if (hasUser(session) && session.user.role === "teacher") {
+    if (session && session.user.role === "teacher") {
       const data = await getAllClassesByTeacherId(id);
       return data;
     } else return null;
@@ -39,7 +42,7 @@ export default async function RootLayout({
   async function handleGetAllEnrolledClassesByUserId(id: string) {
     "use server";
     if (
-      hasUser(session) &&
+      session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
       const data = await getAllEnrolledClassesByUserId(id);
@@ -52,7 +55,7 @@ export default async function RootLayout({
       <Provider>
         {session && (
           <Sidebar
-            session={hasUser(session) ? session : null}
+            session={session ? session.user : null}
             onGetAllClassesByTeacherId={handleGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={
               handleGetAllEnrolledClassesByUserId

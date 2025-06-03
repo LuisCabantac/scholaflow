@@ -81,25 +81,25 @@ export default function ClassroomSection({
 
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {
-      queryKey: [`createdClasses--${session.user.id}`],
-      queryFn: () => onGetAllClasses(session.user.id),
+      queryKey: [`createdClasses--${session.id}`],
+      queryFn: () => onGetAllClasses(session.id),
     },
   );
 
   const { data: enrolledClasses, isPending: enrolledClassesIsPending } =
     useQuery({
-      queryKey: [`enrolledClasses--${session.user.id}`],
-      queryFn: () => onGetAllEnrolledClasses(session.user.id),
+      queryKey: [`enrolledClasses--${session.id}`],
+      queryFn: () => onGetAllEnrolledClasses(session.id),
     });
 
   const { data: enrolledClassworks } = useQuery({
-    queryKey: [`enrolledClassesClassworks--${session.user.id}`],
-    queryFn: () => onGetAllEnrolledClassesClassworks(session.user.id),
+    queryKey: [`enrolledClassesClassworks--${session.id}`],
+    queryFn: () => onGetAllEnrolledClassesClassworks(session.id),
   });
 
   const { data: classworks } = useQuery({
-    queryKey: [`classworks--${session.user.id}`],
-    queryFn: () => onGetAllClassworks(session.user.id),
+    queryKey: [`classworks--${session.id}`],
+    queryFn: () => onGetAllClassworks(session.id),
   });
 
   const { mutate: deleteClass, isPending: deleteClassIsPending } = useMutation({
@@ -109,8 +109,8 @@ export default function ClassroomSection({
 
       queryClient.invalidateQueries({
         queryKey: [
-          `createdClasses--${session.user.id}`,
-          `enrolledClasses--${session.user.id}`,
+          `createdClasses--${session.id}`,
+          `enrolledClasses--${session.id}`,
         ],
       });
     },
@@ -128,7 +128,7 @@ export default function ClassroomSection({
             new Date(classwork.dueDate ?? "") > new Date())) &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))) &&
+            classwork.announceTo.includes(session.id))) &&
         (classwork.scheduledAt
           ? new Date(classwork.scheduledAt) < new Date()
           : true),
@@ -152,7 +152,7 @@ export default function ClassroomSection({
         new Date(classwork.dueDate ?? "") < new Date() &&
         (classwork.announceToAll ||
           (classwork.announceTo &&
-            classwork.announceTo.includes(session.user.id))) &&
+            classwork.announceTo.includes(session.id))) &&
         (classwork.scheduledAt
           ? new Date(classwork.scheduledAt) < new Date()
           : true),
@@ -196,7 +196,7 @@ export default function ClassroomSection({
 
     const enrolledExists = await onGetEnrolledClass(classExists.classroomId);
 
-    if (classExists.teacherId === session.user.id || enrolledExists) {
+    if (classExists.teacherId === session.id || enrolledExists) {
       setIsLoading(false);
       toast.error("You're already in this class.");
       return;

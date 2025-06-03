@@ -52,11 +52,11 @@ export default function TopicCard({
     if (
       classworks?.filter(
         (stream) =>
-          ((stream.announceTo.includes(session.user.id) &&
+          ((stream.announceTo.includes(session.id) &&
             stream.announceToAll === false) ||
             stream.announceToAll ||
-            stream.author === session.user.id ||
-            classroom.teacherId === session.user.id) &&
+            stream.author === session.id ||
+            classroom.teacherId === session.id) &&
           stream.topicId === topic.topicId,
       ).length
     )
@@ -92,11 +92,11 @@ export default function TopicCard({
         >
           {classworks?.filter(
             (stream) =>
-              ((stream.announceTo.includes(session.user.id) &&
+              ((stream.announceTo.includes(session.id) &&
                 stream.announceToAll === false) ||
                 stream.announceToAll ||
-                stream.author === session.user.id ||
-                classroom.teacherId === session.user.id) &&
+                stream.author === session.id ||
+                classroom.teacherId === session.id) &&
               stream.topicId === topic.topicId,
           ).length ? (
             <svg
@@ -118,7 +118,7 @@ export default function TopicCard({
         </li>
         <li>
           <ul className="flex items-center">
-            {session.user.id === classroom.teacherId && (
+            {session.id === classroom.teacherId && (
               <li>
                 <div className="relative" ref={ellipsisWrapperRef}>
                   <button onClick={handleToggleEllipsis} type="button">
@@ -138,9 +138,9 @@ export default function TopicCard({
                     </svg>
                   </button>
                   <EllipsisPopover
-                    showEdit={session.user.id === classroom.teacherId}
+                    showEdit={session.id === classroom.teacherId}
                     showEllipsis={ellipsis}
-                    showDelete={session.user.id === classroom.teacherId}
+                    showDelete={session.id === classroom.teacherId}
                     onToggleEllipsis={handleToggleEllipsis}
                     onShowEditForm={handleToggleShowTopicForm}
                     onShowConfirmationModal={handleToggleShowConfirmation}
@@ -179,16 +179,16 @@ export default function TopicCard({
           {classworks
             ?.filter(
               (stream) =>
-                ((stream.announceTo.includes(session.user.id) &&
+                ((stream.announceTo.includes(session.id) &&
                   stream.announceToAll === false) ||
                   stream.announceToAll ||
-                  stream.author === session.user.id ||
-                  classroom.teacherId === session.user.id) &&
+                  stream.author === session.id ||
+                  classroom.teacherId === session.id) &&
                 stream.topicId === topic.topicId &&
                 ((stream.scheduledAt
                   ? new Date(stream.scheduledAt) < new Date()
                   : true) ||
-                  classroom.teacherId === session.user.id),
+                  classroom.teacherId === session.id),
             )
             .map((stream) => (
               <StreamCard

@@ -12,16 +12,14 @@ import UserForm from "@/components/UserForm";
 
 export interface IUser {
   id: string;
+  name: string;
   email: string;
-  password: string;
-  fullName: string;
-  avatar: string;
-  role: "student" | "teacher" | "admin";
-  emailVerified: boolean;
-  created_at: string;
-  gender: string;
-  updatedProfile: boolean;
-  schoolName: string | null;
+  email_verified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null | undefined | undefined;
+  role: string;
+  schoolName?: string | null | undefined;
 }
 
 export default function UserManagementSection({

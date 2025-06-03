@@ -27,8 +27,8 @@ export default function UserForm({
   const { useClickOutsideHandler } = useClickOutside();
   const userFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [validPassword, setValidPassword] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
+  // const [validPassword, setValidPassword] = useState(true);
+  // const [showPassword, setShowPassword] = useState(false);
   const [userRole, setUserRole] = useState<UserRoleType>(
     (user?.role as UserRoleType) ?? "student",
   );
@@ -37,11 +37,11 @@ export default function UserForm({
 
   async function onCreateUser(formData: FormData) {
     const status = await createUser({
-      fullName: formData.get("fullName"),
+      name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
       role: userRole,
-      emailVerified: true,
+      email_verified: true,
     });
     return status;
   }
@@ -70,10 +70,10 @@ export default function UserForm({
     } else toast.error(message);
   }
 
-  function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
-    setShowPassword(!showPassword);
-  }
+  // function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
+  //   event.preventDefault();
+  //   setShowPassword(!showPassword);
+  // }
 
   useClickOutsideHandler(
     userFormModalWrapperRef,
@@ -129,9 +129,9 @@ export default function UserForm({
                 disabled={isLoading}
                 required
                 type="text"
-                name="fullName"
+                name="name"
                 placeholder="Enter the user's name"
-                defaultValue={user?.fullName}
+                defaultValue={user?.name}
                 className="w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
               />
             </div>
@@ -150,7 +150,7 @@ export default function UserForm({
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <label className="text-sm font-medium">
                 Password <span className="text-red-400">*</span>
               </label>
@@ -201,7 +201,7 @@ export default function UserForm({
                   </svg>
                 </button>
               </div>
-            </div>
+            </div> */}
             <div className="accent-[#22317c]">
               <label className="text-sm font-medium">
                 Role <span className="text-red-400">*</span>

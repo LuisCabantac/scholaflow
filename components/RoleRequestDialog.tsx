@@ -85,25 +85,25 @@ export default function RoleRequestDialog({
               <input
                 type="text"
                 name="userId"
-                defaultValue={session.user.id}
+                defaultValue={session.id}
                 hidden
               />
               <input
                 type="text"
                 name="userName"
-                defaultValue={session.user.name}
+                defaultValue={session.name}
                 hidden
               />
               <input
                 type="text"
                 name="userEmail"
-                defaultValue={session.user.email}
+                defaultValue={session.email}
                 hidden
               />
               <input
                 type="text"
                 name="avatar"
-                defaultValue={session.user.image}
+                defaultValue={session.image ?? ""}
                 hidden
               />
               <div className="flex items-center justify-end gap-2">
