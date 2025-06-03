@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
+import { ISession } from "@/lib/auth";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
   IStream,
@@ -30,17 +31,7 @@ export default function TopicCard({
 }: {
   topic: ITopic;
   topics: ITopic[] | null | undefined;
-  session: {
-    id: string;
-    name: string;
-    email: string;
-    email_verified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    image?: string | null | undefined | undefined;
-    role: string;
-    schoolName?: string | null | undefined;
-  };
+  session: ISession;
   classroom: IClass;
   classworks: IStream[] | null | undefined;
   onDeleteTopic: (topicId: string) => void;

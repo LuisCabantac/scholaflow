@@ -1,8 +1,9 @@
 "use client";
 
-import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { ISession } from "@/lib/auth";
 import { createNote, updateNote } from "@/lib/notes-actions";
@@ -12,7 +13,6 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function NoteForm({
   note,

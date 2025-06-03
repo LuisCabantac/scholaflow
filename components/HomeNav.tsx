@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { useNav } from "@/contexts/NavContext";
 
+import { ISession } from "@/lib/auth";
+
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import ProfileIcon from "@/components/ProfileIcon";
@@ -11,18 +13,7 @@ import ProfileIcon from "@/components/ProfileIcon";
 export default function HomeNav({
   session,
 }: {
-  session:
-    | {
-        id: string;
-        name: string;
-        email: string;
-        email_verified: boolean;
-        createdAt: Date;
-        updatedAt: Date;
-        role: string;
-        image?: string | null | undefined | undefined;
-      }
-    | undefined;
+  session: ISession | undefined;
 }) {
   const { isSticky } = useNav();
 
