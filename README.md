@@ -24,6 +24,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 - [Next.js 15](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Supabase](https://supabase.com/)
+- [Drizzle ORM](https://orm.drizzle.team/)
 - [Better Auth](https://www.better-auth.com/)
 - [TanStack Query](https://tanstack.com/query/latest)
 - [Date-fns](https://date-fns.org/)
