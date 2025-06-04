@@ -3,23 +3,15 @@
 import { db } from "@/drizzle";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/lib/supabase";
-import { user, verification } from "@/drizzle/schema";
 
+import { supabase } from "@/lib/supabase";
+import { Verification } from "@/lib/schema";
+import { getUserByEmail } from "@/lib/user-service";
+import { user, verification } from "@/drizzle/schema";
 import {
-  getUserByEmail,
   getVerificationToken,
   getVerificationTokenByToken,
-} from "@/lib/data-service";
-
-export interface IVerification {
-  id: string;
-  identifier: string;
-  value: string;
-  expiresAt: Date;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-}
+} from "@/lib/auth-service";
 
 // Auth.js Credential SignIn
 // export async function signInCredentialsAction(formData: FormData) {
@@ -114,17 +106,23 @@ export interface IVerification {
 //   };
 // }
 
-export async function createUser(newUser: object) {
-  const { data, error } = await supabase.from("user").insert([newUser]);
+// export async function createUser(newUser: object) {
+//   const { data, error } = await supabase.from("user").insert([newUser]);
 
-  if (error) {
-    throw new Error("User could not be created");
-  }
+//   if (error) {
+//     throw new Error("User could not be created");
+//   }
 
-  return data;
-}
+//   return data;
+// }
 
-export async function checkEmail(formData: FormData) {
+export async function checkEmail(formData: FormData): Promise<{
+  type: string;
+  success: {
+    status: boolean;
+    message: string;
+  };
+}> {
   const email = formData.get("email") as string;
 
   const user = await getUserByEmail(email);
@@ -147,7 +145,7 @@ export async function checkEmail(formData: FormData) {
   }
 }
 
-export async function deleteVerificationToken(email: string) {
+export async function deleteVerificationToken(email: string): Promise<void> {
   await supabase.from("verificationTokens").delete().eq("email", email);
 }
 
@@ -155,7 +153,7 @@ export async function createVerificationToken(
   email: string,
   token: string,
   expiresAt: Date,
-): Promise<IVerification | null> {
+): Promise<Verification | null> {
   const [data] = await db
     .insert(verification)
     .values({
@@ -173,13 +171,15 @@ export async function createVerificationToken(
   return data;
 }
 
-export async function checkVerificationToken(formData: FormData) {
+export async function checkVerificationToken(
+  formData: FormData,
+): Promise<boolean> {
   const email = formData.get("email") as string;
   const otp = formData.get("otp") as string;
 
   const data = await getVerificationToken(email);
 
-  return data.value === otp;
+  return data?.value === otp;
 }
 
 export async function newVerification(token: string): Promise<{
