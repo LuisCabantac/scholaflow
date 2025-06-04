@@ -18,6 +18,20 @@ export const userSchema = z.object({
 
 export type User = z.infer<typeof userSchema>;
 
+export const sessionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.email(),
+  emailVerified: z.boolean(),
+  image: z.string().optional().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  role: z.string(),
+  schoolName: z.string().optional().nullable(),
+});
+
+export type Session = z.infer<typeof sessionSchema>;
+
 export const verificationSchema = z.object({
   id: z.string(),
   identifier: z.string(),
