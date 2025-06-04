@@ -22,7 +22,7 @@ import {
 import StreamCard from "@/components/StreamCard";
 import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
-import TopicDialog, { ITopic } from "@/components/TopicDialog";
+import TopicDialog from "@/components/TopicDialog";
 import TopicCard from "@/components/TopicCard";
 
 type IStreamType = "stream" | "assignment" | "quiz" | "question" | "material";
@@ -338,7 +338,7 @@ export default function ClassworksSection({
                         topics={topics as ClassTopic[] | null}
                         session={session}
                         classroom={classroom}
-                        classworks={classworks as Classwork[] | null}
+                        classworks={classworks as Stream[] | null}
                         enrolledClasses={enrolledClasses}
                         onGetAllComments={onGetAllComments}
                         onDeleteTopic={handleDeleteTopic}
@@ -356,7 +356,7 @@ export default function ClassworksSection({
       </div>
       {showStreamForm && (
         <StreamForm
-          topics={topics as ITopic[] | null}
+          topics={topics as ClassTopic[] | null}
           session={session}
           search={search}
           formType="create"
