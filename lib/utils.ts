@@ -80,8 +80,8 @@ export function removeUUIDFromFilename(filename: string): string {
 export const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
-export function formatDate(createdAt: string): string {
-  const date = new Date(createdAt);
+export function formatDate(createdAt: string | Date): string {
+  const date = typeof createdAt === "string" ? new Date(createdAt) : createdAt;
   const now = new Date();
 
   const differenceInDays =
@@ -189,8 +189,9 @@ export function getFileExtension(url: string): string {
   return match ? match[1] : "";
 }
 
-export function formatMessageDate(dateString: string): string {
-  const date = parseISO(dateString);
+export function formatMessageDate(dateString: string | Date): string {
+  const date =
+    typeof dateString === "string" ? parseISO(dateString) : dateString;
 
   if (isToday(date)) {
     return format(date, "hh:mm a");
