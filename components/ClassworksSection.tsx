@@ -25,7 +25,7 @@ import StreamForm from "@/components/StreamForm";
 import TopicDialog from "@/components/TopicDialog";
 import TopicCard from "@/components/TopicCard";
 
-type IStreamType = "stream" | "assignment" | "quiz" | "question" | "material";
+type StreamType = "stream" | "assignment" | "quiz" | "question" | "material";
 
 export default function ClassworksSection({
   session,
@@ -48,7 +48,7 @@ export default function ClassworksSection({
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const btnWrapperRef = useRef<HTMLDivElement>(null);
-  const [classworkType, setClassworkType] = useState<IStreamType>("stream");
+  const [classworkType, setClassworkType] = useState<StreamType>("stream");
   const [search, setSearch] = useState("");
   const [showStreamForm, setShowStreamForm] = useState(false);
   const [showTopicForm, setShowTopicForm] = useState(false);
@@ -124,7 +124,7 @@ export default function ClassworksSection({
     setShowTopicForm(!showTopicForm);
   }
 
-  function handleSetClassworkType(type: IStreamType) {
+  function handleSetClassworkType(type: StreamType) {
     setClassworkType(type);
     handleToggleShowStreamForm();
   }

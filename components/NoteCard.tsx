@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { Session } from "@/lib/schema";
+import { Note, Session } from "@/lib/schema";
 import { formatDate } from "@/lib/utils";
-import { INotes } from "@/app/(main)/notes/page";
 
 import NoteForm from "@/components/NoteForm";
 
@@ -13,7 +12,7 @@ export default function NoteCard({
   onDeleteNote,
   deleteNoteIsPending,
 }: {
-  note: INotes;
+  note: Note;
   session: Session;
   onDeleteNote: (noteId: string) => void;
   deleteNoteIsPending: boolean;
@@ -30,9 +29,9 @@ export default function NoteCard({
         onClick={handleToggleShowNotesForm}
         className="grid cursor-pointer gap-2 p-3 md:p-4"
       >
-        {note.attachment.length ? (
+        {note.attachments.length ? (
           <div className="columns-2 gap-0.5">
-            {note.attachment.slice(0, 4).map((image) => (
+            {note.attachments.slice(0, 4).map((image) => (
               <Image
                 key={image}
                 src={image}
@@ -46,16 +45,14 @@ export default function NoteCard({
         ) : null}
         {note.title && <h6 className="font-medium">{note.title}</h6>}
         <div className="grid gap-1">
-          {note.description.length ? (
+          {note.content?.length ? (
             <p className="whitespace-pre-line">
-              {note.description.length > 250
-                ? note.description.slice(0, 250).concat("...")
-                : note.description}
+              {note.content.length > 250
+                ? note.content.slice(0, 250).concat("...")
+                : note.content}
             </p>
           ) : null}
-          <p className="text-xs text-[#616572]">
-            {formatDate(note.created_at)}
-          </p>
+          <p className="text-xs text-[#616572]">{formatDate(note.createdAt)}</p>
         </div>
       </div>
       {showNotesForm && (

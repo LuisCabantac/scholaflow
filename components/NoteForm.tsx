@@ -5,10 +5,9 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { Session } from "@/lib/schema";
-import { createNote, updateNote } from "@/lib/notes-actions";
 import { formatDate } from "@/lib/utils";
-import { INotes } from "@/app/(main)/notes/page";
+import { Note, Session } from "@/lib/schema";
+import { createNote, updateNote } from "@/lib/notes-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
@@ -23,7 +22,7 @@ export default function NoteForm({
   deleteNoteIsPending,
   onToggleShowNotesForm,
 }: {
-  note?: INotes;
+  note?: Note;
   type: "create" | "edit";
   session: Session;
   onDeleteNote: (noteId: string) => void;
@@ -39,9 +38,9 @@ export default function NoteForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isPinned, setIsPinned] = useState(note?.isPinned ?? false);
   const [title, setTitle] = useState(note?.title ?? "");
-  const [description, setDescription] = useState(note?.description ?? "");
+  const [description, setDescription] = useState(note?.content ?? "");
   const [currentAttachments, setCurrentAttachments] = useState<string[]>(
-    note?.attachment ?? [],
+    note?.attachments ?? [],
   );
   const [attachmentImagesNames, setAttachmentImagesNames] = useState<string[]>(
     [],
@@ -243,8 +242,8 @@ export default function NoteForm({
             </div>
             <input type="text" name="noteId" hidden defaultValue={note?.id} />
             <div>
-              {note?.created_at && (
-                <p className="text-xs text-[#616572]">{`Created ${formatDate(note.created_at)}`}</p>
+              {note?.createdAt && (
+                <p className="text-xs text-[#616572]">{`Created ${formatDate(note.createdAt)}`}</p>
               )}
               <input
                 type="text"

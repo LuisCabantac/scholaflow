@@ -7,16 +7,6 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
 
-export interface IRoleRequest {
-  id: string;
-  avatar: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  created_at: string;
-  status: "pending" | "rejected";
-}
-
 export default function RoleRequestDialog({
   session,
   existingRequest,

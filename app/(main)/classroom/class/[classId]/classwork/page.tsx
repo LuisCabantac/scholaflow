@@ -33,26 +33,6 @@ export async function generateMetadata({
   };
 }
 
-export interface IClasswork {
-  id: string;
-  userId: string;
-  userName: string;
-  streamId: string;
-  classroomId: string;
-  classroomName: string;
-  streamCreated: string;
-  classworkTitle: string;
-  attachment: string[];
-  title: string;
-  userPoints: string;
-  isReturned: boolean;
-  isTurnedIn: boolean;
-  isGraded: boolean;
-  links: string[];
-  userAvatar: string;
-  turnedInDate: string;
-}
-
 export default async function Page({
   params,
 }: {

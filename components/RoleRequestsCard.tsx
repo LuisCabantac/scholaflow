@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { UseMutateFunction } from "@tanstack/react-query";
 
-import { IRoleRequest } from "@/components/RoleRequestDialog";
 import SpinnerMini from "@/components/SpinnerMini";
 import { StatusType } from "@/components/RoleRequestsSection";
 import { RoleRequest } from "@/lib/schema";
