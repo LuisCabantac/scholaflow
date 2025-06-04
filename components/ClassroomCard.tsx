@@ -4,9 +4,9 @@ import React, { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Classroom } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
 const illustrationArr = [
@@ -24,7 +24,7 @@ export default function ClassroomCard({
   deleteClassIsPending,
 }: {
   type: "created" | "enrolled";
-  classData: IClass;
+  classData: Classroom;
   onDeleteClass: (classId: string) => void;
   deleteClassIsPending: boolean;
 }) {
@@ -55,16 +55,16 @@ export default function ClassroomCard({
     <li
       className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm md:h-[10rem]"
       style={{
-        backgroundColor: classData.classCardBackgroundColor,
+        backgroundColor: classData.cardBackground,
       }}
     >
       <Link
-        href={`/classroom/class/${classData.classroomId}`}
+        href={`/classroom/class/${classData.id}`}
         className="relative h-[9rem] md:h-[10rem]"
       >
         <div className="absolute left-3 top-3 w-[88%] text-balance drop-shadow-sm md:left-4 md:top-4">
           <h5 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-[#F5F5F5]">
-            {classData.className}
+            {classData.name}
           </h5>
           <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium text-[#F5F5F5]">
             {classData.subject && `${classData.subject} · `}
@@ -73,7 +73,7 @@ export default function ClassroomCard({
         </div>
         <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
           <Image
-            src={classData.teacherAvatar}
+            src={classData.teacherImage}
             width={24}
             height={24}
             alt={`${classData.teacherName}'s avatar`}
@@ -151,7 +151,7 @@ export default function ClassroomCard({
           isLoading={deleteClassIsPending}
           handleCancel={handleToggleShowConfirmation}
           handleAction={() => {
-            onDeleteClass(classData.classroomId);
+            onDeleteClass(classData.id);
             handleToggleShowConfirmation();
           }}
         >

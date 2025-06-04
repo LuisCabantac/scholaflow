@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { IClass } from "@/components/ClassroomSection";
-import PeopleCard from "@/components/PeopleCard";
+import { Classroom, EnrolledClass } from "@/lib/schema";
+
 import Button from "@/components/Button";
+import PeopleCard from "@/components/PeopleCard";
 import AddUserToClassDialog from "@/components/AddUserToClassDialog";
 
 export default function PeopleSection({
@@ -21,9 +21,9 @@ export default function PeopleSection({
 }: {
   classId: string;
   sessionId: string;
-  classroom: IClass;
+  classroom: Classroom;
   onDeleteClass: (enrolledClassId: string) => Promise<void>;
-  onGetAllEnrolledClasses: (classId: string) => Promise<IClass[] | null>;
+  onGetAllEnrolledClasses: (classId: string) => Promise<EnrolledClass[] | null>;
 }) {
   const queryClient = useQueryClient();
 
@@ -122,7 +122,7 @@ export default function PeopleSection({
               <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
                 <div className="flex items-center gap-2">
                   <Image
-                    src={classroom.teacherAvatar}
+                    src={classroom.teacherImage}
                     alt={`${classroom.teacherName}'s image`}
                     width={32}
                     height={32}

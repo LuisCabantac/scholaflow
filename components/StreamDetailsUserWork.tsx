@@ -2,7 +2,14 @@ import React, { useOptimistic, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import {
+  Classroom,
+  Classwork,
+  Session,
+  Stream,
+  StreamPrivateComment,
+} from "@/lib/schema";
 import {
   addPrivateComment,
   deletePrivateComment,
@@ -10,19 +17,12 @@ import {
   unsubmitClasswork,
   updateClasswork,
 } from "@/lib/classroom-actions";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
-import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
 
 import Button from "@/components/Button";
-import AttachmentLinkCard from "@/components/AttachmentLinkCard";
-import AttachmentFileCard from "@/components/AttachmentFileCard";
 import SpinnerMini from "@/components/SpinnerMini";
 import CommentCard from "@/components/CommentCard";
-import { IClass } from "@/components/ClassroomSection";
+import AttachmentLinkCard from "@/components/AttachmentLinkCard";
+import AttachmentFileCard from "@/components/AttachmentFileCard";
 import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamDetailsUserWork({
@@ -32,13 +32,13 @@ export default function StreamDetailsUserWork({
   classwork,
   onGetAllPrivateComments,
 }: {
-  stream: IStream;
-  session: ISession;
-  classroom: IClass;
-  classwork: IClasswork | null | undefined;
+  stream: Stream;
+  session: Session;
+  classroom: Classroom;
+  classwork: Classwork | null | undefined;
   onGetAllPrivateComments: (
     streamId: string,
-  ) => Promise<IStreamComment[] | null>;
+  ) => Promise<StreamPrivateComment[] | null>;
 }) {
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
@@ -50,7 +50,7 @@ export default function StreamDetailsUserWork({
   const [showAddLinkModal, setShowAddLinkModal] = useState(false);
   const [attachmentNames, setAttachmentNames] = useState<string[]>([]);
   const [currentAttachments, setCurrentAttachments] = useState<string[]>(
-    classwork?.attachment ?? [],
+    classwork?.attachments ?? [],
   );
   const [newAttachments, setNewAttachments] = useState<File[]>([]);
   const [newUrlLinks, setNewUrlLinks] = useState<string[]>([]);
@@ -77,7 +77,7 @@ export default function StreamDetailsUserWork({
       formData.append("attachments", attachment),
     );
     const { success, message } = await (!classwork
-      ? submitClasswork(stream.classroomId, stream.id, formData)
+      ? submitClasswork(stream.classId, stream.id, formData)
       : updateClasswork(currentUrlLinks, currentAttachments, formData));
     setIsLoading(false);
     if (success) {
@@ -91,7 +91,7 @@ export default function StreamDetailsUserWork({
     setIsLoading(true);
     const { success, message } = await unsubmitClasswork(
       classwork?.id ?? "",
-      stream.classroomId,
+      stream.classId,
       stream?.id,
     );
     setIsLoading(false);
@@ -300,7 +300,7 @@ export default function StreamDetailsUserWork({
         <div className="flex gap-1">
           {stream.points && classwork?.isGraded && (
             <p className="font-medium text-[#616572]">
-              {classwork.userPoints} / {stream.points}
+              {classwork.points} / {stream.points}
             </p>
           )}
           {!classwork?.isGraded &&
@@ -463,9 +463,9 @@ export default function StreamDetailsUserWork({
                 <label className="text-sm font-medium">Private comments</label>
                 {optimisticComments?.filter(
                   (comment) =>
-                    (comment.author === session.id &&
+                    (comment.userId === session.id &&
                       comment.toUserId === classroom.teacherId) ||
-                    (comment.author === classroom.teacherId &&
+                    (comment.userId === classroom.teacherId &&
                       comment.toUserId === session.id),
                 ).length ? (
                   <button
@@ -488,9 +488,9 @@ export default function StreamDetailsUserWork({
                     optimisticComments
                       ?.filter(
                         (comment) =>
-                          (comment.author === session.id &&
+                          (comment.userId === session.id &&
                             comment.toUserId === classroom.teacherId) ||
-                          (comment.author === classroom.teacherId &&
+                          (comment.userId === classroom.teacherId &&
                             comment.toUserId === session.id),
                       )
                       .map((comment) => (
@@ -516,7 +516,7 @@ export default function StreamDetailsUserWork({
               <input
                 type="text"
                 name="classroomId"
-                defaultValue={stream.classroomId}
+                defaultValue={stream.classId}
                 hidden
               />
               <input
@@ -667,7 +667,7 @@ export default function StreamDetailsUserWork({
               <input
                 type="text"
                 name="classroomId"
-                defaultValue={stream?.classroomId ?? ""}
+                defaultValue={stream?.classId ?? ""}
                 hidden
               />
               <input
@@ -726,7 +726,7 @@ export default function StreamDetailsUserWork({
               <input
                 type="text"
                 name="classroomId"
-                defaultValue={stream.classroomId}
+                defaultValue={stream.classId}
                 hidden
               />
               <input
@@ -836,9 +836,9 @@ export default function StreamDetailsUserWork({
           )}
           {optimisticComments?.filter(
             (comment) =>
-              (comment.author === session.id &&
+              (comment.userId === session.id &&
                 comment.toUserId === classroom.teacherId) ||
-              (comment.author === classroom.teacherId &&
+              (comment.userId === classroom.teacherId &&
                 comment.toUserId === session.id),
           ).length ? (
             <ul className="mt-2 grid max-h-[20rem] gap-2 overflow-y-auto">
@@ -846,9 +846,9 @@ export default function StreamDetailsUserWork({
                 optimisticComments
                   ?.filter(
                     (comment) =>
-                      (comment.author === session.id &&
+                      (comment.userId === session.id &&
                         comment.toUserId === classroom.teacherId) ||
-                      (comment.author === classroom.teacherId &&
+                      (comment.userId === classroom.teacherId &&
                         comment.toUserId === session.id),
                   )
                   .map((comment) => (

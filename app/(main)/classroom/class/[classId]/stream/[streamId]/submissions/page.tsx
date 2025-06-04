@@ -4,14 +4,16 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+import { getClassStreamByStreamId } from "@/lib/stream-service";
+import { getAllPrivateCommentsByStreamId } from "@/lib/comment-service";
+import {
+  getAllEnrolledClassesByClassAndSessionId,
+  getClassByClassId,
+} from "@/lib/classroom-service";
 import {
   getAllAssignedClassworksByStreamAndClassroomId,
-  getAllEnrolledClassesByClassAndSessionId,
-  getAllPrivateCommentsByStreamId,
-  getClassByClassId,
-  getClassStreamByStreamId,
   getClassworkByClassAndUserId,
-} from "@/lib/data-service";
+} from "@/lib/classwork-service";
 
 import StreamSubmissionsSection from "@/components/StreamSubmissionsSection";
 
@@ -26,7 +28,7 @@ export async function generateMetadata({
 
   return {
     title:
-      `${stream?.title} - Submissions` || `${stream?.caption} - Submissions`,
+      `${stream?.title} - Submissions` || `${stream?.content} - Submissions`,
   };
 }
 
@@ -49,7 +51,7 @@ export default async function Page({
 
   if (!stream) return redirect("/classroom");
 
-  const classroom = await getClassByClassId(stream.classroomId);
+  const classroom = await getClassByClassId(stream.classId);
   if (!classroom) return redirect("/classroom");
   if (classroom?.teacherId !== session.user.id) return redirect("/classroom");
 

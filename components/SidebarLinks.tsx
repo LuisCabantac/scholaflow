@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { useSidebar } from "@/contexts/SidebarContext";
-
-import { IClass } from "@/components/ClassroomSection";
+import { Classroom, EnrolledClass } from "@/lib/schema";
 
 const activeLinkStyle =
   "bg-[#c7d2f1] text-[#384689] font-semibold stroke-[#5c7cfa] fill-[#c7d2f1] shadow-sm";
@@ -20,8 +19,10 @@ export default function SidebarLinks({
 }: {
   userId: string;
   role: string;
-  onGetAllClassesByTeacherId: (id: string) => Promise<IClass[] | null>;
-  onGetAllEnrolledClassesByUserId: (userId: string) => Promise<IClass[] | null>;
+  onGetAllClassesByTeacherId: (id: string) => Promise<Classroom[] | null>;
+  onGetAllEnrolledClassesByUserId: (
+    userId: string,
+  ) => Promise<EnrolledClass[] | null>;
 }) {
   const pathname = usePathname();
   const { isMobile, sidebarExpand, handleSidebarExpand } = useSidebar();
@@ -175,23 +176,23 @@ export default function SidebarLinks({
                 <li className="pl-4 text-xs text-[#929bb4]">Created</li>
               ) : null}
               {createdClasses?.map((curClass) => (
-                <li key={curClass.classroomId}>
+                <li key={curClass.id}>
                   <Link
-                    href={`/classroom/class/${curClass.classroomId}`}
-                    className={`${pathname.includes(curClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid items-center rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
+                    href={`/classroom/class/${curClass.id}`}
+                    className={`${pathname.includes(curClass.id) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid items-center rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
                       <div
                         className="h-3 w-3 flex-shrink-0 rounded-full"
                         style={{
-                          backgroundColor: curClass.classCardBackgroundColor,
+                          backgroundColor: curClass.cardBackground,
                         }}
                       ></div>
                       <span className="block whitespace-nowrap">
-                        {curClass.className.length > 18
-                          ? curClass.className.slice(0, 18).concat("...")
-                          : curClass.className}
+                        {curClass.name.length > 18
+                          ? curClass.name.slice(0, 18).concat("...")
+                          : curClass.name}
                       </span>
                     </div>
                     <span className="block whitespace-nowrap pl-5 text-xs">
@@ -230,22 +231,21 @@ export default function SidebarLinks({
               {enrolledClasses?.map((enrolledClass) => (
                 <li key={enrolledClass.id}>
                   <Link
-                    href={`/classroom/class/${enrolledClass.classroomId}`}
-                    className={`${pathname.includes(enrolledClass.classroomId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
+                    href={`/classroom/class/${enrolledClass.classId}`}
+                    className={`${pathname.includes(enrolledClass.classId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
                       <div
                         className="h-3 w-3 flex-shrink-0 rounded-full"
                         style={{
-                          backgroundColor:
-                            enrolledClass.classCardBackgroundColor,
+                          backgroundColor: enrolledClass.cardBackground,
                         }}
                       ></div>
                       <span className="block whitespace-nowrap">
-                        {enrolledClass.className.length > 18
-                          ? enrolledClass.className.slice(0, 18).concat("...")
-                          : enrolledClass.className}
+                        {enrolledClass.name.length > 18
+                          ? enrolledClass.name.slice(0, 18).concat("...")
+                          : enrolledClass.name}
                       </span>
                     </div>
                     <span className="block whitespace-nowrap pl-5 text-xs">

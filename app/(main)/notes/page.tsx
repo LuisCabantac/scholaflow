@@ -3,24 +3,13 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-
+import { Note } from "@/lib/schema";
 import {
   getAllNotesBySession,
   getAllNotesBySessionQuery,
-} from "@/lib/data-service";
+} from "@/lib/notes-service";
 
 import NotesSection from "@/components/NotesSection";
-
-export interface INotes {
-  id: string;
-  author: string;
-  title: string;
-  description: string;
-  created_at: string;
-  editedAt: string;
-  isPinned: boolean;
-  attachment: string[];
-}
 
 export const metadata: Metadata = {
   title: "Notes",
@@ -34,7 +23,7 @@ export default async function Page() {
   });
   if (!session) return redirect("/signin");
 
-  async function handleGetAllNotes(query: string): Promise<INotes[] | null> {
+  async function handleGetAllNotes(query: string): Promise<Note[] | null> {
     "use server";
     if (!query) {
       const notes = await getAllNotesBySession();

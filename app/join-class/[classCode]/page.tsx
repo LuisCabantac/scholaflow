@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 import {
   getClassByClassCode,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import Nav from "@/components/Nav";
 import InviteSection from "@/components/InviteSection";
@@ -22,9 +22,8 @@ export async function generateMetadata({
   const classroom = await getClassByClassCode(classCode);
 
   return {
-    title: `Join - ${classroom?.className}`,
-    description:
-      classroom?.classDescription || `${classroom?.className} class.`,
+    title: `Join - ${classroom?.name}`,
+    description: classroom?.description || `${classroom?.name} class.`,
   };
 }
 
@@ -45,9 +44,7 @@ export default async function Page({
 
   if (!classroom) return redirect("/classroom");
 
-  const enrolledUser = await getEnrolledClassByClassAndSessionId(
-    classroom.classroomId,
-  );
+  const enrolledUser = await getEnrolledClassByClassAndSessionId(classroom.id);
 
   if (enrolledUser || session.user.id === classroom.teacherId)
     return redirect("/classroom");

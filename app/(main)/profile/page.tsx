@@ -3,13 +3,9 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-
-import {
-  getRoleRequest,
-  getUserByEmail,
-  getUserByUserId,
-} from "@/lib/data-service";
 import { closeAccount } from "@/lib/user-management-actions";
+import { getRoleRequest } from "@/lib/user-management-service";
+import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 
 import ProfileSection from "@/components/ProfileSection";
 

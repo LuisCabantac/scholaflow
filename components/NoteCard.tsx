@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
 import { formatDate } from "@/lib/utils";
 import { INotes } from "@/app/(main)/notes/page";
 
@@ -14,7 +14,7 @@ export default function NoteCard({
   deleteNoteIsPending,
 }: {
   note: INotes;
-  session: ISession;
+  session: Session;
   onDeleteNote: (noteId: string) => void;
   deleteNoteIsPending: boolean;
 }) {

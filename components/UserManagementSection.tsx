@@ -4,23 +4,13 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import UserLists from "@/components/UserLists";
-import Button from "@/components/Button";
-import UserListLoading from "@/components/UserListsLoading";
-import UserNotFound from "@/components/UserNotFound";
-import UserForm from "@/components/UserForm";
+import { Session } from "@/lib/schema";
 
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  email_verified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null | undefined | undefined;
-  role: string;
-  schoolName?: string | null | undefined;
-}
+import Button from "@/components/Button";
+import UserForm from "@/components/UserForm";
+import UserLists from "@/components/UserLists";
+import UserNotFound from "@/components/UserNotFound";
+import UserListLoading from "@/components/UserListsLoading";
 
 export default function UserManagementSection({
   onGetUsers,
@@ -31,7 +21,7 @@ export default function UserManagementSection({
     name: string,
   ) => Promise<
     | { success: boolean; message: string; data: null }
-    | { success: boolean; message: string; data: IUser[] }
+    | { success: boolean; message: string; data: Session[] }
   >;
   onDeleteUser: (userId: string) => Promise<void>;
   onCheckEmail: (formData: FormData) => Promise<boolean>;

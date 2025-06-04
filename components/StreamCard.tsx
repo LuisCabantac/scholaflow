@@ -11,26 +11,27 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import {
+  Classroom,
+  ClassTopic,
+  EnrolledClass,
+  Session,
+  Stream,
+  StreamComment,
+} from "@/lib/schema";
 import {
   addCommentToStream,
   deleteStreamComment,
 } from "@/lib/classroom-actions";
-import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import { IClass } from "@/components/ClassroomSection";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import StreamForm from "@/components/StreamForm";
 import CommentCard from "@/components/CommentCard";
+import EllipsisPopover from "@/components/EllipsisPopover";
+import CommentsLoading from "@/components/CommentsLoading";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
-import EllipsisPopover from "@/components/EllipsisPopover";
-import StreamForm from "@/components/StreamForm";
-import { ITopic } from "@/components/TopicDialog";
-import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamCard({
   topics,
@@ -44,16 +45,16 @@ export default function StreamCard({
   onDeleteStreamPost,
   deleteStreamPostIsPending,
 }: {
-  topics: ITopic[] | null;
-  stream: IStream;
+  topics: ClassTopic[] | null;
+  stream: Stream;
   search?: string;
-  session: ISession;
-  classroom: IClass;
+  session: Session;
+  classroom: Classroom;
   showComments?: boolean;
-  enrolledClasses: IClass[] | null;
+  enrolledClasses: EnrolledClass[] | null;
   onDeleteStreamPost: UseMutateFunction<undefined, Error, string, unknown>;
   deleteStreamPostIsPending: boolean;
-  onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
+  onGetAllComments: (streamId: string) => Promise<StreamComment[] | null>;
 }) {
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
@@ -216,27 +217,25 @@ export default function StreamCard({
       >
         {stream.type === "stream" && (
           <div>
-            <Link
-              href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
-            >
+            <Link href={`/classroom/class/${classroom.id}/stream/${stream.id}`}>
               <div className="flex gap-2 pb-2">
                 <Image
-                  src={stream.avatar}
-                  alt={`${stream.authorName}'s image`}
+                  src={stream.userImage}
+                  alt={`${stream.userName}'s image`}
                   width={40}
                   height={40}
                   className="h-10 w-10 flex-shrink-0 rounded-full"
                 />
                 <div>
-                  <p className="font-medium">{stream.authorName}</p>
+                  <p className="font-medium">{stream.userName}</p>
                   <p className="flex items-center gap-1 text-xs text-[#616572]">
                     Posted{" "}
-                    {isToday(stream.created_at)
+                    {isToday(stream.createdAt)
                       ? "today"
-                      : isYesterday(stream.created_at)
+                      : isYesterday(stream.createdAt)
                         ? "yesterday"
-                        : format(stream.created_at, "MMM d")}
-                    {stream.updatedPost && (
+                        : format(stream.createdAt, "MMM d")}
+                    {stream.updatedAt && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -269,16 +268,16 @@ export default function StreamCard({
             </Link>
             <ReactLinkify componentDecorator={captionLinksDecorator}>
               <p className="hidden whitespace-pre-line md:block">
-                {stream.caption}
+                {stream.content}
               </p>
               <p className="block whitespace-pre-line md:hidden">
-                {stream.caption.length > 80
-                  ? stream.caption.slice(0, 80).concat("...")
-                  : stream.caption}
-                {stream.caption.length > 80 && (
+                {stream.content && stream.content.length > 80
+                  ? stream.content.slice(0, 80).concat("...")
+                  : stream.content}
+                {stream.content && stream.content.length > 80 && (
                   <span className="text-[#616572] hover:underline">
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                      href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
                     >
                       {" "}
                       See more
@@ -287,11 +286,11 @@ export default function StreamCard({
                 )}
               </p>
             </ReactLinkify>
-            {stream.attachment.length || stream.links.length ? (
+            {stream.attachments.length || stream.links.length ? (
               <div className="mt-2 grid gap-2">
                 <p className="font-medium">Attachments</p>
                 <ul className="grid gap-1 font-medium">
-                  {stream.attachment.map((file, index) => (
+                  {stream.attachments.map((file, index) => (
                     <AttachmentFileCard
                       file={file}
                       index={index}
@@ -317,7 +316,7 @@ export default function StreamCard({
         {stream.type !== "stream" && (
           <div>
             <Link
-              href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+              href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
               className="underline__container flex gap-2"
             >
               {stream.type === "assignment" && (
@@ -390,12 +389,12 @@ export default function StreamCard({
                 </p>
                 <p className="flex items-center gap-1 text-xs text-[#616572]">
                   Posted{" "}
-                  {isToday(stream.created_at)
+                  {isToday(stream.createdAt)
                     ? "today"
-                    : isYesterday(stream.created_at)
+                    : isYesterday(stream.createdAt)
                       ? "yesterday"
-                      : format(stream.created_at, "MMM d")}
-                  {stream.updatedPost && (
+                      : format(stream.createdAt, "MMM d")}
+                  {stream.updatedAt && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -446,11 +445,11 @@ export default function StreamCard({
               </svg>
             </button>
             <EllipsisPopover
-              showEdit={session.id === stream.author}
-              clipboardUrl={`scholaflow.vercel.app/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+              showEdit={session.id === stream.userId}
+              clipboardUrl={`scholaflow.vercel.app/classroom/class/${classroom.id}/stream/${stream.id}`}
               showEllipsis={ellipsis}
               showDelete={
-                session.id === stream.author ||
+                session.id === stream.userId ||
                 session.id === classroom.teacherId
               }
               onToggleEllipsis={handleToggleEllipsis}
@@ -480,7 +479,7 @@ export default function StreamCard({
             {optimisticComments?.length ? (
               <>
                 <Link
-                  href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                  href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
                   className="mt-2 block font-medium md:hidden"
                 >
                   View all comments
@@ -516,11 +515,11 @@ export default function StreamCard({
               )}
             </ul>
           </div>
-          {(classroom.allowStudentsToComment ||
+          {(classroom.allowUsersToComment ||
             classroom.teacherId === session.id) && (
             <>
               <Link
-                href={`/classroom/class/${classroom.classroomId}/stream/${stream.id}`}
+                href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
                 className="mt-2 flex items-end gap-2 md:hidden"
               >
                 <div className="flex h-9 w-full items-center justify-between rounded-md border border-[#dddfe6] px-4 py-2 text-[#616572]">
@@ -564,7 +563,7 @@ export default function StreamCard({
                   <input
                     type="text"
                     name="classroomId"
-                    defaultValue={classroom.classroomId}
+                    defaultValue={classroom.id}
                     hidden
                   />
                   <input
@@ -657,7 +656,7 @@ export default function StreamCard({
       )}
       {showStreamForm && (
         <StreamForm
-          topics={topics}
+          topics={topics as ClassTopic[] | null}
           stream={stream}
           search={search}
           session={session}

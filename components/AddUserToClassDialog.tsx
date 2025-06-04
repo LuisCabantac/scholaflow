@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { addUserToClass } from "@/lib/classroom-actions";
 
 import Button from "@/components/Button";
-import { addUserToClass } from "@/lib/classroom-actions";
 
 export default function AddUserToClassDialog({
   classId,

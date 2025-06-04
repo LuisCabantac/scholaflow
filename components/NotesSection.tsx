@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
 import { deleteNote } from "@/lib/notes-actions";
 import { INotes } from "@/app/(main)/notes/page";
 
@@ -17,7 +17,7 @@ export default function NotesSection({
   session,
   onGetNotes,
 }: {
-  session: ISession;
+  session: Session;
   onGetNotes: (query: string) => Promise<INotes[] | null>;
 }) {
   const queryClient = useQueryClient();

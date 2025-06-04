@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
 import { createNote, updateNote } from "@/lib/notes-actions";
 import { formatDate } from "@/lib/utils";
 import { INotes } from "@/app/(main)/notes/page";
@@ -25,7 +25,7 @@ export default function NoteForm({
 }: {
   note?: INotes;
   type: "create" | "edit";
-  session: ISession;
+  session: Session;
   onDeleteNote: (noteId: string) => void;
   onSetShowNotesForm: Dispatch<SetStateAction<boolean>>;
   deleteNoteIsPending: boolean;

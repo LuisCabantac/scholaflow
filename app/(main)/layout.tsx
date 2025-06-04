@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 import {
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";

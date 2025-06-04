@@ -5,12 +5,11 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-import { ISession } from "@/lib/auth";
+import { Classroom, Session } from "@/lib/schema";
 import { createClass, updateClass } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
-import { IClass } from "@/components/ClassroomSection";
 
 export default function ClassForm({
   type,
@@ -21,8 +20,8 @@ export default function ClassForm({
   onToggleShowClassForm,
 }: {
   type: "create" | "edit";
-  session: ISession;
-  classroom?: IClass;
+  session: Session;
+  classroom?: Classroom;
   onDeleteClass: (classId: string) => Promise<void>;
   onSetShowClassForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowClassForm: () => void;
@@ -31,17 +30,17 @@ export default function ClassForm({
   const { useClickOutsideHandler } = useClickOutside();
   const classFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [className, setClassName] = useState(classroom?.className ?? "");
+  const [className, setClassName] = useState(classroom?.name ?? "");
   const [section, setSection] = useState(classroom?.section ?? "");
   const [subject, setSubject] = useState(classroom?.subject ?? "");
   const [cardBackground, setCardBackground] = useState(
-    classroom?.classCardBackgroundColor ?? "#a7adcb",
+    classroom?.cardBackground ?? "#a7adcb",
   );
   const [allowStudentsToPost, setAllowStudentsToPost] = useState<boolean>(
-    classroom?.allowStudentsToPost ?? false,
+    classroom?.allowUsersToPost ?? false,
   );
   const [allowStudentsToComment, setAllowStudentsToComment] = useState<boolean>(
-    classroom?.allowStudentsToComment ?? false,
+    classroom?.allowUsersToComment ?? false,
   );
   const [updateClassCode, setUpdateClassCode] = useState(false);
 
@@ -120,7 +119,7 @@ export default function ClassForm({
                 <input
                   type="text"
                   name="classroomId"
-                  defaultValue={classroom?.classroomId}
+                  defaultValue={classroom?.id}
                   hidden
                 />
                 <div className="flex items-center justify-between">
@@ -269,7 +268,7 @@ export default function ClassForm({
                     name="classDescription"
                     className="h-[5.3rem] w-full resize-none rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                     placeholder="Add a class description..."
-                    defaultValue={classroom?.classDescription}
+                    defaultValue={classroom?.description ?? ""}
                   ></textarea>
                 </div>
                 <div className="grid gap-2">
@@ -279,11 +278,11 @@ export default function ClassForm({
                       className="cursor-pointer text-lg text-[#5c7cfa]"
                       onClick={async () => {
                         await navigator.clipboard
-                          .writeText(classroom?.classCode ?? "")
+                          .writeText(classroom?.code ?? "")
                           .then(() => toast.success("Copied to clipboard!"));
                       }}
                     >
-                      {classroom?.classCode}
+                      {classroom?.code}
                     </p>
                     <button
                       className="text-sm text-[#384689] hover:text-[#384689] disabled:cursor-not-allowed disabled:text-[#1b2763]"
@@ -303,12 +302,12 @@ export default function ClassForm({
                       onClick={async () => {
                         await navigator.clipboard
                           .writeText(
-                            `scholaflow.vercel.app/join-class/${classroom?.classCode}`,
+                            `scholaflow.vercel.app/join-class/${classroom?.code}`,
                           )
                           .then(() => toast.success("Copied to clipboard!"));
                       }}
                     >
-                      {`scholaflow.vercel.app/join-class/${classroom?.classCode}`}
+                      {`scholaflow.vercel.app/join-class/${classroom?.code}`}
                     </p>
                   </div>
                 </div>
@@ -354,7 +353,7 @@ export default function ClassForm({
                 type="secondary"
                 bg="text-[#f03e3e] hover:text-[#c92a2a] bg-[#e1e7f5] hover:bg-[#d9dfee] disabled:bg-[#c5cde6]"
                 onClick={() => {
-                  onDeleteClass(classroom?.classroomId ?? "");
+                  onDeleteClass(classroom?.id ?? "");
                   onToggleShowClassForm();
                 }}
                 isLoading={isLoading}

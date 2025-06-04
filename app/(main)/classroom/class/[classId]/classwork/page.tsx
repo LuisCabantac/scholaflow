@@ -4,15 +4,17 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 
+import { getAllCommentsByStreamId } from "@/lib/comment-service";
+import { getAllClassTopicsByClassId } from "@/lib/class-topic-service";
 import {
-  getAllClassTopicsByClassId,
   getAllClassworkStreamsByClassId,
-  getAllCommentsByStreamId,
+  getClassworksByClassIdQuery,
+} from "@/lib/stream-service";
+import {
   getAllEnrolledClassesByClassId,
   getClassByClassId,
-  getClassworksByClassIdQuery,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import ClassworksSection from "@/components/ClassworksSection";
 
@@ -26,8 +28,8 @@ export async function generateMetadata({
   const classroom = await getClassByClassId(classId);
 
   return {
-    title: `Classwork - ${classroom?.className}`,
-    description: `Access all classwork for ${classroom?.className}. View assignments, deadlines, and relevant materials. Stay organized and keep track of everything you need to succeed in this class.`,
+    title: `Classwork - ${classroom?.name}`,
+    description: `Access all classwork for ${classroom?.name}. View assignments, deadlines, and relevant materials. Stay organized and keep track of everything you need to succeed in this class.`,
   };
 }
 

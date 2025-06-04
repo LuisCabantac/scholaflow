@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { getClassByClassId } from "@/lib/data-service";
+import { getClassByClassId } from "@/lib/classroom-service";
 
 import ProfileIcon from "@/components/ProfileIcon";
 import HeaderTitle from "@/components/HeaderTitle";

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
 import { updateProfile } from "@/lib/user-management-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
@@ -18,8 +18,8 @@ export default function EditProfileForm({
   onToggleShowEditProfileForm,
   handleSetShowEditProfileForm,
 }: {
-  user: ISession | undefined;
-  session: ISession;
+  user: Session | null | undefined;
+  session: Session;
   onToggleShowEditProfileForm: () => void;
   onCloseProfile: (userId: string) => Promise<void>;
   handleSetShowEditProfileForm: Dispatch<SetStateAction<boolean>>;

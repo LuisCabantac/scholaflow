@@ -1,9 +1,8 @@
 "use client";
 
-import { ISession } from "@/lib/auth";
 import { useSidebar } from "@/contexts/SidebarContext";
+import { Classroom, EnrolledClass, Session } from "@/lib/schema";
 
-import { IClass } from "@/components/ClassroomSection";
 import Logo from "@/components/Logo";
 import SidebarLinks from "@/components/SidebarLinks";
 
@@ -12,9 +11,11 @@ export default function Sidebar({
   onGetAllClassesByTeacherId,
   onGetAllEnrolledClassesByUserId,
 }: {
-  session: ISession | null;
-  onGetAllClassesByTeacherId: (id: string) => Promise<IClass[] | null>;
-  onGetAllEnrolledClassesByUserId: (userId: string) => Promise<IClass[] | null>;
+  session: Session | null;
+  onGetAllClassesByTeacherId: (id: string) => Promise<Classroom[] | null>;
+  onGetAllEnrolledClassesByUserId: (
+    userId: string,
+  ) => Promise<EnrolledClass[] | null>;
 }) {
   const { sidebarExpand, handleSidebarExpand } = useSidebar();
 

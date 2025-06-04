@@ -1,21 +1,24 @@
 "use client";
 
-import { useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
-import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { useOptimistic, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import noClasworks from "@/public/app/no_classworks.svg";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { deleteClassStreamPost, deleteTopic } from "@/lib/classroom-actions";
 import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+  Classroom,
+  ClassTopic,
+  Session,
+  StreamComment,
+  Stream,
+  EnrolledClass,
+  Classwork,
+} from "@/lib/schema";
 
-import { ISession } from "@/lib/auth";
-import { IClass } from "@/components/ClassroomSection";
 import StreamCard from "@/components/StreamCard";
 import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
@@ -32,15 +35,15 @@ export default function ClassworksSection({
   onGetAllComments,
   onGetAllClassworkStreams,
 }: {
-  session: ISession;
-  classroom: IClass;
-  enrolledClasses: IClass[] | null;
-  onGetAllTopics: (classId: string) => Promise<ITopic[] | null>;
-  onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
+  session: Session;
+  classroom: Classroom;
+  enrolledClasses: EnrolledClass[] | null;
+  onGetAllTopics: (classId: string) => Promise<ClassTopic[] | null>;
+  onGetAllComments: (streamId: string) => Promise<StreamComment[] | null>;
   onGetAllClassworkStreams: (
     classId: string,
     query: string,
-  ) => Promise<IStream[] | null>;
+  ) => Promise<Stream[] | null>;
 }) {
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
@@ -52,8 +55,8 @@ export default function ClassworksSection({
   const [showCreateClasswork, setShowCreateClasswork] = useState(false);
 
   const { data: classworks, isPending: classworksIsPending } = useQuery({
-    queryKey: [`classworks--${classroom.classroomId}`, search],
-    queryFn: () => onGetAllClassworkStreams(classroom.classroomId, search),
+    queryKey: [`classworks--${classroom.id}`, search],
+    queryFn: () => onGetAllClassworkStreams(classroom.id, search),
   });
 
   const { mutate: deleteStreamPost, isPending: deleteStreamPostIsPending } =
@@ -64,8 +67,8 @@ export default function ClassworksSection({
 
         queryClient.invalidateQueries({
           queryKey: [
-            `classworks--${classroom.classroomId}`,
-            `topics--${classroom.classroomId}`,
+            `classworks--${classroom.id}`,
+            `topics--${classroom.id}`,
             search,
           ],
         });
@@ -76,8 +79,8 @@ export default function ClassworksSection({
     });
 
   const { data: topics } = useQuery({
-    queryKey: [`topics--${classroom.classroomId}`],
-    queryFn: () => onGetAllTopics(classroom.classroomId),
+    queryKey: [`topics--${classroom.id}`],
+    queryFn: () => onGetAllTopics(classroom.id),
   });
 
   const { mutate: deleteClassTopic, isPending: deleteTopicIsPending } =
@@ -87,10 +90,7 @@ export default function ClassworksSection({
         toast.success("Topic has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [
-            `topics--${classroom.classroomId}`,
-            `classworks--${classroom.classroomId}`,
-          ],
+          queryKey: [`topics--${classroom.id}`, `classworks--${classroom.id}`],
         });
       },
       onError: (error) => {
@@ -108,7 +108,7 @@ export default function ClassworksSection({
   const [optimisticTopics, optimisticDeleteTopics] = useOptimistic(
     topics,
     (curTopic, topicId) => {
-      return curTopic?.filter((topic) => topic.topicId !== topicId);
+      return curTopic?.filter((topic) => topic.id !== topicId);
     },
   );
 
@@ -152,25 +152,25 @@ export default function ClassworksSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/classroom/class/${classroom.classroomId}`}
+            href={`/classroom/class/${classroom.id}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/classwork`}
+            href={`/classroom/class/${classroom.id}/classwork`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/people`}
+            href={`/classroom/class/${classroom.id}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/chat`}
+            href={`/classroom/class/${classroom.id}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
@@ -273,7 +273,7 @@ export default function ClassworksSection({
                   ((stream.announceTo.includes(session.id) &&
                     stream.announceToAll === false) ||
                     stream.announceToAll ||
-                    stream.author === session.id ||
+                    stream.userId === session.id ||
                     classroom.teacherId === session.id) &&
                   !stream.topicId &&
                   ((stream.scheduledAt
@@ -302,7 +302,7 @@ export default function ClassworksSection({
                       ((stream.announceTo.includes(session.id) &&
                         stream.announceToAll === false) ||
                         stream.announceToAll ||
-                        stream.author === session.id ||
+                        stream.userId === session.id ||
                         classroom.teacherId === session.id) &&
                       !stream.topicId &&
                       ((stream.scheduledAt
@@ -314,7 +314,7 @@ export default function ClassworksSection({
                     <StreamCard
                       key={stream.id}
                       search={search}
-                      topics={topics as ITopic[] | null}
+                      topics={topics as ClassTopic[] | null}
                       stream={stream}
                       session={session}
                       classroom={classroom}
@@ -333,12 +333,12 @@ export default function ClassworksSection({
                   <ul className="grid gap-4">
                     {optimisticTopics.map((topic) => (
                       <TopicCard
-                        key={topic.topicId}
+                        key={topic.id}
                         topic={topic}
-                        topics={topics}
+                        topics={topics as ClassTopic[] | null}
                         session={session}
                         classroom={classroom}
-                        classworks={classworks}
+                        classworks={classworks as Classwork[] | null}
                         enrolledClasses={enrolledClasses}
                         onGetAllComments={onGetAllComments}
                         onDeleteTopic={handleDeleteTopic}

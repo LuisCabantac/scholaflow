@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-import { ISession } from "@/lib/auth";
+import { RoleRequest, Session } from "@/lib/schema";
 import { roleRequest } from "@/lib/user-management-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
@@ -23,8 +23,8 @@ export default function RoleRequestDialog({
   onToggleShowRoleRequest,
   handleSetShowRoleRequest,
 }: {
-  session: ISession;
-  existingRequest: IRoleRequest | null;
+  session: Session;
+  existingRequest: RoleRequest | null;
   onToggleShowRoleRequest: () => void;
   handleSetShowRoleRequest: Dispatch<SetStateAction<boolean>>;
 }) {

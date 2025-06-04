@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { RoleRequest } from "@/lib/schema";
 import {
   approveRoleRequest,
   rejectRoleRequest,
@@ -13,7 +14,6 @@ import {
 } from "@/lib/user-management-actions";
 import noRequest from "@/public/app/no-role-requests.svg";
 
-import { IRoleRequest } from "@/components/RoleRequestDialog";
 import RoleRequestsCard from "@/components/RoleRequestsCard";
 
 export type StatusType = "pending" | "rejected";
@@ -23,7 +23,7 @@ export default function RoleRequestsSection({
 }: {
   onGetAllRequests: (
     status: "pending" | "rejected",
-  ) => Promise<IRoleRequest[] | null>;
+  ) => Promise<RoleRequest[] | null>;
 }) {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();

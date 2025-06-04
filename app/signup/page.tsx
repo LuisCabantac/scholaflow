@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { generateVerificationToken } from "@/lib/data-service";
+import { generateVerificationToken } from "@/lib/auth-service";
 import signUpPageImage from "@/public/landing_page/signup-page.svg";
 
 import Logo from "@/components/Logo";

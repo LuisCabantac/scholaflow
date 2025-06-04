@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useRouter } from "next/navigation";
 
+import { Verification } from "@/lib/schema";
 import { authClient } from "@/lib/auth-client";
-import { IVerification } from "@/lib/auth-actions";
 
 import SignInCredentialsButton from "@/components/SignInCredentialsButton";
 
@@ -19,7 +19,7 @@ async function sendEmail(
     to_email: string;
     to_name: string;
   },
-  onGenerateVerificationToken: (email: string) => Promise<IVerification | null>,
+  onGenerateVerificationToken: (email: string) => Promise<Verification | null>,
 ) {
   const verification = await onGenerateVerificationToken(
     templateParams.to_email,
@@ -38,7 +38,7 @@ async function sendEmail(
 export default function SignUpForm({
   onGenerateVerificationToken,
 }: {
-  onGenerateVerificationToken: (email: string) => Promise<IVerification | null>;
+  onGenerateVerificationToken: (email: string) => Promise<Verification | null>;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

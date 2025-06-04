@@ -2,9 +2,9 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
+import { Classroom, EnrolledClass } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
@@ -15,8 +15,8 @@ export default function PeopleCard({
   handleDeleteClass,
   deleteClassIsPending,
 }: {
-  user: IClass;
-  classroom: IClass;
+  user: EnrolledClass;
+  classroom: Classroom;
   sessionId: string;
   handleDeleteClass: UseMutateFunction<void, Error, string, unknown>;
   deleteClassIsPending: boolean;
@@ -46,7 +46,7 @@ export default function PeopleCard({
     <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
       <div className="flex items-center gap-2">
         <Image
-          src={user.userAvatar}
+          src={user.userImage}
           alt={`${user.userName}'s image`}
           width={32}
           height={32}

@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { getAllRoleRequest } from "@/lib/data-service";
+import { getAllRoleRequest } from "@/lib/user-management-service";
 
 import RoleRequestsSection from "@/components/RoleRequestsSection";
 

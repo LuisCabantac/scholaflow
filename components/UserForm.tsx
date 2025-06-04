@@ -3,11 +3,11 @@
 import toast from "react-hot-toast";
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { Session } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { createUser, updateUser } from "@/lib/user-management-actions";
 
 import Button from "@/components/Button";
-import { IUser } from "@/components/UserManagementSection";
 
 export type UserRoleType = "student" | "teacher";
 
@@ -19,7 +19,7 @@ export default function UserForm({
   onSetShowUserForm,
 }: {
   type: "edit" | "create";
-  user?: IUser;
+  user?: Session;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   onShowUserForm: () => void;
   onSetShowUserForm: Dispatch<SetStateAction<boolean>>;

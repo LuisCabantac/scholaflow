@@ -7,39 +7,21 @@ import { isToday, format, isYesterday, isThisYear } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
 import { joinClass } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
+import {
+  Classroom,
+  Classwork,
+  EnrolledClass,
+  Session,
+  Stream,
+} from "@/lib/schema";
 
 import Button from "@/components/Button";
 import ClassroomLists from "@/components/ClassroomLists";
 import ClassForm from "@/components/ClassForm";
 import JoinClassDialog from "@/components/JoinClassDialog";
 import NoClasses from "@/components/NoClasses";
-
-export interface IClass {
-  id: string;
-  classroomId: string;
-  className: string;
-  teacherName: string;
-  teacherAvatar: string;
-  userName: string;
-  userAvatar: string;
-  userId: string;
-  subject: string;
-  section: string;
-  teacherId: string;
-  room: string;
-  classCode: string;
-  created_at: string;
-  classCardBackgroundColor: string;
-  illustrationIndex: number;
-  allowStudentsToPost: boolean;
-  allowStudentsToComment: boolean;
-  classDescription: string;
-}
 
 export default function ClassroomSection({
   role,
@@ -53,16 +35,16 @@ export default function ClassroomSection({
   onGetAllEnrolledClassesClassworks,
 }: {
   role: string;
-  session: ISession;
-  onGetClass: (code: string) => Promise<IClass | null>;
+  session: Session;
+  onGetClass: (code: string) => Promise<Classroom | null>;
   onDeleteClass: (classId: string) => Promise<void>;
-  onGetAllClasses: (id: string) => Promise<IClass[] | null>;
-  onGetEnrolledClass: (classId: string) => Promise<IClass | null>;
-  onGetAllClassworks: (userId: string) => Promise<IClasswork[] | null>;
-  onGetAllEnrolledClasses: (id: string) => Promise<IClass[] | null>;
+  onGetAllClasses: (id: string) => Promise<Classroom[] | null>;
+  onGetEnrolledClass: (classId: string) => Promise<EnrolledClass | null>;
+  onGetAllClassworks: (userId: string) => Promise<Classwork[] | null>;
+  onGetAllEnrolledClasses: (id: string) => Promise<EnrolledClass[] | null>;
   onGetAllEnrolledClassesClassworks: (
     userId: string,
-  ) => Promise<IStream[] | null>;
+  ) => Promise<Stream[] | null>;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -136,8 +118,8 @@ export default function ClassroomSection({
           : true),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -160,8 +142,8 @@ export default function ClassroomSection({
           : true),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -172,12 +154,12 @@ export default function ClassroomSection({
       (classwork) =>
         (classwork.isTurnedIn || classwork.isGraded) &&
         enrolledClasses
-          ?.map((enrolledClass) => enrolledClass.classroomId)
-          .includes(classwork.classroomId),
+          ?.map((enrolledClass) => enrolledClass.classId)
+          .includes(classwork.classId),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.turnedInDate);
-      const dateB = new Date(b.turnedInDate);
+      const dateA = new Date(a.turnedInDate ?? 0);
+      const dateB = new Date(b.turnedInDate ?? 0);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -196,7 +178,7 @@ export default function ClassroomSection({
       return;
     }
 
-    const enrolledExists = await onGetEnrolledClass(classExists.classroomId);
+    const enrolledExists = await onGetEnrolledClass(classExists.id);
 
     if (classExists.teacherId === session.id || enrolledExists) {
       setIsLoading(false);
@@ -204,12 +186,12 @@ export default function ClassroomSection({
       return;
     }
 
-    const { success, message } = await joinClass(classExists.classroomId);
+    const { success, message } = await joinClass(classExists.id);
     if (success) {
       setIsLoading(false);
       toast.success(message);
       handleToggleShowJoinClass();
-      router.push(`/classroom/class/${classExists.classroomId}`);
+      router.push(`/classroom/class/${classExists.id}`);
     } else toast.error(message);
   }
 
@@ -428,7 +410,7 @@ export default function ClassroomSection({
                 searchParams.get("sort") === null) && (
                 <ClassroomLists
                   type="created"
-                  classes={createdClasses}
+                  classes={createdClasses as Classroom[] | null}
                   classesIsPending={createdClassesIsPending}
                   handleDeleteClass={deleteClass}
                   deleteClassIsPending={deleteClassIsPending}
@@ -439,7 +421,7 @@ export default function ClassroomSection({
                 searchParams.get("sort") === null) && (
                 <ClassroomLists
                   type="enrolled"
-                  classes={enrolledClasses}
+                  classes={enrolledClasses as Classroom[] | null}
                   classesIsPending={enrolledClassesIsPending}
                   handleDeleteClass={deleteClass}
                   deleteClassIsPending={deleteClassIsPending}
@@ -476,7 +458,7 @@ export default function ClassroomSection({
                   return (
                     <li key={assignedClasswork.id}>
                       <Link
-                        href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                        href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
                         className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
@@ -499,17 +481,17 @@ export default function ClassroomSection({
                               {assignedClasswork.title}
                             </p>
                             <p className="text-xs">
-                              {assignedClasswork.classroomName}
+                              {assignedClasswork.className}
                             </p>
                             <div className="mt-2 grid items-center gap-1 text-xs">
                               <p>
                                 Posted{" "}
-                                {isToday(assignedClasswork.created_at)
+                                {isToday(assignedClasswork.createdAt)
                                   ? "today"
-                                  : isYesterday(assignedClasswork.created_at)
+                                  : isYesterday(assignedClasswork.createdAt)
                                     ? "yesterday"
                                     : format(
-                                        assignedClasswork.created_at,
+                                        assignedClasswork.createdAt,
                                         "MMM d",
                                       )}
                               </p>
@@ -539,7 +521,7 @@ export default function ClassroomSection({
                   return (
                     <li key={missingClasswork.id}>
                       <Link
-                        href={`/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
+                        href={`/classroom/class/${missingClasswork.classId}/stream/${missingClasswork.id}`}
                         className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                       >
                         <div className="flex gap-2">
@@ -562,17 +544,17 @@ export default function ClassroomSection({
                               {missingClasswork.title}
                             </p>
                             <p className="text-xs">
-                              {missingClasswork.classroomName}
+                              {missingClasswork.className}
                             </p>
                             <div className="mt-2 grid items-center gap-1 text-xs">
                               <p>
                                 Posted{" "}
-                                {isToday(missingClasswork.created_at)
+                                {isToday(missingClasswork.createdAt)
                                   ? "today"
-                                  : isYesterday(missingClasswork.created_at)
+                                  : isYesterday(missingClasswork.createdAt)
                                     ? "yesterday"
                                     : format(
-                                        missingClasswork.created_at,
+                                        missingClasswork.createdAt,
                                         "MMM d",
                                       )}
                               </p>
@@ -597,7 +579,7 @@ export default function ClassroomSection({
               ? doneClassworks.map((doneClasswork) => (
                   <li key={doneClasswork.id}>
                     <Link
-                      href={`/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
+                      href={`/classroom/class/${doneClasswork.classId}/stream/${doneClasswork.streamId}`}
                       className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                     >
                       <div className="flex gap-2">
@@ -617,27 +599,25 @@ export default function ClassroomSection({
                         </svg>
                         <div>
                           <p className="underline__text font-medium">
-                            {doneClasswork.classworkTitle}
+                            {doneClasswork.title}
                           </p>
-                          <p className="text-xs">
-                            {doneClasswork.classroomName}
-                          </p>
+                          <p className="text-xs">{doneClasswork.className}</p>
                           <div className="mt-2 grid items-center gap-1 text-xs">
                             <p>
                               Posted{" "}
-                              {isToday(doneClasswork.streamCreated)
+                              {isToday(doneClasswork.streamCreatedAt)
                                 ? "today"
-                                : isYesterday(doneClasswork.streamCreated)
+                                : isYesterday(doneClasswork.streamCreatedAt)
                                   ? "yesterday"
                                   : format(
-                                      doneClasswork.streamCreated,
+                                      doneClasswork.streamCreatedAt,
                                       "MMM d",
                                     )}
                             </p>
                             <p className="whitespace-nowrap">
                               {doneClasswork.isGraded &&
                               doneClasswork.isTurnedIn
-                                ? `Score: ${doneClasswork.userPoints}`
+                                ? `Score: ${doneClasswork.points}`
                                 : doneClasswork.isTurnedIn
                                   ? "Turned in"
                                   : ""}

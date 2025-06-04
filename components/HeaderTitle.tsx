@@ -3,14 +3,13 @@
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import { Classroom } from "@/lib/schema";
 import { extractFirstUuid, getLastRouteName } from "@/lib/utils";
-
-import { IClass } from "@/components/ClassroomSection";
 
 export default function HeaderTitle({
   onGetClassByClassId,
 }: {
-  onGetClassByClassId: (classId: string) => Promise<IClass | null>;
+  onGetClassByClassId: (classId: string) => Promise<Classroom | null>;
 }) {
   const pathname = usePathname();
 
@@ -30,11 +29,11 @@ export default function HeaderTitle({
     return (
       <>
         <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:block md:text-2xl">
-          {data ? data.className : "Classroom"}
+          {data ? data.name : "Classroom"}
         </h1>
 
         <h1 className="block overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:hidden md:text-2xl">
-          {data?.className ?? "Classroom"}
+          {data?.name ?? "Classroom"}
         </h1>
       </>
     );

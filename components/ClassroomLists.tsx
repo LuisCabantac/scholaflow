@@ -1,7 +1,8 @@
 import React, { useOptimistic } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
-import { IClass } from "@/components/ClassroomSection";
+import { Classroom } from "@/lib/schema";
+
 import ClassLoading from "@/components/ClassLoading";
 import ClassroomCard from "@/components/ClassroomCard";
 
@@ -13,7 +14,7 @@ export default function ClassroomLists({
   deleteClassIsPending,
 }: {
   type: "created" | "enrolled";
-  classes: IClass[] | null | undefined;
+  classes: Classroom[] | null;
   classesIsPending: boolean;
   deleteClassIsPending: boolean;
   handleDeleteClass: UseMutateFunction<void, Error, string, unknown>;
@@ -21,7 +22,7 @@ export default function ClassroomLists({
   const [optimisticClasses, optimisticDelete] = useOptimistic(
     classes,
     (curClass, classId) => {
-      return curClass?.filter((curClass) => curClass.id !== classId);
+      return curClass?.filter((curClass) => curClass.id !== classId) || null;
     },
   );
 
@@ -38,7 +39,7 @@ export default function ClassroomLists({
     <ul className="contents">
       {optimisticClasses.map((classData) => (
         <ClassroomCard
-          key={classData.classroomId}
+          key={classData.id}
           type={type}
           classData={classData}
           onDeleteClass={handleClassDelete}

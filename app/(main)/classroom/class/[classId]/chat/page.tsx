@@ -4,11 +4,11 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 
+import { getAllMessagesByClassId } from "@/lib/message-service";
 import {
-  getAllMessagesByClassId,
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import ClassChatSection from "@/components/ClassChatSection";
 
@@ -22,8 +22,8 @@ export async function generateMetadata({
   const classroom = await getClassByClassId(classId);
 
   return {
-    title: `Chat - ${classroom?.className}`,
-    description: `Connect with your classmates! Discuss course material, ask questions, and collaborate in ${classroom?.className} class chat.  `,
+    title: `Chat - ${classroom?.name}`,
+    description: `Connect with your classmates! Discuss course material, ask questions, and collaborate in ${classroom?.name} class chat.  `,
   };
 }
 

@@ -4,16 +4,18 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+import { getClassStreamByStreamId } from "@/lib/stream-service";
+import { getClassworkByClassAndUserId } from "@/lib/classwork-service";
+import { getAllClassTopicsByClassId } from "@/lib/class-topic-service";
 import {
-  getAllClassTopicsByClassId,
   getAllCommentsByStreamId,
-  getAllEnrolledClassesByClassId,
   getAllPrivateCommentsByStreamId,
+} from "@/lib/comment-service";
+import {
+  getAllEnrolledClassesByClassId,
   getClassByClassId,
-  getClassStreamByStreamId,
-  getClassworkByClassAndUserId,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import StreamDetailSection from "@/components/StreamDetailSection";
 
@@ -27,7 +29,7 @@ export async function generateMetadata({
   const stream = await getClassStreamByStreamId(streamId);
 
   return {
-    title: stream?.title || stream?.caption,
+    title: stream?.title || stream?.content,
   };
 }
 
@@ -49,11 +51,11 @@ export default async function Page({
   const stream = await getClassStreamByStreamId(streamId);
   if (!stream) return redirect("/classroom");
 
-  const classroom = await getClassByClassId(stream.classroomId);
+  const classroom = await getClassByClassId(stream.classId);
   if (!classroom) return redirect("/classroom");
 
   const enrolledClass = await getEnrolledClassByClassAndSessionId(
-    stream.classroomId,
+    stream.classId,
   );
   if (!enrolledClass && classroom?.teacherId !== session.user.id)
     return redirect("/classroom");
@@ -79,15 +81,13 @@ export default async function Page({
 
   const classwork = await getClassworkByClassAndUserId(
     session?.user?.id ?? "",
-    classroom?.classroomId ?? "",
+    classroom?.id ?? "",
     stream?.id ?? "",
   );
 
-  const enrolledClasses = await getAllEnrolledClassesByClassId(
-    stream.classroomId,
-  );
+  const enrolledClasses = await getAllEnrolledClassesByClassId(stream.classId);
 
-  const allTopics = await getAllClassTopicsByClassId(stream.classroomId);
+  const allTopics = await getAllClassTopicsByClassId(stream.classId);
 
   if (
     session.user.id === classroom.teacherId ||
@@ -108,5 +108,5 @@ export default async function Page({
       />
     );
 
-  return redirect(`/classroom/class/${classroom.classroomId}`);
+  return redirect(`/classroom/class/${classroom.id}`);
 }

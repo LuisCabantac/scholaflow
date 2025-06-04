@@ -4,6 +4,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { IRoleRequest } from "@/components/RoleRequestDialog";
 import SpinnerMini from "@/components/SpinnerMini";
 import { StatusType } from "@/components/RoleRequestsSection";
+import { RoleRequest } from "@/lib/schema";
 
 export default function RoleRequestsCard({
   status,
@@ -16,10 +17,10 @@ export default function RoleRequestsCard({
   removeRequestIsPending,
 }: {
   status: StatusType;
-  request: IRoleRequest;
-  approveRequest: UseMutateFunction<void, Error, IRoleRequest, unknown>;
-  rejectRequest: UseMutateFunction<void, Error, IRoleRequest, unknown>;
-  removeRequest: UseMutateFunction<void, Error, IRoleRequest, unknown>;
+  request: RoleRequest;
+  approveRequest: UseMutateFunction<void, Error, RoleRequest, unknown>;
+  rejectRequest: UseMutateFunction<void, Error, RoleRequest, unknown>;
+  removeRequest: UseMutateFunction<void, Error, RoleRequest, unknown>;
   approveRequestIsPending: boolean;
   rejectRequestIsPending: boolean;
   removeRequestIsPending: boolean;
@@ -27,11 +28,11 @@ export default function RoleRequestsCard({
   return (
     <li
       className="flex w-full flex-col items-start justify-between gap-2 bg-[#f3f6ff] p-2 md:flex-row md:items-center"
-      key={request.created_at}
+      key={request.id}
     >
       <div className="flex items-center gap-2">
         <Image
-          src={request.avatar}
+          src={request.userImage}
           alt={`${request.userName}'s image`}
           width={32}
           height={32}
