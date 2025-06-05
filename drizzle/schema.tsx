@@ -184,7 +184,6 @@ export const classTopic = pgTable("class_topic", {
     .notNull()
     .references(() => classroom.id),
   name: text("name").notNull(),
-  type: text("type").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .$defaultFn(() => new Date())
     .notNull(),
