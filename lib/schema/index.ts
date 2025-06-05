@@ -128,15 +128,30 @@ export const classworkSchema = z.object({
 
 export type Classwork = z.infer<typeof classworkSchema>;
 
+export const createClassworkSchema = classworkSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
 export const classTopicSchema = z.object({
   id: z.uuid(),
   classId: z.uuid(),
   name: z.string(),
-  type: z.string(),
   createdAt: z.date(),
 });
 
 export type ClassTopic = z.infer<typeof classTopicSchema>;
+
+export const createClassTopicSchema = classTopicSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
+export const editClassTopicSchema = classTopicSchema.omit({
+  id: true,
+  classId: true,
+  createdAt: true,
+});
 
 export const streamSchema = z.object({
   id: z.uuid(),
@@ -172,6 +187,25 @@ export const streamSchema = z.object({
 
 export type Stream = z.infer<typeof streamSchema>;
 
+export const createStreamSchema = streamSchema.omit({
+  id: true,
+  isPinned: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const editStreamSchema = streamSchema.omit({
+  id: true,
+  userId: true,
+  userName: true,
+  userImage: true,
+  classId: true,
+  className: true,
+  type: true,
+  isPinned: true,
+  createdAt: true,
+});
+
 export const streamCommentSchema = z.object({
   id: z.uuid(),
   streamId: z.uuid(),
@@ -186,6 +220,16 @@ export const streamCommentSchema = z.object({
 });
 
 export type StreamComment = z.infer<typeof streamCommentSchema>;
+
+export const createStreamCommentSchema = streamCommentSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const editStreamCommentSchema = streamCommentSchema.omit({
+  createdAt: true,
+});
 
 export const streamPrivateCommentSchema = z.object({
   id: z.uuid(),
@@ -203,6 +247,16 @@ export const streamPrivateCommentSchema = z.object({
 
 export type StreamPrivateComment = z.infer<typeof streamPrivateCommentSchema>;
 
+export const createStreamPrivateCommentSchema = streamPrivateCommentSchema.omit(
+  { id: true, createdAt: true, updatedAt: true },
+);
+
+export const editStreamPrivateCommentSchema = streamPrivateCommentSchema.omit({
+  id: true,
+
+  createdAt: true,
+});
+
 export const noteSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
@@ -217,6 +271,7 @@ export const noteSchema = z.object({
 export type Note = z.infer<typeof noteSchema>;
 
 export const createNoteSchema = noteSchema.omit({ id: true, createdAt: true });
+
 export const editNoteSchema = noteSchema.omit({
   id: true,
   userId: true,
