@@ -14,9 +14,12 @@ export default function VerifySection() {
 
   const token = searchParams.get("token");
 
-  if (!token) router.push("/");
-
   const onSubmit = useCallback(() => {
+    if (!token) {
+      router.push("/");
+      return;
+    }
+
     newVerification(token ?? "").then((data) => {
       setIsLoading(false);
       setSuccess(data.success);
