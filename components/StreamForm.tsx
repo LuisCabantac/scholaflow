@@ -332,9 +332,6 @@ export default function StreamForm({
                                   <label className="flex items-center gap-2">
                                     <input
                                       type="checkbox"
-                                      defaultChecked={
-                                        stream?.announceToAll ?? true
-                                      }
                                       checked={
                                         enrolledClasses?.length ===
                                         audience.length
@@ -549,7 +546,6 @@ export default function StreamForm({
                             name="totalPoints"
                             className="cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={grade}
-                            defaultValue="100"
                             onChange={handleGradeChange}
                             onBlur={handleGradeBlur}
                             disabled={isLoading}

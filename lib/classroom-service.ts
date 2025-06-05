@@ -71,6 +71,7 @@ export async function getClassByClassCode(
 }
 
 export async function getEnrolledClassByClassAndSessionId(
+  userId: string,
   classId: string,
 ): Promise<EnrolledClass | null> {
   const session = await auth.api.getSession({
@@ -83,10 +84,7 @@ export async function getEnrolledClassByClassAndSessionId(
     .select()
     .from(enrolledClass)
     .where(
-      and(
-        eq(enrolledClass.id, classId),
-        eq(enrolledClass.userId, session.user.id),
-      ),
+      and(eq(enrolledClass.classId, classId), eq(enrolledClass.userId, userId)),
     );
 
   return data || null;
@@ -128,27 +126,27 @@ export async function getAllEnrolledClassesByClassAndSessionId(
   return !data?.length ? null : data;
 }
 
-export async function getAllEnrolledClassesByClassAndCurrentSessionId(
-  classId: string,
-): Promise<EnrolledClass[] | null> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+// export async function getAllEnrolledClassesByClassAndCurrentSessionId(
+//   classId: string,
+// ): Promise<EnrolledClass[] | null> {
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
 
-  if (!session) return null;
+//   if (!session) return null;
 
-  const data = await db
-    .select()
-    .from(enrolledClass)
-    .where(
-      and(
-        eq(enrolledClass.classId, classId),
-        eq(enrolledClass.userId, session.user.id),
-      ),
-    );
+//   const data = await db
+//     .select()
+//     .from(enrolledClass)
+//     .where(
+//       and(
+//         eq(enrolledClass.classId, classId),
+//         eq(enrolledClass.userId, session.user.id),
+//       ),
+//     );
 
-  return !data?.length ? null : data;
-}
+//   return !data?.length ? null : data;
+// }
 
 export async function getEnrolledClassByClassAndUserId(
   userId: string,

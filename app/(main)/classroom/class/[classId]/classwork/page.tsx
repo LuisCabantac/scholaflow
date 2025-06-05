@@ -52,7 +52,8 @@ export default async function Page({
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
-    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+    (await getEnrolledClassByClassAndSessionId(session.user.id, classId)) !==
+    null;
 
   if (!isTeacher && !isEnrolled) return redirect("/classroom");
 

@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Classroom } from "@/lib/schema";
+import { Classroom, EnrolledClass } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -24,7 +24,7 @@ export default function ClassroomCard({
   deleteClassIsPending,
 }: {
   type: "created" | "enrolled";
-  classData: Classroom;
+  classData: Classroom | EnrolledClass;
   onDeleteClass: (classId: string) => void;
   deleteClassIsPending: boolean;
 }) {
@@ -59,7 +59,7 @@ export default function ClassroomCard({
       }}
     >
       <Link
-        href={`/classroom/class/${classData.id}`}
+        href={`/classroom/class/${"classId" in classData ? classData.classId : classData.id}`}
         className="relative h-[9rem] md:h-[10rem]"
       >
         <div className="absolute left-3 top-3 w-[88%] text-balance drop-shadow-sm md:left-4 md:top-4">

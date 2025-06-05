@@ -16,7 +16,6 @@ import {
   StreamComment,
   Stream,
   EnrolledClass,
-  Classwork,
 } from "@/lib/schema";
 
 import StreamCard from "@/components/StreamCard";

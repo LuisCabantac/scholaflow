@@ -40,6 +40,8 @@ export default async function Page({
     headers: await headers(),
   });
 
+  if (!classId) return redirect("/classroom");
+
   if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/classroom");
@@ -49,7 +51,8 @@ export default async function Page({
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
-    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+    (await getEnrolledClassByClassAndSessionId(session.user.id, classId)) !==
+    null;
 
   if (!isTeacher && !isEnrolled) return redirect("/classroom");
 

@@ -66,7 +66,10 @@ export default async function Page() {
       session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
-      const data = await getEnrolledClassByClassAndSessionId(classId);
+      const data = await getEnrolledClassByClassAndSessionId(
+        session.user.id,
+        classId,
+      );
       return data;
     } else return null;
   }
