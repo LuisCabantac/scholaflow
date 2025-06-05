@@ -399,7 +399,7 @@ export default function StreamDetailSection({
                     <div className="mb-2">
                       <p className="text-base font-medium">{stream.title}</p>
                       <div className="flex items-center gap-1 text-xs text-[#616572]">
-                        <p>{stream.userImage}</p>
+                        <p>{stream.userName}</p>
                         <span>•</span>
                         <p>
                           Posted{" "}
