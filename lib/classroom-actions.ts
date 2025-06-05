@@ -422,7 +422,8 @@ export async function deleteClass(classId: string) {
         eq(enrolledClass.classId, classId),
         eq(enrolledClass.userId, session.user.id),
       ),
-    );
+    )
+    .returning();
 
   if (!data)
     throw new Error(
@@ -566,15 +567,7 @@ export async function deleteAllClassworkByClassAndUserId(
 
 export async function deleteMultipleEnrolledClass(classId: string[]) {
   for (const rowId of classId) {
-    const [data] = await db
-      .delete(enrolledClass)
-      .where(eq(enrolledClass.classId, rowId))
-      .returning();
-
-    if (!data)
-      throw new Error(
-        `Failed to remove enrolled class with ID ${rowId}. The class may not exist or has already been removed.`,
-      );
+    await db.delete(enrolledClass).where(eq(enrolledClass.id, rowId));
   }
 }
 

@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { validate as validateUUID } from "uuid";
 import { and, asc, desc, eq } from "drizzle-orm";
 
 import { db } from "@/drizzle";
@@ -80,6 +81,11 @@ export async function getEnrolledClassByClassAndSessionId(
 
   if (!session) return null;
 
+  if (!classId || !validateUUID(classId)) {
+    console.error("Invalid classId passed:", classId);
+    return null;
+  }
+
   const [data] = await db
     .select()
     .from(enrolledClass)
@@ -99,6 +105,11 @@ export async function getEnrolledClassByEnrolledClassId(
 
   if (!session) return null;
 
+  if (!enrolledClassId || !validateUUID(enrolledClassId)) {
+    console.error("Invalid enrolledClassId passed:", enrolledClassId);
+    return null;
+  }
+
   const [data] = await db
     .select()
     .from(enrolledClass)
@@ -117,6 +128,13 @@ export async function getAllEnrolledClassesByClassAndSessionId(
   if (!session) return null;
 
   if (session.user.role !== "teacher") return null;
+
+  console.log(classId);
+
+  if (!classId || !validateUUID(classId)) {
+    console.error("Invalid classId passed:", classId);
+    return null;
+  }
 
   const data = await db
     .select()
@@ -160,6 +178,11 @@ export async function getEnrolledClassByClassAndUserId(
 
   if (session.user.role !== "teacher") return null;
 
+  if (!classId || !validateUUID(classId)) {
+    console.error("Invalid classId passed:", classId);
+    return null;
+  }
+
   const [data] = await db
     .select()
     .from(enrolledClass)
@@ -197,6 +220,11 @@ export async function getAllEnrolledClassesByClassId(
 
   if (!session) return null;
 
+  if (!classId || !validateUUID(classId)) {
+    console.error("Invalid classId passed:", classId);
+    return null;
+  }
+
   const data = await db
     .select()
     .from(enrolledClass)
@@ -214,6 +242,11 @@ export async function getEnrolledClassByUserAndClassId(
   });
 
   if (!session) return null;
+
+  if (!classId || !validateUUID(classId)) {
+    console.error("Invalid classId passed:", classId);
+    return null;
+  }
 
   const [data] = await db
     .select()
