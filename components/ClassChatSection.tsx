@@ -121,10 +121,10 @@ export default function ClassChatSection({
 
   useEffect(() => {
     const channel = supabase
-      .channel("chat-update")
+      .channel("chat-db-changes")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "chat" },
+        { event: "INSERT", schema: "public", table: "chat" },
         () => refetch(),
       )
       .subscribe();
@@ -195,50 +195,50 @@ export default function ClassChatSection({
       </div>
       <div className="flex w-full flex-col rounded-md md:border md:border-[#dddfe6] md:bg-[#f3f6ff] md:p-4">
         <div className="relative pb-16">
-          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
+          <ul className="flex h-[75dvh] flex-col justify-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
-              <>
-                <li className="justify-self-end" role="status">
+              <div className="flex min-h-full flex-col justify-end">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-56 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="self-start" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-              </>
+              </div>
             )}
             {messages?.length && !messagesIsPending ? (
               messages.map((message, index) => {
@@ -247,15 +247,15 @@ export default function ClassChatSection({
                   message.userId !== messages[index + 1].userId;
 
                 const messageMargin =
-                  message.userId !== messages[index - 1]?.userId ? "mt-4" : "";
+                  message.userId !== messages[index - 1]?.userId
+                    ? "mt-4 mb-2"
+                    : "";
 
                 return (
                   <li
                     key={message.id}
                     className={`${messageMargin} ${
-                      message.userId === session.id
-                        ? "justify-self-end"
-                        : "justify-self-start"
+                      message.userId === session.id ? "self-end" : "self-start"
                     }`}
                   >
                     <div className="flex items-end justify-end gap-2">
