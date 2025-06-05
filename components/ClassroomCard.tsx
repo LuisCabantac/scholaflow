@@ -151,7 +151,9 @@ export default function ClassroomCard({
           isLoading={deleteClassIsPending}
           handleCancel={handleToggleShowConfirmation}
           handleAction={() => {
-            onDeleteClass(classData.id);
+            onDeleteClass(
+              "classId" in classData ? classData.classId : classData.id,
+            );
             handleToggleShowConfirmation();
           }}
         >
