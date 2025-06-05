@@ -45,7 +45,7 @@ export type Verification = z.infer<typeof verificationSchema>;
 
 export const roleRequestSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userEmail: z.string(),
   userImage: z.string(),
@@ -75,10 +75,18 @@ export const classroomSchema = z.object({
 
 export type Classroom = z.infer<typeof classroomSchema>;
 
+export const createClassroomSchema = classroomSchema.omit({
+  id: true,
+  description: true,
+  allowUsersToComment: true,
+  allowUsersToPost: true,
+  createdAt: true,
+});
+
 export const enrolledClassSchema = z.object({
   id: z.uuid(),
   classId: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   name: z.string(),
@@ -93,9 +101,14 @@ export const enrolledClassSchema = z.object({
 
 export type EnrolledClass = z.infer<typeof enrolledClassSchema>;
 
+export const createEnrolledClassSchema = enrolledClassSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
 export const classworkSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   classId: z.uuid(),
@@ -127,7 +140,7 @@ export type ClassTopic = z.infer<typeof classTopicSchema>;
 
 export const streamSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   classId: z.uuid(),
@@ -163,7 +176,7 @@ export const streamCommentSchema = z.object({
   id: z.uuid(),
   streamId: z.uuid(),
   classId: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   content: z.nullable(z.string()),
@@ -178,21 +191,21 @@ export const streamPrivateCommentSchema = z.object({
   id: z.uuid(),
   streamId: z.uuid(),
   classId: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   content: z.nullable(z.string()),
   attachments: z.array(z.string()),
   createdAt: z.date(),
   updatedAt: z.nullable(z.date()),
-  toUserId: z.uuid(),
+  toUserId: z.string(),
 });
 
 export type StreamPrivateComment = z.infer<typeof streamPrivateCommentSchema>;
 
 export const noteSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   title: z.nullable(z.string()),
   content: z.nullable(z.string()),
   attachments: z.array(z.string()),
@@ -205,7 +218,7 @@ export type Note = z.infer<typeof noteSchema>;
 
 export const chatSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   userName: z.string(),
   userImage: z.string(),
   classId: z.uuid(),
