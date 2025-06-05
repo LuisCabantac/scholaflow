@@ -290,3 +290,5 @@ export const chatSchema = z.object({
 });
 
 export type Chat = z.infer<typeof chatSchema>;
+
+export const createChatSchema = chatSchema.omit({ id: true, createdAt: true });
