@@ -55,6 +55,7 @@ export default async function Page({
   if (!classroom) return redirect("/classroom");
 
   const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
     stream.classId,
   );
   if (!enrolledClass && classroom?.teacherId !== session.user.id)
