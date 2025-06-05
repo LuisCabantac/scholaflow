@@ -216,6 +216,13 @@ export const noteSchema = z.object({
 
 export type Note = z.infer<typeof noteSchema>;
 
+export const createNoteSchema = noteSchema.omit({ id: true, createdAt: true });
+export const editNoteSchema = noteSchema.omit({
+  id: true,
+  userId: true,
+  createdAt: true,
+});
+
 export const chatSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
