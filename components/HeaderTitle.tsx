@@ -7,14 +7,19 @@ import { Classroom } from "@/lib/schema";
 import { extractFirstUuid, getLastRouteName } from "@/lib/utils";
 
 export default function HeaderTitle({
+  sessionId,
   onGetClassByClassId,
 }: {
+  sessionId: string | undefined;
   onGetClassByClassId: (classId: string) => Promise<Classroom | null>;
 }) {
   const pathname = usePathname();
 
   const { data } = useQuery({
-    queryKey: [`class--${extractFirstUuid(pathname)}`],
+    queryKey: [
+      `class--${extractFirstUuid(pathname)}`,
+      `createdClasses--${sessionId}`,
+    ],
     queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
   });
 
