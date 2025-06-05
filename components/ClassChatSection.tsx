@@ -420,6 +420,7 @@ export default function ClassChatSection({
                     type="file"
                     multiple
                     className="input__file hidden disabled:cursor-not-allowed"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
                     disabled={addMessageIsPending}
                     onChange={(event) => {
                       handleAttachmentNameChange(event);
