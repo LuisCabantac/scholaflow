@@ -24,7 +24,10 @@ export async function getAllMessagesByClassId(
 
   if (!classroom) return null;
 
-  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
+    classId,
+  );
 
   if (!(classroom.teacherId === session.user.id || enrolledClass)) return null;
 
