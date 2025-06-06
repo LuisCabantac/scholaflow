@@ -18,6 +18,7 @@ export default function Button({
   onClick,
   isLoading,
   children,
+  buttonType = "button",
 }: {
   type: string;
   href?: string;
@@ -25,6 +26,7 @@ export default function Button({
   onClick?: () => void;
   isLoading?: boolean;
   children: React.ReactNode;
+  buttonType?: "button" | "submit" | "reset";
 }) {
   const { pending } = useFormStatus();
 
@@ -53,6 +55,7 @@ export default function Button({
   if (onClick)
     return (
       <button
+        type={buttonType}
         onClick={() => {
           startTransition(() => {
             onClick();
