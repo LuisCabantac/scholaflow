@@ -446,7 +446,7 @@ export async function removeRoleRequest(request: RoleRequest): Promise<void> {
   if (!data) throw new Error("Failed to delete role request from database.");
 }
 
-async function removeRoleRequestByUserId(userId: string): Promise<void> {
+export async function removeRoleRequestByUserId(userId: string): Promise<void> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
