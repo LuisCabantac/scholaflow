@@ -90,10 +90,10 @@ export default function ClassroomSection({
       toast.success("Class has been successfully removed.");
 
       queryClient.invalidateQueries({
-        queryKey: [
-          `createdClasses--${session.id}`,
-          `enrolledClasses--${session.id}`,
-        ],
+        queryKey: [`createdClasses--${session.id}`],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`enrolledClasses--${session.id}`],
       });
     },
     onError: (error) => {
@@ -190,6 +190,14 @@ export default function ClassroomSection({
     if (success) {
       setIsLoading(false);
       toast.success(message);
+
+      queryClient.invalidateQueries({
+        queryKey: [`createdClasses--${session.id}`],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`enrolledClasses--${session.id}`],
+      });
+
       handleToggleShowJoinClass();
       router.push(`/classroom/class/${classExists.id}`);
     } else toast.error(message);

@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Classroom, Session } from "@/lib/schema";
 import { createClass, updateClass } from "@/lib/classroom-actions";
@@ -27,6 +28,7 @@ export default function ClassForm({
   onToggleShowClassForm: () => void;
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const classFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +56,17 @@ export default function ClassForm({
     setIsLoading(false);
     if (response.success) {
       toast.success(response.message);
+
+      queryClient.invalidateQueries({
+        queryKey: [`class--${classroom?.id}`],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`createdClasses--${session.id}`],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`enrolledClasses--${session.id}`],
+      });
+
       onToggleShowClassForm();
       if (response.classUrl) {
         router.push(response.classUrl);

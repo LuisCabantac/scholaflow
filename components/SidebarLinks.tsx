@@ -27,23 +27,17 @@ export default function SidebarLinks({
   const pathname = usePathname();
   const { isMobile, sidebarExpand, handleSidebarExpand } = useSidebar();
 
-  const uuidV4Regex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const isValidUserId = typeof userId === "string" && uuidV4Regex.test(userId);
-
   const { data: createdClasses, isPending: createdClassesIsPending } = useQuery(
     {
-      queryKey: [`createdClasses--${userId}`],
+      queryKey: [`sidebar-createdClasses--${userId}`],
       queryFn: () => onGetAllClassesByTeacherId(userId),
-      enabled: role !== "admin" && role !== "student" && isValidUserId,
     },
   );
 
   const { data: enrolledClasses, isPending: enrolledClassesIsPending } =
     useQuery({
-      queryKey: [`enrolledClasses--${userId}`],
+      queryKey: [`sidebar-enrolledClasses--${userId}`],
       queryFn: () => onGetAllEnrolledClassesByUserId(userId),
-      enabled: role !== "admin" && isValidUserId,
     });
 
   return (

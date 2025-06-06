@@ -22,6 +22,7 @@ export default function HeaderTitle({
     queryKey: [
       `class--${extractFirstUuid(pathname)}`,
       `createdClasses--${sessionId}`,
+      `enrolledClasses--${sessionId}`,
     ],
     queryFn: () => onGetClassByClassId(extractFirstUuid(pathname)!),
     enabled: isValidClassId,
