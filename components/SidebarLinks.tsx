@@ -35,7 +35,7 @@ export default function SidebarLinks({
     {
       queryKey: [`createdClasses--${userId}`],
       queryFn: () => onGetAllClassesByTeacherId(userId),
-      enabled: isValidUserId,
+      enabled: role !== "admin" && role !== "student" && isValidUserId,
     },
   );
 
@@ -43,7 +43,7 @@ export default function SidebarLinks({
     useQuery({
       queryKey: [`enrolledClasses--${userId}`],
       queryFn: () => onGetAllEnrolledClassesByUserId(userId),
-      enabled: isValidUserId,
+      enabled: role !== "admin" && isValidUserId,
     });
 
   return (
@@ -210,7 +210,7 @@ export default function SidebarLinks({
                   </Link>
                 </li>
               ))}
-              {enrolledClassesIsPending && (
+              {role !== "admin" && enrolledClassesIsPending && (
                 <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
                   <ul className="flex flex-col gap-3">
                     <li className="pl-4 text-xs text-[#929bb4]">Enrolled</li>
