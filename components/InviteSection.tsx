@@ -52,7 +52,8 @@ export default function InviteSection({
           alt={`${session.name}'s avatar`}
           width={32}
           height={32}
-          className="h-8 w-8 flex-shrink-0 rounded-full"
+          className="h-8 w-8 flex-shrink-0 select-none rounded-full"
+          onDragStart={(e) => e.preventDefault()}
         />
         <div>
           <p className="text-sm font-medium">{session.name}</p>

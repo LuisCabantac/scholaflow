@@ -38,7 +38,7 @@ export default function NoteCard({
                 alt={`${image}`}
                 width={80}
                 height={20}
-                className="mb-0.5 w-auto break-inside-avoid rounded-md object-cover"
+                className="mb-0.5 w-auto select-none break-inside-avoid rounded-md object-cover"
               />
             ))}
           </div>

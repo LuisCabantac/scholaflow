@@ -44,7 +44,7 @@ export default function Hero({
           width={0}
           height={0}
           placeholder="blur"
-          className="rounded-md"
+          className="select-none rounded-md"
           alt="hero image"
         />
       </div>

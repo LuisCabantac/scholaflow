@@ -50,7 +50,7 @@ export default function PeopleCard({
           alt={`${user.userName}'s image`}
           width={32}
           height={32}
-          className="h-8 w-8 flex-shrink-0 rounded-full"
+          className="h-8 w-8 flex-shrink-0 select-none rounded-full"
         />
         <p>{user.userName}</p>
       </div>

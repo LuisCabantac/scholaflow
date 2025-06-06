@@ -38,7 +38,7 @@ export default async function Page() {
           <Image
             src={signUpPageImage}
             alt="road to knowledge"
-            className="object-cover"
+            className="select-none object-cover"
           />
         </div>
         <Link href="/" className="absolute left-6 top-6 md:hidden">

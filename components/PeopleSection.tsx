@@ -126,7 +126,8 @@ export default function PeopleSection({
                     alt={`${classroom.teacherName}'s image`}
                     width={32}
                     height={32}
-                    className="h-8 w-8 flex-shrink-0 rounded-full"
+                    className="seelct-none h-8 w-8 flex-shrink-0 rounded-full"
+                    onDragStart={(e) => e.preventDefault()}
                   />
                   <p>{classroom.teacherName}</p>
                   <span className="role teacher mt-1 flex items-center justify-center rounded-md px-2 py-1 text-[0.65rem] font-semibold">

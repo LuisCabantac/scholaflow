@@ -199,8 +199,9 @@ export default function NoteForm({
                     alt={image}
                     width={500}
                     height={500}
-                    className="mb-2 w-auto cursor-pointer break-inside-avoid rounded-md object-cover"
+                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
                     onClick={() => openZoomedImage(image)}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
               ))}
@@ -234,8 +235,9 @@ export default function NoteForm({
                     alt={image}
                     width={500}
                     height={500}
-                    className="mb-2 w-auto cursor-pointer break-inside-avoid rounded-md object-cover"
+                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
                     onClick={() => openZoomedImage(image)}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
               ))}
@@ -380,7 +382,8 @@ export default function NoteForm({
                 alt={zoomedImage}
                 width={500}
                 height={500}
-                className="max-h-[90vh] max-w-[90vw] object-contain"
+                className="max-h-[90vh] max-w-[90vw] select-none object-contain"
+                onDragStart={(e) => e.preventDefault()}
               />
             </div>
           </div>

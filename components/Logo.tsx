@@ -17,7 +17,7 @@ export default function Logo({ showText = true }: { showText?: boolean }) {
         alt="logo"
         width={200}
         height={200}
-        className="h-7 w-7 flex-shrink-0 object-cover md:h-8 md:w-8"
+        className="h-7 w-7 flex-shrink-0 select-none object-cover md:h-8 md:w-8"
       />
       {showText && (
         <p
