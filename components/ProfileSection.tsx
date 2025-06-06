@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { RoleRequest, Session } from "@/lib/schema";
 
-import EditProfileForm from "@/components/EditProfileForm";
+import EditProfileForm from "@/components/ProfileForm";
 import RoleRequestDialog from "@/components/RoleRequestDialog";
 
 export default function ProfileSection({
