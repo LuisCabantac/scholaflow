@@ -3,11 +3,12 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
+
 import {
   getAllEnrolledClassesByClassId,
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 import { deleteEnrolledClassbyClassAndEnrolledClassId } from "@/lib/classroom-actions";
 
 import PeopleSection from "@/components/PeopleSection";
@@ -22,8 +23,8 @@ export async function generateMetadata({
   const classroom = await getClassByClassId(classId);
 
   return {
-    title: `People - ${classroom?.className}`,
-    description: `See who's in ${classroom?.className} class! This page lists all students enrolled in this course. `,
+    title: `People - ${classroom?.name}`,
+    description: `See who's in ${classroom?.name} class! This page lists all students enrolled in this course. `,
   };
 }
 
@@ -46,7 +47,8 @@ export default async function Page({
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
-    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+    (await getEnrolledClassByClassAndSessionId(session.user.id, classId)) !==
+    null;
 
   if (!isTeacher && !isEnrolled) return redirect("/classroom");
 

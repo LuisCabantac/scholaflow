@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { checkEmail } from "@/lib/auth-actions";
 import { closeAccount } from "@/lib/user-management-actions";
-import { getAllUser, getUsersFilter } from "@/lib/data-service";
+import { getAllUser, getUsersFilter } from "@/lib/user-service";
 
 import UserManagementSection from "@/components/UserManagementSection";
 

@@ -1,15 +1,14 @@
 "use client";
 
-import { useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { format, isThisYear, isToday, isYesterday } from "date-fns";
-import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
+import ReactLinkify from "react-linkify";
+import { useOptimistic, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
   addCommentToStream,
@@ -17,12 +16,16 @@ import {
   deleteStreamComment,
 } from "@/lib/classroom-actions";
 import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
+  Classroom,
+  ClassTopic,
+  Classwork,
+  EnrolledClass,
+  Session,
+  Stream,
+  StreamComment,
+  StreamPrivateComment,
+} from "@/lib/schema";
 
-import { IClass } from "@/components/ClassroomSection";
 import CommentCard from "@/components/CommentCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
@@ -30,7 +33,6 @@ import EllipsisPopover from "@/components/EllipsisPopover";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import StreamForm from "@/components/StreamForm";
 import StreamDetailsUserWork from "@/components/StreamDetailsUserWork";
-import { ITopic } from "@/components/TopicDialog";
 import CommentsLoading from "@/components/CommentsLoading";
 
 export default function StreamDetailSection({
@@ -43,16 +45,16 @@ export default function StreamDetailSection({
   onGetAllComments,
   onGetAllPrivateComments,
 }: {
-  topics: ITopic[] | null;
-  stream: IStream;
-  session: ISession;
-  classroom: IClass;
-  classwork: IClasswork | null;
-  enrolledClasses: IClass[] | null;
-  onGetAllComments: (classId: string) => Promise<IStreamComment[] | null>;
+  topics: ClassTopic[] | null;
+  stream: Stream;
+  session: Session;
+  classroom: Classroom;
+  classwork: Classwork | null;
+  enrolledClasses: EnrolledClass[] | null;
+  onGetAllComments: (classId: string) => Promise<StreamComment[] | null>;
   onGetAllPrivateComments: (
     streamId: string,
-  ) => Promise<IStreamComment[] | null>;
+  ) => Promise<StreamPrivateComment[] | null>;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -223,14 +225,14 @@ export default function StreamDetailSection({
           stream.type !== "material" && (
             <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
               <Link
-                href={`/classroom/class/${stream.classroomId}/stream/${stream.id}`}
+                href={`/classroom/class/${stream.classId}/stream/${stream.id}`}
                 className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
               >
                 Instructions
               </Link>
 
               <Link
-                href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions/`}
+                href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions/`}
                 className="px-3 py-2 text-[#929bb4] transition-all"
               >
                 Submissions
@@ -241,7 +243,7 @@ export default function StreamDetailSection({
           className={`relative w-full ${session.id !== classroom.teacherId && "pb-[12rem]"}`}
         >
           <div className="flex items-center gap-2">
-            <Link href={`/classroom/class/${classroom.classroomId}`}>
+            <Link href={`/classroom/class/${classroom.id}`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -263,22 +265,22 @@ export default function StreamDetailSection({
               {stream.type === "stream" && (
                 <div className="mb-2 flex gap-2">
                   <Image
-                    src={stream.avatar}
-                    alt={`${stream.authorName}'s image`}
+                    src={stream.userImage}
+                    alt={`${stream.userName}'s image`}
                     width={40}
                     height={40}
                     className="h-10 w-10 flex-shrink-0 rounded-full"
                   />
                   <div>
-                    <p className="font-medium">{stream.authorName}</p>
+                    <p className="font-medium">{stream.userName}</p>
                     <p className="flex items-center gap-1 text-xs text-[#616572]">
                       Posted{" "}
-                      {isToday(stream.created_at)
+                      {isToday(stream.createdAt)
                         ? "today"
-                        : isYesterday(stream.created_at)
+                        : isYesterday(stream.createdAt)
                           ? "yesterday"
-                          : format(stream.created_at, "MMM d")}
-                      {stream.updatedPost && (
+                          : format(stream.createdAt, "MMM d")}
+                      {stream.updatedAt && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -397,17 +399,17 @@ export default function StreamDetailSection({
                     <div className="mb-2">
                       <p className="text-base font-medium">{stream.title}</p>
                       <div className="flex items-center gap-1 text-xs text-[#616572]">
-                        <p>{stream.authorName}</p>
+                        <p>{stream.userName}</p>
                         <span>•</span>
                         <p>
                           Posted{" "}
-                          {isToday(stream.created_at)
+                          {isToday(stream.createdAt)
                             ? "today"
-                            : isYesterday(stream.created_at)
+                            : isYesterday(stream.createdAt)
                               ? "yesterday"
-                              : format(stream.created_at, "MMM d")}
+                              : format(stream.createdAt, "MMM d")}
                         </p>
-                        {stream.updatedPost && (
+                        {stream.updatedAt && (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -439,17 +441,17 @@ export default function StreamDetailSection({
                   </div>
                 </div>
               )}
-              {stream.caption && (
+              {stream.content && (
                 <ReactLinkify componentDecorator={captionLinksDecorator}>
                   <p className="overflow-wrap mb-2 whitespace-pre-line break-words">
-                    {stream.caption}
+                    {stream.content}
                   </p>
                 </ReactLinkify>
               )}
-              {stream.attachment.length || stream.links.length ? (
+              {stream.attachments.length || stream.links.length ? (
                 <div className="mb-2">
                   <ul className="grid gap-1 font-medium">
-                    {stream.attachment.map((file, index) => (
+                    {stream.attachments.map((file, index) => (
                       <AttachmentFileCard
                         file={file}
                         index={index}
@@ -472,7 +474,7 @@ export default function StreamDetailSection({
               ) : null}
             </div>
             <ul className="grid gap-2">
-              {classroom.allowStudentsToComment ||
+              {classroom.allowUsersToComment ||
               classroom.teacherId === session.id ||
               commentsIsPending ||
               optimisticComments?.length ? (
@@ -480,7 +482,7 @@ export default function StreamDetailSection({
                   Comments
                 </li>
               ) : null}
-              {(classroom.allowStudentsToComment ||
+              {(classroom.allowUsersToComment ||
                 classroom.teacherId === session.id) && (
                 <li>
                   <form
@@ -490,7 +492,7 @@ export default function StreamDetailSection({
                     <input
                       type="text"
                       name="classroomId"
-                      defaultValue={classroom.classroomId}
+                      defaultValue={classroom.id}
                       hidden
                     />
                     <input
@@ -622,11 +624,11 @@ export default function StreamDetailSection({
               </button>
               <EllipsisPopover
                 showEdit={
-                  session.id === stream.author ||
+                  session.id === stream.userId ||
                   session.id === classroom.teacherId
                 }
                 showDelete={
-                  session.id === stream.author ||
+                  session.id === stream.userId ||
                   session.id === classroom.teacherId
                 }
                 clipboardUrl={`scholaflow.vercel.app${pathname}`}

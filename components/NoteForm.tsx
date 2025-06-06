@@ -5,10 +5,9 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { ISession } from "@/lib/auth";
-import { createNote, updateNote } from "@/lib/notes-actions";
 import { formatDate } from "@/lib/utils";
-import { INotes } from "@/app/(main)/notes/page";
+import { Note, Session } from "@/lib/schema";
+import { createNote, updateNote } from "@/lib/notes-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
@@ -23,9 +22,9 @@ export default function NoteForm({
   deleteNoteIsPending,
   onToggleShowNotesForm,
 }: {
-  note?: INotes;
+  note?: Note;
   type: "create" | "edit";
-  session: ISession;
+  session: Session;
   onDeleteNote: (noteId: string) => void;
   onSetShowNotesForm: Dispatch<SetStateAction<boolean>>;
   deleteNoteIsPending: boolean;
@@ -39,9 +38,9 @@ export default function NoteForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isPinned, setIsPinned] = useState(note?.isPinned ?? false);
   const [title, setTitle] = useState(note?.title ?? "");
-  const [description, setDescription] = useState(note?.description ?? "");
+  const [description, setDescription] = useState(note?.content ?? "");
   const [currentAttachments, setCurrentAttachments] = useState<string[]>(
-    note?.attachment ?? [],
+    note?.attachments ?? [],
   );
   const [attachmentImagesNames, setAttachmentImagesNames] = useState<string[]>(
     [],
@@ -200,8 +199,9 @@ export default function NoteForm({
                     alt={image}
                     width={500}
                     height={500}
-                    className="mb-2 w-auto cursor-pointer break-inside-avoid rounded-md object-cover"
+                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
                     onClick={() => openZoomedImage(image)}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
               ))}
@@ -235,16 +235,17 @@ export default function NoteForm({
                     alt={image}
                     width={500}
                     height={500}
-                    className="mb-2 w-auto cursor-pointer break-inside-avoid rounded-md object-cover"
+                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
                     onClick={() => openZoomedImage(image)}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
               ))}
             </div>
             <input type="text" name="noteId" hidden defaultValue={note?.id} />
             <div>
-              {note?.created_at && (
-                <p className="text-xs text-[#616572]">{`Created ${formatDate(note.created_at)}`}</p>
+              {note?.createdAt && (
+                <p className="text-xs text-[#616572]">{`Created ${formatDate(note.createdAt)}`}</p>
               )}
               <input
                 type="text"
@@ -381,7 +382,8 @@ export default function NoteForm({
                 alt={zoomedImage}
                 width={500}
                 height={500}
-                className="max-h-[90vh] max-w-[90vw] object-contain"
+                className="max-h-[90vh] max-w-[90vw] select-none object-contain"
+                onDragStart={(e) => e.preventDefault()}
               />
             </div>
           </div>

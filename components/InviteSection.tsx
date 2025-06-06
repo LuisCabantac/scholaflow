@@ -5,18 +5,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
+import { Classroom } from "@/lib/schema";
 import { joinClass } from "@/lib/classroom-actions";
 
-import { IClass } from "@/components/ClassroomSection";
 import SpinnerMini from "@/components/SpinnerMini";
 
 export default function InviteSection({
   classroom,
   session,
 }: {
-  classroom: IClass;
-  session: ISession;
+  classroom: Classroom;
+  session: Session;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ export default function InviteSection({
     <section className="z-10 mx-8 grid w-full gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
       <div className="w-full">
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
-          {classroom.className}
+          {classroom.name}
         </h1>
         <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
           {classroom.subject && `${classroom.subject} · `}
@@ -52,7 +52,8 @@ export default function InviteSection({
           alt={`${session.name}'s avatar`}
           width={32}
           height={32}
-          className="h-8 w-8 flex-shrink-0 rounded-full"
+          className="h-8 w-8 flex-shrink-0 select-none rounded-full"
+          onDragStart={(e) => e.preventDefault()}
         />
         <div>
           <p className="text-sm font-medium">{session.name}</p>
@@ -62,7 +63,7 @@ export default function InviteSection({
       <form onSubmit={handleJoinClass}>
         <input
           type="text"
-          defaultValue={classroom.classroomId}
+          defaultValue={classroom.id}
           name="classroomId"
           hidden
         />

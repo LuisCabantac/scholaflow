@@ -3,10 +3,9 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import {
-  getAllClassworksByUserId,
-  getAllEnrolledClassesClassworks,
-} from "@/lib/data-service";
+
+import { getAllClassworksByUserId } from "@/lib/classwork-service";
+import { getAllEnrolledClassesClassworks } from "@/lib/stream-service";
 
 import ToDoSection from "@/components/ToDoSection";
 

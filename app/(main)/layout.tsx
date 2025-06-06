@@ -3,13 +3,12 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import Provider from "@/app/Provider";
 import { auth } from "@/lib/auth";
-
+import Provider from "@/app/Provider";
 import {
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -33,6 +32,7 @@ export default async function RootLayout({
 
   async function handleGetAllClassesByTeacherId(id: string) {
     "use server";
+    if (!id) return null;
     if (session && session.user.role === "teacher") {
       const data = await getAllClassesByTeacherId(id);
       return data;
@@ -41,6 +41,7 @@ export default async function RootLayout({
 
   async function handleGetAllEnrolledClassesByUserId(id: string) {
     "use server";
+    if (!id) return null;
     if (
       session &&
       (session.user.role === "teacher" || session.user.role === "student")

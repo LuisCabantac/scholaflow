@@ -7,24 +7,13 @@ import ReactLinkify from "react-linkify";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
-import { formatMessageDate, getFileExtension } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { Chat, Session } from "@/lib/schema";
 import { addMessageToChat } from "@/lib/classroom-actions";
+import { formatMessageDate, getFileExtension } from "@/lib/utils";
 
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-
-export interface IChat {
-  id: string;
-  author: string;
-  authorName: string;
-  authorAvatar: string;
-  message: string;
-  classroomId: string;
-  attachment: string[];
-  created_at: string;
-}
 
 const imageExtensions: string[] = [
   "jpg",
@@ -44,8 +33,8 @@ export default function ClassChatSection({
   onGetAllMessages,
 }: {
   classId: string;
-  session: ISession;
-  onGetAllMessages: (classId: string) => Promise<IChat[] | null>;
+  session: Session;
+  onGetAllMessages: (classId: string) => Promise<Chat[] | null>;
 }) {
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
@@ -132,10 +121,10 @@ export default function ClassChatSection({
 
   useEffect(() => {
     const channel = supabase
-      .channel("chat-update")
+      .channel("chat-db-changes")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "chat" },
+        { event: "INSERT", schema: "public", table: "chat" },
         () => refetch(),
       )
       .subscribe();
@@ -206,86 +195,86 @@ export default function ClassChatSection({
       </div>
       <div className="flex w-full flex-col rounded-md md:border md:border-[#dddfe6] md:bg-[#f3f6ff] md:p-4">
         <div className="relative pb-16">
-          <ul className="grid h-[75dvh] items-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
+          <ul className="flex h-[75dvh] flex-col justify-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
-              <>
-                <li className="justify-self-end" role="status">
+              <div className="flex min-h-full flex-col justify-end">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-56 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-end" role="status">
+                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-                <li className="justify-self-start" role="status">
+                <li className="self-start" role="status">
                   <span className="sr-only">Loading…</span>
                   <div className="h-4 w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
                 </li>
-              </>
+              </div>
             )}
             {messages?.length && !messagesIsPending ? (
               messages.map((message, index) => {
                 const showAvatar =
                   index === messages.length - 1 ||
-                  message.author !== messages[index + 1].author;
+                  message.userId !== messages[index + 1].userId;
 
                 const messageMargin =
-                  message.author !== messages[index - 1]?.author ? "mt-4" : "";
+                  message.userId !== messages[index - 1]?.userId
+                    ? "mt-4 mb-2"
+                    : "";
 
                 return (
                   <li
                     key={message.id}
                     className={`${messageMargin} ${
-                      message.author === session.id
-                        ? "justify-self-end"
-                        : "justify-self-start"
+                      message.userId === session.id ? "self-end" : "self-start"
                     }`}
                   >
                     <div className="flex items-end justify-end gap-2">
-                      {message.author !== session.id && showAvatar ? (
+                      {message.userId !== session.id && showAvatar ? (
                         <Image
-                          src={message.authorAvatar}
-                          alt={`${message.authorName}'s avatar`}
+                          src={message.userImage}
+                          alt={`${message.userName}'s avatar`}
                           width={32}
                           height={32}
                           className="mb-1 h-8 w-8 flex-shrink-0 rounded-full object-contain"
                         />
-                      ) : message.author !== session.id && !showAvatar ? (
+                      ) : message.userId !== session.id && !showAvatar ? (
                         <div className="mb-1 h-8 w-8 flex-shrink-0 rounded-full"></div>
                       ) : null}
                       <div>
-                        {message.author !== session.id &&
-                          message.author !== messages[index - 1]?.author && (
+                        {message.userId !== session.id &&
+                          message.userId !== messages[index - 1]?.userId && (
                             <p className="mb-1 text-xs font-semibold">
-                              {message.authorName}
+                              {message.userName}
                             </p>
                           )}
                         {message.message && (
@@ -293,21 +282,21 @@ export default function ClassChatSection({
                             componentDecorator={captionLinksDecorator}
                           >
                             <div
-                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.author === session.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
+                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.userId === session.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
                             >
                               <p className={`max-w-full whitespace-pre-line`}>
                                 {message.message}
                               </p>
                               <p
-                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.id === message.author ? "text-left" : "text-right"}`}
+                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.id === message.userId ? "text-left" : "text-right"}`}
                               >
-                                {formatMessageDate(message.created_at)}
+                                {formatMessageDate(message.createdAt)}
                               </p>
                             </div>
                           </ReactLinkify>
                         )}
-                        {message.attachment.length
-                          ? message.attachment.map((attachment) => {
+                        {message.attachments.length
+                          ? message.attachments.map((attachment) => {
                               if (
                                 imageExtensions.includes(
                                   getFileExtension(attachment),
@@ -431,6 +420,7 @@ export default function ClassChatSection({
                     type="file"
                     multiple
                     className="input__file hidden disabled:cursor-not-allowed"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
                     disabled={addMessageIsPending}
                     onChange={(event) => {
                       handleAttachmentNameChange(event);

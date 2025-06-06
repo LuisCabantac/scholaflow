@@ -1,18 +1,12 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { Classroom, ClassTopic } from "@/lib/schema";
 import { createTopic, updateTopic } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
-import { IClass } from "@/components/ClassroomSection";
-import { useQueryClient } from "@tanstack/react-query";
-
-export interface ITopic {
-  topicId: string;
-  topicName: string;
-  classroomId: string;
-}
 
 export default function TopicDialog({
   type,
@@ -22,8 +16,8 @@ export default function TopicDialog({
   onSetShowTopicDialog,
 }: {
   type: "edit" | "create";
-  topic?: ITopic;
-  classroom: IClass;
+  topic?: ClassTopic;
+  classroom: Classroom;
   onToggleShowTopic: () => void;
   onSetShowTopicDialog: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -44,7 +38,7 @@ export default function TopicDialog({
       toast.success(message);
       onToggleShowTopic();
       queryClient.invalidateQueries({
-        queryKey: [`topics--${classroom.classroomId}`],
+        queryKey: [`topics--${classroom.id}`],
       });
     } else {
       setIsLoading(false);
@@ -80,22 +74,17 @@ export default function TopicDialog({
             <input
               type="text"
               name="classroomId"
-              defaultValue={classroom.classroomId}
+              defaultValue={classroom.id}
               hidden
             />
-            <input
-              type="text"
-              name="topicId"
-              defaultValue={topic?.topicId}
-              hidden
-            />
+            <input type="text" name="topicId" defaultValue={topic?.id} hidden />
             <input
               disabled={isLoading}
               required
               type="text"
               name="topicName"
               className="focus:outline-t-2 w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
-              defaultValue={topic?.topicName}
+              defaultValue={topic?.name}
               placeholder="Enter the topic name here..."
             />
             <div className="flex items-center justify-end gap-2">

@@ -1,21 +1,9 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/drizzle/index";
+import { betterAuth } from "better-auth";
 import { schema } from "@/drizzle/schema";
-import { inferAdditionalFields } from "better-auth/client/plugins";
 import { nextCookies } from "better-auth/next-js";
-
-export interface ISession {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null | undefined | undefined;
-  role: string;
-  schoolName?: string | null | undefined;
-}
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

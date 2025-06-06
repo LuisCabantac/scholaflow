@@ -27,6 +27,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 - [Drizzle ORM](https://orm.drizzle.team/)
 - [Better Auth](https://www.better-auth.com/)
 - [TanStack Query](https://tanstack.com/query/latest)
+- [Zod](https://zod.dev/)
 - [Date-fns](https://date-fns.org/)
 - [React Hot Toast](https://react-hot-toast.com/)
 - [React Linkify](https://www.npmjs.com/package/react-linkify)

@@ -1,12 +1,15 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
+import { db } from "@/drizzle";
 import { auth } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
-import { getNoteByNoteIdSession } from "@/lib/data-service";
+import { note } from "@/drizzle/schema";
+import { getNoteByNoteIdSession } from "@/lib/notes-service";
+import { createNoteSchema, editNoteSchema } from "@/lib/schema";
 import { arraysAreEqual, extractNoteFilePath } from "@/lib/utils";
 import {
   deleteFilesFromBucket,
@@ -44,21 +47,23 @@ export async function createNote(
     : [];
 
   const newNote = {
-    author: session.user.id,
+    userId: session.user.id,
     title: formData.get("title"),
-    description: formData.get("description"),
-    attachment: noteAttachments,
+    content: formData.get("description"),
+    attachments: noteAttachments,
     isPinned,
+    updatedAt: null,
   };
 
-  const { error } = await supabase.from("notes").insert([newNote]);
+  const result = createNoteSchema.safeParse(newNote);
 
-  if (error) {
+  if (result.error)
     return {
       success: false,
       message: "Failed to create note. Please try again.",
     };
-  }
+
+  await db.insert(note).values(result.data);
 
   revalidatePath(`/notes`);
 
@@ -89,7 +94,7 @@ export async function updateNote(
       message: "Note doesn't exist.",
     };
 
-  if (currentNote.author !== session.user.id)
+  if (currentNote.userId !== session.user.id)
     return {
       success: false,
       message: "Only the author who created this note can edit this.",
@@ -101,12 +106,12 @@ export async function updateNote(
 
   if (
     newTitle !== currentNote.title ||
-    newDescription !== currentNote.description ||
+    newDescription !== currentNote.content ||
     isPinned !== currentNote.isPinned ||
     newNoteAttachments.length ||
-    arraysAreEqual(curAttachments, currentNote.attachment) === false
+    arraysAreEqual(curAttachments, currentNote.attachments ?? []) === false
   ) {
-    const removedAttachments = currentNote.attachment.filter(
+    const removedAttachments = currentNote.attachments.filter(
       (attachment) => !curAttachments.includes(attachment),
     );
 
@@ -135,22 +140,22 @@ export async function updateNote(
 
     const updatedNote = {
       title: formData.get("title"),
-      description: formData.get("description"),
-      attachment: noteAttachments.concat(curAttachments),
+      content: formData.get("description"),
+      attachments: noteAttachments.concat(curAttachments),
       isPinned,
+      updatedAt: new Date(),
     };
 
-    const { error } = await supabase
-      .from("notes")
-      .update([updatedNote])
-      .eq("id", noteId);
+    const result = editNoteSchema.safeParse(updatedNote);
 
-    if (error) {
+    if (result.error) {
       return {
         success: false,
         message: "Failed to edit note. Please try again.",
       };
     }
+
+    await db.update(note).set(result.data).where(eq(note.id, noteId));
 
     revalidatePath(`/notes`);
 
@@ -172,20 +177,18 @@ export async function deleteNote(noteId: string) {
 
   if (!session) return redirect("/signin");
 
-  const note = await getNoteByNoteIdSession(noteId);
+  const currentNote = await getNoteByNoteIdSession(noteId);
 
-  if (!note) throw new Error("Note doesn't exist.");
+  if (!currentNote) throw new Error("Note doesn't exist.");
 
-  if (note.attachment.length) {
-    const noteAttachmentsFilePath = note.attachment.map((file) =>
+  if (currentNote.attachments.length) {
+    const noteAttachmentsFilePath = currentNote.attachments.map((file) =>
       extractNoteFilePath(file),
     );
     await deleteFilesFromBucket("notes", noteAttachmentsFilePath);
   }
 
-  const { error } = await supabase.from("notes").delete().eq("id", noteId);
+  await db.delete(note).where(eq(note.id, noteId));
 
   revalidatePath(`/notes`);
-
-  if (error) throw new Error(error.message);
 }

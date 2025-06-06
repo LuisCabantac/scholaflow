@@ -4,9 +4,8 @@ import toast from "react-hot-toast";
 import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import { Note, Session } from "@/lib/schema";
 import { deleteNote } from "@/lib/notes-actions";
-import { INotes } from "@/app/(main)/notes/page";
 
 import Button from "@/components/Button";
 import NoteForm from "@/components/NoteForm";
@@ -17,8 +16,8 @@ export default function NotesSection({
   session,
   onGetNotes,
 }: {
-  session: ISession;
-  onGetNotes: (query: string) => Promise<INotes[] | null>;
+  session: Session;
+  onGetNotes: (query: string) => Promise<Note[] | null>;
 }) {
   const queryClient = useQueryClient();
   const [showNotesForm, setShowNotesForm] = useState(false);
@@ -132,7 +131,7 @@ export default function NotesSection({
               ?.filter((note) => note.isPinned)
               .map((note) => (
                 <NoteCard
-                  key={note.created_at}
+                  key={note.id}
                   note={note}
                   session={session}
                   onDeleteNote={handleDeleteNote}
@@ -153,7 +152,7 @@ export default function NotesSection({
               ?.filter((note) => !note.isPinned)
               .map((note) => (
                 <NoteCard
-                  key={note.created_at}
+                  key={note.id}
                   note={note}
                   session={session}
                   onDeleteNote={handleDeleteNote}

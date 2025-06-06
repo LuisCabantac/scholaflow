@@ -3,15 +3,15 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { deleteClass } from "@/lib/classroom-actions";
+import { getAllCommentsByStreamId } from "@/lib/comment-service";
+import { getAllClassStreamsByClassId } from "@/lib/stream-service";
+import { getAllClassTopicsByClassId } from "@/lib/class-topic-service";
 import {
   getClassByClassId,
-  getAllCommentsByStreamId,
-  getAllClassStreamsByClassId,
   getAllEnrolledClassesByClassId,
   getEnrolledClassByClassAndSessionId,
-  getAllClassTopicsByClassId,
-} from "@/lib/data-service";
-import { deleteClass } from "@/lib/classroom-actions";
+} from "@/lib/classroom-service";
 
 import StreamsSection from "@/components/StreamsSection";
 
@@ -25,49 +25,9 @@ export async function generateMetadata({
   const classroom = await getClassByClassId(classId);
 
   return {
-    title: classroom?.className,
-    description:
-      classroom?.classDescription || `${classroom?.className} class.`,
+    title: classroom?.name,
+    description: classroom?.description || `${classroom?.name} class.`,
   };
-}
-
-export interface IStream {
-  id: string;
-  author: string;
-  authorName: string;
-  avatar: string;
-  caption: string;
-  announceTo: string[];
-  attachment: string[];
-  links: string[];
-  announceToAll: boolean;
-  classroomId: string;
-  classroomName: string;
-  created_at: string;
-  updatedPost: boolean;
-  type: "stream" | "assignment" | "quiz" | "question" | "material";
-  scheduledAt: string | null;
-  topicId: string | null;
-  topicName: string | null;
-  title: string;
-  dueDate: string | null;
-  points: number | null;
-  acceptingSubmissions: boolean;
-  closeSubmissionsAfterDueDate: boolean;
-}
-
-export interface IStreamComment {
-  id: string;
-  streamId: string;
-  classroomId: string;
-  comment: string;
-  author: string;
-  authorName: string;
-  authorAvatar: string;
-  created_at: string;
-  updatedComment: boolean;
-  toUserId: string;
-  attachment: string[];
 }
 
 export default async function Page({
@@ -80,6 +40,8 @@ export default async function Page({
     headers: await headers(),
   });
 
+  if (!classId) return redirect("/classroom");
+
   if (!session) return redirect("/signin");
 
   if (session.user.role === "admin") return redirect("/classroom");
@@ -89,7 +51,8 @@ export default async function Page({
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
-    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+    (await getEnrolledClassByClassAndSessionId(session.user.id, classId)) !==
+    null;
 
   if (!isTeacher && !isEnrolled) return redirect("/classroom");
 

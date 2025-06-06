@@ -4,17 +4,13 @@ import Link from "next/link";
 
 import { useNav } from "@/contexts/NavContext";
 
-import { ISession } from "@/lib/auth";
+import { Session } from "@/lib/schema";
 
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import ProfileIcon from "@/components/ProfileIcon";
 
-export default function HomeNav({
-  session,
-}: {
-  session: ISession | undefined;
-}) {
+export default function HomeNav({ session }: { session: Session | undefined }) {
   const { isSticky } = useNav();
 
   return (

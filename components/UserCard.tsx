@@ -1,12 +1,12 @@
 "use client";
 
-import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { format } from "date-fns";
 import Image from "next/image";
+import { format } from "date-fns";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { Session } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import { IUser } from "@/components/UserManagementSection";
 import UserForm from "@/components/UserForm";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
@@ -18,7 +18,7 @@ export default function UserCard({
   onSetShowUserForm,
   deleteUserIsPending,
 }: {
-  userData: IUser;
+  userData: Session;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   onDeleteUser: (userId: string) => void;
   onSetShowUserForm: Dispatch<SetStateAction<boolean>>;
@@ -76,7 +76,7 @@ export default function UserCard({
         {format(new Date(userData.createdAt), "MMMM d, yyyy")}
       </td>
       <td data-cell="Verified:" className="px-4 py-2">
-        {userData.email_verified ? (
+        {userData.emailVerified ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -128,7 +128,7 @@ export default function UserCard({
             </svg>
           </button>
           <EllipsisPopover
-            showEdit={true}
+            showEdit={false}
             showDelete={true}
             deleteLabel="Remove user"
             showEllipsis={ellipsis}

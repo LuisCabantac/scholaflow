@@ -6,19 +6,22 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import {
+  Classroom,
+  ClassTopic,
+  EnrolledClass,
+  Session,
+  Stream,
+} from "@/lib/schema";
 import {
   createClassStreamPost,
   updateClassStreamPost,
 } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
-import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
 
-import { IClass } from "@/components/ClassroomSection";
 import Button from "@/components/Button";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
-import { ITopic } from "@/components/TopicDialog";
 
 export default function StreamForm({
   topics,
@@ -32,14 +35,14 @@ export default function StreamForm({
   onSetShowStreamForm,
   onToggleShowStreamForm,
 }: {
-  topics: ITopic[] | null;
+  topics: ClassTopic[] | null;
   search?: string;
-  stream?: IStream;
-  session: ISession;
+  stream?: Stream;
+  session: Session;
   formType: "create" | "edit";
-  classroom: IClass;
+  classroom: Classroom;
   streamType?: "stream" | "assignment" | "quiz" | "question" | "material";
-  enrolledClasses: IClass[] | null;
+  enrolledClasses: EnrolledClass[] | null;
   onSetShowStreamForm: Dispatch<SetStateAction<boolean>>;
   onToggleShowStreamForm: () => void;
 }) {
@@ -55,7 +58,7 @@ export default function StreamForm({
   const [showSelectUsersModal, setShowSelectUsersModal] = useState(false);
   const [showAddLinkModal, setShowAddLinkModal] = useState(false);
   const [currentAttachments, setCurrentAttachments] = useState<string[]>(
-    stream?.attachment ?? [],
+    stream?.attachments ?? [],
   );
   const [attachmentNames, setAttachmentNames] = useState<string[]>([]);
   const [newAttachments, setNewAttachments] = useState<File[]>([]);
@@ -110,9 +113,9 @@ export default function StreamForm({
       toast.success(message);
       queryClient.invalidateQueries({
         queryKey: [
-          `classworks--${classroom.classroomId}`,
-          `streams--${classroom.classroomId}`,
-          `topics--${classroom.classroomId}`,
+          `classworks--${classroom.id}`,
+          `streams--${classroom.id}`,
+          `topics--${classroom.id}`,
           search,
         ],
       });
@@ -261,7 +264,7 @@ export default function StreamForm({
               <input
                 type="text"
                 name="classroomId"
-                defaultValue={stream?.classroomId ?? classroom.classroomId}
+                defaultValue={stream?.classId ?? classroom.id}
                 hidden
               />
               <input
@@ -329,9 +332,6 @@ export default function StreamForm({
                                   <label className="flex items-center gap-2">
                                     <input
                                       type="checkbox"
-                                      defaultChecked={
-                                        stream?.announceToAll ?? true
-                                      }
                                       checked={
                                         enrolledClasses?.length ===
                                         audience.length
@@ -376,7 +376,7 @@ export default function StreamForm({
                                         }}
                                       />
                                       <Image
-                                        src={user.userAvatar}
+                                        src={user.userImage}
                                         alt={`${user.userName}'s image`}
                                         width={24}
                                         height={24}
@@ -434,7 +434,7 @@ export default function StreamForm({
                   className="h-[10rem] w-full resize-none rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                   placeholder="Add relevant details or instructions"
                   disabled={isLoading}
-                  defaultValue={stream?.caption ?? ""}
+                  defaultValue={stream?.content ?? ""}
                 ></textarea>
               </div>
               {session.id === classroom.teacherId &&
@@ -546,7 +546,6 @@ export default function StreamForm({
                             name="totalPoints"
                             className="cursor-pointer rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572]"
                             value={grade}
-                            defaultValue="100"
                             onChange={handleGradeChange}
                             onBlur={handleGradeBlur}
                             disabled={isLoading}
@@ -596,8 +595,8 @@ export default function StreamForm({
                       <option value="no-topic">No topic</option>
                       {topics?.length
                         ? topics.map((topic) => (
-                            <option key={topic.topicId} value={topic.topicId}>
-                              {topic.topicName}
+                            <option key={topic.id} value={topic.id}>
+                              {topic.name}
                             </option>
                           ))
                         : null}

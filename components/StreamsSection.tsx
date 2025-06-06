@@ -8,20 +8,21 @@ import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
-import { ISession } from "@/lib/auth";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { deleteClassStreamPost } from "@/lib/classroom-actions";
 import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+  Classroom,
+  ClassTopic,
+  EnrolledClass,
+  Session,
+  Stream,
+  StreamComment,
+} from "@/lib/schema";
 
-import { IClass } from "@/components/ClassroomSection";
 import ClassForm from "@/components/ClassForm";
 import StreamForm from "@/components/StreamForm";
 import NoClassStreams from "@/components/NoClassStreams";
 import StreamCard from "@/components/StreamCard";
-import { ITopic } from "@/components/TopicDialog";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -40,13 +41,13 @@ export default function StreamsSection({
   onGetAllComments,
   onGetAllClassStreams,
 }: {
-  topics: ITopic[] | null;
-  session: ISession;
-  classroom: IClass;
+  topics: ClassTopic[] | null;
+  session: Session;
+  classroom: Classroom;
   onDeleteClass: (classId: string) => Promise<void>;
-  enrolledClasses: IClass[] | null;
-  onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
-  onGetAllClassStreams: (classId: string) => Promise<IStream[] | null>;
+  enrolledClasses: EnrolledClass[] | null;
+  onGetAllComments: (streamId: string) => Promise<StreamComment[] | null>;
+  onGetAllClassStreams: (classId: string) => Promise<Stream[] | null>;
 }) {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -57,8 +58,8 @@ export default function StreamsSection({
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const { data: streams, isPending: streamsIsPending } = useQuery({
-    queryKey: [`streams--${classroom.classroomId}`],
-    queryFn: () => onGetAllClassStreams(classroom.classroomId),
+    queryKey: [`streams--${classroom.id}`],
+    queryFn: () => onGetAllClassStreams(classroom.id),
   });
 
   const { mutate: deleteStreamPost, isPending: deleteStreamPostIsPending } =
@@ -68,7 +69,7 @@ export default function StreamsSection({
         toast.success("Post has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [`streams--${classroom.classroomId}`],
+          queryKey: [`streams--${classroom.id}`],
         });
       },
       onError: (error) => {
@@ -88,7 +89,7 @@ export default function StreamsSection({
       ((stream.announceTo.includes(session.id) &&
         stream.announceToAll === false) ||
         stream.announceToAll ||
-        stream.author === session.id ||
+        stream.userId === session.id ||
         classroom.teacherId === session.id) &&
       ((stream.scheduledAt
         ? new Date(stream.scheduledAt) < new Date()
@@ -127,25 +128,25 @@ export default function StreamsSection({
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/classroom/class/${classroom.classroomId}`}
+            href={`/classroom/class/${classroom.id}`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Stream
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/classwork`}
+            href={`/classroom/class/${classroom.id}/classwork`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Classwork
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/people`}
+            href={`/classroom/class/${classroom.id}/people`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             People
           </Link>
           <Link
-            href={`/classroom/class/${classroom.classroomId}/chat`}
+            href={`/classroom/class/${classroom.id}/chat`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Chat
@@ -155,11 +156,11 @@ export default function StreamsSection({
       <div className="grid gap-2">
         <div
           className="relative h-[9rem] rounded-md shadow-sm md:h-[10rem]"
-          style={{ backgroundColor: classroom.classCardBackgroundColor }}
+          style={{ backgroundColor: classroom.cardBackground }}
         >
           <div className="absolute left-3 top-3 w-[80%] text-balance drop-shadow-sm md:left-4 md:top-4">
             <h5 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-[#eeeeee] md:text-2xl">
-              {classroom.className}
+              {classroom.name}
             </h5>
             <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-medium text-[#eeeeee]">
               {classroom.subject && `${classroom.subject} · `}
@@ -263,7 +264,7 @@ export default function StreamsSection({
             {(session.role === "teacher" &&
               session.id === classroom.teacherId) ||
             ((session.role === "student" || session.role === "teacher") &&
-              classroom.allowStudentsToPost) ? (
+              classroom.allowUsersToPost) ? (
               <div
                 className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
@@ -312,7 +313,7 @@ export default function StreamsSection({
                 >
                   <li>
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}?sort=all`}
+                      href={`/classroom/class/${classroom.id}?sort=all`}
                       scroll={false}
                       className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -338,7 +339,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}?sort=stream`}
+                      href={`/classroom/class/${classroom.id}?sort=stream`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -363,7 +364,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}?sort=assignment`}
+                      href={`/classroom/class/${classroom.id}?sort=assignment`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -388,7 +389,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}?sort=quiz`}
+                      href={`/classroom/class/${classroom.id}?sort=quiz`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -413,7 +414,7 @@ export default function StreamsSection({
                   </li>
                   <li>
                     <Link
-                      href={`/classroom/class/${classroom.classroomId}?sort=material`}
+                      href={`/classroom/class/${classroom.id}?sort=material`}
                       scroll={false}
                       className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
                     >
@@ -526,7 +527,7 @@ export default function StreamsSection({
                     ((stream.announceTo.includes(session.id) &&
                       stream.announceToAll === false) ||
                       stream.announceToAll ||
-                      stream.author === session.id ||
+                      stream.userId === session.id ||
                       classroom.teacherId === session.id) &&
                     ((stream.scheduledAt
                       ? new Date(stream.scheduledAt) < new Date()
@@ -550,7 +551,7 @@ export default function StreamsSection({
                     ((stream.announceTo.includes(session.id) &&
                       stream.announceToAll === false) ||
                       stream.announceToAll ||
-                      stream.author === session.id ||
+                      stream.userId === session.id ||
                       classroom.teacherId === session.id) &&
                     ((stream.scheduledAt
                       ? new Date(stream.scheduledAt) < new Date()
@@ -588,9 +589,7 @@ export default function StreamsSection({
                   Class code
                 </h4>
                 <div className="flex items-center justify-between">
-                  <p className="text-lg text-[#5c7cfa]">
-                    {classroom.classCode}
-                  </p>
+                  <p className="text-lg text-[#5c7cfa]">{classroom.code}</p>
                   <div className="flex gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -601,7 +600,7 @@ export default function StreamsSection({
                       className="size-5 cursor-pointer stroke-[#22317c]"
                       onClick={async () => {
                         await navigator.clipboard
-                          .writeText(classroom.classCode)
+                          .writeText(classroom.code)
                           .then(() => toast.success("Copied to clipboard!"));
                       }}
                     >
@@ -617,7 +616,7 @@ export default function StreamsSection({
             )}
             <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
               <Link
-                href={`/classroom/class/${classroom.classroomId}/classwork`}
+                href={`/classroom/class/${classroom.id}/classwork`}
                 className="text-base font-medium tracking-tight hover:underline"
               >
                 Recent work
@@ -625,7 +624,7 @@ export default function StreamsSection({
               {assignedClasswork ? (
                 <div className="mt-2">
                   <Link
-                    href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                    href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
                   >
                     <div className="flex gap-2">
@@ -650,11 +649,11 @@ export default function StreamsSection({
                         <div className="mt-1 grid gap-1 text-xs">
                           <p>
                             Posted{" "}
-                            {isToday(assignedClasswork.created_at)
+                            {isToday(assignedClasswork.createdAt)
                               ? "today"
-                              : isYesterday(assignedClasswork.created_at)
+                              : isYesterday(assignedClasswork.createdAt)
                                 ? "yesterday"
-                                : format(assignedClasswork.created_at, "MMM d")}
+                                : format(assignedClasswork.createdAt, "MMM d")}
                           </p>
                           {assignedClasswork.dueDate ? (
                             <p className="text-[#616572]">

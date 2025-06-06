@@ -3,11 +3,11 @@
 import toast from "react-hot-toast";
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 
+import { Session } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { createUser, updateUser } from "@/lib/user-management-actions";
 
 import Button from "@/components/Button";
-import { IUser } from "@/components/UserManagementSection";
 
 export type UserRoleType = "student" | "teacher";
 
@@ -19,7 +19,7 @@ export default function UserForm({
   onSetShowUserForm,
 }: {
   type: "edit" | "create";
-  user?: IUser;
+  user?: Session;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   onShowUserForm: () => void;
   onSetShowUserForm: Dispatch<SetStateAction<boolean>>;
@@ -27,8 +27,6 @@ export default function UserForm({
   const { useClickOutsideHandler } = useClickOutside();
   const userFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const [validPassword, setValidPassword] = useState(true);
-  // const [showPassword, setShowPassword] = useState(false);
   const [userRole, setUserRole] = useState<UserRoleType>(
     (user?.role as UserRoleType) ?? "student",
   );
@@ -69,11 +67,6 @@ export default function UserForm({
       onShowUserForm();
     } else toast.error(message);
   }
-
-  // function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
-  //   event.preventDefault();
-  //   setShowPassword(!showPassword);
-  // }
 
   useClickOutsideHandler(
     userFormModalWrapperRef,

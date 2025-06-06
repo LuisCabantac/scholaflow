@@ -2,15 +2,16 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import ReactLinkify from "react-linkify";
 
-import { ISession } from "@/lib/auth";
 import { formatDate } from "@/lib/utils";
-import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import {
+  Classroom,
+  Session,
+  Stream,
+  StreamComment,
+  StreamPrivateComment,
+} from "@/lib/schema";
 
-import { IClass } from "@/components/ClassroomSection";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
 
@@ -22,10 +23,10 @@ export default function CommentCard({
   onDeleteComment,
   deleteCommentIsPending,
 }: {
-  stream: IStream;
-  comment: IStreamComment;
-  session: ISession;
-  classroom: IClass;
+  stream: Stream;
+  comment: StreamComment | StreamPrivateComment;
+  session: Session;
+  classroom: Classroom;
   onDeleteComment: (
     classroomId: string,
     streamId: string,
@@ -93,27 +94,27 @@ export default function CommentCard({
     >
       <div className="grid grid-cols-[2rem_1fr] gap-2">
         <Image
-          src={comment.authorAvatar}
+          src={comment.userImage}
           width={32}
           height={32}
           className="h-8 w-8 rounded-full"
-          alt={`${comment.authorName}'s image`}
+          alt={`${comment.userName}'s image`}
         />
         <div>
           <div className="flex items-center gap-1">
-            <h6 className="text-sm font-medium">{comment.authorName}</h6>
+            <h6 className="text-sm font-medium">{comment.userName}</h6>
             <p className="pt-[1px] text-xs text-[#616572]">
-              {formatDate(comment.created_at)}
+              {formatDate(comment.createdAt)}
             </p>
           </div>
-          {comment.comment && (
+          {comment.content && (
             <ReactLinkify componentDecorator={captionLinksDecorator}>
-              <p className="mr-[1rem] whitespace-pre-line">{comment.comment}</p>
+              <p className="mr-[1rem] whitespace-pre-line">{comment.content}</p>
             </ReactLinkify>
           )}
-          {comment.attachment.length ? (
+          {comment.attachments.length ? (
             <ul className="mt-1 grid gap-1">
-              {comment.attachment.map((image) => (
+              {comment.attachments.map((image) => (
                 <li
                   key={image}
                   onClick={() => openZoomedImage(image)}
@@ -132,7 +133,7 @@ export default function CommentCard({
           ) : null}
         </div>
       </div>
-      {(session.id === comment.author ||
+      {(session.id === comment.userId ||
         session.id === classroom.teacherId) && (
         <div className="absolute right-0 top-0">
           <div className="relative" ref={commentEllipsisWrapperRef}>
@@ -155,7 +156,7 @@ export default function CommentCard({
             <EllipsisPopover
               showEdit={false}
               showDelete={
-                session.id === comment.author ||
+                session.id === comment.userId ||
                 session.id === classroom.teacherId
               }
               onToggleEllipsis={handleToggleCommentEllipsis}
@@ -169,7 +170,7 @@ export default function CommentCard({
                 isLoading={deleteCommentIsPending}
                 handleCancel={handleToggleShowCommentConfirmation}
                 handleAction={() => {
-                  onDeleteComment(classroom.classroomId, stream.id, comment.id);
+                  onDeleteComment(classroom.id, stream.id, comment.id);
                   handleToggleShowCommentConfirmation();
                 }}
               >

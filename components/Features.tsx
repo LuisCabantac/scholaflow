@@ -75,7 +75,7 @@ export default function Features({
                   src={commentAvatar2}
                   width={24}
                   height={24}
-                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                   alt="comment 2 avatar"
                 />
                 <div>
@@ -95,7 +95,7 @@ export default function Features({
                   src={commentAvatar}
                   width={24}
                   height={24}
-                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                   alt="comment 1 avatar"
                 />
                 <div>
@@ -117,7 +117,7 @@ export default function Features({
                   src={commentAvatar3}
                   width={24}
                   height={24}
-                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                   alt="comment 3 avatar"
                 />
                 <div>
@@ -157,7 +157,7 @@ export default function Features({
                     src={commentAvatar4}
                     width={24}
                     height={24}
-                    className="h-6 w-6 flex-shrink-0 rounded-full"
+                    className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                     alt="comment 1 avatar"
                   />
                   <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
@@ -176,7 +176,7 @@ export default function Features({
                     src={commentAvatar3}
                     width={24}
                     height={24}
-                    className="h-6 w-6 flex-shrink-0 rounded-full"
+                    className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                     alt="comment 3 avatar"
                   />
                   <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
@@ -240,7 +240,7 @@ export default function Features({
                       src={commentAvatar4}
                       width={24}
                       height={24}
-                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                       alt="comment 1 avatar"
                     />
                     <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
@@ -258,7 +258,7 @@ export default function Features({
                       src={commentAvatar2}
                       width={24}
                       height={24}
-                      className="h-6 w-6 flex-shrink-0 rounded-full"
+                      className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                       alt="comment 2 avatar h-6 w-6 flex-shrink-0"
                     />
                     <p className="rounded-md border border-[#dddfe6] px-2 py-1 text-xs">
@@ -373,7 +373,7 @@ export default function Features({
                   src={commentAvatar5}
                   width={24}
                   height={24}
-                  className="h-6 w-6 flex-shrink-0 rounded-full"
+                  className="h-6 w-6 flex-shrink-0 select-none rounded-full"
                   alt="comment 5 avatar"
                 />
                 <p>Share with your class...</p>

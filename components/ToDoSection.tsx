@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { format, isThisYear, isToday, isYesterday } from "date-fns";
-import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
-import { ISession } from "@/lib/auth";
-import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
-import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
+import { Classwork, Session, Stream } from "@/lib/schema";
+
 import noAssigned from "@/public/app/no_assigned.svg";
 import noMissing from "@/public/app/no_missing.svg";
 import noDone from "@/public/app/no_done.svg";
@@ -18,11 +17,11 @@ export default function ToDoSection({
   onGetAllClassworks,
   onGetAllEnrolledClassesClassworks,
 }: {
-  session: ISession;
-  onGetAllClassworks: (userId: string) => Promise<IClasswork[] | null>;
+  session: Session;
+  onGetAllClassworks: (userId: string) => Promise<Classwork[] | null>;
   onGetAllEnrolledClassesClassworks: (
     userId: string,
-  ) => Promise<IStream[] | null>;
+  ) => Promise<Stream[] | null>;
 }) {
   const searchParams = useSearchParams();
 
@@ -53,8 +52,8 @@ export default function ToDoSection({
           : true),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -77,8 +76,8 @@ export default function ToDoSection({
           : true),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.created_at);
-      const dateB = new Date(b.created_at);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -89,12 +88,12 @@ export default function ToDoSection({
       (classwork) =>
         (classwork.isTurnedIn || classwork.isGraded) &&
         enrolledClassworks
-          ?.map((enrolledClasswork) => enrolledClasswork.classroomId)
-          .includes(classwork.classroomId),
+          ?.map((enrolledClasswork) => enrolledClasswork.classId)
+          .includes(classwork.classId),
     )
     .sort((a, b) => {
-      const dateA = new Date(a.turnedInDate);
-      const dateB = new Date(b.turnedInDate);
+      const dateA = new Date(a.turnedInDate ?? 0);
+      const dateB = new Date(b.turnedInDate ?? 0);
       dateA.setHours(0, 0, 0, 0);
       dateB.setHours(0, 0, 0, 0);
       return dateB.getTime() - dateA.getTime();
@@ -130,7 +129,7 @@ export default function ToDoSection({
               return (
                 <li key={assignedClasswork.id}>
                   <Link
-                    href={`/classroom/class/${assignedClasswork.classroomId}/stream/${assignedClasswork.id}`}
+                    href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
@@ -152,15 +151,15 @@ export default function ToDoSection({
                         <p className="underline__text font-medium">
                           {assignedClasswork.title}
                         </p>
-                        <p>{assignedClasswork.classroomName}</p>
+                        <p>{assignedClasswork.className}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
                             Posted{" "}
-                            {isToday(assignedClasswork.created_at)
+                            {isToday(assignedClasswork.createdAt)
                               ? "today"
-                              : isYesterday(assignedClasswork.created_at)
+                              : isYesterday(assignedClasswork.createdAt)
                                 ? "yesterday"
-                                : format(assignedClasswork.created_at, "MMM d")}
+                                : format(assignedClasswork.createdAt, "MMM d")}
                           </p>
                           {assignedClasswork.dueDate ? (
                             <p className="text-[#616572] md:hidden">
@@ -201,7 +200,7 @@ export default function ToDoSection({
               return (
                 <li key={missingClasswork.id}>
                   <Link
-                    href={`/classroom/class/${missingClasswork.classroomId}/stream/${missingClasswork.id}`}
+                    href={`/classroom/class/${missingClasswork.classId}/stream/${missingClasswork.id}`}
                     className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
@@ -223,15 +222,15 @@ export default function ToDoSection({
                         <p className="underline__text font-medium">
                           {missingClasswork.title}
                         </p>
-                        <p className="">{missingClasswork.classroomName}</p>
+                        <p className="">{missingClasswork.className}</p>
                         <div className="mt-2 grid gap-1 text-xs">
                           <p>
                             Posted{" "}
-                            {isToday(missingClasswork.created_at)
+                            {isToday(missingClasswork.createdAt)
                               ? "today"
-                              : isYesterday(missingClasswork.created_at)
+                              : isYesterday(missingClasswork.createdAt)
                                 ? "yesterday"
-                                : format(missingClasswork.created_at, "MMM d")}
+                                : format(missingClasswork.createdAt, "MMM d")}
                           </p>
                           {missingClasswork.dueDate && (
                             <p className="text-[#f03e3e] md:hidden">
@@ -263,7 +262,7 @@ export default function ToDoSection({
           ? doneClassworks.map((doneClasswork) => (
               <li key={doneClasswork.id}>
                 <Link
-                  href={`/classroom/class/${doneClasswork.classroomId}/stream/${doneClasswork.streamId}`}
+                  href={`/classroom/class/${doneClasswork.classId}/stream/${doneClasswork.streamId}`}
                   className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 >
                   <div className="flex gap-2">
@@ -283,21 +282,21 @@ export default function ToDoSection({
                     </svg>
                     <div>
                       <p className="underline__text font-medium">
-                        {doneClasswork.classworkTitle}
+                        {doneClasswork.title}
                       </p>
-                      <p>{doneClasswork.classroomName}</p>
+                      <p>{doneClasswork.className}</p>
                       <div className="mt-2 grid gap-1 text-xs">
                         <p>
                           Posted{" "}
-                          {isToday(doneClasswork.streamCreated)
+                          {isToday(doneClasswork.streamCreatedAt)
                             ? "today"
-                            : isYesterday(doneClasswork.streamCreated)
+                            : isYesterday(doneClasswork.streamCreatedAt)
                               ? "yesterday"
-                              : format(doneClasswork.streamCreated, "MMM d")}
+                              : format(doneClasswork.streamCreatedAt, "MMM d")}
                         </p>
                         <p className="md:hidden">
                           {doneClasswork.isGraded && doneClasswork.isTurnedIn
-                            ? doneClasswork.userPoints
+                            ? doneClasswork.points
                             : doneClasswork.isTurnedIn
                               ? "Turned in"
                               : ""}
@@ -307,7 +306,7 @@ export default function ToDoSection({
                   </div>
                   <p className="hidden md:block">
                     {doneClasswork.isGraded && doneClasswork.isTurnedIn
-                      ? doneClasswork.userPoints
+                      ? doneClasswork.points
                       : doneClasswork.isTurnedIn
                         ? "Turned in"
                         : ""}

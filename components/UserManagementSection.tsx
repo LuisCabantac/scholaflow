@@ -4,23 +4,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import UserLists from "@/components/UserLists";
-import Button from "@/components/Button";
-import UserListLoading from "@/components/UserListsLoading";
-import UserNotFound from "@/components/UserNotFound";
-import UserForm from "@/components/UserForm";
+import { Session } from "@/lib/schema";
 
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  email_verified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null | undefined | undefined;
-  role: string;
-  schoolName?: string | null | undefined;
-}
+import UserForm from "@/components/UserForm";
+import UserLists from "@/components/UserLists";
+import UserNotFound from "@/components/UserNotFound";
+import UserListLoading from "@/components/UserListsLoading";
 
 export default function UserManagementSection({
   onGetUsers,
@@ -31,7 +20,7 @@ export default function UserManagementSection({
     name: string,
   ) => Promise<
     | { success: boolean; message: string; data: null }
-    | { success: boolean; message: string; data: IUser[] }
+    | { success: boolean; message: string; data: Session[] }
   >;
   onDeleteUser: (userId: string) => Promise<void>;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
@@ -73,9 +62,6 @@ export default function UserManagementSection({
           placeholder="Search..."
           className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
         />
-        <Button type="primary" onClick={handleToggleShowUserForm}>
-          Add user
-        </Button>
       </div>
       {(!users?.data || users?.data.length === 0) && !usersIsPending ? (
         <UserNotFound />

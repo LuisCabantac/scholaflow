@@ -7,26 +7,27 @@ import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
 import { capitalizeFirstLetter } from "@/lib/utils";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
   addGradeClasswork,
   addPrivateComment,
   deletePrivateComment,
 } from "@/lib/classroom-actions";
-import { IClasswork } from "@/app/(main)/classroom/class/[classId]/classwork/page";
 import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+  Classroom,
+  Classwork,
+  EnrolledClass,
+  Session,
+  Stream,
+  StreamPrivateComment,
+} from "@/lib/schema";
 
 import Button from "@/components/Button";
-import { IClass } from "@/components/ClassroomSection";
-import AttachmentLinkCard from "@/components/AttachmentLinkCard";
-import AttachmentFileCard from "@/components/AttachmentFileCard";
 import CommentCard from "@/components/CommentCard";
 import CommentsLoading from "@/components/CommentsLoading";
+import AttachmentLinkCard from "@/components/AttachmentLinkCard";
+import AttachmentFileCard from "@/components/AttachmentFileCard";
 
 export default function StreamSubmissionsSection({
   stream,
@@ -37,22 +38,22 @@ export default function StreamSubmissionsSection({
   onGetAllAssignedClassworks,
   onGetAssignedUserClasswork,
 }: {
-  stream: IStream;
-  session: ISession;
-  classroom: IClass;
-  onGetAllEnrolledUsers: (classId: string) => Promise<IClass[] | null>;
+  stream: Stream;
+  session: Session;
+  classroom: Classroom;
+  onGetAllEnrolledUsers: (classId: string) => Promise<EnrolledClass[] | null>;
   onGetAllPrivateComments: (
     streamId: string,
-  ) => Promise<IStreamComment[] | null>;
+  ) => Promise<StreamPrivateComment[] | null>;
   onGetAllAssignedClassworks: (
     classId: string,
     streamId: string,
-  ) => Promise<IClasswork[] | null>;
+  ) => Promise<Classwork[] | null>;
   onGetAssignedUserClasswork: (
     userId: string,
     classId: string,
     streamId: string,
-  ) => Promise<IClasswork | null>;
+  ) => Promise<Classwork | null>;
 }) {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -72,17 +73,17 @@ export default function StreamSubmissionsSection({
   const { data: classwork } = useQuery({
     queryKey: [userId],
     queryFn: () =>
-      onGetAssignedUserClasswork(userId ?? "", stream.classroomId, stream.id),
+      onGetAssignedUserClasswork(userId ?? "", stream.classId, stream.id),
   });
 
   const { data: enrolledUsers } = useQuery({
-    queryKey: [classroom.classroomId],
-    queryFn: () => onGetAllEnrolledUsers(classroom.classroomId),
+    queryKey: [classroom.id],
+    queryFn: () => onGetAllEnrolledUsers(classroom.id),
   });
 
   const { data: turnedInUsers } = useQuery({
-    queryKey: [classroom.classroomId, stream.id],
-    queryFn: () => onGetAllAssignedClassworks(classroom.classroomId, stream.id),
+    queryKey: [classroom.id, stream.id],
+    queryFn: () => onGetAllAssignedClassworks(classroom.id, stream.id),
   });
 
   const [grade, setGrade] = useState("");
@@ -237,13 +238,13 @@ export default function StreamSubmissionsSection({
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
           <Link
-            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}`}
+            href={`/classroom/class/${stream.classId}/stream/${stream.id}`}
             className="px-3 py-2 text-[#929bb4] transition-all"
           >
             Instructions
           </Link>
           <Link
-            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions`}
+            href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions`}
             className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
           >
             Submissions
@@ -299,16 +300,16 @@ export default function StreamSubmissionsSection({
                         key={user.id}
                         onClick={() => {
                           handleToggleExpandUserWork();
-                          setGrade(classwork?.userPoints ?? "");
+                          setGrade(String(classwork?.points) ?? "");
                         }}
                       >
                         <Link
-                          href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                          href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                           className="underline__container flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2">
                             <Image
-                              src={user.userAvatar}
+                              src={user.userImage}
                               alt={user.userName}
                               width={30}
                               height={30}
@@ -319,7 +320,7 @@ export default function StreamSubmissionsSection({
                           {stream.points && (
                             <p>
                               {stream.points && user.isGraded
-                                ? `${user.userPoints}/${stream.points}`
+                                ? `${user.points}/${stream.points}`
                                 : "Ungraded"}
                             </p>
                           )}
@@ -342,16 +343,16 @@ export default function StreamSubmissionsSection({
                           key={user.id}
                           onClick={() => {
                             handleToggleExpandUserWork();
-                            setGrade(classwork?.userPoints ?? "");
+                            setGrade(String(classwork?.points) ?? "");
                           }}
                         >
                           <Link
-                            href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                            href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                             className="underline__container flex items-center justify-between"
                           >
                             <div className="flex items-center gap-2">
                               <Image
-                                src={user.userAvatar}
+                                src={user.userImage}
                                 alt={user.userName}
                                 width={30}
                                 height={30}
@@ -395,16 +396,16 @@ export default function StreamSubmissionsSection({
                             key={user.id}
                             onClick={() => {
                               handleToggleExpandUserWork();
-                              setGrade(classwork?.userPoints ?? "");
+                              setGrade(String(classwork?.points) ?? "");
                             }}
                           >
                             <Link
-                              href={`/classroom/class/${stream.classroomId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
+                              href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
                               className="underline__container flex items-center justify-between"
                             >
                               <div className="flex items-center gap-2">
                                 <Image
-                                  src={user.userAvatar}
+                                  src={user.userImage}
                                   alt={user.userName}
                                   width={30}
                                   height={30}
@@ -519,7 +520,7 @@ export default function StreamSubmissionsSection({
                         <input
                           type="text"
                           name="classroomId"
-                          defaultValue={classroom.classroomId}
+                          defaultValue={classroom.id}
                           hidden
                         />
                         <input
@@ -584,16 +585,16 @@ export default function StreamSubmissionsSection({
                         <p className="text-lg font-medium">{works.userName}</p>
                         {stream.points && (
                           <p className="pr-6">
-                            {works.userPoints} / {stream.points}
+                            {works.points} / {stream.points}
                           </p>
                         )}
                       </div>
-                      {works.attachment.length || works.links.length ? (
+                      {works.attachments.length || works.links.length ? (
                         <div className="grid gap-2">
                           <label className="font-medium">Attachments</label>
                           <ul className="grid max-h-full gap-1 overflow-y-auto md:max-h-44">
-                            {works.attachment.length
-                              ? works.attachment.map((file, index) => (
+                            {works.attachments.length
+                              ? works.attachments.map((file, index) => (
                                   <AttachmentFileCard
                                     file={file}
                                     index={index}
@@ -644,7 +645,7 @@ export default function StreamSubmissionsSection({
                         <input
                           type="text"
                           name="classroomId"
-                          defaultValue={stream.classroomId}
+                          defaultValue={stream.classId}
                           hidden
                         />
                         <input
@@ -760,9 +761,9 @@ export default function StreamSubmissionsSection({
                     )}
                     {optimisticComments?.filter(
                       (comment) =>
-                        (comment.author === session.id &&
+                        (comment.userId === session.id &&
                           comment.toUserId === userId) ||
-                        (comment.author === userId &&
+                        (comment.userId === userId &&
                           comment.toUserId === session.id),
                     ).length ? (
                       <ul className="mt-1 grid max-h-[20rem] gap-2 overflow-y-auto">
@@ -770,9 +771,9 @@ export default function StreamSubmissionsSection({
                           optimisticComments
                             ?.filter(
                               (comment) =>
-                                (comment.author === session.id &&
+                                (comment.userId === session.id &&
                                   comment.toUserId === userId) ||
-                                (comment.author === userId &&
+                                (comment.userId === userId &&
                                   comment.toUserId === session.id),
                             )
                             .map((comment) => (
@@ -800,9 +801,9 @@ export default function StreamSubmissionsSection({
                       <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(
                         (comment) =>
-                          (comment.author === session.id &&
+                          (comment.userId === session.id &&
                             comment.toUserId === userId) ||
-                          (comment.author === userId &&
+                          (comment.userId === userId &&
                             comment.toUserId === session.id),
                       ).length ? (
                         <button
@@ -824,9 +825,9 @@ export default function StreamSubmissionsSection({
                     )}
                     {optimisticComments?.filter(
                       (comment) =>
-                        (comment.author === session.id &&
+                        (comment.userId === session.id &&
                           comment.toUserId === userId) ||
-                        (comment.author === userId &&
+                        (comment.userId === userId &&
                           comment.toUserId === session.id),
                     ).length ? (
                       <ul
@@ -836,9 +837,9 @@ export default function StreamSubmissionsSection({
                           optimisticComments
                             ?.filter(
                               (comment) =>
-                                (comment.author === session.id &&
+                                (comment.userId === session.id &&
                                   comment.toUserId === userId) ||
-                                (comment.author === userId &&
+                                (comment.userId === userId &&
                                   comment.toUserId === session.id),
                             )
                             .map((comment) => (
@@ -866,7 +867,7 @@ export default function StreamSubmissionsSection({
                     <input
                       type="text"
                       name="classroomId"
-                      defaultValue={stream.classroomId}
+                      defaultValue={stream.classId}
                       hidden
                     />
                     <input

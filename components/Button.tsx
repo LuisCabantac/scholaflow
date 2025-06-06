@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
+import React, { startTransition } from "react";
 
 import SpinnerMini from "@/components/SpinnerMini";
 
@@ -53,7 +53,11 @@ export default function Button({
   if (onClick)
     return (
       <button
-        onClick={onClick}
+        onClick={() => {
+          startTransition(() => {
+            onClick();
+          });
+        }}
         className={`${bg && type === "primary" ? `${bg} h-10 px-4 py-2 text-[#edf2ff]` : bg && type === "secondary" ? `${bg}` : `${type === "primary" ? primaryStyle : secondaryStyle}`} ${isLoading && "disabled:cursor-not-allowed"} flex h-10 items-center gap-1 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors disabled:cursor-not-allowed md:gap-2`}
         disabled={isLoading}
       >

@@ -11,7 +11,7 @@ export default function NotFound() {
           <Image
             src={pageNotFound}
             alt="page not found"
-            className="object-cover"
+            className="select-none object-cover"
           />
         </div>
         <p className="mb-2 text-center text-base font-medium">

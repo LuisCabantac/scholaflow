@@ -4,15 +4,17 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 
+import { getAllCommentsByStreamId } from "@/lib/comment-service";
+import { getAllClassTopicsByClassId } from "@/lib/class-topic-service";
 import {
-  getAllClassTopicsByClassId,
   getAllClassworkStreamsByClassId,
-  getAllCommentsByStreamId,
+  getClassworksByClassIdQuery,
+} from "@/lib/stream-service";
+import {
   getAllEnrolledClassesByClassId,
   getClassByClassId,
-  getClassworksByClassIdQuery,
   getEnrolledClassByClassAndSessionId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
 
 import ClassworksSection from "@/components/ClassworksSection";
 
@@ -26,29 +28,9 @@ export async function generateMetadata({
   const classroom = await getClassByClassId(classId);
 
   return {
-    title: `Classwork - ${classroom?.className}`,
-    description: `Access all classwork for ${classroom?.className}. View assignments, deadlines, and relevant materials. Stay organized and keep track of everything you need to succeed in this class.`,
+    title: `Classwork - ${classroom?.name}`,
+    description: `Access all classwork for ${classroom?.name}. View assignments, deadlines, and relevant materials. Stay organized and keep track of everything you need to succeed in this class.`,
   };
-}
-
-export interface IClasswork {
-  id: string;
-  userId: string;
-  userName: string;
-  streamId: string;
-  classroomId: string;
-  classroomName: string;
-  streamCreated: string;
-  classworkTitle: string;
-  attachment: string[];
-  title: string;
-  userPoints: string;
-  isReturned: boolean;
-  isTurnedIn: boolean;
-  isGraded: boolean;
-  links: string[];
-  userAvatar: string;
-  turnedInDate: string;
 }
 
 export default async function Page({
@@ -70,7 +52,8 @@ export default async function Page({
 
   const isTeacher = classroom.teacherId === session.user.id;
   const isEnrolled =
-    (await getEnrolledClassByClassAndSessionId(classId)) !== null;
+    (await getEnrolledClassByClassAndSessionId(session.user.id, classId)) !==
+    null;
 
   if (!isTeacher && !isEnrolled) return redirect("/classroom");
 

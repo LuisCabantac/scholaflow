@@ -1,8 +1,8 @@
 import { UseMutateFunction } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useOptimistic } from "react";
 
-import { IUser } from "@/components/UserManagementSection";
 import UserCard from "@/components/UserCard";
+import { Session } from "@/lib/schema";
 
 export default function UserLists({
   results,
@@ -13,7 +13,7 @@ export default function UserLists({
 }: {
   results:
     | { success: boolean; message: string; data: null }
-    | { success: boolean; message: string; data: IUser[] }
+    | { success: boolean; message: string; data: Session[] }
     | undefined;
   onCheckEmail: (formData: FormData) => Promise<boolean>;
   handleDeleteUser: UseMutateFunction<void, Error, string, unknown>;

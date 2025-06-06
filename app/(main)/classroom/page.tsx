@@ -3,16 +3,15 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-
+import { deleteClass } from "@/lib/classroom-actions";
+import { getAllClassworksByUserId } from "@/lib/classwork-service";
+import { getAllEnrolledClassesClassworks } from "@/lib/stream-service";
 import {
   getClassByClassCode,
   getAllClassesByTeacherId,
-  getEnrolledClassByClassAndSessionId,
   getAllEnrolledClassesByUserId,
-  getAllEnrolledClassesClassworks,
-  getAllClassworksByUserId,
-} from "@/lib/data-service";
-import { deleteClass } from "@/lib/classroom-actions";
+  getEnrolledClassByClassAndSessionId,
+} from "@/lib/classroom-service";
 
 import ClassroomSection from "@/components/ClassroomSection";
 
@@ -67,7 +66,10 @@ export default async function Page() {
       session &&
       (session.user.role === "teacher" || session.user.role === "student")
     ) {
-      const data = await getEnrolledClassByClassAndSessionId(classId);
+      const data = await getEnrolledClassByClassAndSessionId(
+        session.user.id,
+        classId,
+      );
       return data;
     } else return null;
   }

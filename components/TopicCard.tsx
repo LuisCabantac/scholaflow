@@ -3,18 +3,20 @@
 import { useRef, useState } from "react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
-  IStream,
-  IStreamComment,
-} from "@/app/(main)/classroom/class/[classId]/page";
+  Classroom,
+  ClassTopic,
+  EnrolledClass,
+  Session,
+  Stream,
+  StreamComment,
+} from "@/lib/schema";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import TopicDialog, { ITopic } from "@/components/TopicDialog";
 import StreamCard from "@/components/StreamCard";
-import { IClass } from "@/components/ClassroomSection";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import TopicDialog from "@/components/TopicDialog";
 import EllipsisPopover from "@/components/EllipsisPopover";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function TopicCard({
   topic,
@@ -29,14 +31,14 @@ export default function TopicCard({
   deleteTopicIsPending,
   deleteStreamPostIsPending,
 }: {
-  topic: ITopic;
-  topics: ITopic[] | null | undefined;
-  session: ISession;
-  classroom: IClass;
-  classworks: IStream[] | null | undefined;
+  topic: ClassTopic;
+  topics: ClassTopic[] | null;
+  session: Session;
+  classroom: Classroom;
+  classworks: Stream[] | null;
   onDeleteTopic: (topicId: string) => void;
-  enrolledClasses: IClass[] | null;
-  onGetAllComments: (streamId: string) => Promise<IStreamComment[] | null>;
+  enrolledClasses: EnrolledClass[] | null;
+  onGetAllComments: (streamId: string) => Promise<StreamComment[] | null>;
   onDeleteStreamPost: UseMutateFunction<undefined, Error, string, unknown>;
   deleteTopicIsPending: boolean;
   deleteStreamPostIsPending: boolean;
@@ -55,9 +57,9 @@ export default function TopicCard({
           ((stream.announceTo.includes(session.id) &&
             stream.announceToAll === false) ||
             stream.announceToAll ||
-            stream.author === session.id ||
+            stream.userId === session.id ||
             classroom.teacherId === session.id) &&
-          stream.topicId === topic.topicId,
+          stream.topicId === topic.id,
       ).length
     )
       setExpandTopic(!expandTopic);
@@ -95,9 +97,9 @@ export default function TopicCard({
               ((stream.announceTo.includes(session.id) &&
                 stream.announceToAll === false) ||
                 stream.announceToAll ||
-                stream.author === session.id ||
+                stream.userId === session.id ||
                 classroom.teacherId === session.id) &&
-              stream.topicId === topic.topicId,
+              stream.topicId === topic.id,
           ).length ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +116,7 @@ export default function TopicCard({
               />
             </svg>
           ) : null}
-          <h4 className="text-base">{topic.topicName}</h4>
+          <h4 className="text-base">{topic.name}</h4>
         </li>
         <li>
           <ul className="flex items-center">
@@ -153,7 +155,7 @@ export default function TopicCard({
                       handleCancel={handleToggleShowConfirmation}
                       handleAction={() => {
                         handleToggleShowConfirmation();
-                        onDeleteTopic(topic.topicId);
+                        onDeleteTopic(topic.id);
                       }}
                     >
                       Are you sure you want to delete this post?
@@ -182,9 +184,9 @@ export default function TopicCard({
                 ((stream.announceTo.includes(session.id) &&
                   stream.announceToAll === false) ||
                   stream.announceToAll ||
-                  stream.author === session.id ||
+                  stream.userId === session.id ||
                   classroom.teacherId === session.id) &&
-                stream.topicId === topic.topicId &&
+                stream.topicId === topic.id &&
                 ((stream.scheduledAt
                   ? new Date(stream.scheduledAt) < new Date()
                   : true) ||
@@ -193,7 +195,7 @@ export default function TopicCard({
             .map((stream) => (
               <StreamCard
                 key={stream.id}
-                topics={topics as ITopic[] | null}
+                topics={topics as ClassTopic[] | null}
                 stream={stream}
                 classroom={classroom}
                 session={session}

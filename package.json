@@ -25,7 +25,8 @@
     "react-dom": "19.0.0",
     "react-hot-toast": "^2.4.1",
     "react-linkify": "^1.0.0-alpha",
-    "uuid": "^11.0.2"
+    "uuid": "^11.0.2",
+    "zod": "^3.25.50"
   },
   "devDependencies": {
     "@types/node": "^20",

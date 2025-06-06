@@ -6,8 +6,34 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { format, parseISO, subHours } from "date-fns";
 
+import { db } from "@/drizzle";
+import { and, eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
+import {
+  chat,
+  classroom,
+  classTopic,
+  classwork,
+  enrolledClass,
+  stream,
+  streamComment,
+  streamPrivateComment,
+} from "@/drizzle/schema";
+import {
+  createChatSchema,
+  createClassroomSchema,
+  createClassTopicSchema,
+  createClassworkSchema,
+  createEnrolledClassSchema,
+  createStreamCommentSchema,
+  createStreamPrivateCommentSchema,
+  createStreamSchema,
+  editClassTopicSchema,
+  editStreamSchema,
+  Stream,
+} from "@/lib/schema";
+import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 import {
   arraysAreEqual,
   capitalizeFirstLetter,
@@ -18,34 +44,39 @@ import {
   generateClassCode,
 } from "@/lib/utils";
 import {
-  getAllClassStreamsByClassId,
-  getAllClassTopicsByClassId,
-  getAllClassworksByClassAndUserId,
-  getAllClassworksByStreamId,
-  getAllClassworkStreamsByTopicId,
-  getAllCommentsByStreamId,
-  getAllCommentsByUserId,
   getAllEnrolledClassesByClassAndSessionId,
   getAllEnrolledClassesByClassId,
-  getAllMessagesByClassId,
-  getAllMessagesByUserId,
-  getAllPrivateCommentsByStreamId,
-  getAllPrivateCommentsByUserId,
   getClassByClassId,
-  getClassStreamByStreamId,
-  getClassTopicByTopicId,
-  getClassworkByClassAndUserId,
   getEnrolledClassByClassAndSessionId,
   getEnrolledClassByEnrolledClassId,
   getEnrolledClassByUserAndClassId,
+} from "@/lib/classroom-service";
+import {
+  getAllClassStreamsByClassId,
+  getAllClassworkStreamsByTopicId,
+  getClassStreamByStreamId,
+} from "@/lib/stream-service";
+import {
+  getAllClassTopicsByClassId,
+  getClassTopicByTopicId,
+} from "@/lib/class-topic-service";
+import {
+  getAllMessagesByClassId,
+  getAllMessagesByUserId,
+} from "@/lib/message-service";
+import {
+  getAllCommentsByStreamId,
+  getAllCommentsByUserId,
+  getAllPrivateCommentsByStreamId,
+  getAllPrivateCommentsByUserId,
   getStreamCommentByCommentId,
   getStreamPrivateCommentByCommentId,
-  getUserByEmail,
-  getUserByUserId,
-} from "@/lib/data-service";
-import { IStream } from "@/app/(main)/classroom/class/[classId]/page";
-
-import { IClass } from "@/components/ClassroomSection";
+} from "@/lib/comment-service";
+import {
+  getAllClassworksByClassAndUserId,
+  getAllClassworksByStreamId,
+  getClassworkByClassAndUserId,
+} from "@/lib/classwork-service";
 
 export async function createClass(formData: FormData) {
   const session = await auth.api.getSession({
@@ -62,33 +93,39 @@ export async function createClass(formData: FormData) {
   }
 
   const newClass = {
-    teacherId: session.user.id,
-    teacherName: session.user.name,
-    teacherAvatar: session.user.image,
+    name: formData.get("className"),
     subject: formData.get("subject"),
-    className: formData.get("className"),
     section: formData.get("section"),
     room: formData.get("room"),
-    classCardBackgroundColor: formData.get("color"),
+    cardBackground: formData.get("color"),
     illustrationIndex: Math.floor(Math.random() * 5),
-    classCode: generateClassCode(),
+    code: generateClassCode(),
+    teacherId: session.user.id,
+    teacherName: session.user.name,
+    teacherImage: session.user.image,
   };
 
-  const { data, error } = await supabase
-    .from("classroom")
-    .insert([newClass])
-    .select();
+  const result = createClassroomSchema.safeParse(newClass);
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid class information provided. Please check all required fields and try again.",
+    };
   }
+
+  const [data] = await db
+    .insert(classroom)
+    .values(result.data)
+    .returning({ id: classroom.id });
 
   revalidatePath("/classroom");
 
   return {
     success: true,
     message: "Class created successfully!",
-    classUrl: `/classroom/class/${(data[0] as IClass).classroomId}`,
+    classUrl: `/classroom/class/${data.id}`,
   };
 }
 
@@ -126,40 +163,38 @@ export async function updateClass(
     };
   }
 
-  const newClassName = formData.get("className");
-  const newSubject = formData.get("subject");
-  const newSection = formData.get("section");
-  const newClassDescription = formData.get("classDescription");
+  const newClassName = formData.get("className") as string;
+  const newSubject = formData.get("subject") as string;
+  const newSection = formData.get("section") as string | null;
+  const newClassDescription = formData.get("classDescription") as string | null;
   const newAllowStudentsToComment =
     formData.get("allowStudentsToComment") === "true";
-  const newClassCardBackgroundColor = formData.get("color");
+  const newClassCardBackgroundColor = formData.get("color") as string;
   const newAllowStudentsToPost = formData.get("allowStudentsToPost") === "true";
 
   if (
     updateClassCode ||
-    currentClassroom.className !== newClassName ||
+    currentClassroom.name !== newClassName ||
     currentClassroom.subject !== newSubject ||
     currentClassroom.teacherName !== session.user.name ||
-    currentClassroom.teacherAvatar !== session.user.image ||
-    currentClassroom.classDescription !== newClassDescription ||
+    currentClassroom.teacherImage !== session.user.image ||
+    currentClassroom.description !== newClassDescription ||
     currentClassroom.section !== newSection ||
-    currentClassroom.classCardBackgroundColor !== newClassCardBackgroundColor ||
-    currentClassroom.allowStudentsToComment !== newAllowStudentsToComment ||
-    currentClassroom.allowStudentsToPost !== newAllowStudentsToPost
+    currentClassroom.cardBackground !== newClassCardBackgroundColor ||
+    currentClassroom.allowUsersToComment !== newAllowStudentsToComment ||
+    currentClassroom.allowUsersToPost !== newAllowStudentsToPost
   ) {
     const updatedClass = {
+      name: newClassName,
       subject: newSubject,
-      section: newSection,
-      className: newClassName,
+      section: newSection ?? "",
+      description: newClassDescription ?? "",
       teacherName: session.user.name,
-      teacherAvatar: session.user.image,
-      classDescription: newClassDescription,
-      allowStudentsToComment: newAllowStudentsToComment,
-      allowStudentsToPost: newAllowStudentsToPost,
-      classCardBackgroundColor: newClassCardBackgroundColor,
-      classCode: updateClassCode
-        ? generateClassCode()
-        : currentClassroom.classCode,
+      teacherImage: session.user.image as string,
+      allowUsersToComment: newAllowStudentsToComment,
+      allowUsersToPost: newAllowStudentsToPost,
+      cardBackground: newClassCardBackgroundColor,
+      code: updateClassCode ? generateClassCode() : currentClassroom.code,
     };
 
     const enrolledClasses = await getAllEnrolledClassesByClassId(classroomId);
@@ -168,25 +203,44 @@ export async function updateClass(
       for (const enrolledClass of enrolledClasses) {
         await updateEnrolledClass(enrolledClass.id, {
           teacherName: session.user.name,
-          teacherAvatar: session.user.image ?? "",
-          className: newClassName as string,
+          teacherImage: session.user.image ?? "",
+          name: newClassName as string,
           subject: newSubject as string,
           section: newSection as string,
-          classCardBackgroundColor: newClassCardBackgroundColor as string,
+          cardBackground: newClassCardBackgroundColor as string,
         });
       }
     }
 
-    const { error } = await supabase
-      .from("classroom")
-      .update([updatedClass])
-      .eq("classroomId", classroomId);
+    const result = createClassroomSchema.safeParse({
+      ...currentClassroom,
+      ...updateClass,
+    });
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (result.error) {
+      return {
+        success: false,
+        message:
+          "Invalid class information provided. Please check all required fields and try again.",
+      };
     }
 
-    revalidatePath(`/classroom/class/${currentClassroom.classroomId}`);
+    const [data] = await db
+      .update(classroom)
+      .set(updatedClass)
+      .where(eq(classroom.id, classroomId))
+      .returning();
+
+    if (!data) {
+      return {
+        success: false,
+        message:
+          "Failed to update class information. Please check your connection and try again, or contact support if the issue persists.",
+        classUrl: "",
+      };
+    }
+
+    revalidatePath(`/classroom/class/${currentClassroom.id}`);
     revalidatePath("/classroom");
 
     return {
@@ -205,12 +259,12 @@ export async function updateClass(
 async function updateEnrolledClass(
   enrolledClassId: string,
   updatedClass: {
-    teacherName: string | null;
-    teacherAvatar: string | null;
-    className: string | null;
+    teacherName: string;
+    teacherImage: string;
+    name: string;
+    section: string;
     subject: string | null;
-    section: string | null;
-    classCardBackgroundColor: string | null;
+    cardBackground: string;
   },
 ) {
   const session = await auth.api.getSession({
@@ -222,12 +276,14 @@ async function updateEnrolledClass(
   if (session.user.role !== "teacher")
     throw new Error("Only teachers can update the enrolled class information.");
 
-  const { error } = await supabase
-    .from("enrolledClass")
-    .update([updatedClass])
-    .eq("id", enrolledClassId);
+  const [data] = await db
+    .update(enrolledClass)
+    .set(updatedClass)
+    .where(eq(enrolledClass.id, enrolledClassId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data)
+    throw new Error("There was an error updating this enrolled class.");
 }
 
 export async function joinClass(classId: string) {
@@ -252,25 +308,37 @@ export async function joinClass(classId: string) {
       message: "This class doesn't exist",
     };
 
-  const newClass = {
+  const newEnrolledClass = {
+    classId: classroom.id,
     userId: session.user.id,
     userName: session.user.name,
-    userAvatar: session.user.image,
-    classroomId: classroom.classroomId,
+    userImage: session.user.image as string,
+    name: classroom.name,
     subject: classroom.subject,
-    className: classroom.className,
     section: classroom.section,
-    classCardBackgroundColor: classroom.classCardBackgroundColor,
-    illustrationIndex: classroom.illustrationIndex,
     teacherName: classroom.teacherName,
-    teacherAvatar: classroom.teacherAvatar,
+    teacherImage: classroom.teacherImage,
+    cardBackground: classroom.cardBackground,
+    illustrationIndex: classroom.illustrationIndex,
   };
 
-  const { error } = await supabase.from("enrolledClass").insert([newClass]);
+  const result = createEnrolledClassSchema.safeParse(newEnrolledClass);
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid enrollment data. Please check if the class exists and try again.",
+    };
   }
+
+  const [data] = await db.insert(enrolledClass).values(result.data).returning();
+
+  if (!data)
+    return {
+      success: false,
+      message: "Failed to join the class. Please try again.",
+    };
 
   revalidatePath("/classroom");
 
@@ -286,17 +354,17 @@ export async function deleteClass(classId: string) {
   if (session.user.role === "admin")
     throw new Error("Only the teacher who created this class can delete it.");
 
-  const classroom = await getClassByClassId(classId);
+  const currentClassroom = await getClassByClassId(classId);
 
   if (
     session.user.role === "teacher" &&
-    classroom?.teacherId === session.user.id
+    currentClassroom?.teacherId === session.user.id
   ) {
-    if (!classroom) throw new Error("This class doesn't exist.");
+    if (!currentClassroom) throw new Error("This class doesn't exist.");
 
     const classes = await getAllEnrolledClassesByClassAndSessionId(classId);
     if (classes?.length) {
-      const classroomId = classes.map((curClass) => curClass.classroomId);
+      const classroomId = classes.map((curClass) => curClass.id);
       await deleteMultipleEnrolledClass(classroomId);
     }
 
@@ -314,41 +382,55 @@ export async function deleteClass(classId: string) {
 
     if (topics?.length) {
       for (const topic of topics) {
-        await deleteTopic(topic.topicId);
+        await deleteTopic(topic.id);
       }
     }
 
-    const { error } = await supabase
-      .from("classroom")
-      .delete()
-      .eq("classroomId", classId)
-      .eq("teacherId", session.user.id);
+    const [data] = await db
+      .delete(classroom)
+      .where(
+        and(
+          eq(classroom.id, classId),
+          eq(classroom.teacherId, session.user.id),
+        ),
+      )
+      .returning();
 
     revalidatePath("/classroom");
 
-    if (error) throw new Error(error.message);
+    if (!data) throw new Error("There was an error deleting this class.");
 
     return;
   }
 
-  const enrolledClass = await getEnrolledClassByClassAndSessionId(classId);
-
-  if (!enrolledClass) throw new Error("This class doesn't exist.");
-
-  await deleteAllClassworkByClassAndUserId(
-    enrolledClass.classroomId,
-    enrolledClass.userId,
+  const currentEnrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
+    classId,
   );
 
-  const { error } = await supabase
-    .from("enrolledClass")
-    .delete()
-    .eq("classroomId", classId)
-    .eq("userId", session.user.id);
+  if (!currentEnrolledClass) throw new Error("This class doesn't exist.");
+
+  await deleteAllClassworkByClassAndUserId(
+    currentEnrolledClass.classId,
+    currentEnrolledClass.userId,
+  );
+
+  const [data] = await db
+    .delete(enrolledClass)
+    .where(
+      and(
+        eq(enrolledClass.classId, classId),
+        eq(enrolledClass.userId, session.user.id),
+      ),
+    )
+    .returning();
+
+  if (!data)
+    throw new Error(
+      "Failed to leave the class. The enrollment may not exist or has already been removed.",
+    );
 
   revalidatePath("/classroom");
-
-  if (error) throw new Error(error.message);
 
   return;
 }
@@ -364,7 +446,7 @@ export async function deleteAllMessagesByUserId(userId: string) {
 
   if (!messages || !messages.length) return;
 
-  const attachments = messages.map((chat) => chat.attachment).flat();
+  const attachments = messages.map((chat) => chat.attachments).flat();
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -373,9 +455,12 @@ export async function deleteAllMessagesByUserId(userId: string) {
     await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
   }
 
-  const { error } = await supabase.from("chat").delete().eq("author", userId);
+  const data = await db.delete(chat).where(eq(chat.userId, userId)).returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete user messages. No messages were found or the deletion operation was unsuccessful.",
+    );
 
   return;
 }
@@ -391,7 +476,7 @@ export async function deleteAllCommentsByUserId(userId: string) {
 
   if (!comments || !comments.length) return;
 
-  const attachments = comments.map((comment) => comment.attachment).flat();
+  const attachments = comments.map((comment) => comment.attachments).flat();
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -400,12 +485,15 @@ export async function deleteAllCommentsByUserId(userId: string) {
     await deleteFilesFromBucket("comments", chatAttachmentsFilePath);
   }
 
-  const { error } = await supabase
-    .from("classComments")
-    .delete()
-    .eq("author", userId);
+  const data = await db
+    .delete(streamComment)
+    .where(eq(streamComment.userId, userId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete user comments. No comments were found or the deletion operation was unsuccessful.",
+    );
 
   return;
 }
@@ -421,7 +509,7 @@ export async function deleteAllPrivateCommentsByUserId(userId: string) {
 
   if (!comments || !comments.length) return;
 
-  const attachments = comments.map((comment) => comment.attachment).flat();
+  const attachments = comments.map((comment) => comment.attachments).flat();
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -430,12 +518,15 @@ export async function deleteAllPrivateCommentsByUserId(userId: string) {
     await deleteFilesFromBucket("comments", chatAttachmentsFilePath);
   }
 
-  const { error } = await supabase
-    .from("classPrivateComments")
-    .delete()
-    .eq("author", userId);
+  const data = await db
+    .delete(streamPrivateComment)
+    .where(eq(streamPrivateComment.userId, userId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete user private comments. No comments were found or the deletion operation was unsuccessful.",
+    );
 
   return;
 }
@@ -454,7 +545,7 @@ export async function deleteAllClassworkByClassAndUserId(
 
   if (!classworks || !classworks.length) return;
 
-  const attachments = classworks.map((chat) => chat.attachment).flat();
+  const attachments = classworks.map((chat) => chat.attachments).flat();
 
   if (attachments.length) {
     const classworkAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -463,23 +554,20 @@ export async function deleteAllClassworkByClassAndUserId(
     await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
   }
 
-  const { error } = await supabase
-    .from("classworks")
-    .delete()
-    .eq("userId", userId)
-    .eq("classroomId", classId);
+  const data = await db
+    .delete(classwork)
+    .where(and(eq(classwork.userId, userId), eq(classwork.classId, classId)))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete user's classwork submissions. No submissions were found or the deletion operation was unsuccessful.",
+    );
 }
 
 export async function deleteMultipleEnrolledClass(classId: string[]) {
   for (const rowId of classId) {
-    const { error } = await supabase
-      .from("enrolledClass")
-      .delete()
-      .eq("classroomId", rowId);
-
-    if (error) throw new Error(error.message);
+    await db.delete(enrolledClass).where(eq(enrolledClass.id, rowId));
   }
 }
 
@@ -493,9 +581,10 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
 
   if (!session) return redirect("/signin");
 
-  const enrolledClass =
+  const currentEnrolledClass =
     await getEnrolledClassByEnrolledClassId(enrolledClassId);
-  if (!enrolledClass) throw new Error("You are not a member of this class.");
+  if (!currentEnrolledClass)
+    throw new Error("You are not a member of this class.");
 
   const classroom = await getClassByClassId(classId);
   if (!classroom) throw new Error("This class doesn't exist.");
@@ -503,23 +592,30 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
   if (
     !(
       classroom.teacherId === session.user.id ||
-      enrolledClass.userId === session.user.id
+      currentEnrolledClass.userId === session.user.id
     )
   )
     throw new Error("You're not authorized to remove this user.");
 
   await deleteAllClassworkByClassAndUserId(
-    enrolledClass.classroomId,
-    enrolledClass.userId,
+    currentEnrolledClass.classId,
+    currentEnrolledClass.userId,
   );
 
-  const { error } = await supabase
-    .from("enrolledClass")
-    .delete()
-    .eq("id", enrolledClassId)
-    .eq("classroomId", classId);
+  const [data] = await db
+    .delete(enrolledClass)
+    .where(
+      and(
+        eq(enrolledClass.id, enrolledClassId),
+        eq(enrolledClass.classId, classId),
+      ),
+    )
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data)
+    throw new Error(
+      "Failed to remove user from class. The enrollment may not exist or has already been removed.",
+    );
 
   revalidatePath(`/classroom/class/${classId}/people`);
 }
@@ -552,7 +648,7 @@ export async function createClassStreamPost(
       message: "This class doesn't exist.",
     };
 
-  if (classroom.teacherId !== session.user.id && !classroom.allowStudentsToPost)
+  if (classroom.teacherId !== session.user.id && !classroom.allowUsersToPost)
     return {
       success: false,
       message: "Students are not allowed to post to the class.",
@@ -578,47 +674,65 @@ export async function createClassStreamPost(
   const dueDate = formData.get("dueDate");
 
   const topicId = formData.get("topicId");
+  const finalTopicId = topicId === "no-topic" ? null : topicId;
 
-  const topic = await getClassTopicByTopicId(topicId as string);
+  const topic = finalTopicId
+    ? await getClassTopicByTopicId(finalTopicId as string)
+    : null;
 
   const newStream = {
-    author: session.user.id,
-    authorName: session.user.name,
-    avatar: session.user.image,
+    userId: session.user.id,
+    userName: session.user.name,
+    userImage: session.user.image,
     type: formData.get("streamType"),
     title: formData.get("title"),
-    caption: formData.get("caption"),
-    classroomId: formData.get("classroomId"),
-    classroomName: classroom.className,
+    content: formData.get("caption"),
+    classId: formData.get("classroomId"),
+    className: classroom.name,
     announceTo: formData.getAll("announceTo"),
     announceToAll: audienceIsAll,
-    attachment: postAttachments,
+    attachments: postAttachments,
     links: formData.getAll("links"),
     dueDate: dueDate
-      ? format(
-          subHours(parseISO(formData.get("dueDate") as string), 8),
-          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+      ? parseISO(
+          format(
+            subHours(parseISO(formData.get("scheduledAt") as string), 8),
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+          ),
         )
       : null,
     scheduledAt: formData.get("scheduledAt")
-      ? format(
-          subHours(parseISO(formData.get("scheduledAt") as string), 8),
-          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+      ? parseISO(
+          format(
+            subHours(parseISO(formData.get("scheduledAt") as string), 8),
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+          ),
         )
       : null,
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
       formData.get("closeSubmissionsAfterDueDate") === "true",
     points: formData.get("totalPoints"),
-    topicId: topic?.topicId,
-    topicName: topic?.topicName,
+    topicId: topic?.id ?? null,
+    topicName: topic?.name ?? null,
   };
 
-  const { error } = await supabase.from("streams").insert([newStream]);
-
-  if (error) {
-    return { success: false, message: error.message };
+  const result = createStreamSchema.safeParse(newStream);
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid post data provided. Please check all required fields and try again.",
+    };
   }
+
+  const [data] = await db.insert(stream).values(result.data).returning();
+  if (!data)
+    return {
+      success: false,
+      message:
+        "Failed to publish post. Please check your connection and try again, or contact support if the issue persists.",
+    };
 
   revalidatePath(`/classroom/class/${formData.get("classroomId")}`);
   revalidatePath(`/classroom/class/${formData.get("classroomId")}/classwork`);
@@ -659,7 +773,7 @@ export async function updateClassStreamPost(
       message: "This post doesn't exist in this class.",
     };
 
-  if (currentStream.author !== session.user.id)
+  if (currentStream.userId !== session.user.id)
     return {
       success: false,
       message: "This class stream can only be edited by the one who posted it.",
@@ -670,17 +784,22 @@ export async function updateClassStreamPost(
   const newCaption = formData.get("caption");
   const newTitle = formData.get("title");
   const newDueDate = formData.get("dueDate")
-    ? format(
-        formData.get("dueDate") as string,
-        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+    ? parseISO(
+        format(
+          formData.get("dueDate") as string,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        ),
       )
     : null;
   const newPoints = formData.get("totalPoints");
-  const newTopicId = formData.get("topicId");
+  const topicId = formData.get("topicId");
+  const newTopicId = topicId === "no-topic" ? null : topicId;
   const newScheduledAt = formData.get("scheduledAt")
-    ? format(
-        formData.get("scheduledAt") as string,
-        "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+    ? parseISO(
+        format(
+          formData.get("scheduledAt") as string,
+          "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        ),
       )
     : null;
   const newAcceptingSubmissions =
@@ -691,8 +810,8 @@ export async function updateClassStreamPost(
   const topic = await getClassTopicByTopicId(newTopicId as string);
 
   if (
-    currentStream.caption !== newCaption ||
-    currentStream.topicId !== (topic?.topicId || null) ||
+    currentStream.content !== newCaption ||
+    currentStream.topicId !== (topic?.id || null) ||
     currentStream.announceToAll !== audienceIsAll ||
     newAttachments.length ||
     newUrlLinks.length ||
@@ -708,10 +827,10 @@ export async function updateClassStreamPost(
       ? format(currentStream.dueDate, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx")
       : null) !== newDueDate ||
     arraysAreEqual(audience, currentStream.announceTo) === false ||
-    arraysAreEqual(curAttachments, currentStream.attachment) === false ||
+    arraysAreEqual(curAttachments, currentStream.attachments) === false ||
     arraysAreEqual(curUrlLinks, currentStream.links) === false
   ) {
-    const removedAttachments = currentStream.attachment.filter(
+    const removedAttachments = currentStream.attachments.filter(
       (attachment) => !curAttachments.includes(attachment),
     );
     if (removedAttachments.length) {
@@ -743,38 +862,57 @@ export async function updateClassStreamPost(
 
     const updatedStream = {
       title: newTitle,
-      caption: formData.get("caption"),
+      content: formData.get("caption") as string | null,
       announceTo: audience,
       announceToAll: audienceIsAll,
-      attachment: postAttachments.concat(curAttachments),
+      attachments: postAttachments.concat(curAttachments),
       links: newUrlLinks.concat(curUrlLinks),
       dueDate: newDueDate
-        ? format(
-            subHours(parseISO(formData.get("dueDate") as string), 8),
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        ? parseISO(
+            format(
+              subHours(parseISO(formData.get("dueDate") as string), 8),
+              "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+            ),
           )
         : null,
       scheduledAt: formData.get("scheduledAt")
-        ? format(
-            subHours(parseISO(formData.get("scheduledAt") as string), 8),
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+        ? parseISO(
+            format(
+              subHours(parseISO(formData.get("scheduledAt") as string), 8),
+              "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
+            ),
           )
         : null,
-      points: newPoints,
+      points: newPoints ? Number(newPoints) : null,
       acceptingSubmissions: newAcceptingSubmissions,
       closeSubmissionsAfterDueDate: newCloseSubmissionsAfterDueDate,
-      topicId: topic?.topicId,
-      topicName: topic?.topicName,
-      updatedPost: true,
+      topicId: topic?.id ?? null,
+      topicName: topic?.name ?? null,
+      updatedAt: new Date(),
     };
 
-    const { error } = await supabase
-      .from("streams")
-      .update([updatedStream])
-      .eq("id", formData.get("streamId"));
+    const result = editStreamSchema.safeParse(updatedStream);
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (result.error) {
+      return {
+        success: false,
+        message:
+          "Invalid data provided for stream update. Please check your input and try again.",
+      };
+    }
+
+    const [data] = await db
+      .update(stream)
+      .set(result.data)
+      .where(eq(stream.id, formData.get("streamId") as string))
+      .returning();
+
+    if (!data) {
+      return {
+        success: false,
+        message:
+          "Failed to update the post. Please check your connection and try again, or contact support if the issue persists.",
+      };
     }
 
     revalidatePath(`/classroom/class/${formData.get("classroomId")}`);
@@ -798,17 +936,17 @@ export async function deleteClassStreamPost(streamId: string) {
 
   if (!session) return redirect("/signin");
 
-  const stream = await getClassStreamByStreamId(streamId);
+  const currentStream = await getClassStreamByStreamId(streamId);
 
-  if (!stream) throw new Error("This post doesn't exist in this class.");
+  if (!currentStream) throw new Error("This post doesn't exist in this class.");
 
-  const classroom = await getClassByClassId(stream.classroomId);
+  const classroom = await getClassByClassId(currentStream.classId);
 
   if (!classroom) throw new Error("This class doesn't exist.");
 
   if (
     !(
-      stream.author === session.user.id ||
+      currentStream.userId === session.user.id ||
       classroom.teacherId === session.user.id
     )
   )
@@ -820,19 +958,25 @@ export async function deleteClassStreamPost(streamId: string) {
 
   await deleteAllClassworkByStreamId(streamId);
 
-  if (stream.attachment.length) {
-    const streamAttachmentsFilePath = stream.attachment.map((file) =>
+  if (currentStream.attachments.length) {
+    const streamAttachmentsFilePath = currentStream.attachments.map((file) =>
       extractStreamFilePath(file),
     );
     await deleteFilesFromBucket("streams", streamAttachmentsFilePath);
   }
 
-  const { error } = await supabase.from("streams").delete().eq("id", streamId);
+  const [data] = await db
+    .delete(stream)
+    .where(eq(stream.id, streamId))
+    .returning();
 
-  revalidatePath(`/classroom/class/${classroom.classroomId}`);
-  revalidatePath(`/classroom/class/${classroom.classroomId}/classwork`);
+  revalidatePath(`/classroom/class/${classroom.id}`);
+  revalidatePath(`/classroom/class/${classroom.id}/classwork`);
 
-  if (error) throw new Error(error.message);
+  if (!data)
+    throw new Error(
+      "Failed to delete the post. The post may not exist or you may not have permission to delete it.",
+    );
 }
 
 export async function deleteAllClassworkByStreamId(streamId: string) {
@@ -846,7 +990,7 @@ export async function deleteAllClassworkByStreamId(streamId: string) {
 
   if (!classworks || !classworks.length) return;
 
-  const attachments = classworks.map((chat) => chat.attachment).flat();
+  const attachments = classworks.map((chat) => chat.attachments).flat();
 
   if (attachments.length) {
     const classworkAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -855,12 +999,15 @@ export async function deleteAllClassworkByStreamId(streamId: string) {
     await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
   }
 
-  const { error } = await supabase
-    .from("classworks")
-    .delete()
-    .eq("streamId", streamId);
+  const data = await db
+    .delete(classwork)
+    .where(eq(classwork.streamId, streamId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "There was an error deleting all classwork for this stream.",
+    );
 }
 
 export async function deleteAllMessagesByClassId(classId: string) {
@@ -874,7 +1021,7 @@ export async function deleteAllMessagesByClassId(classId: string) {
 
   if (!messages || !messages.length) return;
 
-  const attachments = messages.map((chat) => chat.attachment).flat();
+  const attachments = messages.map((chat) => chat.attachments).flat();
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -883,29 +1030,29 @@ export async function deleteAllMessagesByClassId(classId: string) {
     await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
   }
 
-  const { error } = await supabase
-    .from("chat")
-    .delete()
-    .eq("classroomId", classId);
+  const data = await db
+    .delete(chat)
+    .where(eq(chat.classId, classId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete messages for this class. The messages may not exist or there was an issue with the deletion operation.",
+    );
 }
 
 export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
   const comments = await getAllCommentsByStreamId(streamId);
 
-  if (comments?.length) {
-    const attachments = comments.map((comment) => comment.attachment).flat();
+  if (!comments?.length) return;
+
+  const attachments = comments.map((comment) => comment.attachments).flat();
+  if (attachments.length) {
     const filePath = attachments.map((file) => extractCommentFilePath(file));
     await deleteFilesFromBucket("comments", filePath);
   }
 
-  const { error } = await supabase
-    .from("classComments")
-    .delete()
-    .eq("streamId", streamId);
-
-  if (error) throw new Error(error.message);
+  await db.delete(streamComment).where(eq(streamComment.streamId, streamId));
 }
 
 export async function deleteAllPrivateStreamCommentsByStreamId(
@@ -913,29 +1060,30 @@ export async function deleteAllPrivateStreamCommentsByStreamId(
 ) {
   const privateComments = await getAllPrivateCommentsByStreamId(streamId);
 
-  if (privateComments?.length) {
-    const attachments = privateComments
-      .map((comment) => comment.attachment)
-      .flat();
+  if (!privateComments?.length) return;
+
+  const attachments = privateComments
+    .map((comment) => comment.attachments)
+    .flat();
+  if (attachments.length) {
     const filePath = attachments.map((file) => extractCommentFilePath(file));
     await deleteFilesFromBucket("comments", filePath);
   }
 
-  const { error } = await supabase
-    .from("classPrivateComments")
-    .delete()
-    .eq("streamId", streamId);
-
-  if (error) throw new Error(error.message);
+  await db
+    .delete(streamPrivateComment)
+    .where(eq(streamPrivateComment.streamId, streamId));
 }
 
 export async function deleteAllPrivateStreamCommentsByClassId(classId: string) {
-  const { error } = await supabase
-    .from("classPrivateComments")
-    .delete()
-    .eq("classroomId", classId);
+  const data = await db
+    .delete(streamPrivateComment)
+    .where(eq(streamPrivateComment.classId, classId));
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete private comments for this class. No comments were found or the deletion operation was unsuccessful.",
+    );
 }
 
 export async function deleteStreamComment(
@@ -963,26 +1111,33 @@ export async function deleteStreamComment(
 
   if (
     !(
-      comment.author === session.user.id ||
+      comment.userId === session.user.id ||
       classroom.teacherId === session.user.id
     )
   )
     throw new Error("You're not authorized to delete this comment.");
 
-  if (comment.attachment.length) {
-    const filePath = comment.attachment.map((file) =>
+  if (comment.attachments?.length) {
+    const filePath = comment.attachments.map((file) =>
       extractCommentFilePath(file),
     );
     await deleteFilesFromBucket("comments", filePath);
   }
 
-  const { error } = await supabase
-    .from("classComments")
-    .delete()
-    .eq("id", commentId)
-    .eq("streamId", streamId);
+  const data = await db
+    .delete(streamComment)
+    .where(
+      and(
+        eq(streamComment.id, commentId),
+        eq(streamComment.streamId, streamId),
+      ),
+    )
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data.length)
+    throw new Error(
+      "Failed to delete the comment. The comment may not exist or you may not have permission to delete it.",
+    );
 }
 
 export async function addCommentToStream(formData: FormData) {
@@ -999,6 +1154,7 @@ export async function addCommentToStream(formData: FormData) {
   if (!classroom) throw new Error("This class doesn't exist.");
 
   const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
     formData.get("classroomId") as string,
   );
 
@@ -1006,7 +1162,7 @@ export async function addCommentToStream(formData: FormData) {
     !(
       classroom.teacherId === session.user.id ||
       enrolledClass ||
-      classroom.allowStudentsToComment
+      classroom.allowUsersToComment
     )
   ) {
     throw new Error("You don't have permission to comment on this post.");
@@ -1030,18 +1186,30 @@ export async function addCommentToStream(formData: FormData) {
     : [];
 
   const newComment = {
-    author: session.user.id,
-    authorName: session.user.name,
-    authorAvatar: session.user.image,
-    comment: formData.get("comment"),
-    classroomId: formData.get("classroomId"),
     streamId: formData.get("streamId"),
-    attachment: commentAttachments,
+    classId: formData.get("classroomId"),
+    userId: session.user.id,
+    userName: session.user.name,
+    userImage: session.user.image,
+    content: formData.get("comment"),
+    attachments: commentAttachments,
   };
 
-  const { error } = await supabase.from("classComments").insert([newComment]);
+  const result = createStreamCommentSchema.safeParse(newComment);
 
-  if (error) throw new Error(error.message);
+  if (result.error) {
+    throw new Error(
+      "Invalid comment data provided. Please check all required fields and try again.",
+    );
+  }
+
+  const [data] = await db.insert(streamComment).values(result.data).returning();
+
+  if (!data) {
+    throw new Error(
+      "Failed to save comment. Please try again or contact support if the issue persists.",
+    );
+  }
 }
 
 export async function addPrivateComment(formData: FormData) {
@@ -1059,7 +1227,10 @@ export async function addPrivateComment(formData: FormData) {
 
   if (!classroom) throw new Error("This class doesn't exist.");
 
-  const enrolledClass = await getEnrolledClassByClassAndSessionId(classroomId);
+  const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
+    classroomId,
+  );
 
   if (!(classroom?.teacherId === session.user.id || enrolledClass)) {
     throw new Error("You don't have permission to comment.");
@@ -1097,22 +1268,35 @@ export async function addPrivateComment(formData: FormData) {
     : [];
 
   const newPrivateComment = {
-    author: session.user.id,
-    authorName: session.user.name,
-    authorAvatar: session.user.image,
+    streamId: formData.get("streamId") as string,
+    classId: formData.get("classroomId") as string,
+    userId: session.user.id,
+    userName: session.user.name,
+    userImage: session.user.image,
+    content: formData.get("comment") as string,
+    attachments: commentAttachments,
     toUserId:
       session.user.id === classroom.teacherId ? userId : classroom.teacherId,
-    comment: formData.get("comment"),
-    classroomId: formData.get("classroomId"),
-    streamId: formData.get("streamId"),
-    attachment: commentAttachments,
   };
 
-  const { error } = await supabase
-    .from("classPrivateComments")
-    .insert([newPrivateComment]);
+  const result = createStreamPrivateCommentSchema.safeParse(newPrivateComment);
 
-  if (error) throw new Error(error.message);
+  if (result.error) {
+    throw new Error(
+      "Invalid private comment data provided. Please check all required fields and try again.",
+    );
+  }
+
+  const [data] = await db
+    .insert(streamPrivateComment)
+    .values(result.data)
+    .returning();
+
+  if (!data) {
+    throw new Error(
+      "Failed to save private comment. Please try again or contact support if the issue persists.",
+    );
+  }
 }
 
 export async function deletePrivateComment(
@@ -1140,26 +1324,33 @@ export async function deletePrivateComment(
 
   if (
     !(
-      comment.author === session.user.id ||
+      comment.userId === session.user.id ||
       classroom.teacherId === session.user.id
     )
   )
     throw new Error("You're not authorized to delete this comment.");
 
-  if (comment.attachment.length) {
-    const filePath = comment.attachment.map((file) =>
+  if (comment.attachments?.length) {
+    const filePath = comment.attachments.map((file) =>
       extractCommentFilePath(file),
     );
     await deleteFilesFromBucket("comments", filePath);
   }
 
-  const { error } = await supabase
-    .from("classPrivateComments")
-    .delete()
-    .eq("id", commentId)
-    .eq("streamId", streamId);
+  const [data] = await db
+    .delete(streamPrivateComment)
+    .where(
+      and(
+        eq(streamPrivateComment.id, commentId),
+        eq(streamPrivateComment.streamId, streamId),
+      ),
+    )
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data)
+    throw new Error(
+      "Failed to delete the private comment. The comment may not exist or you may not have permission to delete it.",
+    );
 }
 
 export async function addUserToClass(formData: FormData): Promise<{
@@ -1210,35 +1401,49 @@ export async function addUserToClass(formData: FormData): Promise<{
       message: "This class can only include students and teachers.",
     };
 
-  const enrolledClass = await getEnrolledClassByUserAndClassId(
+  const currentEnrolledClass = await getEnrolledClassByUserAndClassId(
     user.id,
     classroomId,
   );
 
-  if (enrolledClass)
+  if (currentEnrolledClass)
     return {
       success: false,
       message: "This user is already a member of this class.",
     };
 
   const newClass = {
+    classId: classroom.id,
     userId: user.id,
     userName: user.name,
-    userAvatar: user.image,
-    classroomId: classroom.classroomId,
+    userImage: user.image,
+    name: classroom.name,
     subject: classroom.subject,
-    className: classroom.className,
     section: classroom.section,
-    classCardBackgroundColor: classroom.classCardBackgroundColor,
-    illustrationIndex: classroom.illustrationIndex,
     teacherName: classroom.teacherName,
-    teacherAvatar: classroom.teacherAvatar,
+    teacherImage: classroom.teacherImage,
+    cardBackground: classroom.cardBackground,
+    illustrationIndex: classroom.illustrationIndex,
   };
 
-  const { error } = await supabase.from("enrolledClass").insert([newClass]);
+  const result = createEnrolledClassSchema.safeParse(newClass);
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid user data provided. Please check the email address and try again.",
+    };
+  }
+
+  const [data] = await db.insert(enrolledClass).values(result.data).returning();
+
+  if (!data) {
+    return {
+      success: false,
+      message:
+        "Failed to add user to class. Please check your connection and try again, or contact support if the issue persists.",
+    };
   }
 
   revalidatePath(`/classroom/`);
@@ -1343,22 +1548,39 @@ export async function submitClasswork(
   const newClasswork = {
     userId: session.user.id,
     userName: session.user.name,
-    userAvatar: session.user.image,
-    classroomId: classId,
-    classroomName: classroom.className,
-    streamCreated: stream.created_at,
-    classworkTitle: stream.title,
+    userImage: session.user.image,
+    classId: classId,
+    className: classroom.name,
+    streamCreatedAt: stream.createdAt,
+    title: stream.title,
     streamId,
-    attachment: postAttachments,
+    attachments: postAttachments,
     links: formData.getAll("links"),
     turnedInDate: new Date(),
     isTurnedIn: true,
+    isGraded: false,
+    points: null,
+    isReturned: false,
   };
 
-  const { error } = await supabase.from("classworks").insert([newClasswork]);
+  const result = createClassworkSchema.safeParse(newClasswork);
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid classwork data provided. Please check all required fields and try again.",
+    };
+  }
+
+  const [data] = await db.insert(classwork).values(result.data).returning();
+
+  if (!data) {
+    return {
+      success: false,
+      message:
+        "Failed to submit classwork. Please check your connection and try again, or contact support if the issue persists.",
+    };
   }
 
   revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
@@ -1404,13 +1626,14 @@ export async function updateClasswork(
     newAttachments.length ||
     newUrlLinks.length ||
     newIsTurnedIn === currentClasswork.isTurnedIn ||
-    arraysAreEqual(curAttachments, currentClasswork.attachment) === false ||
-    arraysAreEqual(curUrlLinks, currentClasswork.links) === false
+    arraysAreEqual(curAttachments, currentClasswork.attachments ?? []) ===
+      false ||
+    arraysAreEqual(curUrlLinks, currentClasswork.links ?? []) === false
   ) {
-    const removedAttachments = currentClasswork.attachment.filter(
+    const removedAttachments = currentClasswork.attachments?.filter(
       (attachment) => !curAttachments.includes(attachment),
     );
-    if (removedAttachments.length) {
+    if (removedAttachments?.length) {
       const filePath = removedAttachments.map((file) =>
         extractClassworkFilePath(file),
       );
@@ -1437,20 +1660,36 @@ export async function updateClasswork(
         ).then((results) => results.filter((url) => url !== null))
       : [];
 
-    const updatedStream = {
-      attachment: postAttachments.concat(curAttachments),
+    const updatedClasswork = {
+      ...currentClasswork,
+      attachments: postAttachments.concat(curAttachments),
       links: newUrlLinks.concat(curUrlLinks),
       turnedInDate: new Date(),
       isTurnedIn: true,
     };
 
-    const { error } = await supabase
-      .from("classworks")
-      .update([updatedStream])
-      .eq("id", formData.get("classworkId"));
+    const result = createClassworkSchema.safeParse(updatedClasswork);
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (result.error) {
+      return {
+        success: false,
+        message:
+          "Invalid classwork data provided. Please check your submission and try again.",
+      };
+    }
+
+    const [data] = await db
+      .update(classwork)
+      .set(result.data)
+      .where(eq(classwork.id, formData.get("classworkId") as string))
+      .returning();
+
+    if (!data) {
+      return {
+        success: false,
+        message:
+          "Failed to update classwork. Please check your connection and try again, or contact support if the issue persists.",
+      };
     }
 
     revalidatePath(
@@ -1495,17 +1734,22 @@ export async function unsubmitClasswork(
       message: "This post doesn't exist in this class.",
     };
 
-  const updatedStream = {
+  const updatedClasswork = {
     isTurnedIn: false,
   };
 
-  const { error } = await supabase
-    .from("classworks")
-    .update([updatedStream])
-    .eq("id", classworkId);
+  const [data] = await db
+    .update(classwork)
+    .set(updatedClasswork)
+    .where(eq(classwork.id, classworkId))
+    .returning();
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (!data) {
+    return {
+      success: false,
+      message:
+        "Failed to unsubmit classwork. Please check your connection and try again, or contact support if the issue persists.",
+    };
   }
 
   revalidatePath(`/classroom/class/${classroomId}/stream/${streamId}`);
@@ -1531,7 +1775,9 @@ export async function addGradeClasswork(formData: FormData) {
   const streamId = formData.get("streamId") as string;
   const classId = formData.get("classroomId") as string;
   const classworkId = formData.get("classworkId") as string;
-  const userPoints = formData.get("userPoints") as string;
+  const userPoints = formData.get("userPoints")
+    ? Number(formData.get("userPoints"))
+    : null;
 
   const stream = await getClassStreamByStreamId(streamId);
 
@@ -1568,25 +1814,42 @@ export async function addGradeClasswork(formData: FormData) {
     return { success: true, message: "Grade has been added to this user." };
   }
 
-  if (currentClasswork?.userPoints !== userPoints) {
-    const updatedStream = {
-      userPoints,
+  if (currentClasswork.points !== userPoints) {
+    const updatedClasswork = {
+      ...currentClasswork,
+      points: userPoints,
       isGraded: true,
     };
 
-    const { error } = await supabase
-      .from("classworks")
-      .update([updatedStream])
-      .eq("id", classworkId);
+    const result = createClassworkSchema.safeParse(updatedClasswork);
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (result.error) {
+      return {
+        success: false,
+        message:
+          "Invalid grade data provided. Please check the grade value and try again.",
+      };
+    }
+
+    const [data] = await db
+      .update(classwork)
+      .set(updatedClasswork)
+      .where(eq(classwork.id, classworkId))
+      .returning();
+
+    if (!data) {
+      return {
+        success: false,
+        message:
+          "Failed to update the grade. Please check your connection and try again, or contact support if the issue persists.",
+      };
     }
 
     revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
 
     return { success: true, message: "Grade has been added to this user." };
   }
+
   return { success: true, message: "No changes were made to the classwork." };
 }
 
@@ -1594,7 +1857,7 @@ export async function createEmptyClasswork(
   userId: string,
   classId: string,
   streamId: string,
-  userPoints?: string,
+  userPoints?: number | null,
 ) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -1623,27 +1886,40 @@ export async function createEmptyClasswork(
 
   const newClasswork = {
     userId: user.id,
-    classroomId: classId,
-    streamId,
-    attachment: [],
-    links: [],
-    userPoints,
-    isGraded: Number(userPoints) >= 0 ? true : false,
-    classroomName: classroom.className,
-    streamCreated: stream.created_at,
-    classworkTitle: stream.title,
     userName: user.name,
-    userAvatar: user.image,
+    userImage: user.image,
+    classId: classId,
+    className: classroom.name,
+    streamId,
+    title: stream.title,
+    attachments: [],
+    links: [],
+    points: userPoints,
+    isGraded:
+      userPoints !== undefined &&
+      userPoints !== null &&
+      Number.isFinite(userPoints) &&
+      userPoints >= 0,
+    isReturned: false,
+    streamCreatedAt: stream.createdAt,
     isTurnedIn: false,
+    turnedInDate: null,
   };
 
-  const { data, error } = await supabase
-    .from("classworks")
-    .insert([newClasswork])
-    .select()
-    .single();
+  const result = createClassworkSchema.safeParse(newClasswork);
 
-  if (error) throw new Error(error.message);
+  if (result.error) {
+    throw new Error(
+      "Invalid classwork data provided. Please check all required fields and try again.",
+    );
+  }
+
+  const [data] = await db.insert(classwork).values(result.data).returning();
+
+  if (!data)
+    throw new Error(
+      "Failed to create empty classwork entry. The classwork may not have been saved properly.",
+    );
 
   return data;
 }
@@ -1662,6 +1938,7 @@ export async function addMessageToChat(formData: FormData) {
   if (!classroom) throw new Error("This class doesn't exist.");
 
   const enrolledClass = await getEnrolledClassByClassAndSessionId(
+    session.user.id,
     formData.get("classroomId") as string,
   );
 
@@ -1689,17 +1966,29 @@ export async function addMessageToChat(formData: FormData) {
     : [];
 
   const newChat = {
-    author: session.user.id,
-    authorName: session.user.name,
-    authorAvatar: session.user.image,
+    userId: session.user.id,
+    userName: session.user.name,
+    userImage: session.user.image,
     message: formData.get("message"),
-    classroomId: formData.get("classroomId"),
-    attachment: chatAttachments,
+    classId: formData.get("classroomId"),
+    attachments: chatAttachments,
   };
 
-  const { error } = await supabase.from("chat").insert([newChat]);
+  const result = createChatSchema.safeParse(newChat);
 
-  if (error) throw new Error(error.message);
+  if (result.error) {
+    throw new Error(
+      "Invalid message data provided. Please check all required fields and try again.",
+    );
+  }
+
+  const [data] = await db.insert(chat).values(result.data).returning();
+
+  if (!data) {
+    throw new Error(
+      "Failed to send message. Please check your connection and try again, or contact support if the issue persists.",
+    );
+  }
 }
 
 export async function createTopic(formData: FormData) {
@@ -1730,14 +2019,28 @@ export async function createTopic(formData: FormData) {
   }
 
   const newTopic = {
-    topicName: formData.get("topicName"),
-    classroomId: formData.get("classroomId"),
+    name: formData.get("topicName"),
+    classId: formData.get("classroomId"),
   };
 
-  const { error } = await supabase.from("classTopic").insert([newTopic]);
+  const result = createClassTopicSchema.safeParse(newTopic);
 
-  if (error) {
-    return { success: false, message: error.message };
+  if (result.error) {
+    return {
+      success: false,
+      message:
+        "Invalid topic data provided. Please check the topic name and try again.",
+    };
+  }
+
+  const [data] = await db.insert(classTopic).values(result.data).returning();
+
+  if (!data) {
+    return {
+      success: false,
+      message:
+        "Failed to create topic. Please check your connection and try again, or contact support if the issue persists.",
+    };
   }
 
   revalidatePath("/classroom");
@@ -1772,9 +2075,12 @@ export async function updateTopic(formData: FormData) {
     };
   }
 
-  const topicId = formData.get("topicId") as string;
+  const topicId = formData.get("topicId");
+  const finalTopicId = topicId === "no-topic" ? null : topicId;
 
-  const currentTopic = await getClassTopicByTopicId(topicId);
+  const currentTopic = finalTopicId
+    ? await getClassTopicByTopicId(finalTopicId as string)
+    : null;
 
   if (!currentTopic)
     return {
@@ -1784,12 +2090,14 @@ export async function updateTopic(formData: FormData) {
 
   const newTopicName = formData.get("topicName");
 
-  if (newTopicName !== currentTopic.topicName) {
+  if (newTopicName !== currentTopic.name) {
     const updatedTopic = {
-      topicName: newTopicName,
+      name: newTopicName,
     };
 
-    const classworkStream = await getAllClassworkStreamsByTopicId(topicId);
+    const classworkStream = await getAllClassworkStreamsByTopicId(
+      currentTopic.id,
+    );
 
     if (classworkStream?.length) {
       for (const stream of classworkStream) {
@@ -1801,16 +2109,31 @@ export async function updateTopic(formData: FormData) {
       }
     }
 
-    const { error } = await supabase
-      .from("classTopic")
-      .update([updatedTopic])
-      .eq("topicId", topicId);
+    const result = editClassTopicSchema.safeParse(updatedTopic);
 
-    if (error) {
-      return { success: false, message: error.message };
+    if (result.error) {
+      return {
+        success: false,
+        message:
+          "Invalid topic data provided. Please check the topic name and try again.",
+      };
     }
 
-    revalidatePath(`/classroom/class/${currentTopic.classroomId}/classworks`);
+    const [data] = await db
+      .update(classTopic)
+      .set(result.data)
+      .where(eq(classTopic.id, currentTopic.id))
+      .returning();
+
+    if (!data) {
+      return {
+        success: false,
+        message:
+          "Failed to update topic. Please check your connection and try again, or contact support if the issue persists.",
+      };
+    }
+
+    revalidatePath(`/classroom/class/${currentTopic.classId}/classworks`);
 
     return { success: true, message: "Topic updated successfully!" };
   }
@@ -1831,7 +2154,7 @@ export async function deleteTopic(topicId: string) {
 
   if (!topic) throw new Error("This topic does not exist.");
 
-  const classroom = await getClassByClassId(topic.classroomId);
+  const classroom = await getClassByClassId(topic.classId);
 
   if (!classroom) throw new Error("This class does not exist.");
 
@@ -1849,44 +2172,46 @@ export async function deleteTopic(topicId: string) {
     }
   }
 
-  const { error } = await supabase
-    .from("classTopic")
-    .delete()
-    .eq("topicId", topicId);
+  const [data] = await db
+    .delete(classTopic)
+    .where(eq(classTopic.id, topicId))
+    .returning();
 
-  revalidatePath(`/classroom/class/${topic.classroomId}/classworks`);
+  if (!data)
+    throw new Error(
+      "Failed to delete topic. The topic may not exist or the deletion operation was unsuccessful.",
+    );
 
-  if (error) throw new Error(error.message);
+  revalidatePath(`/classroom/class/${topic.classId}/classworks`);
 }
 
 export async function updateClassStreamPostTopic(
   type: "edit" | "delete",
-  stream: IStream,
+  streamData: Stream,
   topicName?: string,
 ) {
   if (type === "edit") {
-    const updatedStream = {
-      topicName,
-    };
+    const [data] = await db
+      .update(stream)
+      .set({ topicName: topicName ?? null })
+      .where(eq(stream.id, streamData.id))
+      .returning();
 
-    const { error } = await supabase
-      .from("streams")
-      .update([updatedStream])
-      .eq("id", stream.id);
-
-    if (error) throw new Error(error.message);
+    if (!data)
+      throw new Error(
+        "Failed to update stream topic. The stream may not exist or the update operation was unsuccessful.",
+      );
   }
   if (type === "delete") {
-    const updatedStream = {
-      topicName: null,
-      topicId: null,
-    };
+    const [data] = await db
+      .update(stream)
+      .set({ topicName: null, topicId: null })
+      .where(eq(stream.id, streamData.id))
+      .returning();
 
-    const { error } = await supabase
-      .from("streams")
-      .update([updatedStream])
-      .eq("id", stream.id);
-
-    if (error) throw new Error(error.message);
+    if (!data)
+      throw new Error(
+        "Failed to remove topic from stream. The stream may not exist or the operation was unsuccessful.",
+      );
   }
 }

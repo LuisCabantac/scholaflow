@@ -5,12 +5,10 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 
-import { ISession } from "@/lib/auth";
+import { RoleRequest, Session } from "@/lib/schema";
 
-import EditProfileForm from "@/components/EditProfileForm";
-import RoleRequestDialog, {
-  IRoleRequest,
-} from "@/components/RoleRequestDialog";
+import EditProfileForm from "@/components/ProfileForm";
+import RoleRequestDialog from "@/components/RoleRequestDialog";
 
 export default function ProfileSection({
   session,
@@ -18,10 +16,10 @@ export default function ProfileSection({
   onCloseProfile,
   existingRequest,
 }: {
-  session: ISession;
-  onGetUser: (email: string) => Promise<ISession>;
+  session: Session;
+  onGetUser: (email: string) => Promise<Session | null>;
   onCloseProfile: (userId: string) => Promise<void>;
-  existingRequest: IRoleRequest | null;
+  existingRequest: RoleRequest | null;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
   const [showRoleRequest, setShowRoleRequest] = useState(false);
