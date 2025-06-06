@@ -958,7 +958,6 @@ export async function deleteClassStreamPost(streamId: string) {
 
   await deleteAllClassworkByStreamId(streamId);
 
-  // console.log(currentStream.attachments.length);
   if (currentStream.attachments.length) {
     const streamAttachmentsFilePath = currentStream.attachments.map((file) =>
       extractStreamFilePath(file),

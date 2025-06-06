@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { validate as validateUUID } from "uuid";
 import { useQuery } from "@tanstack/react-query";
 
 import { Classroom } from "@/lib/schema";
@@ -14,13 +15,16 @@ export default function HeaderTitle({
   onGetClassByClassId: (classId: string) => Promise<Classroom | null>;
 }) {
   const pathname = usePathname();
+  const classId = extractFirstUuid(pathname);
+  const isValidClassId = typeof classId === "string" && validateUUID(classId);
 
   const { data } = useQuery({
     queryKey: [
       `class--${extractFirstUuid(pathname)}`,
       `createdClasses--${sessionId}`,
     ],
-    queryFn: () => onGetClassByClassId(extractFirstUuid(pathname) ?? ""),
+    queryFn: () => onGetClassByClassId(extractFirstUuid(pathname)!),
+    enabled: isValidClassId,
   });
 
   if (pathname === "/classroom/class/")

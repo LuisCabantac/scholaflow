@@ -63,7 +63,7 @@ export default function Sidebar({
             </svg>
           </button>
         </div>
-        {session && (
+        {session && session.id && (
           <SidebarLinks
             userId={session.id}
             role={session.role}

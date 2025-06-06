@@ -34,6 +34,11 @@ export async function getClassNameByClassId(id: string): Promise<{
 
   if (!session) return null;
 
+  if (!id || !validateUUID(id)) {
+    console.error("Invalid classId passed to getClassNameByClassId:", id);
+    return null;
+  }
+
   const [data] = await db
     .select({ className: classroom.id })
     .from(classroom)
@@ -48,6 +53,11 @@ export async function getClassByClassId(id: string): Promise<Classroom | null> {
   });
 
   if (!session) return null;
+
+  if (!id || !validateUUID(id)) {
+    console.error("Invalid classId passed to getClassByClassId:", id);
+    return null;
+  }
 
   const [data] = await db.select().from(classroom).where(eq(classroom.id, id));
 
@@ -128,8 +138,6 @@ export async function getAllEnrolledClassesByClassAndSessionId(
   if (!session) return null;
 
   if (session.user.role !== "teacher") return null;
-
-  console.log(classId);
 
   if (!classId || !validateUUID(classId)) {
     console.error("Invalid classId passed:", classId);
