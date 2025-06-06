@@ -27,8 +27,6 @@ export default function UserForm({
   const { useClickOutsideHandler } = useClickOutside();
   const userFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const [validPassword, setValidPassword] = useState(true);
-  // const [showPassword, setShowPassword] = useState(false);
   const [userRole, setUserRole] = useState<UserRoleType>(
     (user?.role as UserRoleType) ?? "student",
   );
@@ -69,11 +67,6 @@ export default function UserForm({
       onShowUserForm();
     } else toast.error(message);
   }
-
-  // function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
-  //   event.preventDefault();
-  //   setShowPassword(!showPassword);
-  // }
 
   useClickOutsideHandler(
     userFormModalWrapperRef,

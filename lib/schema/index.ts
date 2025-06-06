@@ -18,6 +18,13 @@ export const userSchema = z.object({
 
 export type User = z.infer<typeof userSchema>;
 
+export const editUserSchema = userSchema.omit({
+  id: true,
+  emailVerified: true,
+  createdAt: true,
+  role: true,
+});
+
 export const sessionSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -54,6 +61,20 @@ export const roleRequestSchema = z.object({
 });
 
 export type RoleRequest = z.infer<typeof roleRequestSchema>;
+
+export const createRoleRequestSchema = roleRequestSchema.omit({
+  id: true,
+  createdAt: true,
+});
+
+export const editRoleRequestSchema = roleRequestSchema.omit({
+  id: true,
+  userId: true,
+  userName: true,
+  userEmail: true,
+  userImage: true,
+  createdAt: true,
+});
 
 export const classroomSchema = z.object({
   id: z.uuid(),

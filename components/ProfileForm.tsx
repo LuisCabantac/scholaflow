@@ -11,7 +11,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import Button from "@/components/Button";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
-export default function EditProfileForm({
+export default function ProfileForm({
   user,
   session,
   onCloseProfile,
@@ -186,7 +186,7 @@ export default function EditProfileForm({
               </label>
               <input
                 required
-                disabled
+                readOnly
                 name="email"
                 type="email"
                 defaultValue={user?.email ?? ""}

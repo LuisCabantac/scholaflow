@@ -6,7 +6,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Session } from "@/lib/schema";
 
-import Button from "@/components/Button";
 import UserForm from "@/components/UserForm";
 import UserLists from "@/components/UserLists";
 import UserNotFound from "@/components/UserNotFound";
@@ -63,9 +62,6 @@ export default function UserManagementSection({
           placeholder="Search..."
           className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
         />
-        <Button type="primary" onClick={handleToggleShowUserForm}>
-          Add user
-        </Button>
       </div>
       {(!users?.data || users?.data.length === 0) && !usersIsPending ? (
         <UserNotFound />

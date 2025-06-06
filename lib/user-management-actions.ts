@@ -1,5 +1,6 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/lib/auth";
@@ -8,13 +9,20 @@ import { supabase } from "@/lib/supabase";
 import { extractAvatarFilePath } from "@/lib/utils";
 import {
   getAllClassesByTeacherId,
-  getAllClassesStreamByUserId,
   getAllEnrolledClassesByUserId,
-  getAllNotesBySession,
-  getRoleRequest,
-  getUserByEmail,
-  getUserByUserId,
-} from "@/lib/data-service";
+} from "@/lib/classroom-service";
+import { db } from "@/drizzle";
+import { deleteNote } from "@/lib/notes-actions";
+import { getAllNotesBySession } from "@/lib/notes-service";
+import { getRoleRequest } from "@/lib/user-management-service";
+import { getAllClassesStreamByUserId } from "@/lib/stream-service";
+import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
+import { roleRequest as roleRequestDrizzle, user } from "@/drizzle/schema";
+import {
+  createRoleRequestSchema,
+  editUserSchema,
+  RoleRequest,
+} from "@/lib/schema";
 import {
   deleteAllCommentsByUserId,
   deleteAllMessagesByUserId,
@@ -24,11 +32,8 @@ import {
   deleteEnrolledClassbyClassAndEnrolledClassId,
   uploadAttachments,
 } from "@/lib/classroom-actions";
-import { deleteNote } from "@/lib/notes-actions";
 
-import { IRoleRequest } from "@/components/RoleRequestDialog";
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function createUser(newGuest: object): Promise<{
   success: boolean;
@@ -134,41 +139,32 @@ export async function updateProfile(formData: FormData): Promise<{
       message: "Unable to edit. You can only make changes to your own profile.",
     };
 
-  const newEmail = formData.get("email") as string;
-  const newPassword = formData.get("password");
-  const newFullName = formData.get("fullName");
+  const newEmail = formData.get("email");
+  const newFullName = formData.get("name");
   const newSchoolName = formData.get("schoolName");
   const attachment = formData.get("attachment");
+
+  console.log(newEmail);
 
   if (
     currentUserData.email !== newEmail ||
     currentUserData.name !== newFullName ||
-    // currentUserData.password !== newPassword ||
     currentUserData.schoolName !== newSchoolName ||
     attachment
   ) {
-    if (!emailRegex.test(newEmail))
-      return {
-        success: false,
-        message: "Invalid email address.",
-      };
+    // if (!emailRegex.test(newEmail))
+    //   return {
+    //     success: false,
+    //     message: "Invalid email address.",
+    //   };
 
-    const emailExist = await getUserByEmail(newEmail);
+    const emailExist = await getUserByEmail(newEmail as string);
 
     if (currentUserData.email !== newEmail && emailExist)
       return {
         success: false,
         message: "Email address already in use.",
       };
-
-    // if (
-    //   currentUserData.password !== newPassword &&
-    //   (newPassword as string).length < 8
-    // )
-    //   return {
-    //     success: false,
-    //     message: "Your password must be a minimum of 8 characters in length.",
-    //   };
 
     const newProfilePhoto = attachment
       ? await uploadAttachments("avatars", session.user.id, attachment as File)
@@ -183,22 +179,33 @@ export async function updateProfile(formData: FormData): Promise<{
     }
 
     const updatedGuest = {
-      fullName: newFullName,
+      name: newFullName,
       email: newEmail,
-      password: newPassword,
+      image: newProfilePhoto,
       schoolName: newSchoolName,
-      avatar: newProfilePhoto,
+      updatedAt: new Date(),
     };
 
-    const { error } = await supabase
-      .from("user")
-      .update([updatedGuest])
-      .eq("id", userId);
+    const result = editUserSchema.safeParse(updatedGuest);
 
-    if (error) {
+    if (result.error)
+      return {
+        success: false,
+        message: "Invalid profile data. Please check all fields and try again.",
+      };
+
+    const [data] = await db
+      .update(user)
+      .set(result.data)
+      .where(eq(user.id, userId))
+      .returning();
+
+    if (!data) {
       return { success: false, message: "Profile could not be edited." };
     }
+
     revalidatePath("/profile");
+
     return { success: true, message: "Profile updated!" };
   }
 
@@ -255,7 +262,7 @@ export async function closeAccount(userId: string): Promise<void> {
     for (const enrolledClass of enrolledClasses) {
       await deleteEnrolledClassbyClassAndEnrolledClassId(
         enrolledClass.id,
-        enrolledClass.classroomId,
+        enrolledClass.classId,
       );
     }
   }
@@ -263,7 +270,7 @@ export async function closeAccount(userId: string): Promise<void> {
   const createdClasses = await getAllClassesByTeacherId(userId);
   if (createdClasses?.length) {
     for (const createdClass of createdClasses) {
-      await deleteClass(createdClass.classroomId);
+      await deleteClass(createdClass.id);
     }
   }
 
@@ -325,15 +332,32 @@ export async function roleRequest(formData: FormData) {
     userId: formData.get("userId"),
     userName: formData.get("userName"),
     userEmail: formData.get("userEmail"),
-    avatar: formData.get("avatar"),
+    userImage: formData.get("avatar"),
+    status: "pending",
   };
 
-  const { error } = await supabase.from("roleRequests").insert([request]);
+  const result = createRoleRequestSchema.safeParse(request);
 
-  if (error) {
-    return { success: false, message: "Request could not be created." };
+  if (result.error)
+    return {
+      success: false,
+      message: "Invalid request data. Please check all fields and try again.",
+    };
+
+  const [data] = await db
+    .insert(roleRequestDrizzle)
+    .values(result.data)
+    .returning();
+
+  if (!data) {
+    return {
+      success: false,
+      message: "Failed to submit your teacher role request. Please try again.",
+    };
   }
+
   revalidatePath("/profile");
+
   return {
     success: true,
     message:
@@ -341,7 +365,7 @@ export async function roleRequest(formData: FormData) {
   };
 }
 
-export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
+export async function approveRoleRequest(request: RoleRequest): Promise<void> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -356,16 +380,20 @@ export async function approveRoleRequest(request: IRoleRequest): Promise<void> {
 
   await setTeacherUserRole(request.userId);
 
-  const { error } = await supabase
-    .from("roleRequests")
-    .delete()
-    .eq("userId", request.userId)
-    .eq("id", request.id);
+  const [data] = await db
+    .delete(roleRequestDrizzle)
+    .where(
+      and(
+        eq(roleRequestDrizzle.userId, request.userId),
+        eq(roleRequestDrizzle.id, request.id),
+      ),
+    )
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to delete role request from database.");
 }
 
-export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
+export async function rejectRoleRequest(request: RoleRequest): Promise<void> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -378,20 +406,21 @@ export async function rejectRoleRequest(request: IRoleRequest): Promise<void> {
 
   if (!userRequest) throw new Error("Request does not exist.");
 
-  const rejectedRequest = {
-    status: "rejected",
-  };
+  const [data] = await db
+    .update(roleRequestDrizzle)
+    .set({ status: "rejected" })
+    .where(
+      and(
+        eq(roleRequestDrizzle.userId, request.userId),
+        eq(roleRequestDrizzle.id, request.id),
+      ),
+    )
+    .returning();
 
-  const { error } = await supabase
-    .from("roleRequests")
-    .update([rejectedRequest])
-    .eq("userId", request.userId)
-    .eq("id", request.id);
-
-  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to reject role request in database.");
 }
 
-export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
+export async function removeRoleRequest(request: RoleRequest): Promise<void> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -404,13 +433,17 @@ export async function removeRoleRequest(request: IRoleRequest): Promise<void> {
 
   if (!userRequest) throw new Error("Request does not exist.");
 
-  const { error } = await supabase
-    .from("roleRequests")
-    .delete()
-    .eq("userId", request.userId)
-    .eq("id", request.id);
+  const [data] = await db
+    .delete(roleRequestDrizzle)
+    .where(
+      and(
+        eq(roleRequestDrizzle.userId, request.userId),
+        eq(roleRequestDrizzle.id, request.id),
+      ),
+    )
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to delete role request from database.");
 }
 
 async function removeRoleRequestByUserId(userId: string): Promise<void> {
@@ -423,12 +456,13 @@ async function removeRoleRequestByUserId(userId: string): Promise<void> {
 
   if (!userRequest) return;
 
-  const { error } = await supabase
-    .from("roleRequests")
-    .delete()
-    .eq("userId", userId);
+  const [data] = await db
+    .delete(roleRequestDrizzle)
+    .where(eq(roleRequestDrizzle.userId, userId))
+    .returning();
 
-  if (error) throw new Error(error.message);
+  if (!data)
+    throw new Error("Failed to delete this user's role request from database.");
 }
 
 async function setTeacherUserRole(userId: string): Promise<void> {
@@ -440,12 +474,11 @@ async function setTeacherUserRole(userId: string): Promise<void> {
   if (session.user.role !== "admin")
     throw new Error("Only an admin can perform this action.");
 
-  const updatedUserRole = { role: "teacher" };
+  const [data] = await db
+    .update(user)
+    .set({ role: "teacher" })
+    .where(eq(user.id, userId))
+    .returning();
 
-  const { error } = await supabase
-    .from("user")
-    .update([updatedUserRole])
-    .eq("id", userId);
-
-  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to set this user's role to teacher.");
 }

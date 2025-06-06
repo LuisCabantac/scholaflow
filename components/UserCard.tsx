@@ -128,7 +128,7 @@ export default function UserCard({
             </svg>
           </button>
           <EllipsisPopover
-            showEdit={true}
+            showEdit={false}
             showDelete={true}
             deleteLabel="Remove user"
             showEllipsis={ellipsis}
