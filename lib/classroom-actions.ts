@@ -214,7 +214,7 @@ export async function updateClass(
 
     const result = createClassroomSchema.safeParse({
       ...currentClassroom,
-      ...updateClass,
+      ...updatedClass,
     });
 
     if (result.error) {
@@ -356,12 +356,12 @@ export async function deleteClass(classId: string) {
 
   const currentClassroom = await getClassByClassId(classId);
 
+  if (!currentClassroom) throw new Error("This class doesn't exist.");
+
   if (
     session.user.role === "teacher" &&
     currentClassroom?.teacherId === session.user.id
   ) {
-    if (!currentClassroom) throw new Error("This class doesn't exist.");
-
     const classes = await getAllEnrolledClassesByClassAndSessionId(classId);
     if (classes?.length) {
       const classroomId = classes.map((curClass) => curClass.id);
@@ -408,7 +408,8 @@ export async function deleteClass(classId: string) {
     classId,
   );
 
-  if (!currentEnrolledClass) throw new Error("This class doesn't exist.");
+  if (!currentEnrolledClass)
+    throw new Error("You are not enrolled in this class.");
 
   await deleteAllClassworkByClassAndUserId(
     currentEnrolledClass.classId,
@@ -587,6 +588,7 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
     throw new Error("You are not a member of this class.");
 
   const classroom = await getClassByClassId(classId);
+
   if (!classroom) throw new Error("This class doesn't exist.");
 
   if (
