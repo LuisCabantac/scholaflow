@@ -48,23 +48,30 @@ async function sendEmail(
     };
   }
 
-  const response = await emailjs.send(
-    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
-    process.env.NEXT_PUBLIC_EMAILJS_CLOSE_ACCOUNT_TEMPLATE_ID ?? "",
-    {
-      ...templateParams,
-      message: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
-    },
-    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
-  );
-
-  if (response.status !== 200) {
-    return {
-      success: false,
-      message:
-        "Failed to send verification email. Please check your internet connection and try again, or contact support if the issue persists.",
-    };
-  }
+  await emailjs
+    .send(
+      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
+      process.env.NEXT_PUBLIC_EMAILJS_CLOSE_ACCOUNT_TEMPLATE_ID ?? "",
+      {
+        ...templateParams,
+        message: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
+      },
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
+    )
+    .then(() => {
+      return {
+        success: false,
+        message:
+          "Failed to send verification email. Please check your internet connection and try again, or contact support if the issue persists.",
+      };
+    })
+    .catch(() => {
+      return {
+        success: false,
+        message:
+          "Failed to send verification email. Please check your internet connection and try again, or contact support if the issue persists.",
+      };
+    });
 
   return {
     success: true,
