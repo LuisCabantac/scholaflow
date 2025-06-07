@@ -322,12 +322,12 @@ export default function ClassForm({
                         onClick={async () => {
                           await navigator.clipboard
                             .writeText(
-                              `scholaflow.vercel.app/join-class/${classroom?.code}`,
+                              `${process.env.NEXT_PUBLIC_APP_URL}/join-class/${classroom?.code}`,
                             )
                             .then(() => toast.success("Copied to clipboard!"));
                         }}
                       >
-                        {`scholaflow.vercel.app/join-class/${classroom?.code}`}
+                        {`${process.env.NEXT_PUBLIC_APP_URL}/join-class/${classroom?.code}`}
                       </p>
                     </div>
                   </div>
