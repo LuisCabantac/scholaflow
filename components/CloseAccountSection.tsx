@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { verifyEmailVerification } from "@/lib/auth-actions";
+import { closeUserAccount } from "@/lib/auth-actions";
 
-export default function VerifySection() {
+export default function CloseAccountSection() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -14,20 +14,20 @@ export default function VerifySection() {
 
   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (!token) {
       router.push("/");
       return;
     }
 
-    verifyEmailVerification(token ?? "").then((data) => {
-      setIsLoading(false);
-      setSuccess(data.success);
-      setMessage(data.message);
-      if (data.success) {
-        setTimeout(() => router.push("/signin"), 2000);
-      }
-    });
+    const { success, message } = await closeUserAccount(token ?? "");
+
+    setIsLoading(false);
+    setSuccess(success);
+    setMessage(message);
+    if (success) {
+      router.push("/signin");
+    }
   }, [token, router]);
 
   useEffect(() => {
@@ -37,11 +37,12 @@ export default function VerifySection() {
   return (
     <section className="z-10 mx-8 grid w-full gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
       <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
-        Verify your email
+        Close Account
       </h1>
       {isLoading && (
         <div className="flex items-center gap-2">
-          <div className="spinner__mini dark"></div> Verifying...
+          <div className="spinner__mini dark"></div> Processing account
+          closure...
         </div>
       )}
       {success && (

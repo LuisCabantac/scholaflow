@@ -446,7 +446,7 @@ export default function StreamCard({
             </button>
             <EllipsisPopover
               showEdit={session.id === stream.userId}
-              clipboardUrl={`scholaflow.vercel.app/classroom/class/${classroom.id}/stream/${stream.id}`}
+              clipboardUrl={`${process.env.NEXT_PUBLIC_APP_URL}/classroom/class/${classroom.id}/stream/${stream.id}`}
               showEllipsis={ellipsis}
               showDelete={
                 session.id === stream.userId ||

@@ -144,8 +144,6 @@ export async function updateProfile(formData: FormData): Promise<{
   const newSchoolName = formData.get("schoolName");
   const attachment = formData.get("attachment");
 
-  console.log(newEmail);
-
   if (
     currentUserData.email !== newEmail ||
     currentUserData.name !== newFullName ||
@@ -446,7 +444,7 @@ export async function removeRoleRequest(request: RoleRequest): Promise<void> {
   if (!data) throw new Error("Failed to delete role request from database.");
 }
 
-async function removeRoleRequestByUserId(userId: string): Promise<void> {
+export async function removeRoleRequestByUserId(userId: string): Promise<void> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

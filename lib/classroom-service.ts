@@ -35,7 +35,6 @@ export async function getClassNameByClassId(id: string): Promise<{
   if (!session) return null;
 
   if (!id || !validateUUID(id)) {
-    console.error("Invalid classId passed to getClassNameByClassId:", id);
     return null;
   }
 
@@ -55,7 +54,6 @@ export async function getClassByClassId(id: string): Promise<Classroom | null> {
   if (!session) return null;
 
   if (!id || !validateUUID(id)) {
-    console.error("Invalid classId passed to getClassByClassId:", id);
     return null;
   }
 
@@ -92,7 +90,6 @@ export async function getEnrolledClassByClassAndSessionId(
   if (!session) return null;
 
   if (!classId || !validateUUID(classId)) {
-    console.error("Invalid classId passed:", classId);
     return null;
   }
 
@@ -116,7 +113,6 @@ export async function getEnrolledClassByEnrolledClassId(
   if (!session) return null;
 
   if (!enrolledClassId || !validateUUID(enrolledClassId)) {
-    console.error("Invalid enrolledClassId passed:", enrolledClassId);
     return null;
   }
 
@@ -140,7 +136,6 @@ export async function getAllEnrolledClassesByClassAndSessionId(
   if (session.user.role !== "teacher") return null;
 
   if (!classId || !validateUUID(classId)) {
-    console.error("Invalid classId passed:", classId);
     return null;
   }
 
@@ -187,7 +182,6 @@ export async function getEnrolledClassByClassAndUserId(
   if (session.user.role !== "teacher") return null;
 
   if (!classId || !validateUUID(classId)) {
-    console.error("Invalid classId passed:", classId);
     return null;
   }
 
@@ -229,7 +223,6 @@ export async function getAllEnrolledClassesByClassId(
   if (!session) return null;
 
   if (!classId || !validateUUID(classId)) {
-    console.error("Invalid classId passed:", classId);
     return null;
   }
 
@@ -252,7 +245,6 @@ export async function getEnrolledClassByUserAndClassId(
   if (!session) return null;
 
   if (!classId || !validateUUID(classId)) {
-    console.error("Invalid classId passed:", classId);
     return null;
   }
 

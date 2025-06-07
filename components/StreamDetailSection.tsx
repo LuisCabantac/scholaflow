@@ -631,7 +631,7 @@ export default function StreamDetailSection({
                   session.id === stream.userId ||
                   session.id === classroom.teacherId
                 }
-                clipboardUrl={`scholaflow.vercel.app${pathname}`}
+                clipboardUrl={`${process.env.NEXT_PUBLIC_APP_URL}${pathname}`}
                 onToggleEllipsis={handleToggleEllipsis}
                 showEllipsis={ellipsis}
                 onShowEditForm={handleToggleShowStreamForm}
