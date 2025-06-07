@@ -73,9 +73,9 @@ async function sendEmail(
     )
     .then(() => {
       return {
-        success: false,
+        success: true,
         message:
-          "Failed to send verification email. Please check your internet connection and try again, or contact support if the issue persists.",
+          "Verification email sent successfully. Please check your inbox.",
       };
     })
     .catch(() => {
