@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { closeAccount } from "@/lib/user-management-actions";
+import {
+  generateVerificationToken,
+  getVerificationToken,
+} from "@/lib/auth-service";
 import { getRoleRequest } from "@/lib/user-management-service";
 import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 
@@ -36,9 +39,16 @@ export default async function Page() {
     return user;
   }
 
-  async function handleCloseProfile(userId: string) {
+  async function generateVerificationTokenClient(email: string) {
     "use server";
-    await closeAccount(userId);
+    const verification = await generateVerificationToken(email);
+    return verification;
+  }
+
+  async function handleGetVerificationToken(email: string) {
+    "use server";
+    const verification = await getVerificationToken(email);
+    return verification;
   }
 
   const existingRequest = await getRoleRequest(session.user.id);
@@ -47,7 +57,8 @@ export default async function Page() {
     <ProfileSection
       session={session.user}
       onGetUser={handleGetUser}
-      onCloseProfile={handleCloseProfile}
+      onGetVerificationToken={handleGetVerificationToken}
+      onGenerateVerificationToken={generateVerificationTokenClient}
       existingRequest={existingRequest}
     />
   );

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
@@ -9,33 +8,27 @@ import { updateProfile } from "@/lib/user-management-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import Button from "@/components/Button";
-import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function ProfileForm({
   user,
   session,
-  onCloseProfile,
   onToggleShowEditProfileForm,
   handleSetShowEditProfileForm,
 }: {
   user: Session | null | undefined;
   session: Session;
   onToggleShowEditProfileForm: () => void;
-  onCloseProfile: (userId: string) => Promise<void>;
   handleSetShowEditProfileForm: Dispatch<SetStateAction<boolean>>;
 }) {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { useClickOutsideHandler } = useClickOutside();
   const editProfileFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isClosingAccount, setIsClosingAccount] = useState(false);
 
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string>(
     user?.image ?? "",
   );
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
   async function handleSubmitEditProfile(event: React.FormEvent) {
     event.preventDefault();
@@ -74,10 +67,6 @@ export default function ProfileForm({
       };
       reader.readAsDataURL(selectedFile);
     }
-  }
-
-  function handleToggleShowConfirmation() {
-    setShowConfirmation(!showConfirmation);
   }
 
   useClickOutsideHandler(
@@ -195,38 +184,12 @@ export default function ProfileForm({
               />
             </div>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
-            <button
-              type="button"
-              disabled={isLoading}
-              className="flex h-10 items-center gap-1 rounded-md bg-[#e1e7f5] px-4 py-2 text-sm font-medium text-[#f03e3e] shadow-sm transition-colors hover:bg-[#d9dfee] hover:text-[#c92a2a] disabled:cursor-not-allowed disabled:bg-[#c5cde6]"
-              onClick={handleToggleShowConfirmation}
-            >
-              Close account
-            </button>
-            {!isClosingAccount && (
-              <Button type="primary" isLoading={isLoading}>
-                Save changes
-              </Button>
-            )}
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
+            <Button type="primary" isLoading={isLoading}>
+              Save changes
+            </Button>
           </div>
         </form>
-        {showConfirmation && (
-          <ConfirmationModal
-            type="delete"
-            btnLabel="Close account"
-            isLoading={isLoading}
-            handleCancel={handleToggleShowConfirmation}
-            handleAction={() => {
-              setIsLoading(true);
-              setIsClosingAccount(true);
-              onCloseProfile(session.id);
-              router.push("/");
-            }}
-          >
-            Are you sure your want to close your account?
-          </ConfirmationModal>
-        )}
       </div>
     </div>
   );

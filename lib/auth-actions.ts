@@ -6,12 +6,32 @@ import { v4 as uuidv4 } from "uuid";
 
 import { supabase } from "@/lib/supabase";
 import { Verification } from "@/lib/schema";
+import { deleteNote } from "@/lib/notes-actions";
 import { getUserByEmail } from "@/lib/user-service";
-import { user, verification } from "@/drizzle/schema";
+import { extractAvatarFilePath } from "@/lib/utils";
+import { getAllNotesBySession } from "@/lib/notes-service";
+import { getAllClassesStreamByUserId } from "@/lib/stream-service";
+import { account, session, user, verification } from "@/drizzle/schema";
 import {
   getVerificationToken,
   getVerificationTokenByToken,
 } from "@/lib/auth-service";
+import {
+  getAllClassesByTeacherId,
+  getAllEnrolledClassesByUserId,
+} from "@/lib/classroom-service";
+import {
+  deleteFileFromBucket,
+  removeRoleRequestByUserId,
+} from "@/lib/user-management-actions";
+import {
+  deleteAllCommentsByUserId,
+  deleteAllMessagesByUserId,
+  deleteAllPrivateCommentsByUserId,
+  deleteClass,
+  deleteClassStreamPost,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
+} from "@/lib/classroom-actions";
 
 // Auth.js Credential SignIn
 // export async function signInCredentialsAction(formData: FormData) {
@@ -237,5 +257,125 @@ export async function verifyEmailVerification(token: string): Promise<{
   return {
     success: true,
     message: "Your email is confirmed! Your learning journey begins now.",
+  };
+}
+
+export async function closeUserAccount(token: string): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  const tokenData = await getVerificationTokenByToken(token);
+
+  if (!tokenData)
+    return {
+      success: false,
+      message:
+        "Invalid link. This verification link may be incorrect or expired. Please request a new one.",
+    };
+
+  const hasExpired = new Date(tokenData.expiresAt) < new Date();
+
+  if (hasExpired) {
+    await db
+      .delete(verification)
+      .where(eq(verification.identifier, tokenData.identifier));
+
+    return {
+      success: false,
+      message: "This link has expired. Please request a new verification link.",
+    };
+  }
+
+  const existingUser = await getUserByEmail(tokenData.identifier);
+
+  if (!existingUser)
+    return {
+      success: false,
+      message:
+        "No account found for this email address. Please double-check your spelling or create a new account.",
+    };
+
+  await deleteAllMessagesByUserId(existingUser.id);
+
+  await deleteAllCommentsByUserId(existingUser.id);
+
+  await deleteAllPrivateCommentsByUserId(existingUser.id);
+
+  const posts = await getAllClassesStreamByUserId(existingUser.id);
+  if (posts?.length) {
+    for (const post of posts) {
+      await deleteClassStreamPost(post.id);
+    }
+  }
+
+  const enrolledClasses = await getAllEnrolledClassesByUserId(existingUser.id);
+  if (enrolledClasses?.length) {
+    for (const enrolledClass of enrolledClasses) {
+      await deleteEnrolledClassbyClassAndEnrolledClassId(
+        enrolledClass.id,
+        enrolledClass.classId,
+      );
+    }
+  }
+
+  const createdClasses = await getAllClassesByTeacherId(existingUser.id);
+  if (createdClasses?.length) {
+    for (const createdClass of createdClasses) {
+      await deleteClass(createdClass.id);
+    }
+  }
+
+  const allNotes = await getAllNotesBySession();
+  if (allNotes?.length) {
+    for (const note of allNotes) {
+      await deleteNote(note.id);
+    }
+  }
+
+  await removeRoleRequestByUserId(existingUser.id);
+
+  if (
+    existingUser.image &&
+    !existingUser.image.startsWith("https://lh3.googleusercontent.com/")
+  ) {
+    const filePath = extractAvatarFilePath(existingUser.image);
+    await deleteFileFromBucket("avatars", filePath);
+  }
+
+  await db.delete(session).where(eq(session.userId, existingUser.id));
+
+  const [existingAccount] = await db
+    .delete(account)
+    .where(eq(account.userId, existingUser.id))
+    .returning();
+
+  if (!existingAccount)
+    return {
+      success: false,
+      message:
+        "Failed to delete user account. Please try again or contact support.",
+    };
+
+  const [existingUserData] = await db
+    .delete(user)
+    .where(eq(user.id, existingUser.id))
+    .returning();
+
+  if (!existingUserData)
+    return {
+      success: false,
+      message:
+        "Failed to delete user account. Please try again or contact support.",
+    };
+
+  await db
+    .delete(verification)
+    .where(eq(verification.identifier, tokenData.identifier))
+    .returning();
+
+  return {
+    success: true,
+    message:
+      "Your account has been successfully deleted. We're sorry to see you go!",
   };
 }

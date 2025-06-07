@@ -1,28 +1,94 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 
-import { RoleRequest, Session } from "@/lib/schema";
+import { RoleRequest, Session, Verification } from "@/lib/schema";
 
-import EditProfileForm from "@/components/ProfileForm";
+import Button from "@/components/Button";
+import ProfileForm from "@/components/ProfileForm";
 import RoleRequestDialog from "@/components/RoleRequestDialog";
+import ConfirmationModal from "@/components/ConfirmationModal";
+
+async function sendEmail(
+  templateParams: {
+    to_email: string;
+    to_name: string;
+  },
+  onGetVerificationToken: (email: string) => Promise<Verification | null>,
+  onGenerateVerificationToken: (email: string) => Promise<Verification | null>,
+) {
+  const existingToken = await onGetVerificationToken(templateParams.to_email);
+
+  if (existingToken) {
+    const hasExpired = new Date(existingToken.expiresAt) < new Date();
+
+    if (!hasExpired) {
+      return {
+        success: false,
+        message:
+          "A verification email was already sent. Please check your inbox or wait for the current link to expire before requesting a new one.",
+      };
+    }
+  }
+
+  const verification = await onGenerateVerificationToken(
+    templateParams.to_email,
+  );
+
+  if (!verification) {
+    return {
+      success: false,
+      message:
+        "Failed to generate verification token. Please try again later or contact support if the issue persists.",
+    };
+  }
+
+  const response = await emailjs.send(
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
+    process.env.NEXT_PUBLIC_EMAILJS_CLOSE_ACCOUNT_TEMPLATE_ID ?? "",
+    {
+      ...templateParams,
+      message: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
+    },
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
+  );
+
+  if (response.status !== 200) {
+    return {
+      success: false,
+      message:
+        "Failed to send verification email. Please check your internet connection and try again, or contact support if the issue persists.",
+    };
+  }
+
+  return {
+    success: true,
+    message: "Verification email sent successfully. Please check your inbox.",
+  };
+}
 
 export default function ProfileSection({
   session,
   onGetUser,
-  onCloseProfile,
   existingRequest,
+  onGetVerificationToken,
+  onGenerateVerificationToken,
 }: {
   session: Session;
   onGetUser: (email: string) => Promise<Session | null>;
-  onCloseProfile: (userId: string) => Promise<void>;
   existingRequest: RoleRequest | null;
+  onGetVerificationToken: (email: string) => Promise<Verification | null>;
+  onGenerateVerificationToken: (email: string) => Promise<Verification | null>;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [showRoleRequest, setShowRoleRequest] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { data: user, isPending: userIsPending } = useQuery({
     queryKey: [`profile--${session.id}`],
@@ -37,8 +103,12 @@ export default function ProfileSection({
     setShowRoleRequest(!showRoleRequest);
   }
 
+  function handleToggleShowConfirmation() {
+    setShowConfirmation(!showConfirmation);
+  }
+
   return (
-    <section>
+    <section className="grid gap-2">
       <div className="grid gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -154,11 +224,26 @@ export default function ProfileSection({
           )}
         </div>
       </div>
+      <div className="grid rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
+        <h3 className="font-medium tracking-tight">Delete account</h3>
+        <div className="flex flex-col items-start gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between">
+          <p className="text-sm font-medium text-[#616572]">
+            Permanently delete your account and all data. This cannot be undone.
+          </p>
+          <Button
+            type="primary"
+            bg="bg-[#f03e3e] hover:bg-[#c92a2a]"
+            isLoading={isLoading}
+            onClick={handleToggleShowConfirmation}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
       {showEditProfileForm && (
-        <EditProfileForm
+        <ProfileForm
           user={user}
           session={session}
-          onCloseProfile={onCloseProfile}
           handleSetShowEditProfileForm={setShowEditProfileForm}
           onToggleShowEditProfileForm={handleToggleShowEditProfileForm}
         />
@@ -170,6 +255,35 @@ export default function ProfileSection({
           onToggleShowRoleRequest={handleToggleShowRoleRequest}
           handleSetShowRoleRequest={setShowRoleRequest}
         />
+      )}
+      {showConfirmation && (
+        <ConfirmationModal
+          type="delete"
+          btnLabel="Delete account"
+          isLoading={isLoading}
+          handleCancel={handleToggleShowConfirmation}
+          handleAction={async () => {
+            setIsLoading(true);
+            const templateParams = {
+              to_email: session.email,
+              to_name: session.name.split(" ")[0],
+            };
+            const { success, message } = await sendEmail(
+              templateParams,
+              onGetVerificationToken,
+              onGenerateVerificationToken,
+            );
+            if (success) {
+              setShowConfirmation(false);
+              toast.success(message);
+            } else {
+              toast.error(message);
+            }
+            setIsLoading(false);
+          }}
+        >
+          Are you sure your want to delete your account?
+        </ConfirmationModal>
       )}
     </section>
   );
