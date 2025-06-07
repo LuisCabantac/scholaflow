@@ -1,5 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import { eq } from "drizzle-orm";
+import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/drizzle/index";
 import { Verification } from "@/lib/schema";
@@ -33,8 +34,11 @@ export async function getVerificationTokenByToken(
 
 export async function generateVerificationToken(
   email: string,
+  type: "uuid" | "nanoid" = "uuid",
 ): Promise<Verification | null> {
-  const token = uuidv4();
+  if (!type) return null;
+
+  const token = type === "nanoid" ? nanoid() : uuidv4();
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
   const existingToken = await getVerificationToken(email);
