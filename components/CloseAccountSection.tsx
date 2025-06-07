@@ -1,59 +1,58 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { uuidv4Id } from "@/lib/schema";
 import { closeUserAccount } from "@/lib/auth-actions";
+
+import SpinnerMini from "@/components/SpinnerMini";
 
 export default function CloseAccountSection() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
 
   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(async () => {
-    if (!token) {
-      router.push("/");
-      return;
-    }
+  if (!token) {
+    router.push("/");
+  }
 
+  if (uuidv4Id.safeParse(token).error) {
+    router.push("/");
+  }
+
+  async function confirmDeleteAccountAction(event: React.FormEvent) {
+    event.preventDefault();
+    setIsLoading(true);
     const { success, message } = await closeUserAccount(token ?? "");
 
-    setIsLoading(false);
     setSuccess(success);
     setMessage(message);
+    setIsLoading(false);
     if (success) {
+      toast.success(message);
       router.push("/signin");
+    } else {
+      toast.error(message);
     }
-  }, [token, router]);
-
-  useEffect(() => {
-    onSubmit();
-  }, [onSubmit]);
+  }
 
   return (
-    <section className="z-10 mx-8 grid w-full gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
-      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
-        Close Account
-      </h1>
-      {isLoading && (
-        <div className="flex items-center gap-2">
-          <div className="spinner__mini dark"></div> Processing account
-          closure...
-        </div>
-      )}
+    <form className="grid gap-3 pb-3" onSubmit={confirmDeleteAccountAction}>
       {success && (
-        <div className="flex gap-2">
+        <div className="text-muted-foreground flex gap-2 rounded-md border p-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="size-5 flex-shrink-0 stroke-[#37b24d]"
+            className="mt-0.5 size-6 flex-shrink-0 stroke-[#37b24d]"
           >
             <path
               strokeLinecap="round"
@@ -65,14 +64,14 @@ export default function CloseAccountSection() {
         </div>
       )}
       {success === false && success !== null && (
-        <div className="flex gap-2">
+        <div className="text-muted-foreground flex gap-2 rounded-md border p-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="size-5 flex-shrink-0 stroke-[#f03e3e]"
+            className="mt-0.5 size-6 flex-shrink-0 stroke-[#f03e3e]"
           >
             <path
               strokeLinecap="round"
@@ -83,6 +82,14 @@ export default function CloseAccountSection() {
           <span>{message}</span>
         </div>
       )}
-    </section>
+      <button
+        className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#22317c] px-4 py-2 text-sm font-medium text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"
+        disabled={isLoading}
+        type="submit"
+      >
+        {isLoading && <SpinnerMini />}
+        {isLoading ? "Closing account..." : "Permanently close account"}
+      </button>
+    </form>
   );
 }
