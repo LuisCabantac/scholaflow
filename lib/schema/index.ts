@@ -25,6 +25,24 @@ export const editUserSchema = userSchema.omit({
   role: true,
 });
 
+export const accountSchema = z.object({
+  id: z.string(),
+  accountId: z.string(),
+  providerId: z.string(),
+  userId: z.string(),
+  accessToken: z.nullable(z.string()),
+  refreshToken: z.nullable(z.string()),
+  idToken: z.nullable(z.string()),
+  accessTokenExpiresAt: z.nullable(z.date()),
+  refreshTokenExpiresAt: z.nullable(z.date()),
+  scope: z.nullable(z.string()),
+  password: z.nullable(z.string()),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type Account = z.infer<typeof accountSchema>;
+
 export const sessionSchema = z.object({
   id: z.string(),
   name: z.string(),

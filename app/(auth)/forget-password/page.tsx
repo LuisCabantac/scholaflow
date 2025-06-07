@@ -5,11 +5,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { getUserByEmail } from "@/lib/user-service";
-import {
-  generateVerificationToken,
-  getVerificationToken,
-} from "@/lib/auth-service";
 import forgetPasswordPageImage from "@/public/landing_page/forgot-password.svg";
 
 import Logo from "@/components/Logo";
@@ -27,24 +22,6 @@ export default async function Page() {
   });
 
   if (session) return redirect("/classroom");
-
-  async function generateVerificationTokenClient(email: string) {
-    "use server";
-    const verification = await generateVerificationToken(email, "nanoid");
-    return verification;
-  }
-
-  async function handleGetVerificationToken(email: string) {
-    "use server";
-    const verification = await getVerificationToken(email);
-    return verification;
-  }
-
-  async function handleGetUserByEmail(email: string) {
-    "use server";
-    const user = await getUserByEmail(email);
-    return user;
-  }
 
   return (
     <div className="absolute top-0 z-[-2] h-screen w-screen bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
@@ -84,11 +61,7 @@ export default async function Page() {
             </p>
           </div>
           <div className="grid gap-3">
-            <ForgetPasswordSection
-              onGetUserByEmail={handleGetUserByEmail}
-              onGetVerificationToken={handleGetVerificationToken}
-              onGenerateVerificationToken={generateVerificationTokenClient}
-            />
+            <ForgetPasswordSection />
           </div>
           <p className="mx-auto my-0 text-xs">
             Don&apos;t have an account?{" "}

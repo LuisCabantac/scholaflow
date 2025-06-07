@@ -2,9 +2,9 @@ import { headers } from "next/headers";
 import { asc, eq, ilike } from "drizzle-orm";
 
 import { auth } from "@/lib/auth";
-import { User } from "@/lib/schema";
 import { db } from "@/drizzle/index";
-import { user } from "@/drizzle/schema";
+import { Account, User } from "@/lib/schema";
+import { account, user } from "@/drizzle/schema";
 
 export async function getUser(email: string): Promise<User | null> {
   const [data] = await db.select().from(user).where(eq(user.email, email));
@@ -20,6 +20,17 @@ export async function getUserByUserId(userId: string): Promise<User | null> {
 
 export async function getUserByEmail(email: string): Promise<User | null> {
   const [data] = await db.select().from(user).where(eq(user.email, email));
+
+  return data || null;
+}
+
+export async function getAccountByUserId(
+  userId: string,
+): Promise<Account | null> {
+  const [data] = await db
+    .select()
+    .from(account)
+    .where(eq(account.userId, userId));
 
   return data || null;
 }

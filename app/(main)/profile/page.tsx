@@ -3,10 +3,6 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import {
-  generateVerificationToken,
-  getVerificationToken,
-} from "@/lib/auth-service";
 import { getRoleRequest } from "@/lib/user-management-service";
 import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 
@@ -39,26 +35,12 @@ export default async function Page() {
     return user;
   }
 
-  async function generateVerificationTokenClient(email: string) {
-    "use server";
-    const verification = await generateVerificationToken(email);
-    return verification;
-  }
-
-  async function handleGetVerificationToken(email: string) {
-    "use server";
-    const verification = await getVerificationToken(email);
-    return verification;
-  }
-
   const existingRequest = await getRoleRequest(session.user.id);
 
   return (
     <ProfileSection
       session={session.user}
       onGetUser={handleGetUser}
-      onGetVerificationToken={handleGetVerificationToken}
-      onGenerateVerificationToken={generateVerificationTokenClient}
       existingRequest={existingRequest}
     />
   );

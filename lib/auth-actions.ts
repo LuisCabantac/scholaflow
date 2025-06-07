@@ -7,13 +7,14 @@ import { v4 as uuidv4 } from "uuid";
 import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { deleteNote } from "@/lib/notes-actions";
-import { getUserByEmail } from "@/lib/user-service";
 import { extractAvatarFilePath } from "@/lib/utils";
-import { nanoidId, Verification } from "@/lib/schema";
+import { nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import { getAllNotesBySession } from "@/lib/notes-service";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
+import { getAccountByUserId, getUserByEmail } from "@/lib/user-service";
 import { account, session, user, verification } from "@/drizzle/schema";
 import {
+  generateVerificationToken,
   getVerificationToken,
   getVerificationTokenByToken,
 } from "@/lib/auth-service";
@@ -193,14 +194,79 @@ export async function createVerificationToken(
 }
 
 export async function checkVerificationToken(
-  formData: FormData,
-): Promise<boolean> {
-  const email = formData.get("email") as string;
-  const otp = formData.get("otp") as string;
+  email: string,
+  tokenType: "uuid" | "nanoid",
+): Promise<{
+  success: boolean;
+  message: string;
+  data: Verification | null;
+  userName: string | null;
+}> {
+  const existingToken = await getVerificationToken(email);
 
-  const data = await getVerificationToken(email);
+  if (
+    existingToken &&
+    (tokenType === "nanoid"
+      ? nanoidId.safeParse(existingToken.value).success
+      : uuidv4Id.safeParse(existingToken.value).success)
+  ) {
+    const hasExpired = new Date(existingToken.expiresAt) < new Date();
 
-  return data?.value === otp;
+    if (!hasExpired) {
+      return {
+        success: false,
+        message:
+          "A verification email was already sent. Please check your inbox or wait for the current link to expire before requesting a new one.",
+        data: null,
+        userName: null,
+      };
+    }
+  }
+
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser)
+    return {
+      success: false,
+      message:
+        "The email address you entered does not exist in our system. Please check your email and try again, or create a new account.",
+      data: null,
+      userName: null,
+    };
+
+  if (tokenType === "nanoid") {
+    const account = await getAccountByUserId(existingUser.id);
+
+    if (account && account.providerId === "google") {
+      return {
+        success: false,
+        message:
+          "Password reset is not available for Google accounts. Please sign in and visit your profile settings to set up a password for email/password login.",
+        data: null,
+        userName: null,
+      };
+    }
+  }
+
+  const verification = await generateVerificationToken(email, tokenType);
+
+  if (!verification) {
+    return {
+      success: false,
+      message:
+        "Failed to generate verification token. Please try again later or contact support if the issue persists.",
+      data: null,
+      userName: null,
+    };
+  }
+
+  return {
+    success: true,
+    message:
+      "Verification token generated successfully. Please check your email for the verification link.",
+    data: verification,
+    userName: existingUser.name,
+  };
 }
 
 export async function verifyEmailVerification(token: string): Promise<{
@@ -397,8 +463,6 @@ export async function updateUserPassword(
         "Invalid link. This verification link may be incorrect or expired. Please request a new one.",
     };
 
-  console.log(nanoidId.safeParse(tokenData));
-
   if (nanoidId.safeParse(tokenData.value).success === false)
     return {
       success: false,
@@ -447,6 +511,16 @@ export async function updateUserPassword(
       success: false,
       message: "Your password must be no more than 20 characters long.",
     };
+
+  const account = await getAccountByUserId(existingUser.id);
+
+  if (account && account.providerId === "google") {
+    return {
+      success: false,
+      message:
+        "Password reset is not available for Google accounts. You can set a password by visiting your profile settings and editing your account details.",
+    };
+  }
 
   const ctx = await auth.$context;
   const hash = await ctx.password.hash(newPassword);

@@ -5,18 +5,13 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useRouter } from "next/navigation";
 
-import { nanoidId, User, Verification } from "@/lib/schema";
+import { checkVerificationToken } from "@/lib/auth-actions";
 
 import SpinnerMini from "@/components/SpinnerMini";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-async function sendEmail(
-  formData: FormData,
-  onGetUserByEmail: (email: string) => Promise<User | null>,
-  onGetVerificationToken: (email: string) => Promise<Verification | null>,
-  onGenerateVerificationToken: (email: string) => Promise<Verification | null>,
-) {
+async function sendEmail(formData: FormData) {
   const email = formData.get("email") as string | null;
 
   if (!email)
@@ -26,49 +21,25 @@ async function sendEmail(
         "Email address is required. Please provide a valid email address.",
     };
 
-  const existingToken = await onGetVerificationToken(email);
+  const { success, message, data, userName } = await checkVerificationToken(
+    email,
+    "nanoid",
+  );
 
-  if (existingToken && nanoidId.safeParse(existingToken.value).success) {
-    const hasExpired = new Date(existingToken.expiresAt) < new Date();
-
-    if (!hasExpired) {
-      return {
-        success: false,
-        message:
-          "A verification email was already sent. Please check your inbox or wait for the current link to expire before requesting a new one.",
-      };
-    }
-  }
-
-  const existingUser = await onGetUserByEmail(email);
-
-  if (!existingUser)
-    return {
-      success: false,
-      message:
-        "The email address you entered does not exist in our system. Please check your email and try again, or create a new account.",
-    };
-
-  const verification = await onGenerateVerificationToken(email);
-
-  if (!verification) {
-    return {
-      success: false,
-      message:
-        "Failed to generate verification token. Please try again later or contact support if the issue persists.",
-    };
+  if (!success) {
+    return { success: false, message };
   }
 
   const templateParams = {
-    to_email: existingUser.email,
-    to_name: existingUser.name.split(" ")[0],
+    to_email: email,
+    to_name: userName?.split(" ")[0],
     email_subject: "Reset Your ScholaFlow Password",
     email_title: "Password Reset Request",
     email_description:
       "We received a request to reset your ScholaFlow account password. If this was you, please click the button below to reset your password:",
     button_color: "#2563eb",
     button_text: "Reset Password",
-    action_url: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${verification.value}`,
+    action_url: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${data?.value}`,
     footer_message:
       "If you didn't request this password reset, please ignore this email or contact our support team. This link will expire in 1 day.",
   };
@@ -103,15 +74,7 @@ async function sendEmail(
   };
 }
 
-export default function ForgetPasswordSection({
-  onGetUserByEmail,
-  onGetVerificationToken,
-  onGenerateVerificationToken,
-}: {
-  onGetUserByEmail: (email: string) => Promise<User | null>;
-  onGetVerificationToken: (email: string) => Promise<Verification | null>;
-  onGenerateVerificationToken: (email: string) => Promise<Verification | null>;
-}) {
+export default function ForgetPasswordSection() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
@@ -120,12 +83,7 @@ export default function ForgetPasswordSection({
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
-    const { success, message } = await sendEmail(
-      formData,
-      onGetUserByEmail,
-      onGetVerificationToken,
-      onGenerateVerificationToken,
-    );
+    const { success, message } = await sendEmail(formData);
     if (success) {
       router.push("/signin");
       toast.success(message);

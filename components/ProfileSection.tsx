@@ -7,46 +7,27 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 
-import { uuidv4Id, RoleRequest, Session, Verification } from "@/lib/schema";
+import { RoleRequest, Session } from "@/lib/schema";
+import { checkVerificationToken } from "@/lib/auth-actions";
 
 import Button from "@/components/Button";
 import ProfileForm from "@/components/ProfileForm";
 import RoleRequestDialog from "@/components/RoleRequestDialog";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
-async function sendEmail(
-  templateParams: {
-    to_email: string;
-    to_name: string;
-  },
-  onGetVerificationToken: (email: string) => Promise<Verification | null>,
-  onGenerateVerificationToken: (email: string) => Promise<Verification | null>,
-) {
-  const existingToken = await onGetVerificationToken(templateParams.to_email);
-
-  if (existingToken && uuidv4Id.safeParse(existingToken.value).success) {
-    const hasExpired = new Date(existingToken.expiresAt) < new Date();
-
-    if (!hasExpired) {
-      return {
-        success: false,
-        message:
-          "A verification email was already sent. Please check your inbox or wait for the current link to expire before requesting a new one.",
-      };
-    }
-  }
-
-  const verification = await onGenerateVerificationToken(
+async function sendEmail(templateParams: {
+  to_email: string;
+  to_name: string;
+}) {
+  const { success, message, data } = await checkVerificationToken(
     templateParams.to_email,
+    "uuid",
   );
 
-  if (!verification) {
-    return {
-      success: false,
-      message:
-        "Failed to generate verification token. Please try again later or contact support if the issue persists.",
-    };
+  if (!success) {
+    return { success: false, message };
   }
+
   const newTemplateParams = {
     ...templateParams,
     email_subject: "Confirm Your ScholaFlow Account Deletion",
@@ -57,7 +38,7 @@ async function sendEmail(
     button_text: "Confirm Account Closure",
     warning_message:
       "This action cannot be undone. All your data will be permanently deleted.",
-    action_url: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
+    action_url: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${data?.value}`,
     footer_message:
       "If you didn't request this account closure, please ignore this email or contact our support team.",
   };
@@ -96,14 +77,10 @@ export default function ProfileSection({
   session,
   onGetUser,
   existingRequest,
-  onGetVerificationToken,
-  onGenerateVerificationToken,
 }: {
   session: Session;
   onGetUser: (email: string) => Promise<Session | null>;
   existingRequest: RoleRequest | null;
-  onGetVerificationToken: (email: string) => Promise<Verification | null>;
-  onGenerateVerificationToken: (email: string) => Promise<Verification | null>;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -288,11 +265,7 @@ export default function ProfileSection({
               to_email: session.email,
               to_name: session.name.split(" ")[0],
             };
-            const { success, message } = await sendEmail(
-              templateParams,
-              onGetVerificationToken,
-              onGenerateVerificationToken,
-            );
+            const { success, message } = await sendEmail(templateParams);
             if (success) {
               setShowConfirmation(false);
               toast.success(message);
