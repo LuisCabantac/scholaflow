@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import toast from "react-hot-toast";
 import React, { useState } from "react";
 
@@ -14,6 +15,7 @@ export default function SignInForm() {
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const [honeyPot, setHoneyPot] = useState("");
 
@@ -27,6 +29,7 @@ export default function SignInForm() {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
         callbackURL: "/classroom",
+        rememberMe,
       },
       {
         onRequest: () => {
@@ -60,6 +63,10 @@ export default function SignInForm() {
     setShowPassword(!showPassword);
   }
 
+  function handleToggleRememberMe() {
+    setRememberMe(!rememberMe);
+  }
+
   return (
     <form
       className="grid gap-3 border-b border-[#dddfe6] pb-3"
@@ -69,6 +76,7 @@ export default function SignInForm() {
         <label className="font-medium">
           Email <span className="text-red-400">*</span>
         </label>
+
         <input
           required
           disabled={isLoading}
@@ -139,6 +147,25 @@ export default function SignInForm() {
               onChange={(event) => setHoneyPot(event.target.value)}
             />
           </div>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-sm font-medium">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={handleToggleRememberMe}
+                className="mt-0.5 accent-[#22317c] hover:accent-[#384689]"
+              />
+              Remember me
+            </label>
+          </div>
+          <Link
+            href="/forget-password"
+            className="text-sm font-medium text-[#22317c] hover:text-[#384689]"
+          >
+            Forget Password?
+          </Link>
         </div>
       </div>
       <SignInCredentialsButton isLoading={isLoading}>
