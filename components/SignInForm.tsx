@@ -153,6 +153,7 @@ export default function SignInForm() {
             <label className="flex items-center gap-2 text-sm font-medium">
               <input
                 type="checkbox"
+                disabled={isLoading}
                 checked={rememberMe}
                 onChange={handleToggleRememberMe}
                 className="mt-0.5 accent-[#22317c] hover:accent-[#384689]"
@@ -162,6 +163,7 @@ export default function SignInForm() {
           </div>
           <Link
             href="/forget-password"
+            aria-disabled={isLoading}
             className="text-sm font-medium text-[#22317c] hover:text-[#384689]"
           >
             Forget Password?
