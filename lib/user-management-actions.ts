@@ -144,8 +144,6 @@ export async function updateProfile(formData: FormData): Promise<{
   const newSchoolName = formData.get("schoolName");
   const attachment = formData.get("attachment");
 
-  console.log(newEmail);
-
   if (
     currentUserData.email !== newEmail ||
     currentUserData.name !== newFullName ||
