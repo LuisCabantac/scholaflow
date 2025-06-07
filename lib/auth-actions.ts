@@ -4,11 +4,12 @@ import { db } from "@/drizzle";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
+import { auth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { Verification } from "@/lib/schema";
 import { deleteNote } from "@/lib/notes-actions";
 import { getUserByEmail } from "@/lib/user-service";
 import { extractAvatarFilePath } from "@/lib/utils";
+import { nanoidId, Verification } from "@/lib/schema";
 import { getAllNotesBySession } from "@/lib/notes-service";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
 import { account, session, user, verification } from "@/drizzle/schema";
@@ -377,5 +378,88 @@ export async function closeUserAccount(token: string): Promise<{
     success: true,
     message:
       "Your account has been successfully deleted. We're sorry to see you go!",
+  };
+}
+
+export async function updateUserPassword(
+  token: string,
+  formData: FormData,
+): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  const tokenData = await getVerificationTokenByToken(token);
+
+  if (!tokenData)
+    return {
+      success: false,
+      message:
+        "Invalid link. This verification link may be incorrect or expired. Please request a new one.",
+    };
+
+  console.log(nanoidId.safeParse(tokenData));
+
+  if (nanoidId.safeParse(tokenData.value).success === false)
+    return {
+      success: false,
+      message:
+        "Invalid verification token format. Please request a new password reset link.",
+    };
+
+  const hasExpired = new Date(tokenData.expiresAt) < new Date();
+
+  if (hasExpired) {
+    await db
+      .delete(verification)
+      .where(eq(verification.identifier, tokenData.identifier));
+
+    return {
+      success: false,
+      message: "This link has expired. Please request a new verification link.",
+    };
+  }
+
+  const existingUser = await getUserByEmail(tokenData.identifier);
+
+  if (!existingUser)
+    return {
+      success: false,
+      message:
+        "No account found for this email address. Please double-check your spelling or create a new account.",
+    };
+
+  const newPassword = formData.get("password") as string | null;
+
+  if (!newPassword)
+    return {
+      success: false,
+      message: "Password is required. Please enter a new password.",
+    };
+
+  if (newPassword.length < 8)
+    return {
+      success: false,
+      message: "Your password must be at least 8 characters long.",
+    };
+
+  if (newPassword.length > 20)
+    return {
+      success: false,
+      message: "Your password must be no more than 20 characters long.",
+    };
+
+  const ctx = await auth.$context;
+  const hash = await ctx.password.hash(newPassword);
+
+  await ctx.internalAdapter.updatePassword(existingUser.id, hash);
+
+  await db
+    .delete(verification)
+    .where(eq(verification.identifier, tokenData.identifier));
+
+  return {
+    success: true,
+    message:
+      "Your password has been successfully updated. You can now sign in with your new password.",
   };
 }
