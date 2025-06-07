@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 
-import { RoleRequest, Session, Verification } from "@/lib/schema";
+import { uuidv4Id, RoleRequest, Session, Verification } from "@/lib/schema";
 
 import Button from "@/components/Button";
 import ProfileForm from "@/components/ProfileForm";
@@ -24,7 +24,7 @@ async function sendEmail(
 ) {
   const existingToken = await onGetVerificationToken(templateParams.to_email);
 
-  if (existingToken) {
+  if (existingToken && uuidv4Id.safeParse(existingToken.value).success) {
     const hasExpired = new Date(existingToken.expiresAt) < new Date();
 
     if (!hasExpired) {
@@ -47,14 +47,27 @@ async function sendEmail(
         "Failed to generate verification token. Please try again later or contact support if the issue persists.",
     };
   }
+  const newTemplateParams = {
+    ...templateParams,
+    email_subject: "Confirm Your ScholaFlow Account Deletion",
+    email_title: "Account Closure Request",
+    email_description:
+      "We received a request to close your ScholaFlow account. If this was you, please click the button below to confirm and permanently delete your account:",
+    button_color: "#dc2626",
+    button_text: "Confirm Account Closure",
+    warning_message:
+      "This action cannot be undone. All your data will be permanently deleted.",
+    action_url: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
+    footer_message:
+      "If you didn't request this account closure, please ignore this email or contact our support team.",
+  };
 
   await emailjs
     .send(
       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? "",
       process.env.NEXT_PUBLIC_EMAILJS_CLOSE_ACCOUNT_TEMPLATE_ID ?? "",
       {
-        ...templateParams,
-        message: `${process.env.NEXT_PUBLIC_APP_URL}/close-account?token=${verification?.value}`,
+        ...newTemplateParams,
       },
       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY ?? "",
     )
