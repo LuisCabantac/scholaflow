@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -5,6 +6,12 @@ import { auth } from "@/lib/auth";
 
 import Nav from "@/components/Nav";
 import VerifySection from "@/components/VerifySection";
+
+export const metadata: Metadata = {
+  title: "Verify Email",
+  description:
+    "Verify your email address to complete your account setup and access your classroom.",
+};
 
 export default async function Page() {
   const session = await auth.api.getSession({
