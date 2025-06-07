@@ -182,7 +182,7 @@ export async function checkVerificationToken(
   return data?.value === otp;
 }
 
-export async function newVerification(token: string): Promise<{
+export async function verifyEmailVerification(token: string): Promise<{
   success: boolean;
   message: string;
 }> {

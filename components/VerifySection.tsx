@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { newVerification } from "@/lib/auth-actions";
+import { verifyEmailVerification } from "@/lib/auth-actions";
 
 export default function VerifySection() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function VerifySection() {
       return;
     }
 
-    newVerification(token ?? "").then((data) => {
+    verifyEmailVerification(token ?? "").then((data) => {
       setIsLoading(false);
       setSuccess(data.success);
       setMessage(data.message);
