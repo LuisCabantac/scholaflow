@@ -1,5 +1,13 @@
+import { Metadata } from "next";
+
 import Nav from "@/components/Nav";
 import CloseAccountSection from "@/components/CloseAccountSection";
+
+export const metadata: Metadata = {
+  title: "Close Account",
+  description:
+    "Close your ScholaFlow account permanently and delete all associated data.",
+};
 
 export default async function Page() {
   return (

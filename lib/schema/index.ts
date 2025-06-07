@@ -313,3 +313,7 @@ export const chatSchema = z.object({
 export type Chat = z.infer<typeof chatSchema>;
 
 export const createChatSchema = chatSchema.omit({ id: true, createdAt: true });
+
+export const nanoidId = z.nanoid();
+
+export const uuidv4Id = z.uuidv4();
