@@ -226,6 +226,16 @@ export const editClassTopicSchema = classTopicSchema.omit({
   createdAt: true,
 });
 
+export const streamType = z.union([
+  z.literal("stream"),
+  z.literal("assignment"),
+  z.literal("quiz"),
+  z.literal("question"),
+  z.literal("material"),
+]);
+
+export type StreamType = z.infer<typeof streamType>;
+
 export const streamSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
@@ -235,13 +245,7 @@ export const streamSchema = z.object({
   className: z.string(),
   title: z.nullable(z.string()),
   content: z.nullable(z.string()),
-  type: z.union([
-    z.literal("stream"),
-    z.literal("assignment"),
-    z.literal("quiz"),
-    z.literal("question"),
-    z.literal("material"),
-  ]),
+  type: streamType,
   attachments: z.array(z.string()),
   links: z.array(z.string()),
   points: z.nullable(z.number()),
