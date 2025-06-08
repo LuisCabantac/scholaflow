@@ -18,6 +18,18 @@ export const streamTypeEnum = pgEnum("type", [
   "material",
 ]);
 
+export const notificationTypeEnum = pgEnum("type", [
+  "stream",
+  "assignment",
+  "quiz",
+  "question",
+  "material",
+  "comment",
+  "join",
+  "addToClass",
+  "submit",
+]);
+
 export const roleRequestStatusEnum = pgEnum("status", ["pending", "rejected"]);
 
 export const user = pgTable("user", {
@@ -78,6 +90,22 @@ export const verification = pgTable("verification", {
     .notNull()
     .$defaultFn(() => new Date()),
   updatedAt: timestamp("updated_at").$defaultFn(() => new Date()),
+});
+
+export const notification = pgTable("notification", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id),
+  type: notificationTypeEnum("type").notNull(),
+  fromUserName: text("from_user_name").notNull(),
+  fromUserImage: text("from_user_image").notNull(),
+  resourceId: uuid("resource_id").notNull(),
+  resourceContent: text("resource_content").notNull(),
+  isRead: boolean("is_read").notNull().default(false),
+  createdAt: timestamp("created_at")
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 export const roleRequest = pgTable("role_request", {

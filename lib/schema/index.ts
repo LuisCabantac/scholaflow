@@ -68,6 +68,34 @@ export const verificationSchema = z.object({
 
 export type Verification = z.infer<typeof verificationSchema>;
 
+export const notificationSchema = z.object({
+  id: z.uuid(),
+  userId: z.string(),
+  type: z.union([
+    z.literal("stream"),
+    z.literal("assignment"),
+    z.literal("quiz"),
+    z.literal("question"),
+    z.literal("material"),
+    z.literal("comment"),
+    z.literal("join"),
+    z.literal("addToClass"),
+    z.literal("submit"),
+  ]),
+  fromUserName: z.string(),
+  fromUserImage: z.string(),
+  resourceId: z.uuid(),
+  resourceContent: z.string(),
+  isRead: z.boolean(),
+  createdAt: z.date(),
+});
+
+export const createNotificationSchema = notificationSchema.omit({
+  id: true,
+  isRead: true,
+  createdAt: true,
+});
+
 export const roleRequestSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
