@@ -68,20 +68,24 @@ export const verificationSchema = z.object({
 
 export type Verification = z.infer<typeof verificationSchema>;
 
+export const notificationType = z.union([
+  z.literal("stream"),
+  z.literal("assignment"),
+  z.literal("quiz"),
+  z.literal("question"),
+  z.literal("material"),
+  z.literal("comment"),
+  z.literal("join"),
+  z.literal("addToClass"),
+  z.literal("submit"),
+]);
+
+export type NotificationType = z.infer<typeof notificationType>;
+
 export const notificationSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
-  type: z.union([
-    z.literal("stream"),
-    z.literal("assignment"),
-    z.literal("quiz"),
-    z.literal("question"),
-    z.literal("material"),
-    z.literal("comment"),
-    z.literal("join"),
-    z.literal("addToClass"),
-    z.literal("submit"),
-  ]),
+  type: notificationType,
   fromUserName: z.string(),
   fromUserImage: z.string(),
   resourceId: z.uuid(),
@@ -89,6 +93,8 @@ export const notificationSchema = z.object({
   isRead: z.boolean(),
   createdAt: z.date(),
 });
+
+export type Notification = z.infer<typeof notificationSchema>;
 
 export const createNotificationSchema = notificationSchema.omit({
   id: true,
