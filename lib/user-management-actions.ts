@@ -16,8 +16,12 @@ import { deleteNote } from "@/lib/notes-actions";
 import { getAllNotesBySession } from "@/lib/notes-service";
 import { getRoleRequest } from "@/lib/user-management-service";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
-import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 import { roleRequest as roleRequestDrizzle, user } from "@/drizzle/schema";
+import {
+  getAccountByUserId,
+  getUserByEmail,
+  getUserByUserId,
+} from "@/lib/user-service";
 import {
   createRoleRequestSchema,
   editUserSchema,
@@ -32,8 +36,6 @@ import {
   deleteEnrolledClassbyClassAndEnrolledClassId,
   uploadAttachments,
 } from "@/lib/classroom-actions";
-
-// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function createUser(newGuest: object): Promise<{
   success: boolean;
@@ -143,19 +145,44 @@ export async function updateProfile(formData: FormData): Promise<{
   const newFullName = formData.get("name");
   const newSchoolName = formData.get("schoolName");
   const attachment = formData.get("attachment");
+  const currentPassword = formData.get("currentPassword") as string | null;
+  const newPassword = formData.get("newPassword") as string | null;
+  const confirmNewPassword = formData.get("confirmNewPassword") as
+    | string
+    | null;
+
+  if (newPassword !== confirmNewPassword)
+    return {
+      success: false,
+      message:
+        "Passwords do not match. Please ensure both password fields are identical.",
+    };
+
+  const account = await getAccountByUserId(currentUserData.id);
+
+  if (!account)
+    return {
+      success: false,
+      message:
+        "Account not found. Please ensure you're logged in with a valid account.",
+    };
+
+  const ctx = await auth.$context;
 
   if (
     currentUserData.email !== newEmail ||
     currentUserData.name !== newFullName ||
     currentUserData.schoolName !== newSchoolName ||
+    (account.providerId === "google" && newPassword) ||
+    (account.providerId === "credential" &&
+      currentPassword &&
+      newPassword &&
+      !(await ctx.password.verify({
+        password: newPassword,
+        hash: account.password ?? "",
+      }))) ||
     attachment
   ) {
-    // if (!emailRegex.test(newEmail))
-    //   return {
-    //     success: false,
-    //     message: "Invalid email address.",
-    //   };
-
     const emailExist = await getUserByEmail(newEmail as string);
 
     if (currentUserData.email !== newEmail && emailExist)
@@ -174,6 +201,71 @@ export async function updateProfile(formData: FormData): Promise<{
     ) {
       const filePath = extractAvatarFilePath(currentUserData.image);
       await deleteFileFromBucket("avatars", filePath);
+    }
+
+    if (newPassword) {
+      if (newPassword.length < 8 || newPassword.length > 20)
+        return {
+          success: false,
+          message: "Password must be between 8 and 20 characters long.",
+        };
+
+      if (account.providerId === "google") {
+        const result = await auth.api.setPassword({
+          body: { newPassword },
+          headers: await headers(),
+        });
+
+        if (!result)
+          return {
+            success: false,
+            message: "Failed to change password. Please try again later.",
+          };
+      }
+
+      if (account.providerId === "credential") {
+        if (!currentPassword)
+          return {
+            success: false,
+            message: "Current password is required to change your password.",
+          };
+
+        try {
+          const result = await auth.api.changePassword({
+            body: {
+              newPassword,
+              currentPassword,
+              revokeOtherSessions: true,
+            },
+            headers: await headers(),
+          });
+
+          if (!result)
+            return {
+              success: false,
+              message: "Failed to change password.",
+            };
+        } catch (error: unknown) {
+          if (
+            error &&
+            typeof error === "object" &&
+            "status" in error &&
+            "statusCode" in error &&
+            error.status === "BAD_REQUEST" &&
+            error.statusCode === 400
+          ) {
+            return {
+              success: false,
+              message: "Current password is incorrect. Please try again.",
+            };
+          }
+
+          return {
+            success: false,
+            message: "Failed to change password. Please try again later.",
+          };
+        }
+      }
     }
 
     const updatedGuest = {
