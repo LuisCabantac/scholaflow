@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { useSidebar } from "@/contexts/SidebarContext";
-import { Classroom, EnrolledClass } from "@/lib/schema";
+import { Classroom, EnrolledClass, Notification } from "@/lib/schema";
 
 const activeLinkStyle =
   "bg-[#c7d2f1] text-[#384689] font-semibold stroke-[#5c7cfa] fill-[#c7d2f1] shadow-sm";
@@ -15,11 +15,15 @@ export default function SidebarLinks({
   userId,
   role,
   onGetAllClassesByTeacherId,
+  onGetAllUnreadNotificationByUserId,
   onGetAllEnrolledClassesByUserId,
 }: {
   userId: string;
   role: string;
   onGetAllClassesByTeacherId: (id: string) => Promise<Classroom[] | null>;
+  onGetAllUnreadNotificationByUserId(
+    userId: string,
+  ): Promise<Notification[] | null>;
   onGetAllEnrolledClassesByUserId: (
     userId: string,
   ) => Promise<EnrolledClass[] | null>;
@@ -39,6 +43,11 @@ export default function SidebarLinks({
       queryKey: [`sidebar-enrolledClasses--${userId}`],
       queryFn: () => onGetAllEnrolledClassesByUserId(userId),
     });
+
+  const { data: unreadNotifications } = useQuery({
+    queryKey: [`notifications--${userId}--unread`],
+    queryFn: () => onGetAllUnreadNotificationByUserId(userId),
+  });
 
   return (
     <div className="mt-8 grid gap-32 font-medium md:mt-6">
@@ -143,6 +152,33 @@ export default function SidebarLinks({
               className={`text-base transition-all ${sidebarExpand ? "" : "md:hidden"}`}
             >
               Notes
+            </span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/notifications"
+            className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/notifications" ? activeLinkStyle : inactiveLinkStyle}`}
+            onClick={() => !isMobile && handleSidebarExpand()}
+          >
+            <div className="relative">
+              <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                />
+              </svg>
+              {unreadNotifications?.length ? (
+                <div
+                  className={`absolute -right-1 top-0 size-2 rounded-full ${pathname === "/notifications" ? "bg-[#5c7cfa]" : "bg-[#929bb4]"}`}
+                ></div>
+              ) : null}
+            </div>
+            <span
+              className={`text-base transition-all ${sidebarExpand ? "" : "md:hidden"}`}
+            >
+              Notifications
             </span>
           </Link>
         </li>

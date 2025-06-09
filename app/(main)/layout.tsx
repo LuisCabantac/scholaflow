@@ -12,6 +12,7 @@ import {
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import { getAllUnreadNotificationByUserId } from "@/lib/notification-service";
 
 export const metadata: Metadata = {
   title: { template: "%s | ScholaFlow", default: "ScholaFlow" },
@@ -51,6 +52,13 @@ export default async function RootLayout({
     } else return null;
   }
 
+  async function handleGetAllUnreadNotificationByUserId(id: string) {
+    "use server";
+    if (!id) return null;
+    const data = await getAllUnreadNotificationByUserId(id);
+    return data;
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Provider>
@@ -60,6 +68,9 @@ export default async function RootLayout({
             onGetAllClassesByTeacherId={handleGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={
               handleGetAllEnrolledClassesByUserId
+            }
+            onGetAllUnreadNotificationByUserId={
+              handleGetAllUnreadNotificationByUserId
             }
           />
         )}

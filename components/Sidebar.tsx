@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/contexts/SidebarContext";
-import { Classroom, EnrolledClass, Session } from "@/lib/schema";
+import { Classroom, EnrolledClass, Notification, Session } from "@/lib/schema";
 
 import Logo from "@/components/Logo";
 import SidebarLinks from "@/components/SidebarLinks";
@@ -10,9 +10,13 @@ export default function Sidebar({
   session,
   onGetAllClassesByTeacherId,
   onGetAllEnrolledClassesByUserId,
+  onGetAllUnreadNotificationByUserId,
 }: {
   session: Session | null;
   onGetAllClassesByTeacherId: (id: string) => Promise<Classroom[] | null>;
+  onGetAllUnreadNotificationByUserId(
+    userId: string,
+  ): Promise<Notification[] | null>;
   onGetAllEnrolledClassesByUserId: (
     userId: string,
   ) => Promise<EnrolledClass[] | null>;
@@ -69,6 +73,9 @@ export default function Sidebar({
             role={session.role}
             onGetAllClassesByTeacherId={onGetAllClassesByTeacherId}
             onGetAllEnrolledClassesByUserId={onGetAllEnrolledClassesByUserId}
+            onGetAllUnreadNotificationByUserId={
+              onGetAllUnreadNotificationByUserId
+            }
           />
         )}
       </div>
