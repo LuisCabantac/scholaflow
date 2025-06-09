@@ -90,6 +90,7 @@ export const notificationSchema = z.object({
   fromUserImage: z.string(),
   resourceId: z.uuid(),
   resourceContent: z.string(),
+  resourceUrl: z.string(),
   isRead: z.boolean(),
   createdAt: z.date(),
 });
@@ -100,6 +101,10 @@ export const createNotificationSchema = notificationSchema.omit({
   id: true,
   isRead: true,
   createdAt: true,
+});
+
+export const readNotificationSchema = notificationSchema.omit({
+  isRead: true,
 });
 
 export const roleRequestSchema = z.object({

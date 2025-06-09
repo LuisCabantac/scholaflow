@@ -102,6 +102,7 @@ export const notification = pgTable("notification", {
   fromUserImage: text("from_user_image").notNull(),
   resourceId: uuid("resource_id").notNull(),
   resourceContent: text("resource_content").notNull(),
+  resourceUrl: text("resource_url").notNull(),
   isRead: boolean("is_read").notNull().default(false),
   createdAt: timestamp("created_at")
     .notNull()
