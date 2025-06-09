@@ -78,6 +78,7 @@ export const notificationType = z.union([
   z.literal("join"),
   z.literal("addToClass"),
   z.literal("submit"),
+  z.literal("grade"),
 ]);
 
 export type NotificationType = z.infer<typeof notificationType>;

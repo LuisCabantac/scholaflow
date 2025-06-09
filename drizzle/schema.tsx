@@ -28,6 +28,7 @@ export const notificationTypeEnum = pgEnum("type", [
   "join",
   "addToClass",
   "submit",
+  "grade",
 ]);
 
 export const roleRequestStatusEnum = pgEnum("status", ["pending", "rejected"]);
