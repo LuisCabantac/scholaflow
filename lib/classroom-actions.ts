@@ -65,6 +65,10 @@ import {
   getAllMessagesByUserId,
 } from "@/lib/message-service";
 import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/lib/notification-actions";
+import {
   getAllCommentsByStreamId,
   getAllCommentsByUserId,
   getAllPrivateCommentsByStreamId,
@@ -340,6 +344,14 @@ export async function joinClass(classId: string) {
       message: "Failed to join the class. Please try again.",
     };
 
+  await sendNotification(
+    "join",
+    classroom.teacherId,
+    data.id,
+    data.name,
+    `/classroom/class/${data.classId}`,
+  );
+
   revalidatePath("/classroom");
 
   return { success: true, message: "You've successfully joined the class!" };
@@ -431,6 +443,8 @@ export async function deleteClass(classId: string) {
       "Failed to leave the class. The enrollment may not exist or has already been removed.",
     );
 
+  await deleteAllNotificationsByResourceId(data.id);
+
   revalidatePath("/classroom");
 
   return;
@@ -491,10 +505,12 @@ export async function deleteAllCommentsByUserId(userId: string) {
     .where(eq(streamComment.userId, userId))
     .returning();
 
-  if (!data.length)
-    throw new Error(
-      "Failed to delete user comments. No comments were found or the deletion operation was unsuccessful.",
-    );
+  if (data.length) {
+    const commentIds = data.map((comment) => comment.id);
+    for (const id of commentIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 
   return;
 }
@@ -524,10 +540,12 @@ export async function deleteAllPrivateCommentsByUserId(userId: string) {
     .where(eq(streamPrivateComment.userId, userId))
     .returning();
 
-  if (!data.length)
-    throw new Error(
-      "Failed to delete user private comments. No comments were found or the deletion operation was unsuccessful.",
-    );
+  if (data.length) {
+    const commentIds = data.map((comment) => comment.id);
+    for (const id of commentIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 
   return;
 }
@@ -560,14 +578,17 @@ export async function deleteAllClassworkByClassAndUserId(
     .where(and(eq(classwork.userId, userId), eq(classwork.classId, classId)))
     .returning();
 
-  if (!data.length)
-    throw new Error(
-      "Failed to delete user's classwork submissions. No submissions were found or the deletion operation was unsuccessful.",
-    );
+  if (data.length) {
+    const classworkIds = data.map((classwork) => classwork.id);
+    for (const id of classworkIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 }
 
 export async function deleteMultipleEnrolledClass(classId: string[]) {
   for (const rowId of classId) {
+    await deleteAllNotificationsByResourceId(rowId);
     await db.delete(enrolledClass).where(eq(enrolledClass.id, rowId));
   }
 }
@@ -614,10 +635,9 @@ export async function deleteEnrolledClassbyClassAndEnrolledClassId(
     )
     .returning();
 
-  if (!data)
-    throw new Error(
-      "Failed to remove user from class. The enrollment may not exist or has already been removed.",
-    );
+  if (data) {
+    await deleteAllNotificationsByResourceId(data.id);
+  }
 
   revalidatePath(`/classroom/class/${classId}/people`);
 }
@@ -691,7 +711,7 @@ export async function createClassStreamPost(
     content: formData.get("caption"),
     classId: formData.get("classroomId"),
     className: classroom.name,
-    announceTo: formData.getAll("announceTo"),
+    announceTo: formData.getAll("announceTo") as string[] | null,
     announceToAll: audienceIsAll,
     attachments: postAttachments,
     links: formData.getAll("links"),
@@ -738,6 +758,14 @@ export async function createClassStreamPost(
 
   revalidatePath(`/classroom/class/${formData.get("classroomId")}`);
   revalidatePath(`/classroom/class/${formData.get("classroomId")}/classwork`);
+
+  await sendNotification(
+    data.type,
+    newStream.announceTo ?? [],
+    data.id,
+    data.title ?? data.content ?? "",
+    `/classroom/class/${data.classId}/stream/${data.id}`,
+  );
 
   return {
     success: true,
@@ -967,6 +995,8 @@ export async function deleteClassStreamPost(streamId: string) {
     await deleteFilesFromBucket("streams", streamAttachmentsFilePath);
   }
 
+  await deleteAllNotificationsByResourceId(streamId);
+
   const [data] = await db
     .delete(stream)
     .where(eq(stream.id, streamId))
@@ -991,6 +1021,13 @@ export async function deleteAllClassworkByStreamId(streamId: string) {
   const classworks = await getAllClassworksByStreamId(streamId);
 
   if (!classworks || !classworks.length) return;
+
+  const classworkIds = classworks.map((classwork) => classwork.id);
+  if (classworkIds.length) {
+    for (const id in classworkIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 
   const attachments = classworks.map((chat) => chat.attachments).flat();
 
@@ -1048,6 +1085,13 @@ export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
 
   if (!comments?.length) return;
 
+  const commentIds = comments.map((comment) => comment.id);
+  if (commentIds.length) {
+    for (const id in commentIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
+
   const attachments = comments.map((comment) => comment.attachments).flat();
   if (attachments.length) {
     const filePath = attachments.map((file) => extractCommentFilePath(file));
@@ -1063,6 +1107,13 @@ export async function deleteAllPrivateStreamCommentsByStreamId(
   const privateComments = await getAllPrivateCommentsByStreamId(streamId);
 
   if (!privateComments?.length) return;
+
+  const commentIds = privateComments.map((comment) => comment.id);
+  if (commentIds.length) {
+    for (const id in commentIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 
   const attachments = privateComments
     .map((comment) => comment.attachments)
@@ -1080,12 +1131,15 @@ export async function deleteAllPrivateStreamCommentsByStreamId(
 export async function deleteAllPrivateStreamCommentsByClassId(classId: string) {
   const data = await db
     .delete(streamPrivateComment)
-    .where(eq(streamPrivateComment.classId, classId));
+    .where(eq(streamPrivateComment.classId, classId))
+    .returning();
 
-  if (!data.length)
-    throw new Error(
-      "Failed to delete private comments for this class. No comments were found or the deletion operation was unsuccessful.",
-    );
+  if (data.length) {
+    const commentIds = data.map((comment) => comment.id);
+    for (const id in commentIds) {
+      await deleteAllNotificationsByResourceId(id);
+    }
+  }
 }
 
 export async function deleteStreamComment(
@@ -1126,7 +1180,7 @@ export async function deleteStreamComment(
     await deleteFilesFromBucket("comments", filePath);
   }
 
-  const data = await db
+  const [data] = await db
     .delete(streamComment)
     .where(
       and(
@@ -1136,10 +1190,7 @@ export async function deleteStreamComment(
     )
     .returning();
 
-  if (!data.length)
-    throw new Error(
-      "Failed to delete the comment. The comment may not exist or you may not have permission to delete it.",
-    );
+  if (data) await deleteAllNotificationsByResourceId(data.id);
 }
 
 export async function addCommentToStream(formData: FormData) {
@@ -1206,6 +1257,16 @@ export async function addCommentToStream(formData: FormData) {
   }
 
   const [data] = await db.insert(streamComment).values(result.data).returning();
+
+  if (data) {
+    await sendNotification(
+      "comment",
+      classroom.teacherId,
+      data.id,
+      data.content ?? (data.attachments.length ? "Commented an image" : ""),
+      `/classroom/class/${data.classId}/stream/${data.streamId}?comment=${data.id}`,
+    );
+  }
 
   if (!data) {
     throw new Error(
@@ -1299,6 +1360,16 @@ export async function addPrivateComment(formData: FormData) {
       "Failed to save private comment. Please try again or contact support if the issue persists.",
     );
   }
+
+  if (data) {
+    await sendNotification(
+      "comment",
+      classroom.teacherId,
+      data.id,
+      data.content ?? (data.attachments.length ? "Commented an image" : ""),
+      `/classroom/class/${data.classId}/stream/${data.streamId}/submissions?name=${data.userName.toLowerCase().replace(/\s+/g, "-")}&user=${data.userId}&comment=${data.id}`,
+    );
+  }
 }
 
 export async function deletePrivateComment(
@@ -1353,6 +1424,10 @@ export async function deletePrivateComment(
     throw new Error(
       "Failed to delete the private comment. The comment may not exist or you may not have permission to delete it.",
     );
+
+  if (data) {
+    await deleteAllNotificationsByResourceId(data.id);
+  }
 }
 
 export async function addUserToClass(formData: FormData): Promise<{
@@ -1446,6 +1521,16 @@ export async function addUserToClass(formData: FormData): Promise<{
       message:
         "Failed to add user to class. Please check your connection and try again, or contact support if the issue persists.",
     };
+  }
+
+  if (data) {
+    await sendNotification(
+      "addToClass",
+      data.userId,
+      data.id,
+      data.name,
+      `/classroom/class/${data.classId}`,
+    );
   }
 
   revalidatePath(`/classroom/`);
@@ -1584,6 +1669,14 @@ export async function submitClasswork(
         "Failed to submit classwork. Please check your connection and try again, or contact support if the issue persists.",
     };
   }
+
+  await sendNotification(
+    "submit",
+    data.userId,
+    data.id,
+    stream.title ?? stream.content ?? "",
+    `/classroom/class/${data.classId}/stream/${data.streamId}/submissions?name=${data.userName.toLowerCase().replace(/\s+/g, "-")}&user=${data.userId}`,
+  );
 
   revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
 
@@ -1848,6 +1941,16 @@ export async function addGradeClasswork(formData: FormData) {
     }
 
     revalidatePath(`/classroom/class/${classId}/stream/${streamId}`);
+
+    await sendNotification(
+      "grade",
+      data.userId,
+      data.id,
+      data.points !== null
+        ? `Grade received: ${userPoints}${stream.points ? `/${stream.points}` : ""} points`
+        : "Your work has been reviewed",
+      `/classroom/class/${classId}/stream/${streamId}`,
+    );
 
     return { success: true, message: "Grade has been added to this user." };
   }

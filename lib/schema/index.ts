@@ -68,6 +68,46 @@ export const verificationSchema = z.object({
 
 export type Verification = z.infer<typeof verificationSchema>;
 
+export const notificationType = z.union([
+  z.literal("stream"),
+  z.literal("assignment"),
+  z.literal("quiz"),
+  z.literal("question"),
+  z.literal("material"),
+  z.literal("comment"),
+  z.literal("join"),
+  z.literal("addToClass"),
+  z.literal("submit"),
+  z.literal("grade"),
+]);
+
+export type NotificationType = z.infer<typeof notificationType>;
+
+export const notificationSchema = z.object({
+  id: z.uuid(),
+  userId: z.string(),
+  type: notificationType,
+  fromUserName: z.string(),
+  fromUserImage: z.string(),
+  resourceId: z.uuid(),
+  resourceContent: z.string(),
+  resourceUrl: z.string(),
+  isRead: z.boolean(),
+  createdAt: z.date(),
+});
+
+export type Notification = z.infer<typeof notificationSchema>;
+
+export const createNotificationSchema = notificationSchema.omit({
+  id: true,
+  isRead: true,
+  createdAt: true,
+});
+
+export const readNotificationSchema = notificationSchema.omit({
+  isRead: true,
+});
+
 export const roleRequestSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
@@ -192,6 +232,16 @@ export const editClassTopicSchema = classTopicSchema.omit({
   createdAt: true,
 });
 
+export const streamType = z.union([
+  z.literal("stream"),
+  z.literal("assignment"),
+  z.literal("quiz"),
+  z.literal("question"),
+  z.literal("material"),
+]);
+
+export type StreamType = z.infer<typeof streamType>;
+
 export const streamSchema = z.object({
   id: z.uuid(),
   userId: z.string(),
@@ -201,13 +251,7 @@ export const streamSchema = z.object({
   className: z.string(),
   title: z.nullable(z.string()),
   content: z.nullable(z.string()),
-  type: z.union([
-    z.literal("stream"),
-    z.literal("assignment"),
-    z.literal("quiz"),
-    z.literal("question"),
-    z.literal("material"),
-  ]),
+  type: streamType,
   attachments: z.array(z.string()),
   links: z.array(z.string()),
   points: z.nullable(z.number()),

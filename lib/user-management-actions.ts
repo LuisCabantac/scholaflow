@@ -16,6 +16,7 @@ import { deleteNote } from "@/lib/notes-actions";
 import { getAllNotesBySession } from "@/lib/notes-service";
 import { getRoleRequest } from "@/lib/user-management-service";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
+import { deleteAllNotificationsByUserId } from "@/lib/notification-actions";
 import { roleRequest as roleRequestDrizzle, user } from "@/drizzle/schema";
 import {
   getAccountByUserId,
@@ -370,6 +371,8 @@ export async function closeAccount(userId: string): Promise<void> {
       await deleteNote(note.id);
     }
   }
+
+  await deleteAllNotificationsByUserId(userId);
 
   await removeRoleRequestByUserId(userId);
 
