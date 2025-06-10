@@ -13,6 +13,9 @@ import {
   readUnreadNotification,
 } from "@/lib/notification-actions";
 
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 export default function NotificationsSection({
   session,
   onGetAllNotificationByUserId,
@@ -23,7 +26,6 @@ export default function NotificationsSection({
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
-  // const [showNotesForm, setShowNotesForm] = useState(false);
 
   const {
     data: notifications,
@@ -36,22 +38,25 @@ export default function NotificationsSection({
   return (
     <section className="flex flex-col items-start justify-start">
       <div className="flex w-full items-center justify-between">
-        <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href="/notifications?sort=all"
-            className={`px-3 py-2 transition-all ${searchParams.get("sort") === "all" || searchParams.get("sort") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-          >
-            All
-          </Link>
-          <Link
-            href="/notifications?sort=unread"
-            className={`px-3 py-2 transition-all ${searchParams.get("sort") === "unread" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-          >
-            Unread
-          </Link>
-        </div>
-        <button
-          className="font-medium text-[#22317c] hover:text-[#384689]"
+        <Tabs
+          defaultValue="all"
+          value={
+            searchParams.get("sort") === "all" ||
+            searchParams.get("sort") === null
+              ? "all"
+              : "unread"
+          }
+        >
+          <TabsList>
+            <TabsTrigger value="all" asChild>
+              <Link href="/notifications?sort=all">All</Link>
+            </TabsTrigger>
+            <TabsTrigger value="unread">
+              <Link href="/notifications?sort=unread">Unread</Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button
           onClick={async () => {
             await markAllAsReadNotificationsByUserId(session.id);
             queryClient.invalidateQueries({
@@ -64,7 +69,7 @@ export default function NotificationsSection({
           }}
         >
           Mark all as read
-        </button>
+        </Button>
       </div>
       <ul className="mt-2 grid w-full gap-2">
         {notifications?.filter((notification) =>
@@ -82,9 +87,9 @@ export default function NotificationsSection({
             )
             .map((notification) => {
               return (
-                <li key={notification.id}>
+                <li key={notification.id} className="group">
                   <button
-                    className="flex w-full gap-2 overflow-hidden rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex w-full gap-2 overflow-hidden rounded-xl py-3"
                     onClick={() => {
                       if (!notification.isRead) {
                         readUnreadNotification(session.id, notification.id);
@@ -113,7 +118,7 @@ export default function NotificationsSection({
                       <div className="w-full">
                         <div className="flex items-center justify-between">
                           <h3
-                            className={`${notification.isRead ? "font-medium" : "font-bold"}`}
+                            className={`${notification.isRead ? "font-medium" : "font-bold"} text-foreground group-hover:underline`}
                           >
                             {notification.type === "stream" &&
                               `New announcement from ${notification.fromUserName}`}
@@ -135,7 +140,7 @@ export default function NotificationsSection({
                               `${notification.fromUserName} submitted work`}
                           </h3>
                           <p
-                            className={`${notification.isRead ? "font-medium text-[#616572]" : "font-semibold"} hidden text-sm md:block`}
+                            className={`${notification.isRead ? "font-medium" : "font-semibold"} hidden text-sm text-foreground/70 md:block`}
                           >
                             {isToday(notification.createdAt)
                               ? format(notification.createdAt, "h'h ago'")
@@ -145,12 +150,12 @@ export default function NotificationsSection({
                           </p>
                         </div>
                         <p
-                          className={`${notification.isRead ? "font-normal text-[#616572]" : "font-semibold"} text-start text-sm`}
+                          className={`${notification.isRead ? "font-normal" : "font-semibold"} text-start text-sm text-foreground/70 group-hover:underline`}
                         >
                           {notification.resourceContent}
                         </p>
                         <p
-                          className={`${notification.isRead ? "font-medium text-[#616572]" : "font-semibold"} block text-start text-sm md:hidden`}
+                          className={`${notification.isRead ? "font-medium" : "font-semibold"} block text-start text-sm text-foreground/70 md:hidden`}
                         >
                           {isToday(notification.createdAt)
                             ? format(notification.createdAt, "h'h ago'")
@@ -170,17 +175,17 @@ export default function NotificationsSection({
             .map((_, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                className="flex items-center justify-between gap-2 py-3"
               >
                 <div className="flex gap-2">
-                  <div className="size-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+                  <div className="size-10 animate-pulse rounded-full bg-muted"></div>
                   <div className="grid gap-2">
-                    <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                    <div className="h-[0.875rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                    <div className="block h-[0.75rem] w-14 animate-pulse rounded-md bg-[#e0e7ff] md:hidden"></div>
+                    <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-muted"></div>
+                    <div className="h-[0.875rem] w-24 animate-pulse rounded-md bg-muted"></div>
+                    <div className="block h-[0.75rem] w-14 animate-pulse rounded-md bg-muted md:hidden"></div>
                   </div>
                 </div>
-                <div className="hidden h-[0.875rem] w-16 animate-pulse rounded-md bg-[#e0e7ff] md:block"></div>
+                <div className="hidden h-[0.875rem] w-16 animate-pulse rounded-md bg-muted md:block"></div>
               </li>
             ))
         ) : (
