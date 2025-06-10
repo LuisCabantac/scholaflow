@@ -9,11 +9,11 @@ export default function Loading() {
       <div className="flex items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <div className="flex cursor-not-allowed items-center gap-2 text-base font-medium text-foreground md:gap-4">
+            <div className="flex cursor-not-allowed items-center gap-2 text-base font-medium text-foreground">
               <span>All classes</span>
-              <ChevronDown strokeWidth={3} />
+              <ChevronDown strokeWidth={3} className="h-4 w-4" />
             </div>
-            <div className="flex h-10 cursor-not-allowed items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-[#d5dae6] shadow-sm">
+            <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-[#d5dae6] shadow-sm">
               <PlusIcon className="h-4 w-4" />
               Add class
             </div>
@@ -60,14 +60,14 @@ export default function Loading() {
           </div>
           <div className="p-4">
             <div className="w-full">
-              <div className="grid h-10 w-full grid-cols-3 items-center justify-center rounded-xl bg-muted p-1 text-muted-foreground">
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-sm bg-background px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-none">
+              <div className="grid h-9 w-full grid-cols-3 items-center justify-center rounded-xl bg-muted p-1 text-muted-foreground">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-foreground shadow-sm transition-none">
                   Assigned
                 </div>
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-none">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-sm font-medium transition-none">
                   Missing
                 </div>
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-none">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-sm font-medium transition-none">
                   Done
                 </div>
               </div>
