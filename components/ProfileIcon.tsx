@@ -48,11 +48,25 @@ export default function ProfileIcon({
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="mt-2 w-44" align="end">
-        <DropdownMenuLabel>{fullName}</DropdownMenuLabel>
-        <p className="flex-shrink-0 overflow-hidden text-ellipsis pb-2 pl-2 text-xs text-foreground/90">
-          {email}
-        </p>
+      <DropdownMenuContent className="mt-2 w-52" align="end">
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <Image
+            src={avatar}
+            alt="profile image"
+            width={20}
+            height={20}
+            className="h-6 w-6 cursor-pointer rounded-full border object-cover transition-all md:h-10 md:w-10"
+            onDragStart={(e) => e.preventDefault()}
+          />
+          <div className="min-w-0 flex-1">
+            <span className="block overflow-hidden text-ellipsis whitespace-nowrap">
+              {fullName}
+            </span>
+            <p className="block overflow-hidden text-ellipsis whitespace-nowrap text-xs font-normal text-foreground/90">
+              {email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="text-foreground/80">
           <DropdownMenuItem className="mt-1 text-xs font-medium">
