@@ -57,6 +57,10 @@ export default function NotificationsSection({
           </TabsList>
         </Tabs>
         <Button
+          disabled={
+            !!notifications?.filter((notification) => notification.isRead)
+              .length
+          }
           onClick={async () => {
             await markAllAsReadNotificationsByUserId(session.id);
             queryClient.invalidateQueries({
