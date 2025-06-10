@@ -1,18 +1,18 @@
 "use client";
 
 import toast from "react-hot-toast";
-import { PlusIcon } from "lucide-react";
+import { Pen, Search } from "lucide-react";
 import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Note, Session } from "@/lib/schema";
 import { deleteNote } from "@/lib/notes-actions";
 
-import NoteForm from "@/components/NoteForm";
-import NoteCard from "@/components/NoteCard";
 import NoNotes from "@/components/NoNotes";
+import NoteCard from "@/components/NoteCard";
+import NoteForm from "@/components/NoteForm";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Input } from "./ui/input";
 
 export default function NotesSection({
   session,
@@ -65,15 +65,18 @@ export default function NotesSection({
     <section>
       <div>
         <div className="flex items-center justify-between">
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-[60%] md:w-[50%]"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <label className="group flex w-[60%] items-center gap-2 rounded-full border bg-foreground/10 text-sm focus-within:border-ring md:w-[50%]">
+            <Search className="mb-0.5 ml-3 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="mb-0.5 border-0 pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </label>
           <Button onClick={handleToggleShowNotesForm}>
-            <PlusIcon className="h-12 w-12" />
+            <Pen className="h-12 w-12" />
             New note
           </Button>
         </div>
