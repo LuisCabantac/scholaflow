@@ -2,10 +2,10 @@ export default function Loading() {
   return (
     <div className="flex flex-col items-start justify-start" role="status">
       <span className="sr-only">Loading…</span>
-      <div className="flex gap-1 rounded-lg bg-muted p-1">
-        <div className="h-6 w-16 animate-pulse rounded-md bg-muted-foreground/20"></div>
-        <div className="h-6 w-20 animate-pulse rounded-md bg-muted-foreground/20"></div>
-        <div className="h-6 w-20 animate-pulse rounded-md bg-muted-foreground/20"></div>
+      <div className="flex gap-1 rounded-full bg-muted p-1">
+        <div className="h-6 w-16 animate-pulse rounded-full bg-muted-foreground/20"></div>
+        <div className="h-6 w-20 animate-pulse rounded-full bg-muted-foreground/20"></div>
+        <div className="h-6 w-20 animate-pulse rounded-full bg-muted-foreground/20"></div>
       </div>
       <ul className="mt-2 grid w-full gap-2">
         {Array(6)

@@ -1,15 +1,18 @@
-import { PlusIcon } from "lucide-react";
+import { Pen, Search } from "lucide-react";
 
 export default function Loading() {
   return (
     <div>
       <div>
         <div className="flex items-center justify-between">
-          <div className="flex h-9 w-full animate-pulse rounded-xl border border-input bg-muted px-4 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:w-[50%] md:text-sm">
-            <span className="text-muted-foreground">Search...</span>
+          <div className="group flex h-10 w-[60%] animate-pulse items-center gap-2 rounded-full border bg-muted text-sm md:w-[50%]">
+            <Search className="mb-0.5 ml-3 h-4 w-4 stroke-muted-foreground" />
+            <div className="mb-0.5 flex-1 py-2">
+              <div className="h-4 w-20 rounded bg-muted-foreground/20" />
+            </div>
           </div>
           <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-primary-foreground shadow-sm">
-            <PlusIcon className="h-4 w-4" />
+            <Pen className="h-4 w-4" />
             New note
           </div>
         </div>

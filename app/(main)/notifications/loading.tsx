@@ -3,9 +3,9 @@ export default function Loading() {
     <div className="flex flex-col items-start justify-start" role="status">
       <span className="sr-only">Loading…</span>
       <div className="flex w-full items-center justify-between">
-        <div className="flex gap-1 rounded-lg bg-muted p-1">
-          <div className="h-6 w-16 animate-pulse rounded-md bg-muted-foreground/20"></div>
-          <div className="h-6 w-20 animate-pulse rounded-md bg-muted-foreground/20"></div>
+        <div className="flex gap-1 rounded-full bg-muted p-1">
+          <div className="h-6 w-16 animate-pulse rounded-full bg-muted-foreground/20"></div>
+          <div className="h-6 w-20 animate-pulse rounded-full bg-muted-foreground/20"></div>
         </div>
         <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-primary-foreground shadow-sm">
           Mark all as read
