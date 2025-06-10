@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { Quicksand } from "next/font/google";
 
@@ -11,17 +13,18 @@ const quicksand: FontType = Quicksand({
 
 export default function Logo({ showText = true }: { showText?: boolean }) {
   return (
-    <div className="flex items-center justify-start gap-1">
+    <div className="flex select-none items-center justify-start gap-1">
       <Image
         src={scholaflowLogo}
         alt="logo"
         width={200}
         height={200}
         className="h-7 w-7 flex-shrink-0 select-none object-cover md:h-8 md:w-8"
+        onDragStart={(e) => e.preventDefault()}
       />
       {showText && (
         <p
-          className={`${quicksand.className} cursor-default text-xl font-bold text-[#22317c] md:text-2xl`}
+          className={`${quicksand.className} cursor-default text-xl font-bold text-primary md:text-2xl`}
         >
           ScholaFlow
         </p>

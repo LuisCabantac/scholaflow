@@ -46,26 +46,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${beVietnamPro.className} box-border bg-[#edf2ff] text-sm text-[#474c50] antialiased`}
-      >
-        <Provider>{children}</Provider>
-        <Toaster
-          position="top-center"
-          gutter={12}
-          toastOptions={{
-            success: { duration: 3000 },
-            error: { duration: 5000 },
-            style: {
-              color: "#5c7cfa",
-              backgroundColor: "#f3f6ff",
-              fontWeight: 500,
-              padding: "0.75rem 1.25rem",
-            },
-          }}
-        />
-      </body>
-    </html>
+    <>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${beVietnamPro.className} box-border text-sm antialiased`}
+        >
+          <Provider>{children}</Provider>
+          <Toaster
+            position="top-center"
+            gutter={12}
+            toastOptions={{
+              success: { duration: 3000 },
+              error: { duration: 5000 },
+              style: {
+                color: "#5c7cfa",
+                backgroundColor: "#f3f6ff",
+                fontWeight: 500,
+                padding: "0.75rem 1.25rem",
+              },
+            }}
+          />
+        </body>
+      </html>
+    </>
   );
 }
