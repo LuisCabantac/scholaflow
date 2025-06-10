@@ -7,7 +7,9 @@ export default function Loading() {
           <div className="h-6 w-16 animate-pulse rounded-md bg-muted-foreground/20"></div>
           <div className="h-6 w-20 animate-pulse rounded-md bg-muted-foreground/20"></div>
         </div>
-        <div className="h-9 w-32 animate-pulse rounded-full bg-muted"></div>
+        <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-primary-foreground shadow-sm">
+          Mark all as read
+        </div>
       </div>
       <ul className="mt-2 grid w-full gap-2">
         {Array(6)
