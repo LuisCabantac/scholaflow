@@ -1,12 +1,25 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { useTheme } from "next-themes";
+import { LogOut, Moon, Sun, User } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { signOut } from "@/lib/auth-client";
 
-import SignOutButton from "@/components/SignOutButton";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ProfileIcon({
   email,
@@ -17,69 +30,74 @@ export default function ProfileIcon({
   avatar: string;
   fullName: string;
 }) {
-  const [isOpenPopover, setIsOpenPopover] = useState(false);
-  const { useClickOutsideHandler } = useClickOutside();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  function handleToggleOpenPopover() {
-    setIsOpenPopover(!isOpenPopover);
-  }
-
-  useClickOutsideHandler(
-    wrapperRef,
-    () => {
-      setIsOpenPopover(false);
-    },
-    false,
-  );
+  const router = useRouter();
+  const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className="relative" ref={wrapperRef}>
-      <div
-        className="profile__icon flex cursor-pointer items-center gap-2 rounded-md transition-colors"
-        onClick={handleToggleOpenPopover}
-      >
-        <Image
-          src={avatar}
-          alt="profile image"
-          width={40}
-          height={40}
-          className="h-10 w-10 cursor-pointer rounded-full border border-[#dddfe6] object-cover transition-all"
-        />
-      </div>
-      <div
-        className={`${isOpenPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-10 flex w-[12rem] transform flex-col justify-center gap-1 rounded-md bg-[#f3f6ff] px-3 py-3 shadow-md transition-all ease-in-out`}
-      >
-        <div className="relative grid cursor-default items-start gap-2">
-          <div className="overflow-hidden">
-            <p className="flex-shrink-0 overflow-hidden text-ellipsis font-semibold">
-              {fullName}
-            </p>
-            <p className="overflow-hidden text-ellipsis text-xs text-[#6e7280]">
-              {email}
-            </p>
-          </div>
-        </div>
-        <div className="mt-0.5">
-          <Link
-            href="/profile"
-            className="flex gap-[0.7rem] rounded-md py-2 pl-[0.3rem] pr-2 transition-colors hover:bg-[#d8e0f5]"
-            onClick={handleToggleOpenPopover}
-          >
-            <svg viewBox="0 0 24 24" className="size-5 fill-[#5c7cfa]">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-              />
-            </svg>
-            <span>Profile</span>
-          </Link>
-        </div>
-        <div>
-          <SignOutButton />
-        </div>
-      </div>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full" asChild>
+          <Image
+            src={avatar}
+            alt="profile image"
+            width={40}
+            height={40}
+            className="h-8 w-8 cursor-pointer rounded-full border object-cover transition-all md:h-10 md:w-10"
+            onDragStart={(e) => e.preventDefault()}
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="mt-2 w-44" align="end">
+        <DropdownMenuLabel>{fullName}</DropdownMenuLabel>
+        <p className="flex-shrink-0 overflow-hidden text-ellipsis pb-2 pl-2 text-xs text-foreground/90">
+          {email}
+        </p>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup className="text-foreground/80">
+          <DropdownMenuItem className="mt-1 text-xs font-medium">
+            <Link
+              href="/profile"
+              className="flex h-4 w-full items-center gap-2"
+            >
+              <User className="h-4 w-4" />
+              <span>Profile</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="mt-1 text-xs font-medium">
+            <button
+              className="flex h-4 w-full items-center gap-2"
+              onClick={() =>
+                theme === "dark" ? setTheme("light") : setTheme("dark")
+              }
+            >
+              <div className="relative h-4 w-4">
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all group-hover:text-neutral-800 dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute top-0 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 group-hover:dark:text-neutral-200" />
+              </div>
+              <span>{theme === "dark" ? "Dark" : "Light"} mode</span>
+            </button>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="mb-2 mt-1 text-xs font-medium">
+            <button
+              className="flex h-4 w-full items-center gap-2"
+              onClick={async () => {
+                await signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push(pathname === "/" ? "/" : "/signin");
+                      toast.success("You've been signed out successfully");
+                    },
+                  },
+                });
+              }}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Log out</span>
+            </button>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
