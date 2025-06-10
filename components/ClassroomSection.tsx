@@ -24,7 +24,6 @@ import JoinClassDialog from "@/components/JoinClassDialog";
 import NoClasses from "@/components/NoClasses";
 
 export default function ClassroomSection({
-  role,
   session,
   onGetClass,
   onDeleteClass,
@@ -34,7 +33,6 @@ export default function ClassroomSection({
   onGetAllEnrolledClasses,
   onGetAllEnrolledClassesClassworks,
 }: {
-  role: string;
   session: Session;
   onGetClass: (code: string) => Promise<Classroom | null>;
   onDeleteClass: (classId: string) => Promise<void>;

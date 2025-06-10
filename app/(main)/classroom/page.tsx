@@ -80,7 +80,6 @@ export default async function Page() {
 
   return (
     <ClassroomSection
-      role={session.user.role}
       session={session.user}
       onGetClass={handleGetClassByClassCode}
       onDeleteClass={handleDeleteClassByClassId}
