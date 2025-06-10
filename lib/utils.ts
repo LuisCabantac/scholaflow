@@ -1,3 +1,5 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import {
   format,
   formatDistanceToNow,
@@ -202,4 +204,8 @@ export function formatMessageDate(dateString: string | Date): string {
   } else {
     return format(date, "MMM d, yyyy");
   }
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
