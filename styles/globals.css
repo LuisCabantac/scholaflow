@@ -244,9 +244,9 @@
   :root {
     --background: 210 50% 99%;
     --foreground: 207 6% 30%;
-    --card: 210 50% 99%;
+    --card: 240 33% 99%;
     --card-foreground: 207 6% 30%;
-    --popover: 210 50% 99%;
+    --popover: 240 33% 99%;
     --popover-foreground: 207 6% 30%;
     --primary: 230 57% 31%;
     --primary-foreground: 223 100% 96%;
@@ -279,9 +279,9 @@
   .dark {
     --background: 229 57% 9%;
     --foreground: 223 100% 96%;
-    --card: 229 57% 9%;
+    --card: 227 31% 14%;
     --card-foreground: 223 100% 96%;
-    --popover: 229 57% 9%;
+    --popover: 227 31% 14%;
     --popover-foreground: 223 100% 96%;
     --primary: 223 100% 96%;
     --primary-foreground: 230 57% 31%;
