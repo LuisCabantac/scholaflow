@@ -15,7 +15,7 @@ export default function HomeNav({ session }: { session: Session | undefined }) {
 
   return (
     <nav
-      className={`sticky top-0 z-10 flex items-center justify-between bg-background/90 transition-all ${isSticky && "border-b backdrop-blur-3xl"} px-4 py-4 md:px-8 lg:px-12`}
+      className={`sticky top-0 z-10 flex items-center justify-between bg-background/90 transition-all ${isSticky && "border-b backdrop-blur-3xl"} px-4 py-4 md:px-12 lg:px-20`}
     >
       <Link href="/" className="cursor-pointer select-none">
         <Logo />
