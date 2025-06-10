@@ -8,8 +8,9 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { Classroom, EnrolledClass, Notification } from "@/lib/schema";
 
 const activeLinkStyle =
-  "bg-[#c7d2f1] text-[#384689] font-semibold stroke-[#5c7cfa] fill-[#c7d2f1] shadow-sm";
-const inactiveLinkStyle = "fill-[#dbe4ff] stroke-[#929bb4] text-[#929bb4]";
+  "bg-sidebar-accent text-sidebar-accent-foreground font-semibold stroke-sidebar-ring fill-sidebar-accent shadow-sm";
+const inactiveLinkStyle =
+  "fill-sidebar stroke-sidebar-foreground text-sidebar-foreground";
 
 export default function SidebarLinks({
   userId,
@@ -57,7 +58,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/user-management/"
-                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/user-management" ? activeLinkStyle : inactiveLinkStyle}`}
+                className={`sidebar__links hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-4 py-3 transition-all md:pr-0 ${pathname === "/user-management" ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -81,7 +82,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/classroom"
-                className={`sidebar__links md flex items-center justify-between gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-4 ${pathname === "/classroom" || (pathname.includes("/classroom") && !sidebarExpand) ? activeLinkStyle : inactiveLinkStyle} `}
+                className={`sidebar__links md hover:bg-sidebar-accent flex items-center justify-between gap-2 rounded-md px-4 py-3 transition-all md:pr-4 ${pathname === "/classroom" || (pathname.includes("/classroom") && !sidebarExpand) ? activeLinkStyle : inactiveLinkStyle} `}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <div className="flex gap-2">
@@ -100,7 +101,7 @@ export default function SidebarLinks({
             <li>
               <Link
                 href="/to-do"
-                className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/to-do" ? activeLinkStyle : inactiveLinkStyle}`}
+                className={`sidebar__links hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-4 py-3 transition-all md:pr-0 ${pathname === "/to-do" ? activeLinkStyle : inactiveLinkStyle}`}
                 onClick={() => !isMobile && handleSidebarExpand()}
               >
                 <svg viewBox="0 0 24 24" strokeWidth={2} className="size-6">
@@ -122,7 +123,7 @@ export default function SidebarLinks({
         <li>
           <Link
             href="/notes"
-            className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/notes" ? activeLinkStyle : inactiveLinkStyle}`}
+            className={`sidebar__links hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-4 py-3 transition-all md:pr-0 ${pathname === "/notes" ? activeLinkStyle : inactiveLinkStyle}`}
             onClick={() => !isMobile && handleSidebarExpand()}
           >
             <svg viewBox="0 0 24 24" strokeWidth={1.5} className="size-6">
@@ -138,7 +139,7 @@ export default function SidebarLinks({
         <li>
           <Link
             href="/notifications"
-            className={`sidebar__links flex items-center gap-2 rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1] md:pr-0 ${pathname === "/notifications" ? activeLinkStyle : inactiveLinkStyle}`}
+            className={`sidebar__links hover:bg-sidebar-accent flex items-center gap-2 rounded-md px-4 py-3 transition-all md:pr-0 ${pathname === "/notifications" ? activeLinkStyle : inactiveLinkStyle}`}
             onClick={() => !isMobile && handleSidebarExpand()}
           >
             <div className="relative">
@@ -151,7 +152,7 @@ export default function SidebarLinks({
               </svg>
               {unreadNotifications?.length ? (
                 <div
-                  className={`absolute -right-1 top-0 size-2 rounded-full ${pathname === "/notifications" ? "bg-[#5c7cfa]" : "bg-[#929bb4]"}`}
+                  className={`absolute -right-1 top-0 size-2 rounded-full ${pathname === "/notifications" ? "bg-sidebar-ring" : "bg-sidebar-foreground"}`}
                 ></div>
               ) : null}
             </div>
@@ -167,17 +168,17 @@ export default function SidebarLinks({
         {createdClassesIsPending && (
           <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
             <ul className="flex flex-col gap-3">
-              <li className="pl-4 text-xs text-[#929bb4]">Created</li>
+              <li className="text-sidebar-foreground pl-4 text-xs">Created</li>
               {Array(2)
                 .fill(undefined)
                 .map((_, index) => (
                   <li key={index} className="px-4 py-4" role="status">
                     <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
-                      <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
+                      <div className="bg-sidebar-foreground h-3 w-3 flex-shrink-0 animate-pulse rounded-full"></div>
                       <div className="grid gap-1">
-                        <div className="h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
-                        <div className="h-3 w-8 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                        <div className="bg-sidebar-foreground h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md"></div>
+                        <div className="bg-sidebar-foreground h-3 w-8 flex-shrink-0 animate-pulse rounded-md"></div>
                       </div>
                     </div>
                   </li>
@@ -189,13 +190,15 @@ export default function SidebarLinks({
           <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
             <ul className="flex flex-col gap-3">
               {createdClasses?.length ? (
-                <li className="pl-4 text-xs text-[#929bb4]">Created</li>
+                <li className="text-sidebar-foreground pl-4 text-xs">
+                  Created
+                </li>
               ) : null}
               {createdClasses?.map((curClass) => (
                 <li key={curClass.id}>
                   <Link
                     href={`/classroom/class/${curClass.id}`}
-                    className={`${pathname.includes(curClass.id) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid items-center rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
+                    className={`${pathname.includes(curClass.id) ? "bg-sidebar-accent text-[#384689]" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid items-center rounded-md px-4 py-3 transition-all`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
@@ -223,17 +226,19 @@ export default function SidebarLinks({
               {role !== "admin" && enrolledClassesIsPending && (
                 <li className={` ${sidebarExpand ? "" : "md:hidden"}`}>
                   <ul className="flex flex-col gap-3">
-                    <li className="pl-4 text-xs text-[#929bb4]">Enrolled</li>
+                    <li className="text-sidebar-foreground pl-4 text-xs">
+                      Enrolled
+                    </li>
                     {Array(2)
                       .fill(undefined)
                       .map((_, index) => (
                         <li key={index} className="px-4 py-4" role="status">
                           <span className="sr-only">Loading…</span>
                           <div className="flex gap-2">
-                            <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-[#929bb4]"></div>
+                            <div className="bg-sidebar-foreground h-3 w-3 flex-shrink-0 animate-pulse rounded-full"></div>
                             <div className="grid gap-1">
-                              <div className="h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
-                              <div className="h-3 w-8 flex-shrink-0 animate-pulse rounded-md bg-[#929bb4]"></div>
+                              <div className="bg-sidebar-foreground h-[0.875rem] w-32 flex-shrink-0 animate-pulse rounded-md"></div>
+                              <div className="bg-sidebar-foreground h-3 w-8 flex-shrink-0 animate-pulse rounded-md"></div>
                             </div>
                           </div>
                         </li>
@@ -242,13 +247,15 @@ export default function SidebarLinks({
                 </li>
               )}
               {enrolledClasses?.length ? (
-                <li className="pl-4 text-xs text-[#929bb4]">Enrolled</li>
+                <li className="text-sidebar-foreground pl-4 text-xs">
+                  Enrolled
+                </li>
               ) : null}
               {enrolledClasses?.map((enrolledClass) => (
                 <li key={enrolledClass.id}>
                   <Link
                     href={`/classroom/class/${enrolledClass.classId}`}
-                    className={`${pathname.includes(enrolledClass.classId) ? "bg-[#c7d2f1] text-[#384689]" : "text-[#929bb4]"} sidebar__links grid rounded-md px-4 py-3 transition-all hover:bg-[#c7d2f1]`}
+                    className={`${pathname.includes(enrolledClass.classId) ? "bg-sidebar-accent text-[#384689]" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid rounded-md px-4 py-3 transition-all`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
