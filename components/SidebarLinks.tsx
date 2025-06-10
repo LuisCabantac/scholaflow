@@ -198,7 +198,7 @@ export default function SidebarLinks({
                 <li key={curClass.id}>
                   <Link
                     href={`/classroom/class/${curClass.id}`}
-                    className={`${pathname.includes(curClass.id) ? "bg-sidebar-accent text-[#384689]" : "text-sidebar-foreground"} sidebar__links grid items-center rounded-xl px-4 py-3 transition-all hover:bg-sidebar-accent`}
+                    className={`${pathname.includes(curClass.id) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links grid items-center rounded-xl px-4 py-3 transition-all hover:bg-sidebar-accent`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export default function SidebarLinks({
                 <li key={enrolledClass.id}>
                   <Link
                     href={`/classroom/class/${enrolledClass.classId}`}
-                    className={`${pathname.includes(enrolledClass.classId) ? "bg-sidebar-accent text-[#384689]" : "text-sidebar-foreground"} sidebar__links grid rounded-xl px-4 py-3 transition-all hover:bg-sidebar-accent`}
+                    className={`${pathname.includes(enrolledClass.classId) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links grid rounded-xl px-4 py-3 transition-all hover:bg-sidebar-accent`}
                     onClick={() => !isMobile && handleSidebarExpand()}
                   >
                     <div className="flex items-center gap-2">
