@@ -13,7 +13,7 @@ export default function Loading() {
               <span>All classes</span>
               <ChevronDown strokeWidth={3} className="h-4 w-4" />
             </div>
-            <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-[#d5dae6] shadow-sm">
+            <div className="flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-primary px-4 font-medium text-primary-foreground shadow-sm">
               <PlusIcon className="h-4 w-4" />
               Add class
             </div>
