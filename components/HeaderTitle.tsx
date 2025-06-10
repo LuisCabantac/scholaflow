@@ -30,7 +30,7 @@ export default function HeaderTitle({
 
   if (pathname === "/classroom/class/")
     return (
-      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold text-foreground md:text-2xl">
         Classroom
       </h1>
     );
@@ -38,11 +38,11 @@ export default function HeaderTitle({
   if (pathname.includes("/classroom/class/"))
     return (
       <>
-        <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:block md:text-2xl">
+        <h1 className="hidden overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold text-foreground md:block md:text-2xl">
           {data ? data.name : "Classroom"}
         </h1>
 
-        <h1 className="block overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:hidden md:text-2xl">
+        <h1 className="block overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold text-foreground md:hidden md:text-2xl">
           {data?.name ?? "Classroom"}
         </h1>
       </>
@@ -50,13 +50,13 @@ export default function HeaderTitle({
 
   if (pathname.includes("/to-do"))
     return (
-      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+      <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold text-foreground md:text-2xl">
         To-do
       </h1>
     );
 
   return (
-    <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold md:text-2xl">
+    <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-xl font-semibold text-foreground md:text-2xl">
       {getLastRouteName(pathname)}
     </h1>
   );
