@@ -158,7 +158,7 @@ export default function SignInForm() {
                 onChange={handleToggleRememberMe}
                 className="mt-0.5 accent-[#22317c] hover:accent-[#384689]"
               />
-              Remember me
+              Keep me logged in
             </label>
           </div>
           <Link
