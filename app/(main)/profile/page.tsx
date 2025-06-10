@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-import { getRoleRequest } from "@/lib/user-management-service";
 import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 
 import ProfileSection from "@/components/ProfileSection";
@@ -35,13 +34,5 @@ export default async function Page() {
     return user;
   }
 
-  const existingRequest = await getRoleRequest(session.user.id);
-
-  return (
-    <ProfileSection
-      session={session.user}
-      onGetUser={handleGetUser}
-      existingRequest={existingRequest}
-    />
-  );
+  return <ProfileSection session={session.user} onGetUser={handleGetUser} />;
 }

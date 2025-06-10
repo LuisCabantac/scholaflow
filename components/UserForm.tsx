@@ -9,7 +9,7 @@ import { createUser, updateUser } from "@/lib/user-management-actions";
 
 import Button from "@/components/Button";
 
-export type UserRoleType = "student" | "teacher";
+export type UserRoleType = "user" | "admin";
 
 export default function UserForm({
   type,
@@ -27,9 +27,9 @@ export default function UserForm({
   const { useClickOutsideHandler } = useClickOutside();
   const userFormModalWrapperRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [userRole, setUserRole] = useState<UserRoleType>(
-    (user?.role as UserRoleType) ?? "student",
-  );
+  // const [userRole, setUserRole] = useState<UserRoleType>(
+  //   (user?.role as UserRoleType) ?? "user",
+  // );
   const [emailExists, setEmailExists] = useState(true);
   const [email, setEmail] = useState(user?.email ?? "");
 
@@ -38,7 +38,7 @@ export default function UserForm({
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
-      role: userRole,
+      role: "user",
       email_verified: true,
     });
     return status;
@@ -57,7 +57,7 @@ export default function UserForm({
         return;
       }
     }
-    formData.append("userRole", userRole);
+    formData.append("userRole", "user");
     const { success, message } = await (type === "create"
       ? onCreateUser(formData)
       : updateUser(formData));
@@ -195,7 +195,7 @@ export default function UserForm({
                 </button>
               </div>
             </div> */}
-            <div className="accent-[#22317c]">
+            {/* <div className="accent-[#22317c]">
               <label className="text-sm font-medium">
                 Role <span className="text-red-400">*</span>
               </label>
@@ -211,7 +211,7 @@ export default function UserForm({
                       onChange={(event) =>
                         setUserRole(event.target.value as UserRoleType)
                       }
-                      checked={userRole === "teacher"}
+                      checked={userRole === "user"}
                     />
                     Teacher
                   </div>
@@ -233,7 +233,7 @@ export default function UserForm({
                   </div>
                 </label>
               </div>
-            </div>
+            </div> */}
             <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-2 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
               {!isLoading && (
                 <Button type="secondary" onClick={onShowUserForm}>

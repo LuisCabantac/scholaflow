@@ -99,7 +99,7 @@ export default function StreamsSection({
   )[0];
 
   function handleToggleShowClassForm() {
-    if (session.role === "teacher") setShowClassForm(!showClassForm);
+    setShowClassForm(!showClassForm);
   }
 
   function handleToggleShowStreamForm() {
@@ -261,10 +261,8 @@ export default function StreamsSection({
         </div>
         <div className="grid items-start gap-2 md:grid-cols-[1fr_15rem]">
           <div>
-            {(session.role === "teacher" &&
-              session.id === classroom.teacherId) ||
-            ((session.role === "student" || session.role === "teacher") &&
-              classroom.allowUsersToPost) ? (
+            {session.id === classroom.teacherId ||
+            classroom.allowUsersToPost ? (
               <div
                 className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}

@@ -32,7 +32,6 @@ export default async function Header() {
           avatar={session.user.image ?? ""}
           email={session.user.email}
           fullName={session.user.name}
-          role={session.user.role}
         />
       ) : null}
     </header>

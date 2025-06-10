@@ -8,11 +8,7 @@ export const userSchema = z.object({
   image: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  role: z.union([
-    z.literal("student"),
-    z.literal("teacher"),
-    z.literal("admin"),
-  ]),
+  role: z.union([z.literal("user"), z.literal("admin")]),
   schoolName: z.nullable(z.string()),
 });
 

@@ -7,12 +7,11 @@ import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 
-import { RoleRequest, Session } from "@/lib/schema";
+import { Session } from "@/lib/schema";
 import { checkVerificationToken } from "@/lib/auth-actions";
 
 import Button from "@/components/Button";
 import ProfileForm from "@/components/ProfileForm";
-import RoleRequestDialog from "@/components/RoleRequestDialog";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
 async function sendEmail(templateParams: {
@@ -76,15 +75,12 @@ async function sendEmail(templateParams: {
 export default function ProfileSection({
   session,
   onGetUser,
-  existingRequest,
 }: {
   session: Session;
   onGetUser: (email: string) => Promise<Session | null>;
-  existingRequest: RoleRequest | null;
 }) {
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showRoleRequest, setShowRoleRequest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: user, isPending: userIsPending } = useQuery({
@@ -94,10 +90,6 @@ export default function ProfileSection({
 
   function handleToggleShowEditProfileForm() {
     setShowEditProfileForm(!showEditProfileForm);
-  }
-
-  function handleToggleShowRoleRequest() {
-    setShowRoleRequest(!showRoleRequest);
   }
 
   function handleToggleShowConfirmation() {
@@ -147,20 +139,6 @@ export default function ProfileSection({
               )}
             </div>
           </div>
-          {userIsPending ? (
-            <div
-              className="h-6 w-12 animate-pulse rounded-md bg-[#dbe4ff]"
-              role="status"
-            >
-              <span className="sr-only">Loading…</span>
-            </div>
-          ) : (
-            <p
-              className={`role flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${session.role === "admin" ? "admin" : session.role === "student" ? "student" : session.role === "teacher" ? "teacher" : "guest"}`}
-            >
-              {session.role}
-            </p>
-          )}
         </div>
         <div className="flex flex-col items-start justify-start gap-2 md:flex-row md:items-center md:justify-between">
           <div className="grid gap-2 md:flex md:items-center">
@@ -210,15 +188,6 @@ export default function ProfileSection({
               <h4 className="text-xs font-medium text-[#616572]">Joined</h4>
             </div>
           </div>
-          {!userIsPending && session.role !== "teacher" && (
-            <button
-              type="button"
-              onClick={handleToggleShowRoleRequest}
-              className="font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763]"
-            >
-              Switch to teacher role
-            </button>
-          )}
         </div>
       </div>
       <div className="grid rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
@@ -243,14 +212,6 @@ export default function ProfileSection({
           session={session}
           handleSetShowEditProfileForm={setShowEditProfileForm}
           onToggleShowEditProfileForm={handleToggleShowEditProfileForm}
-        />
-      )}
-      {showRoleRequest && (
-        <RoleRequestDialog
-          session={session}
-          existingRequest={existingRequest}
-          onToggleShowRoleRequest={handleToggleShowRoleRequest}
-          handleSetShowRoleRequest={setShowRoleRequest}
         />
       )}
       {showConfirmation && (

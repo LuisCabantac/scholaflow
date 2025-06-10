@@ -212,7 +212,7 @@ export default function ClassroomSection({
   }
 
   function handleToggleShowClassForm() {
-    if (role === "teacher") setShowClassForm(!showClassForm);
+    setShowClassForm(!showClassForm);
     handleToggleShowAddClassPopover();
   }
 
@@ -295,32 +295,30 @@ export default function ClassroomSection({
                     )}
                   </Link>
                 </li>
-                {role === "teacher" && (
-                  <li>
-                    <Link
-                      href="/classroom?sort=created-classes"
-                      className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
-                    >
-                      <span>Created classes</span>
-                      {searchParams.get("sort") === "created-classes" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
-                      )}
-                    </Link>
-                  </li>
-                )}
+                <li>
+                  <Link
+                    href="/classroom?sort=created-classes"
+                    className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                  >
+                    <span>Created classes</span>
+                    {searchParams.get("sort") === "created-classes" && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={3}
+                        stroke="currentColor"
+                        className="size-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                    )}
+                  </Link>
+                </li>
                 <li>
                   <Link
                     href="/classroom?sort=enrolled-classes"
@@ -348,14 +346,7 @@ export default function ClassroomSection({
               </ul>
             </div>
             <div className="relative" ref={btnWrapperRef}>
-              <Button
-                type="primary"
-                onClick={
-                  role === "teacher"
-                    ? handleToggleShowAddClassPopover
-                    : handleToggleShowJoinClass
-                }
-              >
+              <Button type="primary" onClick={handleToggleShowAddClassPopover}>
                 Add class
               </Button>
               <div
@@ -367,14 +358,12 @@ export default function ClassroomSection({
                 >
                   Join class
                 </button>
-                {role === "teacher" && (
-                  <button
-                    className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                    onClick={handleToggleShowClassForm}
-                  >
-                    Create class
-                  </button>
-                )}
+                <button
+                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
+                  onClick={handleToggleShowClassForm}
+                >
+                  Create class
+                </button>
               </div>
             </div>
           </div>

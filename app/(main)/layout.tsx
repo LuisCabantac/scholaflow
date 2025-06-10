@@ -34,22 +34,15 @@ export default async function RootLayout({
   async function handleGetAllClassesByTeacherId(id: string) {
     "use server";
     if (!id) return null;
-    if (session && session.user.role === "teacher") {
-      const data = await getAllClassesByTeacherId(id);
-      return data;
-    } else return null;
+    const data = await getAllClassesByTeacherId(id);
+    return data;
   }
 
   async function handleGetAllEnrolledClassesByUserId(id: string) {
     "use server";
     if (!id) return null;
-    if (
-      session &&
-      (session.user.role === "teacher" || session.user.role === "student")
-    ) {
-      const data = await getAllEnrolledClassesByUserId(id);
-      return data;
-    } else return null;
+    const data = await getAllEnrolledClassesByUserId(id);
+    return data;
   }
 
   async function handleGetAllUnreadNotificationByUserId(id: string) {

@@ -67,7 +67,7 @@ export default function UserCard({
       </td>
       <td data-cell="Role:" className="px-4 py-2">
         <span
-          className={`role flex w-24 items-center justify-center rounded-md p-1 text-[0.65rem] font-semibold md:p-2 md:text-xs ${userData.role === "admin" ? "admin" : userData.role === "teacher" ? "teacher" : userData.role === "student" ? "student" : "guest"}`}
+          className={`role flex w-24 items-center justify-center rounded-md p-1 text-[0.65rem] font-semibold md:p-2 md:text-xs ${userData.role === "admin" ? "admin" : "user"}`}
         >
           {userData.role.toUpperCase()}
         </span>

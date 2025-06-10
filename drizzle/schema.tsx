@@ -8,7 +8,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-export const roleEnum = pgEnum("role", ["student", "teacher", "admin"]);
+export const roleEnum = pgEnum("role", ["user", "admin"]);
 
 export const streamTypeEnum = pgEnum("type", [
   "stream",
@@ -47,7 +47,7 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at")
     .$defaultFn(() => new Date())
     .notNull(),
-  role: roleEnum("role").notNull().default("student"),
+  role: roleEnum("role").notNull().default("user"),
   schoolName: text("school_name"),
 });
 

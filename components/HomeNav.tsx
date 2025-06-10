@@ -25,7 +25,6 @@ export default function HomeNav({ session }: { session: Session | undefined }) {
           avatar={session.image ?? ""}
           email={session.email}
           fullName={session.name}
-          role={session.role}
         />
       ) : (
         <div className="flex gap-2">

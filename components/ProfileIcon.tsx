@@ -9,12 +9,10 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import SignOutButton from "@/components/SignOutButton";
 
 export default function ProfileIcon({
-  role,
   email,
   avatar,
   fullName,
 }: {
-  role: string;
   email: string;
   avatar: string;
   fullName: string;
@@ -62,11 +60,6 @@ export default function ProfileIcon({
             </p>
           </div>
         </div>
-        <p
-          className={`role mt-0.5 flex items-center justify-center rounded-md px-3 py-1.5 text-[0.7rem] font-semibold uppercase ${role === "admin" ? "admin" : role === "teacher" ? "teacher" : role === "student" ? "student" : "guest"} `}
-        >
-          {role}
-        </p>
         <div className="mt-0.5">
           <Link
             href="/profile"

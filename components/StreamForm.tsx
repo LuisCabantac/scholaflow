@@ -279,129 +279,128 @@ export default function StreamForm({
                 defaultValue={stream?.id ?? ""}
                 hidden
               />
-              {session.role === "teacher" &&
-                session.id === classroom.teacherId && (
-                  <div className="flex flex-col items-start justify-start gap-2">
-                    <label className="font-medium">Assign to</label>
-                    <button
-                      onClick={handleToggleShowSelectUsersModal}
-                      type="button"
-                      disabled={isLoading}
-                      className="w-full rounded-md border border-[#dddfe6] px-4 py-2 text-start focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
-                    >
-                      {enrolledClasses?.length === audience.length
-                        ? "All users"
-                        : `${audience.length} user${audience.length > 1 ? "s" : ""} selected`}
-                    </button>
-                    {showSelectUsersModal && (
-                      <div className="modal__container">
-                        <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
-                          <div
-                            className="grid w-full gap-2 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem]"
-                            ref={selectUsersModalWrapperRef}
-                          >
-                            <div className="grid gap-4">
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-lg font-semibold tracking-tight">
-                                  Assign to
-                                </h4>
-                                <button
-                                  type="button"
-                                  className="disabled:cursor-not-allowed"
-                                  disabled={isLoading}
-                                  onClick={handleToggleShowSelectUsersModal}
+              {session.id === classroom.teacherId && (
+                <div className="flex flex-col items-start justify-start gap-2">
+                  <label className="font-medium">Assign to</label>
+                  <button
+                    onClick={handleToggleShowSelectUsersModal}
+                    type="button"
+                    disabled={isLoading}
+                    className="w-full rounded-md border border-[#dddfe6] px-4 py-2 text-start focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
+                  >
+                    {enrolledClasses?.length === audience.length
+                      ? "All users"
+                      : `${audience.length} user${audience.length > 1 ? "s" : ""} selected`}
+                  </button>
+                  {showSelectUsersModal && (
+                    <div className="modal__container">
+                      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
+                        <div
+                          className="grid w-full gap-2 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem]"
+                          ref={selectUsersModalWrapperRef}
+                        >
+                          <div className="grid gap-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-lg font-semibold tracking-tight">
+                                Assign to
+                              </h4>
+                              <button
+                                type="button"
+                                className="disabled:cursor-not-allowed"
+                                disabled={isLoading}
+                                onClick={handleToggleShowSelectUsersModal}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={2}
+                                  stroke="currentColor"
+                                  className="size-5 hover:stroke-[#656b70]"
                                 >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2}
-                                    stroke="currentColor"
-                                    className="size-5 hover:stroke-[#656b70]"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M6 18 18 6M6 6l12 12"
-                                    />
-                                  </svg>
-                                </button>
-                              </div>
-                              <ul className="grid gap-2">
-                                <li>
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6 18 18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                            <ul className="grid gap-2">
+                              <li>
+                                <label className="flex items-center gap-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={
+                                      enrolledClasses?.length ===
+                                      audience.length
+                                    }
+                                    className="size-4 rounded-md checked:accent-[#384689]"
+                                    onChange={(event) => {
+                                      if (event.target.checked) {
+                                        setAudience(
+                                          enrolledClasses?.map(
+                                            (user) => user.userId,
+                                          ) ?? [],
+                                        );
+                                      } else {
+                                        setAudience([]);
+                                      }
+                                    }}
+                                  />
+                                  All users
+                                </label>
+                              </li>
+                              {enrolledClasses?.map((user) => (
+                                <li key={user.id}>
                                   <label className="flex items-center gap-2">
                                     <input
                                       type="checkbox"
-                                      checked={
-                                        enrolledClasses?.length ===
-                                        audience.length
-                                      }
+                                      checked={audience.includes(user.userId)}
                                       className="size-4 rounded-md checked:accent-[#384689]"
                                       onChange={(event) => {
                                         if (event.target.checked) {
-                                          setAudience(
-                                            enrolledClasses?.map(
-                                              (user) => user.userId,
-                                            ) ?? [],
-                                          );
+                                          setAudience([
+                                            ...audience,
+                                            user.userId,
+                                          ]);
                                         } else {
-                                          setAudience([]);
+                                          setAudience(
+                                            audience.filter(
+                                              (people) =>
+                                                people !== user.userId,
+                                            ),
+                                          );
                                         }
                                       }}
                                     />
-                                    All users
+                                    <Image
+                                      src={user.userImage}
+                                      alt={`${user.userName}'s image`}
+                                      width={24}
+                                      height={24}
+                                      className="h-6 w-6 rounded-full"
+                                    />
+                                    {user.userName}
                                   </label>
                                 </li>
-                                {enrolledClasses?.map((user) => (
-                                  <li key={user.id}>
-                                    <label className="flex items-center gap-2">
-                                      <input
-                                        type="checkbox"
-                                        checked={audience.includes(user.userId)}
-                                        className="size-4 rounded-md checked:accent-[#384689]"
-                                        onChange={(event) => {
-                                          if (event.target.checked) {
-                                            setAudience([
-                                              ...audience,
-                                              user.userId,
-                                            ]);
-                                          } else {
-                                            setAudience(
-                                              audience.filter(
-                                                (people) =>
-                                                  people !== user.userId,
-                                              ),
-                                            );
-                                          }
-                                        }}
-                                      />
-                                      <Image
-                                        src={user.userImage}
-                                        alt={`${user.userName}'s image`}
-                                        width={24}
-                                        height={24}
-                                        className="h-6 w-6 rounded-full"
-                                      />
-                                      {user.userName}
-                                    </label>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div className="mt-4 flex justify-end">
-                              <Button
-                                type="primary"
-                                onClick={handleToggleShowSelectUsersModal}
-                              >
-                                Done
-                              </Button>
-                            </div>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="mt-4 flex justify-end">
+                            <Button
+                              type="primary"
+                              onClick={handleToggleShowSelectUsersModal}
+                            >
+                              Done
+                            </Button>
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
+              )}
               {streamType !== "stream" && (
                 <div className="grid gap-2">
                   <label className="font-medium">

@@ -133,8 +133,6 @@ export async function getAllEnrolledClassesByClassAndSessionId(
 
   if (!session) return null;
 
-  if (session.user.role !== "teacher") return null;
-
   if (!classId || !validateUUID(classId)) {
     return null;
   }
@@ -178,8 +176,6 @@ export async function getEnrolledClassByClassAndUserId(
   });
 
   if (!session) return null;
-
-  if (session.user.role !== "teacher") return null;
 
   if (!classId || !validateUUID(classId)) {
     return null;

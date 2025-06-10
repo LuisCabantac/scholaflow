@@ -32,46 +32,33 @@ export default async function Page() {
 
   async function handleGetAllClassesByTeacher(id: string) {
     "use server";
-    if (session && session.user.role === "teacher") {
-      const data = await getAllClassesByTeacherId(id);
-      return data;
-    } else return null;
+
+    const data = await getAllClassesByTeacherId(id);
+    return data;
   }
 
   async function handleGetAllEnrolledClassesByUserId(id: string) {
     "use server";
-    if (
-      session &&
-      (session.user.role === "teacher" || session.user.role === "student")
-    ) {
-      const data = await getAllEnrolledClassesByUserId(id);
-      return data;
-    } else return null;
+    const data = await getAllEnrolledClassesByUserId(id);
+    return data;
   }
 
   async function handleGetClassByClassCode(code: string) {
     "use server";
-    if (
-      session &&
-      (session.user.role === "teacher" || session.user.role === "student")
-    ) {
-      const data = await getClassByClassCode(code);
-      return data;
-    } else return null;
+    const data = await getClassByClassCode(code);
+    return data;
   }
 
   async function handleGetEnrolledClassByClassAndSessionId(classId: string) {
     "use server";
-    if (
-      session &&
-      (session.user.role === "teacher" || session.user.role === "student")
-    ) {
-      const data = await getEnrolledClassByClassAndSessionId(
-        session.user.id,
-        classId,
-      );
-      return data;
-    } else return null;
+
+    if (!session) return null;
+
+    const data = await getEnrolledClassByClassAndSessionId(
+      session.user.id,
+      classId,
+    );
+    return data;
   }
 
   async function handleDeleteClassByClassId(classId: string) {

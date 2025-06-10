@@ -28,7 +28,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         required: true,
-        defaultValue: "student",
+        defaultValue: "user",
       },
       schoolName: {
         type: "string",
@@ -43,7 +43,7 @@ export const auth = betterAuth({
         role: {
           type: "string",
           required: true,
-          defaultValue: "student",
+          defaultValue: "user",
         },
         schoolName: {
           type: "string",

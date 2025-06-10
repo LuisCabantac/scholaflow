@@ -409,7 +409,7 @@ export async function roleRequest(formData: FormData) {
   const userData = await getUserByUserId(userId);
   if (!userData) return { success: false, message: "User does not exist." };
 
-  if (userData.role === "teacher")
+  if (userData.role === "user")
     return { success: false, message: "You are already a teacher." };
 
   const existingRequest = await getRoleRequest(userId);
@@ -569,7 +569,7 @@ async function setTeacherUserRole(userId: string): Promise<void> {
 
   const [data] = await db
     .update(user)
-    .set({ role: "teacher" })
+    .set({ role: "user" })
     .where(eq(user.id, userId))
     .returning();
 

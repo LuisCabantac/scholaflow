@@ -89,13 +89,6 @@ export async function createClass(formData: FormData) {
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role !== "teacher") {
-    return {
-      success: false,
-      message: "Only school teachers can create classes.",
-    };
-  }
-
   const newClass = {
     name: formData.get("className"),
     subject: formData.get("subject"),
@@ -142,13 +135,6 @@ export async function updateClass(
   });
 
   if (!session) return redirect("/signin");
-
-  if (session.user.role !== "teacher") {
-    return {
-      success: false,
-      message: "Only school teachers can edit classes.",
-    };
-  }
 
   const classroomId = formData.get("classroomId") as string;
 
@@ -277,9 +263,6 @@ async function updateEnrolledClass(
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role !== "teacher")
-    throw new Error("Only teachers can update the enrolled class information.");
-
   const [data] = await db
     .update(enrolledClass)
     .set(updatedClass)
@@ -363,17 +346,11 @@ export async function deleteClass(classId: string) {
   });
   if (!session) return redirect("/signin");
 
-  if (session.user.role === "admin")
-    throw new Error("Only the teacher who created this class can delete it.");
-
   const currentClassroom = await getClassByClassId(classId);
 
   if (!currentClassroom) throw new Error("This class doesn't exist.");
 
-  if (
-    session.user.role === "teacher" &&
-    currentClassroom?.teacherId === session.user.id
-  ) {
+  if (currentClassroom?.teacherId === session.user.id) {
     const classes = await getAllEnrolledClassesByClassAndSessionId(classId);
     if (classes?.length) {
       const classroomId = classes.map((curClass) => curClass.id);
@@ -1440,7 +1417,7 @@ export async function addUserToClass(formData: FormData): Promise<{
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role === "admin" || session.user.role === "student") {
+  if (session.user.role === "admin") {
     return {
       success: false,
       message: "Only teachers can add users to this class.",
@@ -1859,13 +1836,6 @@ export async function addGradeClasswork(formData: FormData) {
 
   if (!session) return redirect("/signin");
 
-  if (session.user.role !== "teacher") {
-    return {
-      success: false,
-      message: "Only a teacher can add a grade.",
-    };
-  }
-
   const userId = formData.get("userId") as string;
   const streamId = formData.get("streamId") as string;
   const classId = formData.get("classroomId") as string;
@@ -2113,10 +2083,7 @@ export async function createTopic(formData: FormData) {
       message: "This class does not exist.",
     };
 
-  if (
-    session.user.role !== "teacher" ||
-    session.user.id !== classroom.teacherId
-  ) {
+  if (session.user.id !== classroom.teacherId) {
     return {
       success: false,
       message: "Only the creator of this class can create topics.",
@@ -2170,10 +2137,7 @@ export async function updateTopic(formData: FormData) {
       message: "This class does not exist.",
     };
 
-  if (
-    session.user.role !== "teacher" ||
-    session.user.id !== classroom.teacherId
-  ) {
+  if (session.user.id !== classroom.teacherId) {
     return {
       success: false,
       message: "Only the creator of this class can edit topics.",
@@ -2263,10 +2227,7 @@ export async function deleteTopic(topicId: string) {
 
   if (!classroom) throw new Error("This class does not exist.");
 
-  if (
-    session.user.role !== "teacher" ||
-    session.user.id !== classroom.teacherId
-  )
+  if (session.user.id !== classroom.teacherId)
     throw new Error("Only the creator of this class can delete topics.");
 
   const classworkStream = await getAllClassworkStreamsByTopicId(topicId);
