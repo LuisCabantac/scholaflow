@@ -24,7 +24,7 @@ export default function NoteCard({
   }
 
   return (
-    <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] shadow-sm">
+    <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card shadow-sm">
       <div
         onClick={handleToggleShowNotesForm}
         className="grid cursor-pointer gap-2 p-3 md:p-4"
@@ -43,16 +43,20 @@ export default function NoteCard({
             ))}
           </div>
         ) : null}
-        {note.title && <h6 className="font-medium">{note.title}</h6>}
+        {note.title && (
+          <h6 className="font-medium text-foreground">{note.title}</h6>
+        )}
         <div className="grid gap-1">
           {note.content?.length ? (
-            <p className="whitespace-pre-line">
+            <p className="whitespace-pre-line text-foreground/90">
               {note.content.length > 250
                 ? note.content.slice(0, 250).concat("...")
                 : note.content}
             </p>
           ) : null}
-          <p className="text-xs text-[#616572]">{formatDate(note.createdAt)}</p>
+          <p className="text-xs text-foreground/70">
+            {formatDate(note.createdAt)}
+          </p>
         </div>
       </div>
       {showNotesForm && (
