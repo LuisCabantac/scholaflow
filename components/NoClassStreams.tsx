@@ -11,7 +11,7 @@ export default function NoClassStreams() {
           className="select-none object-cover"
         />
       </div>
-      <p className="text-base font-medium">
+      <p className="text-center text-base font-medium">
         This is where you&apos;ll see updates for this class.
       </p>
     </div>
