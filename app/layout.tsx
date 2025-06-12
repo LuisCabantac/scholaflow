@@ -63,6 +63,7 @@ export default function RootLayout({
                 backgroundColor: "#f3f6ff",
                 fontWeight: 500,
                 padding: "0.75rem 1.25rem",
+                borderRadius: "12px",
               },
             }}
           />
