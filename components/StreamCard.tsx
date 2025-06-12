@@ -203,7 +203,7 @@ export default function StreamCard({
         key={key}
         target="_blank"
         rel="noopener noreferrer"
-        className="overflow-wrap break-words break-all text-[#5c7cfa] underline"
+        className="overflow-wrap break-words break-all text-ring underline"
       >
         {text}
       </a>
@@ -211,9 +211,9 @@ export default function StreamCard({
   }
 
   return (
-    <li className="flex w-full flex-col rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4">
+    <li className="flex w-full flex-col rounded-xl border bg-card p-3 shadow-sm md:p-4">
       <div
-        className={`relative ${optimisticComments?.length && showComments && "border-b border-[#dddfe6] pb-3"}`}
+        className={`relative ${optimisticComments?.length && showComments && "border border-b pb-3"}`}
       >
         {stream.type === "stream" && (
           <div>
@@ -228,7 +228,7 @@ export default function StreamCard({
                 />
                 <div>
                   <p className="font-medium">{stream.userName}</p>
-                  <p className="flex items-center gap-1 text-xs text-[#616572]">
+                  <p className="flex items-center gap-1 text-xs text-foreground">
                     Posted{" "}
                     {isToday(stream.createdAt)
                       ? "today"
@@ -275,7 +275,7 @@ export default function StreamCard({
                   ? stream.content.slice(0, 80).concat("...")
                   : stream.content}
                 {stream.content && stream.content.length > 80 && (
-                  <span className="text-[#616572] hover:underline">
+                  <span className="text-foreground hover:underline">
                     <Link
                       href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
                     >
@@ -326,7 +326,7 @@ export default function StreamCard({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-8 flex-shrink-0 stroke-[#5c7cfa]"
+                  className="size-8 flex-shrink-0 stroke-ring"
                 >
                   <path
                     strokeLinecap="round"
@@ -342,7 +342,7 @@ export default function StreamCard({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-8 flex-shrink-0 stroke-[#5c7cfa]"
+                  className="size-8 flex-shrink-0 stroke-ring"
                 >
                   <path
                     strokeLinecap="round"
@@ -358,7 +358,7 @@ export default function StreamCard({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-8 flex-shrink-0 stroke-[#5c7cfa]"
+                  className="size-8 flex-shrink-0 stroke-ring"
                 >
                   <path
                     strokeLinecap="round"
@@ -374,7 +374,7 @@ export default function StreamCard({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-8 flex-shrink-0 stroke-[#5c7cfa]"
+                  className="size-8 flex-shrink-0 stroke-ring"
                 >
                   <path
                     strokeLinecap="round"
@@ -387,7 +387,7 @@ export default function StreamCard({
                 <p className="underline__text pr-2 font-medium">
                   {stream.title}
                 </p>
-                <p className="flex items-center gap-1 text-xs text-[#616572]">
+                <p className="flex items-center gap-1 text-xs text-foreground">
                   Posted{" "}
                   {isToday(stream.createdAt)
                     ? "today"
@@ -522,7 +522,7 @@ export default function StreamCard({
                 href={`/classroom/class/${classroom.id}/stream/${stream.id}`}
                 className="mt-2 flex items-end gap-2 md:hidden"
               >
-                <div className="flex h-9 w-full items-center justify-between rounded-md border border-[#dddfe6] px-4 py-2 text-[#616572]">
+                <div className="flex h-9 w-full items-center justify-between rounded-md border px-4 py-2 text-foreground">
                   <span>Add class comment</span>
                   <div className="flex gap-4 py-2">
                     <svg
@@ -557,7 +557,7 @@ export default function StreamCard({
               </Link>
               <div className="mt-2 hidden md:block">
                 <form
-                  className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                  className={`comment__form flex w-full rounded-md border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                   onSubmit={handleCommentSubmit}
                 >
                   <input
@@ -576,7 +576,7 @@ export default function StreamCard({
                     required
                     disabled={addCommentIsPending}
                     name="comment"
-                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-18" : "h-9"}`}
+                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-18" : "h-9"}`}
                     placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
                     value={streamComment}
                     onChange={(event) => setStreamComment(event.target.value)}
