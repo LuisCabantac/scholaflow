@@ -19,7 +19,7 @@ export default function AttachmentFileCard({
   onRemoveAttachment?: (index: number) => void;
 }) {
   return (
-    <li className="relative flex w-full items-center overflow-hidden rounded-md border border-[#dddfe6] bg-[#f5f8ff] shadow-sm">
+    <li className="relative flex w-full items-center overflow-hidden rounded-xl border bg-foreground/5 shadow-sm">
       <a
         href={file}
         target="_blank"
@@ -32,7 +32,7 @@ export default function AttachmentFileCard({
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
-            className="size-4 flex-shrink-0 stroke-[#616572] md:size-5"
+            className="size-4 flex-shrink-0 stroke-foreground md:size-5"
           >
             <path
               strokeLinecap="round"
@@ -59,7 +59,7 @@ export default function AttachmentFileCard({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
-              className="size-4 flex-shrink-0 stroke-[#22317c] hover:stroke-[#384689] md:size-5"
+              className="size-4 flex-shrink-0 stroke-primary hover:stroke-primary/90 md:size-5"
             >
               <path
                 strokeLinecap="round"
@@ -81,7 +81,7 @@ export default function AttachmentFileCard({
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className="size-4 flex-shrink-0 stroke-[#f03e3e] hover:stroke-[#c92a2a] md:size-5"
+              className="size-4 flex-shrink-0 stroke-destructive hover:stroke-destructive/90 md:size-5"
             >
               <path
                 strokeLinecap="round"
