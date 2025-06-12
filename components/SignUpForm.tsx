@@ -1,18 +1,28 @@
 "use client";
 
+import { z } from "zod/v4";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Verification } from "@/lib/schema";
 import { authClient } from "@/lib/auth-client";
+import { signUpFormSchema, Verification } from "@/lib/schema";
 
-import SignInCredentialsButton from "@/components/SignInCredentialsButton";
-
-const fullNameRegex =
-  /^[A-Za-z]+([' -]?[A-Za-z]+)* [A-Za-z]+([' -]?[A-Za-z]+)*$/;
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import SignInGoogleButton from "@/components/SignInGoogleButton";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 async function sendEmail(
   templateParams: {
@@ -42,22 +52,26 @@ export default function SignUpForm({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [validEmail, setValidEmail] = useState(true);
-  const [validPassword, setValidPassword] = useState(true);
-  const [validFullName, setValidFullName] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
   const [honeyPot, setHoneyPot] = useState("");
 
-  async function handleSignUpAction(event: React.FormEvent) {
-    event.preventDefault();
+  const form = useForm<z.infer<typeof signUpFormSchema>>({
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
     if (honeyPot) return;
-    const formData = new FormData(event.target as HTMLFormElement);
     await authClient.signUp.email(
       {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-        name: formData.get("name") as string,
+        email: values.email,
+        password: values.password,
+        name: values.fullName,
         callbackURL: "/signin",
       },
       {
@@ -69,8 +83,8 @@ export default function SignUpForm({
         },
         onSuccess: async () => {
           const templateParams = {
-            to_email: (formData.get("email") as string) ?? "",
-            to_name: (formData.get("name") as string).split(" ")[0],
+            to_email: values.email,
+            to_name: values.fullName.split(" ")[0],
           };
           await sendEmail(templateParams, onGenerateVerificationToken);
           router.push("/signin");
@@ -94,91 +108,83 @@ export default function SignUpForm({
   }
 
   return (
-    <form
-      className="grid gap-3 border-b border-[#dddfe6] pb-3"
-      onSubmit={handleSignUpAction}
-    >
-      <div className="grid gap-2">
-        <label className="font-medium">
-          Full name <span className="text-red-400">*</span>
-        </label>
-        <input
-          required
-          disabled={isLoading}
-          name="name"
-          type="text"
-          placeholder="Your full name"
-          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${!validFullName && "border-[#f03e3e]"}`}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setValidFullName(fullNameRegex.test(event.target.value))
-          }
-        />
-      </div>
-      <div className="grid gap-2">
-        <label className="font-medium">
-          Email <span className="text-red-400">*</span>
-        </label>
-        <input
-          required
-          disabled={isLoading}
-          name="email"
-          type="email"
-          placeholder="Your email"
-          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${!validEmail && "border-[#f03e3e]"}`}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setValidEmail(emailRegex.test(event.target.value))
-          }
-        />
-      </div>
-      <div className="mb-2 grid gap-2">
-        <label className="font-medium">
-          Password <span className="text-red-400">*</span>
-        </label>
-        <div className="flex">
-          <input
-            required
-            disabled={isLoading}
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Create a password"
-            className={`password__input rounded-y-md w-full rounded-l-md border-y border-l border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${!validPassword && "border-[#f03e3e]"}`}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setValidPassword(event.target.value.length >= 8 ? true : false)
-            }
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full name</FormLabel>
+                <FormControl>
+                  <Input
+                    required
+                    type="text"
+                    disabled={isLoading}
+                    className="bg-foreground/10"
+                    placeholder="Enter your full name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <button
-            type="button"
-            disabled={isLoading}
-            onClick={handleShowPassword}
-            className={`show__password rounded-r-md border-y border-r border-[#dddfe6] py-2 pr-4 focus:outline-0 disabled:cursor-not-allowed ${!validPassword && "border-[#f03e3e]"}`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              className="size-6 stroke-[#616572]"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-              />
-              {showPassword ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
-              )}
-            </svg>
-          </button>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    required
+                    type="email"
+                    disabled={isLoading}
+                    className="bg-foreground/10"
+                    placeholder="you@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <label className="group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50">
+                    <Input
+                      required
+                      disabled={isLoading}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="border-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                      {...field}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="pr-0 hover:bg-transparent"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="mb-0.5 mr-4 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+                      ) : (
+                        <Eye className="mb-0.5 mr-4 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+                      )}
+                    </Button>
+                  </label>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="hidden">
             <label htmlFor="verify__name">Verify your name</label>
             <input
@@ -188,11 +194,13 @@ export default function SignUpForm({
               onChange={(event) => setHoneyPot(event.target.value)}
             />
           </div>
-        </div>
-      </div>
-      <SignInCredentialsButton isLoading={isLoading}>
-        Sign up
-      </SignInCredentialsButton>
-    </form>
+
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            Sign up
+          </Button>
+        </form>
+      </Form>
+      <SignInGoogleButton isLoading={isLoading} />
+    </>
   );
 }
