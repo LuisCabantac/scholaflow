@@ -81,7 +81,7 @@ export default function ResetPasswordSection() {
                     disabled={isLoading}
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="border-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                    className="border-0 bg-transparent shadow-none drop-shadow-none focus-visible:ring-0"
                     {...field}
                   />
                   <Button

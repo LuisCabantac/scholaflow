@@ -176,7 +176,7 @@ export default function ClassworksSection({
               <Input
                 type="search"
                 placeholder="Search..."
-                className="mb-0.5 border-0 pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                className="mb-0.5 border-0 bg-transparent pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -244,7 +244,7 @@ export default function ClassworksSection({
               <Input
                 type="search"
                 placeholder="Search..."
-                className="mb-0.5 border-0 pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                className="mb-0.5 border-0 bg-transparent pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

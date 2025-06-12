@@ -100,7 +100,6 @@ export default function SignInForm() {
                     required
                     type="email"
                     disabled={isLoading}
-                    className="bg-foreground/10"
                     placeholder="you@example.com"
                     {...field}
                   />
@@ -122,7 +121,7 @@ export default function SignInForm() {
                       disabled={isLoading}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      className="border-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                      className="border-0 bg-transparent shadow-none drop-shadow-none focus-visible:ring-0"
                       {...field}
                     />
                     <Button

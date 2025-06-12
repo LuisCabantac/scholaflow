@@ -122,7 +122,6 @@ export default function SignUpForm({
                     required
                     type="text"
                     disabled={isLoading}
-                    className="bg-foreground/10"
                     placeholder="Enter your full name"
                     {...field}
                   />
@@ -142,7 +141,6 @@ export default function SignUpForm({
                     required
                     type="email"
                     disabled={isLoading}
-                    className="bg-foreground/10"
                     placeholder="you@example.com"
                     {...field}
                   />
@@ -164,7 +162,7 @@ export default function SignUpForm({
                       disabled={isLoading}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      className="border-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                      className="border-0 bg-transparent shadow-none drop-shadow-none focus-visible:ring-0"
                       {...field}
                     />
                     <Button

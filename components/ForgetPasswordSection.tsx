@@ -120,7 +120,6 @@ export default function ForgetPasswordSection() {
                   required
                   type="email"
                   disabled={isLoading}
-                  className="bg-foreground/10"
                   placeholder="you@example.com"
                   {...field}
                 />
