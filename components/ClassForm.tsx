@@ -1,11 +1,11 @@
 "use client";
 
-import { Dispatch, SetStateAction, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { Classroom, Session } from "@/lib/schema";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";

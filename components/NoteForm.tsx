@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { ImagePlus, Pin, PinOff, Trash2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "motion/react";
+import { ImagePlus, Pin, PinOff, Trash2 } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { formatDate } from "@/lib/utils";
@@ -149,216 +150,30 @@ export default function NoteForm({
 
   return (
     <div className="modal__container">
-      <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-card"
-        ref={notesFormModalWrapperRef}
-      >
-        <form
-          className="relative min-h-screen w-full rounded-t-md border-t pb-[6rem] shadow-sm"
-          onSubmit={handleSubmitNote}
+      <AnimatePresence>
+        <motion.div
+          className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-card"
+          ref={notesFormModalWrapperRef}
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{
+            type: "spring",
+            damping: 32,
+            stiffness: 300,
+            mass: 1,
+            duration: 0.2,
+          }}
         >
-          <button
-            className="absolute right-4 top-4 disabled:cursor-not-allowed md:right-8 md:top-8"
-            type="button"
-            disabled={isLoading}
-            onClick={onToggleShowNotesForm}
+          <form
+            className="relative min-h-screen w-full rounded-t-md border-t pb-[6rem] shadow-sm"
+            onSubmit={handleSubmitNote}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="size-5 transition-all hover:stroke-foreground/70"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-          <div className="grid h-full gap-2 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
-            <div className="mt-6 columns-2 gap-2 md:mt-0 md:columns-4">
-              {attachmentImagesNames.map((image, index) => (
-                <div key={image} className="relative">
-                  {!isLoading && (
-                    <button
-                      type="button"
-                      disabled={isLoading}
-                      className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
-                      onClick={() => handleRemoveAttachmentImage(index)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="size-5 stroke-white"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18 18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                  <Image
-                    src={image}
-                    alt={image}
-                    width={500}
-                    height={500}
-                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
-                    onClick={() => openZoomedImage(image)}
-                    onDragStart={(e) => e.preventDefault()}
-                  />
-                </div>
-              ))}
-              {currentAttachments.map((image, index) => (
-                <div key={image} className="relative">
-                  {!isLoading && (
-                    <button
-                      type="button"
-                      disabled={isLoading}
-                      className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
-                      onClick={() => handleRemoveCurrentAttachmentImage(index)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="size-5 stroke-white"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18 18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                  <Image
-                    src={image}
-                    alt={image}
-                    width={500}
-                    height={500}
-                    className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
-                    onClick={() => openZoomedImage(image)}
-                    onDragStart={(e) => e.preventDefault()}
-                  />
-                </div>
-              ))}
-            </div>
-            <input type="text" name="noteId" hidden defaultValue={note?.id} />
-            <div>
-              {note?.createdAt && (
-                <p className="text-xs text-foreground">{`Created ${formatDate(note.createdAt)}`}</p>
-              )}
-              <input
-                type="text"
-                name="title"
-                required={
-                  description.length
-                    ? false
-                    : true ||
-                      !currentAttachments.length ||
-                      !attachmentImages.length
-                }
-                className="w-[90%] border-none bg-transparent text-lg font-semibold focus:outline-none"
-                placeholder="Title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-              />
-            </div>
-            <textarea
-              name="description"
-              required={
-                title.length
-                  ? false
-                  : true ||
-                    !currentAttachments.length ||
-                    !attachmentImages.length
-              }
-              className="h-[40rem] resize-none border-none bg-transparent focus:outline-none md:h-[30rem]"
-              placeholder="Note"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-            ></textarea>
-          </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="p-0 hover:bg-transparent"
-                asChild
-              >
-                <label
-                  className={` ${
-                    isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"
-                  }`}
-                >
-                  <input
-                    type="file"
-                    className="hidden"
-                    multiple
-                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                    disabled={isLoading}
-                    onChange={(event) => {
-                      handleAttachmentImageNameChange(event);
-                      handleSetAttachmentImages(event);
-                    }}
-                  />
-                  <ImagePlus className="size-5 md:size-6" />
-                </label>
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="p-0 hover:bg-transparent"
-                onClick={handleTogglePinnedNote}
-              >
-                {isPinned ? (
-                  <Pin className="size-5 md:size-6" />
-                ) : (
-                  <PinOff className="size-5 md:size-6" />
-                )}
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              {type === "edit" && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  disabled={isLoading || deleteNoteIsPending}
-                  onClick={handleToggleShowConfirmation}
-                >
-                  <Trash2 className="size-5 md:size-6" />
-                  Delete
-                </Button>
-              )}
-              <Button
-                disabled={isLoading}
-                type="submit"
-                variant={type === "edit" ? "secondary" : "default"}
-              >
-                {type === "edit" ? "Save changes" : "Create"}
-              </Button>
-            </div>
-          </div>
-        </form>
-        {zoomedImage && (
-          <div className="modal__container">
             <button
+              className="absolute right-4 top-4 disabled:cursor-not-allowed md:right-8 md:top-8"
               type="button"
-              className="absolute right-2 top-2"
-              onClick={closeZoomedImage}
+              disabled={isLoading}
+              onClick={onToggleShowNotesForm}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -366,7 +181,7 @@ export default function NoteForm({
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="size-6 stroke-white"
+                className="size-5 transition-all hover:stroke-foreground/70"
               >
                 <path
                   strokeLinecap="round"
@@ -375,33 +190,235 @@ export default function NoteForm({
                 />
               </svg>
             </button>
-            <div
-              className="flex max-h-full max-w-full items-center justify-center"
-              ref={zoomedImageWrapperRef}
-            >
-              <Image
-                src={zoomedImage}
-                alt={zoomedImage}
-                width={500}
-                height={500}
-                className="max-h-[90vh] max-w-[90vw] select-none object-contain"
-                onDragStart={(e) => e.preventDefault()}
-              />
+            <div className="grid h-full gap-2 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
+              <div className="mt-6 columns-2 gap-2 md:mt-0 md:columns-4">
+                {attachmentImagesNames.map((image, index) => (
+                  <div key={image} className="relative">
+                    {!isLoading && (
+                      <button
+                        type="button"
+                        disabled={isLoading}
+                        className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+                        onClick={() => handleRemoveAttachmentImage(index)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="size-5 stroke-white"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    <Image
+                      src={image}
+                      alt={image}
+                      width={500}
+                      height={500}
+                      className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
+                      onClick={() => openZoomedImage(image)}
+                      onDragStart={(e) => e.preventDefault()}
+                    />
+                  </div>
+                ))}
+                {currentAttachments.map((image, index) => (
+                  <div key={image} className="relative">
+                    {!isLoading && (
+                      <button
+                        type="button"
+                        disabled={isLoading}
+                        className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+                        onClick={() =>
+                          handleRemoveCurrentAttachmentImage(index)
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="size-5 stroke-white"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    <Image
+                      src={image}
+                      alt={image}
+                      width={500}
+                      height={500}
+                      className="mb-2 w-auto cursor-pointer select-none break-inside-avoid rounded-md object-cover"
+                      onClick={() => openZoomedImage(image)}
+                      onDragStart={(e) => e.preventDefault()}
+                    />
+                  </div>
+                ))}
+              </div>
+              <input type="text" name="noteId" hidden defaultValue={note?.id} />
+              <div>
+                {note?.createdAt && (
+                  <p className="text-xs text-foreground">{`Created ${formatDate(note.createdAt)}`}</p>
+                )}
+                <input
+                  type="text"
+                  name="title"
+                  required={
+                    description.length
+                      ? false
+                      : true ||
+                        !currentAttachments.length ||
+                        !attachmentImages.length
+                  }
+                  className="w-[90%] border-none bg-transparent text-lg font-semibold focus:outline-none"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                />
+              </div>
+              <textarea
+                name="description"
+                required={
+                  title.length
+                    ? false
+                    : true ||
+                      !currentAttachments.length ||
+                      !attachmentImages.length
+                }
+                className="h-[40rem] resize-none border-none bg-transparent focus:outline-none md:h-[30rem]"
+                placeholder="Note"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              ></textarea>
             </div>
-          </div>
-        )}
-        {showConfirmation && (
-          <ConfirmationModal
-            type="delete"
-            btnLabel="Delete"
-            isLoading={deleteNoteIsPending}
-            handleCancel={handleToggleShowConfirmation}
-            handleAction={() => onDeleteNote(note?.id ?? "")}
-          >
-            Are you sure your want remove this note?
-          </ConfirmationModal>
-        )}
-      </div>
+            <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="p-0 hover:bg-transparent"
+                  asChild
+                >
+                  <label
+                    className={` ${
+                      isLoading
+                        ? "disabled:cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      className="hidden"
+                      multiple
+                      accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                      disabled={isLoading}
+                      onChange={(event) => {
+                        handleAttachmentImageNameChange(event);
+                        handleSetAttachmentImages(event);
+                      }}
+                    />
+                    <ImagePlus className="size-5 md:size-6" />
+                  </label>
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="p-0 hover:bg-transparent"
+                  onClick={handleTogglePinnedNote}
+                >
+                  {isPinned ? (
+                    <Pin className="size-5 md:size-6" />
+                  ) : (
+                    <PinOff className="size-5 md:size-6" />
+                  )}
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                {type === "edit" && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    disabled={isLoading || deleteNoteIsPending}
+                    onClick={handleToggleShowConfirmation}
+                  >
+                    <Trash2 className="size-5 md:size-6" />
+                    Delete
+                  </Button>
+                )}
+                <Button
+                  disabled={isLoading}
+                  type="submit"
+                  variant={type === "edit" ? "secondary" : "default"}
+                >
+                  {type === "edit" ? "Save changes" : "Create"}
+                </Button>
+              </div>
+            </div>
+          </form>
+          {zoomedImage && (
+            <div className="modal__container">
+              <button
+                type="button"
+                className="absolute right-2 top-2"
+                onClick={closeZoomedImage}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="size-6 stroke-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <div
+                className="flex max-h-full max-w-full items-center justify-center"
+                ref={zoomedImageWrapperRef}
+              >
+                <Image
+                  src={zoomedImage}
+                  alt={zoomedImage}
+                  width={500}
+                  height={500}
+                  className="max-h-[90vh] max-w-[90vw] select-none object-contain"
+                  onDragStart={(e) => e.preventDefault()}
+                />
+              </div>
+            </div>
+          )}
+          {showConfirmation && (
+            <ConfirmationModal
+              type="delete"
+              btnLabel="Delete"
+              isLoading={deleteNoteIsPending}
+              handleCancel={handleToggleShowConfirmation}
+              handleAction={() => onDeleteNote(note?.id ?? "")}
+            >
+              Are you sure your want remove this note?
+            </ConfirmationModal>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
