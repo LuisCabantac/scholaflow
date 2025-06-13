@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
-import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 

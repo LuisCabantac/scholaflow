@@ -1,6 +1,6 @@
 "use client";
 
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 
 import { signOut } from "@/lib/auth-client";
@@ -17,7 +17,10 @@ export default function SignOutButton() {
           fetchOptions: {
             onSuccess: () => {
               router.push(pathname === "/" ? "/" : "/signin");
-              toast.success("You've been signed out successfully");
+              toast.success("You've been signed out successfully!");
+            },
+            onError: () => {
+              toast.error("Failed to sign out. Please try again.");
             },
           },
         });

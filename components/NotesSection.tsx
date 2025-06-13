@@ -1,6 +1,6 @@
 "use client";
 
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Pen, Search } from "lucide-react";
 import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

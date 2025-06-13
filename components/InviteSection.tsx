@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { toast } from "sonner";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { CircleCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 

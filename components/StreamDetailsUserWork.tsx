@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { motion } from "motion/react";
 import React, { useOptimistic, useRef, useState } from "react";
 import { ChevronDown, ImagePlus, Plus, SendHorizontal } from "lucide-react";

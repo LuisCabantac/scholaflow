@@ -1,5 +1,5 @@
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Eye, EyeOff, Upload } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";

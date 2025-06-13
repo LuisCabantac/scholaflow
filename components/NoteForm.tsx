@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { ImagePlus, Pin, PinOff, Trash2 } from "lucide-react";

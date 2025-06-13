@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "sonner";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { UserRoundPlus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

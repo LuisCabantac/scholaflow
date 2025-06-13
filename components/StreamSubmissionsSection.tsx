@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { ImagePlus, SendHorizontal } from "lucide-react";
 import { useEffect, useOptimistic, useRef, useState } from "react";

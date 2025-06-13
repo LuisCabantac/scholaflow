@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useOptimistic, useState } from "react";
 import { Search, SquarePen } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

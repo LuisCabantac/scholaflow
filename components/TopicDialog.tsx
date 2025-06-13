@@ -1,5 +1,5 @@
+import { toast } from "sonner";
 import { X } from "lucide-react";
-import toast from "react-hot-toast";
 import { motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";

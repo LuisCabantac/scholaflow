@@ -1,7 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Session } from "@/lib/schema";

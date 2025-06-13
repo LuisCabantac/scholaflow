@@ -1,5 +1,5 @@
+import { toast } from "sonner";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import toast from "react-hot-toast";
 
 import { RoleRequest, Session } from "@/lib/schema";
 import { roleRequest } from "@/lib/user-management-actions";

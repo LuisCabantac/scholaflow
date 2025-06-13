@@ -2,7 +2,7 @@
 
 import { z } from "zod/v4";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";

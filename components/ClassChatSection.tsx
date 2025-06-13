@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import ReactLinkify from "react-linkify";
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, ImagePlus, SendHorizontal } from "lucide-react";

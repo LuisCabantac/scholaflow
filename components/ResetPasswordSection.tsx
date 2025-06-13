@@ -1,8 +1,8 @@
 "use client";
 
 import { z } from "zod/v4";
+import { toast } from "sonner";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";

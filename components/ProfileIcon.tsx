@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useTheme } from "next-themes";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";

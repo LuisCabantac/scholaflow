@@ -1,7 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { CircleCheck, CircleX } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -47,7 +47,7 @@ export default function CloseAccountSection() {
     <form className="grid gap-3 pb-3" onSubmit={confirmDeleteAccountAction}>
       {success && (
         <div className="flex gap-2 rounded-xl border bg-card p-3 text-muted-foreground">
-          <CircleCheck className="stroke-success h-6 w-6 flex-shrink-0" />
+          <CircleCheck className="h-6 w-6 flex-shrink-0 stroke-success" />
           <span>{message}</span>
         </div>
       )}
