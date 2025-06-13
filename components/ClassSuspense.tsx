@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 
 import SkeletonTabsStatic from "@/components/SkeletonTabsStatic";
 
@@ -33,20 +33,7 @@ export default function ClassSuspense({
               </div>
               <div className="mb-2 flex cursor-not-allowed items-center gap-2 font-medium text-foreground md:gap-4">
                 <span>All</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={3}
-                  stroke="currentColor"
-                  className="size-4 rotate-0 transition-transform"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
+                <ChevronDown strokeWidth={3} className="h-4 w-4" />
               </div>
               <ul className="flex flex-col gap-2">
                 <li className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4">
