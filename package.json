@@ -44,6 +44,7 @@
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.4.1",
     "react-linkify": "^1.0.0-alpha",
+    "react-textarea-autosize": "^8.5.9",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.2",

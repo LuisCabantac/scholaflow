@@ -16,6 +16,7 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TextareaAutosize } from "@/components/ui/textarea-autosize";
 
 const imageExtensions: string[] = [
   "jpg",
@@ -172,7 +173,7 @@ export default function ClassChatSection({
         key={key}
         target="_blank"
         rel="noopener noreferrer"
-        className="overflow-wrap break-words break-all text-ring underline"
+        className="break-words text-ring underline"
       >
         {text}
       </a>
@@ -202,51 +203,69 @@ export default function ClassChatSection({
         </Tabs>
       </div>
       <div className="flex w-full flex-col rounded-md md:border md:bg-card md:p-4">
-        <div className="relative pb-16">
-          <ul className="flex h-[75dvh] flex-col justify-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
+        <div className={`relative ${message.length > 50 ? "pb-40" : "pb-16"}`}>
+          <ul className="flex h-[75dvh] flex-col gap-2 overflow-y-auto rounded-md md:h-[75dvh]">
             {messagesIsPending && !messages && (
-              <div className="flex min-h-full flex-col justify-end">
-                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-28 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-32 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-56 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-16 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-20 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
-                </li>
-                <li className="self-start" role="status">
-                  <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-36 animate-pulse rounded-md bg-muted"></div>
-                </li>
-              </div>
+              <>
+                <div className="flex-1"></div>
+                <div className="flex min-h-full flex-col justify-end">
+                  <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li
+                    className="mb-12 self-start md:mb-[3.01rem]"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li
+                    className="mb-12 self-start md:mb-[3.01rem]"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li
+                    className="mb-12 self-start md:mb-[3.01rem]"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-28 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li
+                    className="mb-12 self-start md:mb-[3.01rem]"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-32 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-56 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-16 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-20 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li
+                    className="mb-12 self-start md:mb-[3.01rem]"
+                    role="status"
+                  >
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                  <li className="self-start" role="status">
+                    <span className="sr-only">Loading…</span>
+                    <div className="h-4 w-36 animate-pulse rounded-md bg-muted"></div>
+                  </li>
+                </div>
+              </>
             )}
             {messages?.length && !messagesIsPending ? (
               messages.map((message, index) => {
@@ -264,9 +283,9 @@ export default function ClassChatSection({
                     key={message.id}
                     className={`${messageMargin} ${
                       message.userId === session.id ? "self-end" : "self-start"
-                    }`}
+                    } max-w-[85%] sm:max-w-[75%]`}
                   >
-                    <div className="flex items-end justify-end gap-2">
+                    <div className="flex max-w-full items-end gap-2">
                       {message.userId !== session.id && showAvatar ? (
                         <Image
                           src={message.userImage}
@@ -278,7 +297,7 @@ export default function ClassChatSection({
                       ) : message.userId !== session.id && !showAvatar ? (
                         <div className="mb-1 h-8 w-8 flex-shrink-0 rounded-full"></div>
                       ) : null}
-                      <div>
+                      <div className="min-w-0 flex-1">
                         {message.userId !== session.id &&
                           message.userId !== messages[index - 1]?.userId && (
                             <p className="mb-1 text-xs font-semibold">
@@ -290,13 +309,13 @@ export default function ClassChatSection({
                             componentDecorator={captionLinksDecorator}
                           >
                             <div
-                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.userId === session.id ? "bg-card md:bg-foreground/10" : "border"}`}
+                              className={`overflow-hidden whitespace-pre-line break-words rounded-lg px-3 py-2 ${message.userId === session.id ? "bg-card md:bg-foreground/10" : "border"}`}
                             >
-                              <p className={`max-w-full whitespace-pre-line`}>
+                              <p className="overflow-hidden whitespace-pre-line break-words text-foreground/90">
                                 {message.message}
                               </p>
                               <p
-                                className={`mt-1 text-nowrap text-xs font-medium text-foreground ${session.id === message.userId ? "text-left" : "text-right"}`}
+                                className={`mt-1 text-nowrap text-xs font-medium text-foreground/70 ${session.id === message.userId ? "text-left" : "text-right"}`}
                               >
                                 {formatMessageDate(message.createdAt)}
                               </p>
@@ -428,7 +447,7 @@ export default function ClassChatSection({
                   <ImagePlus className="size-5 md:size-6" />
                 </label>
                 <div
-                  className={`comment__form flex w-full rounded-xl border bg-foreground/10 ${message.length > 50 ? "items-end" : "items-center"}`}
+                  className={`comment__form flex w-full gap-2 ${message.length > 50 ? "items-end" : "items-center"}`}
                 >
                   <input
                     type="text"
@@ -436,10 +455,12 @@ export default function ClassChatSection({
                     defaultValue={classId}
                     hidden
                   />
-                  <textarea
+                  <TextareaAutosize
                     name="message"
-                    className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${message.length > 50 ? "h-28" : "h-9"}`}
                     value={message}
+                    className="resize-none"
+                    minRows={1}
+                    maxRows={6}
                     required={!newAttachments.length}
                     placeholder={
                       addMessageIsPending
@@ -448,16 +469,16 @@ export default function ClassChatSection({
                     }
                     disabled={addMessageIsPending}
                     onChange={(event) => setMessage(event.target.value)}
-                  ></textarea>
+                  />
                   <button
                     type="submit"
-                    className="py-2 pr-4"
+                    className="group py-2"
                     disabled={addMessageIsPending}
                   >
                     {addMessageIsPending ? (
                       <div className="spinner__mini dark"></div>
                     ) : (
-                      <SendHorizontal className="size-6 stroke-primary" />
+                      <SendHorizontal className="size-6 stroke-primary group-disabled:opacity-50" />
                     )}
                   </button>
                 </div>
