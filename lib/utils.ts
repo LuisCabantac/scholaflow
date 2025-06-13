@@ -160,6 +160,15 @@ export function generatePassword(length: number = 8) {
   ).join("");
 }
 
+export function formatTimeFromDate(date?: Date): string {
+  if (!date) return "";
+
+  return date.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function getFileNameFromAttachments(url: string): string {
   const urlObject = new URL(url);
   const pathSegments = urlObject.pathname.split("/");
