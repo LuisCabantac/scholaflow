@@ -35,6 +35,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TextareaAutosize } from "@/components/ui/textarea-autosize";
 import StreamDetailsUserWork from "@/components/StreamDetailsUserWork";
 
 export default function StreamDetailSection({
@@ -501,7 +502,7 @@ export default function StreamDetailSection({
                 classroom.teacherId === session.id) && (
                 <li>
                   <form
-                    className={`comment__form flex w-full rounded-xl border bg-foreground/10 ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    className={`flex w-full ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input
@@ -516,15 +517,17 @@ export default function StreamDetailSection({
                       defaultValue={stream.id}
                       hidden
                     />
-                    <textarea
+                    <TextareaAutosize
                       required={!attachmentImages.length}
                       disabled={addCommentIsPending}
                       name="comment"
-                      className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
-                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
+                      className="resize-none"
+                      minRows={1}
+                      maxRows={6}
                       value={streamComment}
                       onChange={(event) => setStreamComment(event.target.value)}
-                    ></textarea>
+                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add class comment"}`}
+                    />
                     <label
                       className={`px-4 py-2 ${
                         addCommentIsPending

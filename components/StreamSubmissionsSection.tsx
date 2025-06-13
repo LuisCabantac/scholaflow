@@ -30,6 +30,7 @@ import CommentsLoading from "@/components/CommentsLoading";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TextareaAutosize } from "@/components/ui/textarea-autosize";
 
 export default function StreamSubmissionsSection({
   stream,
@@ -665,7 +666,7 @@ export default function StreamSubmissionsSection({
                     <p className="font-medium">Private comments</p>
                     <div className="w-full bg-card py-2">
                       <form
-                        className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                        className={`flex w-full ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                         onSubmit={handleCommentSubmit}
                       >
                         <input
@@ -692,17 +693,19 @@ export default function StreamSubmissionsSection({
                           defaultValue={stream.id}
                           hidden
                         />
-                        <textarea
-                          required={!attachmentImagesNames.length}
+                        <TextareaAutosize
+                          required={!attachmentImages.length}
                           disabled={addCommentIsPending}
                           name="comment"
-                          className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
-                          placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                          className="resize-none"
+                          minRows={1}
+                          maxRows={6}
                           value={streamComment}
                           onChange={(event) =>
                             setStreamComment(event.target.value)
                           }
-                        ></textarea>
+                          placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                        />
                         <label
                           className={`px-4 py-2 ${
                             addCommentIsPending
@@ -861,7 +864,7 @@ export default function StreamSubmissionsSection({
                 </div>
                 <div className="z-10 w-full bg-card px-3 pb-3 pt-1 md:px-0 md:pb-0">
                   <form
-                    className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    className={`flex w-full ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input
@@ -888,15 +891,17 @@ export default function StreamSubmissionsSection({
                       defaultValue={stream.id}
                       hidden
                     />
-                    <textarea
-                      required={!attachmentImagesNames.length}
+                    <TextareaAutosize
+                      required={!attachmentImages.length}
                       disabled={addCommentIsPending}
                       name="comment"
-                      className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
-                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                      className="resize-none"
+                      minRows={1}
+                      maxRows={6}
                       value={streamComment}
                       onChange={(event) => setStreamComment(event.target.value)}
-                    ></textarea>
+                      placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                    />
                     <label
                       className={`px-4 py-2 ${
                         addCommentIsPending

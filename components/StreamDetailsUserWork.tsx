@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { motion } from "motion/react";
-import { ChevronDown, ImagePlus, Plus, SendHorizontal } from "lucide-react";
 import React, { useOptimistic, useRef, useState } from "react";
+import { ChevronDown, ImagePlus, Plus, SendHorizontal } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
@@ -27,6 +27,7 @@ import CommentCard from "@/components/CommentCard";
 import CommentsLoading from "@/components/CommentsLoading";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
+import { TextareaAutosize } from "@/components/ui/textarea-autosize";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function StreamDetailsUserWork({
@@ -541,7 +542,7 @@ export default function StreamDetailsUserWork({
           </div>
           <div className="mt-1 w-full">
             <form
-              className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`flex w-full ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -568,15 +569,17 @@ export default function StreamDetailsUserWork({
                 defaultValue={stream.id}
                 hidden
               />
-              <textarea
+              <TextareaAutosize
                 required={!attachmentImages.length}
                 disabled={addCommentIsPending}
                 name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
-                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                className="resize-none"
+                minRows={1}
+                maxRows={6}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
-              ></textarea>
+                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+              />
               <label
                 className={`px-4 py-2 ${
                   addCommentIsPending
@@ -737,7 +740,7 @@ export default function StreamDetailsUserWork({
           <label className="text-sm font-medium">Private comments</label>
           <div className="mt-1">
             <form
-              className={`comment__form flex w-full rounded-md border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`flex w-full ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -764,15 +767,17 @@ export default function StreamDetailsUserWork({
                 defaultValue={stream.id}
                 hidden
               />
-              <textarea
-                required
+              <TextareaAutosize
+                required={!attachmentImages.length}
                 disabled={addCommentIsPending}
                 name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
-                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+                className="resize-none"
+                minRows={1}
+                maxRows={6}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
-              ></textarea>
+                placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
+              />
               <label
                 className={`px-4 py-2 ${
                   addCommentIsPending
