@@ -216,7 +216,7 @@
   }
 
   .comment__form:has(.comment__textarea:focus) {
-    border-color: #384689;
+    border-color: hsl(var(--primary));
   }
 
   .underline__container:hover .underline__text {
