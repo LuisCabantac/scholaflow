@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "motion/react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { addUserToClass } from "@/lib/classroom-actions";
@@ -46,8 +47,20 @@ export default function AddUserToClassDialog({
   );
 
   return (
-    <div className="modal__container">
-      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
+    <motion.div
+      className="modal__container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+    >
+      <motion.div
+        className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
         <Card className="md:w-[25rem]" ref={wrapperRef}>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -98,7 +111,7 @@ export default function AddUserToClassDialog({
             </form>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,8 +1,12 @@
+import { X } from "lucide-react";
+import { motion } from "motion/react";
 import { Dispatch, SetStateAction, useRef } from "react";
 
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import Button from "@/components/Button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function JoinClassDialog({
   isLoading,
@@ -27,63 +31,66 @@ export default function JoinClassDialog({
   );
 
   return (
-    <div className="modal__container">
-      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
-        <div
-          className="relative grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4"
-          ref={wrapperRef}
-        >
-          <div>
-            <h4 className="text-lg font-semibold tracking-tight">Join class</h4>
-            <p>
-              Ask your teacher for the class code and enter it here to join the
-              class.
-            </p>
-          </div>
-          <form onSubmit={onJoinClass} className="grid gap-4">
-            <input
-              disabled={isLoading}
-              required
-              type="text"
-              name="classCode"
-              maxLength={8}
-              className="focus:outline-t-2 w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
-              placeholder="Enter code here..."
-            />
-            <div className="flex items-center justify-end gap-2">
-              {!isLoading && (
-                <Button type="secondary" onClick={onShowJoinClass}>
-                  Cancel
-                </Button>
-              )}
-              <Button type="primary" isLoading={isLoading}>
-                Join
+    <motion.div
+      className="modal__container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+    >
+      <motion.div
+        className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Card className="md:w-[25rem]" ref={wrapperRef}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                Add user to class
+              </h3>
+              <Button
+                className="hover:bg-transparent disabled:cursor-not-allowed"
+                variant="ghost"
+                type="button"
+                size="icon"
+                disabled={isLoading}
+                onClick={onShowJoinClass}
+              >
+                <X className="size-5 stroke-foreground" />
               </Button>
             </div>
-          </form>
-          <button
-            type="button"
-            className="absolute right-4 top-4 disabled:cursor-not-allowed"
-            disabled={isLoading}
-            onClick={onShowJoinClass}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="size-5 transition-all hover:stroke-[#656b70]"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={onJoinClass} className="grid gap-4">
+              <Input
+                disabled={isLoading}
+                required
+                type="text"
+                name="classCode"
+                maxLength={8}
+                placeholder="Enter the class code here"
               />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
+              <div className="flex items-center justify-end gap-2">
+                {!isLoading && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={onShowJoinClass}
+                  >
+                    Cancel
+                  </Button>
+                )}
+                <Button type="submit" disabled={isLoading}>
+                  Join
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }
