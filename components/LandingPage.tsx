@@ -5,7 +5,8 @@ import Image from "next/image";
 import React, { useRef } from "react";
 import { motion } from "motion/react";
 
-import heroImage from "@/public/landing_page/hero.png";
+import heroLightImage from "@/public/landing_page/hero-light.png";
+import heroDarkImage from "@/public/landing_page/hero-dark.png";
 import commentAvatar from "@/public/landing_page/comment-avatar.jpg";
 import commentImage1 from "@/public/landing_page/comment-1-image.jpg";
 import commentAvatar2 from "@/public/landing_page/comment-2-avatar.jpg";
@@ -70,17 +71,26 @@ export default function LandingPage() {
           </div>
         </div>
         <motion.div
-          className="flex h-[90%] w-[90%] items-center justify-center rounded-2xl shadow-lg md:h-auto md:w-auto"
+          className="flex max-w-4xl items-center justify-center rounded-2xl shadow-lg md:max-w-6xl lg:max-w-7xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
           <Image
-            src={heroImage}
-            width={0}
-            height={0}
+            src={heroLightImage}
+            width={1400}
+            height={900}
             placeholder="blur"
-            className="select-none rounded-2xl object-cover"
+            className="block w-[90%] select-none rounded-2xl object-cover shadow-2xl dark:hidden md:w-full"
+            alt="hero image"
+            onDragStart={(e) => e.preventDefault()}
+          />
+          <Image
+            src={heroDarkImage}
+            width={1400}
+            height={900}
+            placeholder="blur"
+            className="hidden w-[90%] select-none rounded-2xl object-cover shadow-2xl dark:block md:w-full"
             alt="hero image"
             onDragStart={(e) => e.preventDefault()}
           />
