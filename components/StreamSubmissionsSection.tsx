@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
+import { ImagePlus, SendHorizontal } from "lucide-react";
+import { useEffect, useOptimistic, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { capitalizeFirstLetter } from "@/lib/utils";
@@ -28,6 +29,7 @@ import CommentCard from "@/components/CommentCard";
 import CommentsLoading from "@/components/CommentsLoading";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function StreamSubmissionsSection({
   stream,
@@ -166,7 +168,15 @@ export default function StreamSubmissionsSection({
   ) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setAttachmentImages((prevFiles) => [...prevFiles, ...files]);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = files.filter((file) => file.size <= maxSize);
+      const invalidFiles = files.filter((file) => file.size > maxSize);
+
+      if (invalidFiles.length > 0) {
+        toast.error("Each attachment must be 5MB or less.");
+      }
+
+      setAttachmentImages((prevFiles) => [...prevFiles, ...validFiles]);
     }
   }
 
@@ -175,7 +185,11 @@ export default function StreamSubmissionsSection({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) => file.name);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = Array.from(files).filter(
+        (file) => file.size <= maxSize,
+      );
+      const newFileNames = validFiles.map((file) => URL.createObjectURL(file));
       setAttachmentImagesNames(newFileNames);
     }
   }
@@ -236,52 +250,60 @@ export default function StreamSubmissionsSection({
   return (
     <section className="grid items-start">
       <div className="flex flex-col items-start gap-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href={`/classroom/class/${stream.classId}/stream/${stream.id}`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Instructions
-          </Link>
-          <Link
-            href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions`}
-            className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
-          >
-            Submissions
-          </Link>
-        </div>
+        <Tabs defaultValue="submissions">
+          <TabsList>
+            <TabsTrigger value="instructions" asChild>
+              <Link
+                href={`/classroom/class/${stream.classId}/stream/${stream.id}`}
+              >
+                Instructions
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="submissions" asChild>
+              <Link
+                href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions`}
+              >
+                Submissions
+              </Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
         <div className="grid w-full items-start gap-8 md:grid-cols-[1fr_2fr]">
           <div className="grid w-full gap-2">
-            <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium md:text-xl">
+            <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-foreground md:text-xl">
               {stream.title}
             </h2>
-            <div className="flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm">
+            <div className="flex items-center justify-around rounded-xl border bg-card p-3 shadow-sm">
               <div>
                 <p className="text-2xl font-semibold">
                   {turnedInUsers?.filter((users) => users.isTurnedIn).length ||
                     0}
                 </p>
-                <h4 className="text-xs font-medium text-[#616572]">
+                <h4 className="text-xs font-medium text-foreground/70">
                   Turned in
                 </h4>
               </div>
-              <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+              <div className="mx-4 h-8 w-px bg-border"></div>
               <div>
                 <p className="text-2xl font-semibold">
                   {(stream?.announceToAll
                     ? enrolledUsers?.length
                     : stream.announceTo.length) || 0}
                 </p>
-                <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
+                <h4 className="text-xs font-medium text-foreground/70">
+                  Assigned
+                </h4>
               </div>
-              <div className="mx-4 h-8 w-px bg-[#dbe4ff]"></div>
+              <div className="mx-4 h-8 w-px bg-border"></div>
               <div>
                 <p className="text-2xl font-semibold">
                   {(stream.points &&
                     turnedInUsers?.filter((users) => users.isGraded).length) ||
                     0}
                 </p>
-                <h4 className="text-xs font-medium text-[#616572]">Graded</h4>
+                <h4 className="text-xs font-medium text-foreground/70">
+                  Graded
+                </h4>
               </div>
             </div>
             {turnedInUsers?.filter(
@@ -305,7 +327,7 @@ export default function StreamSubmissionsSection({
                       >
                         <Link
                           href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                          className="underline__container flex items-center justify-between"
+                          className="group flex items-center justify-between"
                         >
                           <div className="flex items-center gap-2">
                             <Image
@@ -315,7 +337,9 @@ export default function StreamSubmissionsSection({
                               height={30}
                               className="rounded-full"
                             />
-                            <p className="underline__text">{user.userName}</p>
+                            <p className="group-hover:underline">
+                              {user.userName}
+                            </p>
                           </div>
                           {stream.points && (
                             <p>
@@ -348,7 +372,7 @@ export default function StreamSubmissionsSection({
                         >
                           <Link
                             href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                            className="underline__container flex items-center justify-between"
+                            className="group flex items-center justify-between"
                           >
                             <div className="flex items-center gap-2">
                               <Image
@@ -358,7 +382,9 @@ export default function StreamSubmissionsSection({
                                 height={30}
                                 className="rounded-full"
                               />
-                              <p className="underline__text">{user.userName}</p>
+                              <p className="group-hover:underline">
+                                {user.userName}
+                              </p>
                             </div>
                             <div>
                               {turnedInUsers?.find(
@@ -367,7 +393,7 @@ export default function StreamSubmissionsSection({
                               turnedInUsers?.find(
                                 (turnedIn) => turnedIn.userId === user.userId,
                               )?.isGraded ? (
-                                <p className="font-medium text-[#616572]">
+                                <p className="font-medium text-foreground">
                                   {(stream.dueDate &&
                                     new Date(stream.dueDate ?? "") >
                                       new Date()) ||
@@ -378,7 +404,7 @@ export default function StreamSubmissionsSection({
                               ) : (
                                 stream.dueDate &&
                                 new Date(stream.dueDate ?? "") < new Date() && (
-                                  <p className="font-medium text-[#f03e3e]">
+                                  <p className="text-desctructive font-medium">
                                     Missing
                                   </p>
                                 )
@@ -401,7 +427,7 @@ export default function StreamSubmissionsSection({
                           >
                             <Link
                               href={`/classroom/class/${stream.classId}/stream/${stream.id}/submissions?name=${user.userName.split(" ").join("-").toLowerCase()}&user=${user.userId}`}
-                              className="underline__container flex items-center justify-between"
+                              className="group flex items-center justify-between"
                             >
                               <div className="flex items-center gap-2">
                                 <Image
@@ -411,7 +437,7 @@ export default function StreamSubmissionsSection({
                                   height={30}
                                   className="rounded-full"
                                 />
-                                <p className="underline__text">
+                                <p className="group-hover:underline">
                                   {user.userName}
                                 </p>
                               </div>
@@ -422,7 +448,7 @@ export default function StreamSubmissionsSection({
                                 turnedInUsers?.find(
                                   (turnedIn) => turnedIn.userId === user.userId,
                                 )?.isGraded ? (
-                                  <p className="font-medium text-[#616572]">
+                                  <p className="font-medium text-foreground">
                                     {(stream.dueDate &&
                                       new Date(stream.dueDate ?? "") >
                                         new Date()) ||
@@ -438,7 +464,7 @@ export default function StreamSubmissionsSection({
                                   )?.isTurnedIn &&
                                   new Date(stream.dueDate ?? "") <
                                     new Date() && (
-                                    <p className="font-medium text-[#f03e3e]">
+                                    <p className="text-desctructive font-medium">
                                       Missing
                                     </p>
                                   )
@@ -452,7 +478,7 @@ export default function StreamSubmissionsSection({
             ) : null}
           </div>
           <div
-            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll border-[#dddfe6] bg-[#f3f6ff] p-3 md:static md:h-auto md:rounded-md md:border md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
+            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll bg-card p-3 md:static md:h-auto md:rounded-md md:border md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
           >
             <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
               <button
@@ -499,7 +525,7 @@ export default function StreamSubmissionsSection({
                 <div className="modal__container">
                   <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                     <div
-                      className="relative grid gap-4 rounded-md bg-[#f3f6ff] p-4"
+                      className="relative grid gap-4 rounded-md bg-card p-4"
                       ref={wrapperRef}
                     >
                       <div>
@@ -539,7 +565,7 @@ export default function StreamSubmissionsSection({
                           type="number"
                           name="userPoints"
                           required
-                          className="rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none disabled:text-[#616572]"
+                          className="rounded-md border bg-transparent px-4 py-2 focus:border-primary focus:outline-none disabled:text-foreground"
                           disabled={isLoading}
                           value={grade}
                           onChange={handleGradeChange}
@@ -633,13 +659,13 @@ export default function StreamSubmissionsSection({
                   <p>No attachments</p>
                 </>
               )}
-              <div className="hidden flex-col bg-[#f3f6ff] md:flex">
+              <div className="hidden flex-col bg-card md:flex">
                 <div>
-                  <div className="mt-2 border-t border-[#dddfe6] pt-2">
+                  <div className="mt-2 border-t pt-2">
                     <p className="font-medium">Private comments</p>
-                    <div className="w-full bg-[#f3f6ff] py-2">
+                    <div className="w-full bg-card py-2">
                       <form
-                        className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                        className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                         onSubmit={handleCommentSubmit}
                       >
                         <input
@@ -670,7 +696,7 @@ export default function StreamSubmissionsSection({
                           required={!attachmentImagesNames.length}
                           disabled={addCommentIsPending}
                           name="comment"
-                          className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                          className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
                           placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                           value={streamComment}
                           onChange={(event) =>
@@ -695,20 +721,7 @@ export default function StreamSubmissionsSection({
                               handleSetAttachmentImages(event);
                             }}
                           />
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="size-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                            />
-                          </svg>
+                          <ImagePlus className="size-5" />
                         </label>
                         <button
                           className="py-2 pr-4"
@@ -717,23 +730,10 @@ export default function StreamSubmissionsSection({
                           {addCommentIsPending ? (
                             <div className="spinner__mini dark"></div>
                           ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={2}
-                              className="size-6 stroke-[#22317c]"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                              />
-                            </svg>
+                            <SendHorizontal className="size-6 stroke-primary" />
                           )}
                         </button>
                       </form>
-
                       {attachmentImagesNames.length ? (
                         <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
                           {attachmentImagesNames.map((file, index) => (
@@ -794,9 +794,9 @@ export default function StreamSubmissionsSection({
                   </div>
                 </div>
               </div>
-              <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-[#f3f6ff] md:static md:hidden">
+              <div className="fixed bottom-0 left-0 right-0 flex flex-col bg-card md:static md:hidden">
                 <div>
-                  <div className="flex-end flex flex-col gap-2 border-t border-[#dddfe6] px-3 pt-2 md:mt-2 md:px-0">
+                  <div className="flex-end flex flex-col gap-2 border-t px-3 pt-2 md:mt-2 md:px-0">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">Private comments</p>
                       {optimisticComments?.filter(
@@ -808,7 +808,7 @@ export default function StreamSubmissionsSection({
                       ).length ? (
                         <button
                           onClick={handleToggleExpandPrivateComments}
-                          className="block text-xs text-[#22317c] md:hidden"
+                          className="block text-xs text-primary md:hidden"
                         >
                           {expandPrivateComments ? "Minimize" : "Expand"}
                         </button>
@@ -859,9 +859,9 @@ export default function StreamSubmissionsSection({
                     ) : null}
                   </div>
                 </div>
-                <div className="z-10 w-full bg-[#f3f6ff] px-3 pb-3 pt-1 md:px-0 md:pb-0">
+                <div className="z-10 w-full bg-card px-3 pb-3 pt-1 md:px-0 md:pb-0">
                   <form
-                    className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+                    className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
                     onSubmit={handleCommentSubmit}
                   >
                     <input
@@ -892,7 +892,7 @@ export default function StreamSubmissionsSection({
                       required={!attachmentImagesNames.length}
                       disabled={addCommentIsPending}
                       name="comment"
-                      className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                      className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
                       placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                       value={streamComment}
                       onChange={(event) => setStreamComment(event.target.value)}
@@ -915,20 +915,7 @@ export default function StreamSubmissionsSection({
                           handleSetAttachmentImages(event);
                         }}
                       />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                        />
-                      </svg>
+                      <ImagePlus className="size-5" />
                     </label>
                     <button
                       className="py-2 pr-4"
@@ -937,19 +924,7 @@ export default function StreamSubmissionsSection({
                       {addCommentIsPending ? (
                         <div className="spinner__mini dark"></div>
                       ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                          className="size-6 stroke-[#22317c]"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                          />
-                        </svg>
+                        <SendHorizontal className="size-6 stroke-primary" />
                       )}
                     </button>
                   </form>

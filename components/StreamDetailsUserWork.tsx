@@ -1,5 +1,7 @@
-import React, { useOptimistic, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { motion } from "motion/react";
+import { ChevronDown, ImagePlus, Plus, SendHorizontal } from "lucide-react";
+import React, { useOptimistic, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
@@ -18,12 +20,14 @@ import {
   updateClasswork,
 } from "@/lib/classroom-actions";
 
-import Button from "@/components/Button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import SpinnerMini from "@/components/SpinnerMini";
 import CommentCard from "@/components/CommentCard";
+import CommentsLoading from "@/components/CommentsLoading";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
-import CommentsLoading from "@/components/CommentsLoading";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function StreamDetailsUserWork({
   stream,
@@ -179,7 +183,15 @@ export default function StreamDetailsUserWork({
   ) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setAttachmentImages((prevFiles) => [...prevFiles, ...files]);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = files.filter((file) => file.size <= maxSize);
+      const invalidFiles = files.filter((file) => file.size > maxSize);
+
+      if (invalidFiles.length > 0) {
+        toast.error("Each attachment must be 5MB or less.");
+      }
+
+      setAttachmentImages((prevFiles) => [...prevFiles, ...validFiles]);
     }
   }
 
@@ -188,7 +200,11 @@ export default function StreamDetailsUserWork({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) => file.name);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = Array.from(files).filter(
+        (file) => file.size <= maxSize,
+      );
+      const newFileNames = validFiles.map((file) => URL.createObjectURL(file));
       setAttachmentImagesNames(newFileNames);
     }
   }
@@ -205,7 +221,25 @@ export default function StreamDetailsUserWork({
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setNewAttachments((prevFiles) => [...prevFiles, ...files]);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles: File[] = [];
+      let hasOversized = false;
+
+      files.forEach((file) => {
+        if (file.size > maxSize) {
+          hasOversized = true;
+        } else {
+          validFiles.push(file);
+        }
+      });
+
+      if (hasOversized) {
+        toast.error("Each file must be less than 5MB.");
+      }
+
+      if (validFiles.length) {
+        setNewAttachments((prevFiles) => [...prevFiles, ...validFiles]);
+      }
     }
   }
 
@@ -214,7 +248,10 @@ export default function StreamDetailsUserWork({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) => file.name);
+      const maxSize = 5 * 1024 * 1024;
+      const newFileNames = Array.from(files)
+        .filter((file) => file.size <= maxSize)
+        .map((file) => file.name);
       setAttachmentNames(newFileNames);
     }
   }
@@ -291,15 +328,15 @@ export default function StreamDetailsUserWork({
   );
 
   return (
-    <article className="fixed bottom-3 left-3 right-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
+    <article className="fixed bottom-3 left-3 right-3 rounded-md border bg-card p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
       <div
         className="flex cursor-pointer items-center justify-between md:cursor-auto"
         onClick={handleToggleExpandModalView}
       >
-        <h4 className="mb-2 text-lg font-medium">Your work</h4>
-        <div className="flex gap-1">
+        <h4 className="mb-2 text-lg font-medium text-foreground">Your work</h4>
+        <div className="flex items-center gap-1">
           {stream.points && classwork?.isGraded && (
-            <p className="font-medium text-[#616572]">
+            <p className="font-medium text-foreground">
               {classwork.points} / {stream.points}
             </p>
           )}
@@ -307,38 +344,28 @@ export default function StreamDetailsUserWork({
             classwork?.isTurnedIn &&
             ((stream.dueDate && new Date(stream.dueDate) > new Date()) ||
               !stream.dueDate) && (
-              <p className="font-medium text-[#616572]">Turned in</p>
+              <p className="font-medium text-foreground/90">Turned in</p>
             )}
           {!classwork?.isGraded &&
             classwork?.isTurnedIn &&
             stream.dueDate &&
             new Date(stream.dueDate) < new Date() && (
-              <p className="font-medium text-[#616572]">Done late</p>
+              <p className="font-medium text-foreground/90">Done late</p>
             )}
           {!classwork?.isTurnedIn &&
             stream.dueDate &&
             new Date(stream.dueDate) < new Date() && (
-              <p className="font-medium text-[#f03e3e]">Missing</p>
+              <p className="font-medium text-destructive">Missing</p>
             )}
           <button
             onClick={handleToggleExpandModalView}
             className="block md:hidden"
             type="button"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className={`${expandModalView ? "rotate-180" : "rotate-0"} size-6 transition-transform`}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m4.5 15.75 7.5-7.5 7.5 7.5"
-              />
-            </svg>
+            <ChevronDown
+              strokeWidth={3}
+              className={`${expandModalView ? "rotate-180" : "rotate-0"} w-4 transition-transform`}
+            />
           </button>
         </div>
       </div>
@@ -348,7 +375,7 @@ export default function StreamDetailsUserWork({
         newUrlLinks.length) &&
       !expandModalView ? (
         <div
-          className="flex items-center gap-1 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-3 text-sm shadow-sm md:hidden md:p-4 md:text-base"
+          className="flex items-center gap-1 rounded-md border bg-card p-3 text-sm shadow-sm md:hidden md:p-4 md:text-base"
           onClick={handleToggleExpandModalView}
         >
           <svg
@@ -356,7 +383,7 @@ export default function StreamDetailsUserWork({
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
-            className="size-4 stroke-[#616572] md:size-5"
+            className="size-4 stroke-foreground md:size-5"
           >
             <path
               strokeLinecap="round"
@@ -373,14 +400,16 @@ export default function StreamDetailsUserWork({
       !attachmentNames.length &&
       !currentUrlLinks.length &&
       !newUrlLinks.length ? (
-        <p className="mb-2 text-sm text-[#616572]">
+        <p className="mb-2 text-sm text-foreground">
           You have no attachments uploaded.
         </p>
       ) : null}
       <div className={`${expandModalView ? "grid" : "hidden"} gap-2 md:grid`}>
         {currentAttachments.length || attachmentNames.length ? (
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Files</label>
+            <label className="text-sm font-medium text-foreground/90">
+              Files
+            </label>
             <ul
               className={`grid gap-1 overflow-y-auto md:max-h-40 ${expandPrivateComments ? "max-h-20" : "max-h-40"}`}
             >
@@ -419,7 +448,9 @@ export default function StreamDetailsUserWork({
         ) : null}
         {currentUrlLinks.length || newUrlLinks.length ? (
           <div className="grid gap-2">
-            <label className="text-sm font-medium">Links</label>
+            <label className="text-sm font-medium text-foreground/90">
+              Links
+            </label>
             <ul
               className={`grid gap-1 overflow-y-auto md:max-h-40 ${expandPrivateComments ? "max-h-20" : "max-h-40"}`}
             >
@@ -470,7 +501,7 @@ export default function StreamDetailsUserWork({
                 ).length ? (
                   <button
                     onClick={handleToggleExpandPrivateComments}
-                    className="block text-sm text-[#22317c] md:hidden"
+                    className="block text-sm text-primary md:hidden"
                   >
                     {expandPrivateComments ? "Minimize" : "Expand"}
                   </button>
@@ -510,7 +541,7 @@ export default function StreamDetailsUserWork({
           </div>
           <div className="mt-1 w-full">
             <form
-              className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`comment__form flex w-full rounded-xl border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -541,7 +572,7 @@ export default function StreamDetailsUserWork({
                 required={!attachmentImages.length}
                 disabled={addCommentIsPending}
                 name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
@@ -564,38 +595,13 @@ export default function StreamDetailsUserWork({
                     handleSetAttachmentImages(event);
                   }}
                 />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
+                <ImagePlus className="size-5" />
               </label>
               <button className="py-2 pr-4" disabled={addCommentIsPending}>
                 {addCommentIsPending ? (
                   <div className="spinner__mini dark"></div>
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-[#22317c]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                    />
-                  </svg>
+                  <SendHorizontal className="size-6 stroke-primary" />
                 )}
               </button>
             </form>
@@ -624,8 +630,16 @@ export default function StreamDetailsUserWork({
         {!showEditSubmission && (
           <>
             {!isLoading && (
-              <button
-                className={`flex h-10 w-full items-center justify-center gap-1 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "bg-[#e1e7f5] text-[#22317c] hover:bg-[#d9dfee] disabled:bg-[#c5cde6]" : "bg-[#22317c] text-[#edf2ff] hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"}`}
+              <Button
+                type="button"
+                variant={
+                  newAttachments.length ||
+                  currentAttachments.length ||
+                  currentUrlLinks.length ||
+                  newUrlLinks.length
+                    ? "secondary"
+                    : "default"
+                }
                 disabled={
                   isLoading ||
                   (!classwork?.isTurnedIn &&
@@ -634,22 +648,9 @@ export default function StreamDetailsUserWork({
                 }
                 onClick={handleToggleShowAddWorkPopover}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                <span>Add work</span>
-              </button>
+                <Plus className="size-5" />
+                Add work
+              </Button>
             )}
             <form onSubmit={handleSubmitClasswork}>
               <input
@@ -676,8 +677,17 @@ export default function StreamDetailsUserWork({
                 defaultValue={stream?.id ?? ""}
                 hidden
               />
-              <button
-                className={`flex h-10 w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors ${newAttachments.length || currentAttachments.length || currentUrlLinks.length || newUrlLinks.length ? "bg-[#22317c] text-[#edf2ff] hover:bg-[#384689] disabled:bg-[#1b2763] disabled:text-[#d5dae6]" : "bg-[#e1e7f5] text-[#22317c] hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6]"}`}
+              <Button
+                type="submit"
+                className="mt-2 w-full"
+                variant={
+                  newAttachments.length ||
+                  currentAttachments.length ||
+                  currentUrlLinks.length ||
+                  newUrlLinks.length
+                    ? "default"
+                    : "secondary"
+                }
                 disabled={
                   isLoading ||
                   (!classwork?.isTurnedIn &&
@@ -703,24 +713,31 @@ export default function StreamDetailsUserWork({
                     </p>
                   </span>
                 )}
-              </button>
+              </Button>
             </form>
           </>
         )}
         {showEditSubmission && (
-          <button
-            className="flex h-10 w-full items-center justify-center gap-1 rounded-md bg-[#e1e7f5] px-4 py-2 text-sm font-semibold text-[#22317c] shadow-sm transition-colors hover:bg-[#d9dfee] disabled:cursor-not-allowed disabled:bg-[#c5cde6] md:gap-2"
+          <Button
+            variant="secondary"
             onClick={handleUnsubmitClasswork}
             disabled={isLoading}
           >
             {isLoading ? <SpinnerMini /> : "Unsubmit"}
-          </button>
+          </Button>
+          // <button
+          //   className="flex h-10 w-full items-center justify-center gap-1 rounded-md bg-card px-4 py-2 text-sm font-semibold text-primary shadow-sm transition-colors hover:bg-card/90 disabled:cursor-not-allowed disabled:bg-card/90 md:gap-2"
+          //   onClick={handleUnsubmitClasswork}
+          //   disabled={isLoading}
+          // >
+          //   {isLoading ? <SpinnerMini /> : "Unsubmit"}
+          // </button>
         )}
         <div className="hidden md:block">
           <label className="text-sm font-medium">Private comments</label>
           <div className="mt-1">
             <form
-              className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${streamComment.length > 50 ? "items-end" : "items-center"}`}
+              className={`comment__form flex w-full rounded-md border ${streamComment.length > 50 ? "items-end" : "items-center"}`}
               onSubmit={handleCommentSubmit}
             >
               <input
@@ -751,7 +768,7 @@ export default function StreamDetailsUserWork({
                 required
                 disabled={addCommentIsPending}
                 name="comment"
-                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${streamComment.length > 50 ? "h-28" : "h-9"}`}
+                className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${streamComment.length > 50 ? "h-28" : "h-9"}`}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
                 value={streamComment}
                 onChange={(event) => setStreamComment(event.target.value)}
@@ -774,38 +791,13 @@ export default function StreamDetailsUserWork({
                     handleSetAttachmentImages(event);
                   }}
                 />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
+                <ImagePlus className="size-5" />
               </label>
               <button className="py-2 pr-4" disabled={addCommentIsPending}>
                 {addCommentIsPending ? (
                   <div className="spinner__mini dark"></div>
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-[#22317c]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                    />
-                  </svg>
+                  <SendHorizontal className="size-6 stroke-primary" />
                 )}
               </button>
             </form>
@@ -866,10 +858,10 @@ export default function StreamDetailsUserWork({
           ) : null}
         </div>
         <div
-          className={`${showAddWorkPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-md bg-[#f3f6ff] p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
+          className={`${showAddWorkPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-xl border bg-card p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
         >
           <label
-            className="flex cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-[#d8e0f5]"
+            className="hover:bg-card/89 flex cursor-pointer items-center gap-2 rounded-md p-2"
             onClick={handleToggleShowAddWorkPopover}
           >
             <input
@@ -887,7 +879,7 @@ export default function StreamDetailsUserWork({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
-              className="size-4 stroke-[#616572]"
+              className="size-4 stroke-foreground"
             >
               <path
                 strokeLinecap="round"
@@ -898,7 +890,7 @@ export default function StreamDetailsUserWork({
             <span>Upload files</span>
           </label>
           <button
-            className="flex items-center gap-2 rounded-md p-2 hover:bg-[#d8e0f5]"
+            className="hover:bg-card/89 flex items-center gap-2 rounded-md p-2"
             onClick={handleToggleShowAddLinkModal}
           >
             <svg
@@ -907,7 +899,7 @@ export default function StreamDetailsUserWork({
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className="size-4 stroke-[#616572]"
+              className="size-4 stroke-foreground"
             >
               <path
                 strokeLinecap="round"
@@ -920,44 +912,70 @@ export default function StreamDetailsUserWork({
         </div>
       </div>
       {showAddLinkModal && (
-        <div className="modal__container">
-          <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
-            <div
-              className="grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4 md:w-[25rem]"
-              ref={addLinkModalWrapperRef}
-            >
-              <div className="grid gap-2">
-                <h4 className="text-lg font-semibold tracking-tight">
-                  Add link
-                </h4>
-                <input
+        <motion.div
+          className="modal__container"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.1 }}
+        >
+          <motion.div
+            className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Card className="md:w-[25rem]" ref={addLinkModalWrapperRef}>
+              <CardHeader className="text-lg font-medium tracking-tight">
+                Add link
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <Input
                   type="text"
-                  className="w-full rounded-md border bg-transparent px-4 py-2 focus:border-[#384689] focus:outline-none"
-                  placeholder="Enter a url..."
+                  placeholder="Enter a url"
                   required
                   value={url}
                   onChange={(event) => setUrl(event.target.value)}
                   onKeyDown={(event) =>
                     event.key === "Enter" &&
                     showAddLinkModal &&
-                    handleSetNewUrlLinks(url)
+                    (() => {
+                      try {
+                        new URL(url);
+                        handleSetNewUrlLinks(url);
+                      } catch {
+                        toast.error("Please enter a valid URL.");
+                      }
+                    })()
                   }
                 />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button type="secondary" onClick={handleToggleShowAddLinkModal}>
-                  Cancel
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={() => handleSetNewUrlLinks(url)}
-                >
-                  Add
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleToggleShowAddLinkModal}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        new URL(url);
+                        handleSetNewUrlLinks(url);
+                      } catch {
+                        toast.error("Please enter a valid URL.");
+                      }
+                    }}
+                  >
+                    Add
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
       )}
     </article>
   );
