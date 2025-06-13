@@ -4,7 +4,7 @@ import { useOptimistic, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { Clipboard } from "lucide-react";
+import { Check, ChevronDown, Clipboard } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -27,6 +27,12 @@ import StreamCard from "@/components/StreamCard";
 import NoClassStreams from "@/components/NoClassStreams";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -262,7 +268,7 @@ export default function StreamsSection({
             {session.id === classroom.teacherId ||
             classroom.allowUsersToPost ? (
               <div
-                className="mb-2 flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
               >
                 <Image
@@ -276,165 +282,90 @@ export default function StreamsSection({
               </div>
             ) : null}
             <div className="flex items-start justify-start">
-              <div
-                className="relative mb-2 flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
-                onClick={handleToggleShowFilterDropdown}
-                ref={filterWrapperRef}
-              >
-                <div className="flex items-center gap-2 font-medium md:gap-4">
-                  <span>
-                    {searchParams.get("sort") === null
-                      ? "All"
-                      : searchParams.get("sort") === "stream"
-                        ? "Post"
-                        : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={3}
-                    stroke="currentColor"
-                    className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-auto p-0 hover:bg-transparent"
+                    onClick={handleToggleShowFilterDropdown}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    <span>
+                      {searchParams.get("sort") === null
+                        ? "All"
+                        : searchParams.get("sort") === "stream"
+                          ? "Post"
+                          : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
+                    </span>
+                    <ChevronDown
+                      strokeWidth={3}
+                      className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} w-4 transition-transform`}
                     />
-                  </svg>
-                </div>
-                <ul
-                  className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-card p-2 shadow-md transition-all ease-in-out`}
-                >
-                  <li>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=all`}
                       scroll={false}
-                      className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>All</span>
                       {(searchParams.get("sort") === "all" ||
                         searchParams.get("sort") === null) && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=stream`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Post</span>
                       {searchParams.get("sort") === "stream" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=assignment`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Assignment</span>
                       {searchParams.get("sort") === "assignment" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=quiz`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Quiz</span>
                       {searchParams.get("sort") === "quiz" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=material`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Material</span>
                       {searchParams.get("sort") === "material" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                </ul>
-              </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <ul className="flex flex-col gap-2">
               {streamsIsPending && (
