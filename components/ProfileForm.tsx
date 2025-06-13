@@ -257,7 +257,6 @@ export default function ProfileForm({
                   <label className="group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50">
                     <Input
                       name="currentPassword"
-                      required
                       disabled={isLoading}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your current password"
@@ -282,7 +281,6 @@ export default function ProfileForm({
                   <label className="group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50">
                     <Input
                       name="newPassword"
-                      required
                       disabled={isLoading}
                       type={showNewPassword ? "text" : "password"}
                       placeholder="Set up your new password"
@@ -309,7 +307,6 @@ export default function ProfileForm({
                   <label className="group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50">
                     <Input
                       name="confirmNewPassword"
-                      required
                       disabled={isLoading}
                       type={showConfirmNewPassword ? "text" : "password"}
                       placeholder="Set up your new password"
