@@ -31,7 +31,7 @@ export default function ClassSuspense({
                 <div className="h-8 w-8 flex-shrink-0 animate-pulse rounded-full bg-muted md:h-10 md:w-10" />
                 <div className="h-[0.875rem] w-32 animate-pulse rounded-md bg-muted"></div>
               </div>
-              <div className="mb-2 flex cursor-not-allowed items-center gap-2 font-medium text-foreground md:gap-4">
+              <div className="mb-2 flex cursor-not-allowed items-center gap-2 font-medium text-foreground">
                 <span>All</span>
                 <ChevronDown strokeWidth={3} className="h-4 w-4" />
               </div>
