@@ -670,8 +670,6 @@ export async function createClassStreamPost(
       ).then((results) => results.filter((url) => url !== null))
     : [];
 
-  const dueDate = formData.get("dueDate");
-
   const topicId = formData.get("topicId");
   const finalTopicId = topicId === "no-topic" ? null : topicId;
 
@@ -692,10 +690,10 @@ export async function createClassStreamPost(
     announceToAll: audienceIsAll,
     attachments: postAttachments,
     links: formData.getAll("links"),
-    dueDate: dueDate
+    dueDate: formData.get("dueDate")
       ? parseISO(
           format(
-            subHours(parseISO(formData.get("scheduledAt") as string), 8),
+            parseISO(formData.get("dueDate") as string),
             "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
           ),
         )
@@ -703,7 +701,7 @@ export async function createClassStreamPost(
     scheduledAt: formData.get("scheduledAt")
       ? parseISO(
           format(
-            subHours(parseISO(formData.get("scheduledAt") as string), 8),
+            parseISO(formData.get("scheduledAt") as string),
             "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
           ),
         )
@@ -711,7 +709,9 @@ export async function createClassStreamPost(
     acceptingSubmissions: formData.get("acceptingSubmissions") === "true",
     closeSubmissionsAfterDueDate:
       formData.get("closeSubmissionsAfterDueDate") === "true",
-    points: formData.get("totalPoints"),
+    points: formData.get("totalPoints")
+      ? Number(formData.get("totalPoints"))
+      : null,
     topicId: topic?.id ?? null,
     topicName: topic?.name ?? null,
   };
@@ -798,13 +798,15 @@ export async function updateClassStreamPost(
         ),
       )
     : null;
-  const newPoints = formData.get("totalPoints");
+  const newPoints = formData.get("totalPoints")
+    ? Number(formData.get("totalPoints"))
+    : null;
   const topicId = formData.get("topicId");
   const newTopicId = topicId === "no-topic" ? null : topicId;
   const newScheduledAt = formData.get("scheduledAt")
     ? parseISO(
         format(
-          formData.get("scheduledAt") as string,
+          parseISO(formData.get("scheduledAt") as string),
           "yyyy-MM-dd'T'HH:mm:ss.SSSSSSxxx",
         ),
       )
