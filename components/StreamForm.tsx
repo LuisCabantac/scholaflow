@@ -186,7 +186,12 @@ export default function StreamForm({
   function handleGradeChange(event: React.ChangeEvent<HTMLInputElement>) {
     const inputValue = event.target.value;
     if (/^\d*$/.test(inputValue)) {
+      if (inputValue.length > 1 && inputValue.startsWith("0")) {
+        const numericValue = String(parseInt(inputValue, 10));
+        setGrade(numericValue);
+      } else {
       setGrade(inputValue);
+      }
     }
   }
 
