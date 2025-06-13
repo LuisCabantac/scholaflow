@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import ReactLinkify from "react-linkify";
+import Image from "next/image";
 import toast from "react-hot-toast";
+import ReactLinkify from "react-linkify";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown, ImagePlus, SendHorizontal } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
@@ -93,7 +94,17 @@ export default function ClassChatSection({
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setNewAttachments((prevFiles) => [...prevFiles, ...files]);
+      const maxFileSize = 5 * 1024 * 1024;
+
+      const validFiles = files.filter((file) => {
+        if (file.size > maxFileSize) {
+          toast.error(`File ${file.name} exceeds 5MB limit`);
+          return false;
+        }
+        return true;
+      });
+
+      setNewAttachments((prevFiles) => [...prevFiles, ...validFiles]);
     }
   }
 
@@ -102,8 +113,12 @@ export default function ClassChatSection({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) => file.name);
-      setAttachmentNames(newFileNames);
+      const maxFileSize = 5 * 1024 * 1024;
+      const validFileNames = Array.from(files)
+        .filter((file) => file.size <= maxFileSize)
+        .map((file) => file.name);
+
+      setAttachmentNames(validFileNames);
     }
   }
 
@@ -342,25 +357,15 @@ export default function ClassChatSection({
                 <div className="flex justify-between border-t pt-2">
                   <p className="font-medium">Attachments</p>
                   <button type="button" onClick={handleToggleExpandAttachments}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className={`${expandAttachments ? "rotate-180" : "rotate-0"} size-6 transition-transform`}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                      />
-                    </svg>
+                    <ChevronDown
+                      strokeWidth={3}
+                      className={`${expandAttachments ? "rotate-180" : "rotate-0"} w-6 transition-transform`}
+                    />
                   </button>
                 </div>
                 {!expandAttachments && (
                   <div
-                    className="flex cursor-pointer items-center gap-1 rounded-md border bg-card p-3 shadow-sm md:p-4"
+                    className="flex cursor-pointer items-center gap-1 rounded-xl border p-3 shadow-sm md:p-4"
                     onClick={handleToggleExpandAttachments}
                   >
                     <svg
@@ -420,22 +425,10 @@ export default function ClassChatSection({
                       handleSetNewAttachment(event);
                     }}
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-ring"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
+                  <ImagePlus className="size-5 md:size-6" />
                 </label>
                 <div
-                  className={`comment__form flex w-full rounded-md border ${message.length > 50 ? "items-end" : "items-center"}`}
+                  className={`comment__form flex w-full rounded-xl border bg-foreground/10 ${message.length > 50 ? "items-end" : "items-center"}`}
                 >
                   <input
                     type="text"
@@ -445,7 +438,7 @@ export default function ClassChatSection({
                   />
                   <textarea
                     name="message"
-                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${message.length > 50 ? "h-28" : "h-9"}`}
+                    className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${message.length > 50 ? "h-28" : "h-9"}`}
                     value={message}
                     required={!newAttachments.length}
                     placeholder={
@@ -464,19 +457,7 @@ export default function ClassChatSection({
                     {addMessageIsPending ? (
                       <div className="spinner__mini dark"></div>
                     ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        className="size-6 stroke-primary disabled:cursor-not-allowed"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                        />
-                      </svg>
+                      <SendHorizontal className="size-6 stroke-primary" />
                     )}
                   </button>
                 </div>

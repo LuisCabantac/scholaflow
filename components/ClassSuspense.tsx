@@ -1,4 +1,4 @@
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, ImagePlus, Search } from "lucide-react";
 
 import SkeletonTabsStatic from "@/components/SkeletonTabsStatic";
 
@@ -192,22 +192,10 @@ export default function ClassSuspense({
                 <div className="h-4 w-36 animate-pulse rounded-md bg-muted"></div>
               </li>
             </ul>
-            <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-card md:pt-0">
+            <div className="fixed bottom-3 left-3 right-3 z-10 bg-foreground/10 pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-card md:pt-0">
               <div className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  className="size-6 animate-pulse stroke-muted"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-                <div className="h-[2.7rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <ImagePlus className="size-6 animate-pulse stroke-muted" />
+                <div className="h-[2.7rem] w-full animate-pulse rounded-xl bg-muted"></div>
               </div>
             </div>
           </div>
