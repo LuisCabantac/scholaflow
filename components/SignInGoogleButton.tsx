@@ -18,6 +18,7 @@ export default function SignInGoogleButton({
         await signIn.social({
           provider: "google",
           callbackURL: "/classroom",
+          errorCallbackURL: "/error",
         });
       }}
       disabled={isLoading}
