@@ -1,7 +1,8 @@
+import Link from "next/link";
 import Image from "next/image";
 
 import pageNotFound from "@/public/app/page-not-found.svg";
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -17,8 +18,8 @@ export default function NotFound() {
         <p className="mb-2 text-center text-base font-medium">
           Sorry, we could not find the page you are looking for.
         </p>
-        <Button type="primary" href="/">
-          Go back home
+        <Button>
+          <Link href="/">Go back home</Link>
         </Button>
       </div>
     </div>

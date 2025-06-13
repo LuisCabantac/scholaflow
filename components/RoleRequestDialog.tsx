@@ -5,7 +5,7 @@ import { RoleRequest, Session } from "@/lib/schema";
 import { roleRequest } from "@/lib/user-management-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 
 export default function RoleRequestDialog({
   session,
@@ -98,11 +98,15 @@ export default function RoleRequestDialog({
               />
               <div className="flex items-center justify-end gap-2">
                 {!isLoading && (
-                  <Button type="secondary" onClick={onToggleShowRoleRequest}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={onToggleShowRoleRequest}
+                  >
                     Cancel
                   </Button>
                 )}
-                <Button type="primary" isLoading={isLoading}>
+                <Button type="submit" disabled={isLoading}>
                   Request
                 </Button>
               </div>

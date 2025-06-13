@@ -24,7 +24,7 @@ import {
   StreamPrivateComment,
 } from "@/lib/schema";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import CommentCard from "@/components/CommentCard";
 import CommentsLoading from "@/components/CommentsLoading";
 import AttachmentLinkCard from "@/components/AttachmentLinkCard";
@@ -571,7 +571,7 @@ export default function StreamSubmissionsSection({
                           onChange={handleGradeChange}
                         />
                         <div className="flex items-center justify-end">
-                          <Button type="primary" isLoading={isLoading}>
+                          <Button type="submit" disabled={isLoading}>
                             Done
                           </Button>
                         </div>
