@@ -1,19 +1,21 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import ReactLinkify from "react-linkify";
+import Image from "next/image";
 import toast from "react-hot-toast";
+import ReactLinkify from "react-linkify";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronDown, ImagePlus, SendHorizontal } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/lib/supabase";
 import { Chat, Session } from "@/lib/schema";
 import { addMessageToChat } from "@/lib/classroom-actions";
 import { formatMessageDate, getFileExtension } from "@/lib/utils";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import AttachmentFileCard from "@/components/AttachmentFileCard";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const imageExtensions: string[] = [
   "jpg",
@@ -92,7 +94,17 @@ export default function ClassChatSection({
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setNewAttachments((prevFiles) => [...prevFiles, ...files]);
+      const maxFileSize = 5 * 1024 * 1024;
+
+      const validFiles = files.filter((file) => {
+        if (file.size > maxFileSize) {
+          toast.error(`File ${file.name} exceeds 5MB limit`);
+          return false;
+        }
+        return true;
+      });
+
+      setNewAttachments((prevFiles) => [...prevFiles, ...validFiles]);
     }
   }
 
@@ -101,8 +113,12 @@ export default function ClassChatSection({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) => file.name);
-      setAttachmentNames(newFileNames);
+      const maxFileSize = 5 * 1024 * 1024;
+      const validFileNames = Array.from(files)
+        .filter((file) => file.size <= maxFileSize)
+        .map((file) => file.name);
+
+      setAttachmentNames(validFileNames);
     }
   }
 
@@ -156,7 +172,7 @@ export default function ClassChatSection({
         key={key}
         target="_blank"
         rel="noopener noreferrer"
-        className="overflow-wrap break-words break-all text-[#5c7cfa] underline"
+        className="overflow-wrap break-words break-all text-ring underline"
       >
         {text}
       </a>
@@ -166,77 +182,69 @@ export default function ClassChatSection({
   return (
     <section className="relative">
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href={`/classroom/class/${classId}`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Stream
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/classwork`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Classwork
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/people`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            People
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/chat`}
-            className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
-          >
-            Chat
-          </Link>
-        </div>
+        <Tabs defaultValue="chat">
+          <TabsList>
+            <TabsTrigger value="stream" asChild>
+              <Link href={`/classroom/class/${classId}`}>Stream</Link>
+            </TabsTrigger>
+            <TabsTrigger value="classwork" asChild>
+              <Link href={`/classroom/class/${classId}/classwork`}>
+                Classwork
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="people" asChild>
+              <Link href={`/classroom/class/${classId}/people`}>People</Link>
+            </TabsTrigger>
+            <TabsTrigger value="chat" asChild>
+              <Link href={`/classroom/class/${classId}/chat`}>Chat</Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
-      <div className="flex w-full flex-col rounded-md md:border md:border-[#dddfe6] md:bg-[#f3f6ff] md:p-4">
+      <div className="flex w-full flex-col rounded-md md:border md:bg-card md:p-4">
         <div className="relative pb-16">
           <ul className="flex h-[75dvh] flex-col justify-end gap-2 overflow-auto rounded-md md:h-[65dvh]">
             {messagesIsPending && !messages && (
               <div className="flex min-h-full flex-col justify-end">
                 <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-60 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-60 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-28 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-28 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-32 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-32 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-56 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-56 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-16 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-16 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-end md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-20 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="mb-12 self-start md:mb-[3.01rem]" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-40 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-40 animate-pulse rounded-md bg-muted"></div>
                 </li>
                 <li className="self-start" role="status">
                   <span className="sr-only">Loading…</span>
-                  <div className="h-4 w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                  <div className="h-4 w-36 animate-pulse rounded-md bg-muted"></div>
                 </li>
               </div>
             )}
@@ -282,13 +290,13 @@ export default function ClassChatSection({
                             componentDecorator={captionLinksDecorator}
                           >
                             <div
-                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.userId === session.id ? "bg-[#dbe4ff]" : "border border-[#dddfe6]"}`}
+                              className={`max-w-full whitespace-pre-line rounded-lg px-3 py-2 ${message.userId === session.id ? "bg-card md:bg-foreground/10" : "border"}`}
                             >
                               <p className={`max-w-full whitespace-pre-line`}>
                                 {message.message}
                               </p>
                               <p
-                                className={`mt-1 text-nowrap text-xs font-medium text-[#616572] ${session.id === message.userId ? "text-left" : "text-right"}`}
+                                className={`mt-1 text-nowrap text-xs font-medium text-foreground ${session.id === message.userId ? "text-left" : "text-right"}`}
                               >
                                 {formatMessageDate(message.createdAt)}
                               </p>
@@ -343,31 +351,21 @@ export default function ClassChatSection({
             ) : null}
             <li ref={messagesEndRef} className="h-0 w-0"></li>
           </ul>
-          <div className="fixed bottom-3 left-3 right-3 z-10 bg-[#edf2ff] pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-[#f3f6ff] md:pt-0">
+          <div className="fixed bottom-3 left-3 right-3 z-10 bg-background pt-2 md:absolute md:bottom-0 md:left-0 md:right-0 md:w-full md:bg-card md:pt-0">
             {attachmentNames.length ? (
               <>
-                <div className="flex justify-between border-t border-[#dddfe6] pt-2">
+                <div className="flex justify-between border-t pt-2">
                   <p className="font-medium">Attachments</p>
                   <button type="button" onClick={handleToggleExpandAttachments}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className={`${expandAttachments ? "rotate-180" : "rotate-0"} size-6 transition-transform`}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                      />
-                    </svg>
+                    <ChevronDown
+                      strokeWidth={3}
+                      className={`${expandAttachments ? "rotate-180" : "rotate-0"} w-6 transition-transform`}
+                    />
                   </button>
                 </div>
                 {!expandAttachments && (
                   <div
-                    className="flex cursor-pointer items-center gap-1 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-3 shadow-sm md:p-4"
+                    className="flex cursor-pointer items-center gap-1 rounded-xl border p-3 shadow-sm md:p-4"
                     onClick={handleToggleExpandAttachments}
                   >
                     <svg
@@ -375,7 +373,7 @@ export default function ClassChatSection({
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={2}
-                      className="size-4 stroke-[#616572] md:size-5"
+                      className="size-4 stroke-foreground md:size-5"
                     >
                       <path
                         strokeLinecap="round"
@@ -427,22 +425,10 @@ export default function ClassChatSection({
                       handleSetNewAttachment(event);
                     }}
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    className="size-6 stroke-[#5c7cfa]"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
+                  <ImagePlus className="size-5 md:size-6" />
                 </label>
                 <div
-                  className={`comment__form flex w-full rounded-md border border-[#dddfe6] ${message.length > 50 ? "items-end" : "items-center"}`}
+                  className={`comment__form flex w-full rounded-xl border bg-foreground/10 ${message.length > 50 ? "items-end" : "items-center"}`}
                 >
                   <input
                     type="text"
@@ -452,7 +438,7 @@ export default function ClassChatSection({
                   />
                   <textarea
                     name="message"
-                    className={`comment__textarea w-full resize-none bg-transparent py-2 pl-4 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${message.length > 50 ? "h-28" : "h-9"}`}
+                    className={`comment__textarea w-full resize-none rounded-xl bg-transparent py-2 pl-4 placeholder:text-foreground focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:text-foreground ${message.length > 50 ? "h-28" : "h-9"}`}
                     value={message}
                     required={!newAttachments.length}
                     placeholder={
@@ -471,19 +457,7 @@ export default function ClassChatSection({
                     {addMessageIsPending ? (
                       <div className="spinner__mini dark"></div>
                     ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        className="size-6 stroke-[#22317c] disabled:cursor-not-allowed"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                        />
-                      </svg>
+                      <SendHorizontal className="size-6 stroke-primary" />
                     )}
                   </button>
                 </div>

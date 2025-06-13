@@ -1,19 +1,28 @@
 "use client";
 
+import { z } from "zod/v4";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { forgetPasswordFormSchema } from "@/lib/schema";
 import { checkVerificationToken } from "@/lib/auth-actions";
 
-import SpinnerMini from "@/components/SpinnerMini";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-async function sendEmail(formData: FormData) {
-  const email = formData.get("email") as string | null;
-
+async function sendEmail(email: string) {
   if (!email)
     return {
       success: false,
@@ -77,13 +86,17 @@ async function sendEmail(formData: FormData) {
 export default function ForgetPasswordSection() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [validEmail, setValidEmail] = useState(true);
 
-  async function handleForgetPasswordAction(event: React.FormEvent) {
-    event.preventDefault();
+  const form = useForm<z.infer<typeof forgetPasswordFormSchema>>({
+    resolver: zodResolver(forgetPasswordFormSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof forgetPasswordFormSchema>) {
     setIsLoading(true);
-    const formData = new FormData(event.target as HTMLFormElement);
-    const { success, message } = await sendEmail(formData);
+    const { success, message } = await sendEmail(values.email);
     if (success) {
       router.push("/signin");
       toast.success(message);
@@ -94,31 +107,31 @@ export default function ForgetPasswordSection() {
   }
 
   return (
-    <form className="grid gap-3 pb-3" onSubmit={handleForgetPasswordAction}>
-      <div className="grid gap-2">
-        <label className="font-medium">
-          Email <span className="text-red-400">*</span>
-        </label>
-        <input
-          required
-          disabled={isLoading}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
           name="email"
-          type="email"
-          placeholder="Enter your email address"
-          className={`rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none disabled:cursor-not-allowed disabled:text-[#616572] ${!validEmail && "border-[#f03e3e]"}`}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setValidEmail(emailRegex.test(event.target.value))
-          }
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  required
+                  type="email"
+                  disabled={isLoading}
+                  placeholder="you@example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <button
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#22317c] px-4 py-2 text-sm font-medium text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"
-          disabled={isLoading}
-          type="submit"
-        >
-          {isLoading && <SpinnerMini />}
+        <Button type="submit" className="w-full" disabled={isLoading}>
           Reset Password
-        </button>
-      </div>
-    </form>
+        </Button>
+      </form>
+    </Form>
   );
 }

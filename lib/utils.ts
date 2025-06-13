@@ -1,3 +1,5 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import {
   format,
   formatDistanceToNow,
@@ -158,6 +160,15 @@ export function generatePassword(length: number = 8) {
   ).join("");
 }
 
+export function formatTimeFromDate(date?: Date): string {
+  if (!date) return "";
+
+  return date.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function getFileNameFromAttachments(url: string): string {
   const urlObject = new URL(url);
   const pathSegments = urlObject.pathname.split("/");
@@ -202,4 +213,8 @@ export function formatMessageDate(dateString: string | Date): string {
   } else {
     return format(date, "MMM d, yyyy");
   }
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }

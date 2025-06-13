@@ -53,7 +53,7 @@ export default function ClassroomCard({
 
   return (
     <li
-      className="relative flex h-[9rem] w-full flex-col gap-2 rounded-md text-[#F5F5F5] shadow-sm md:h-[10rem]"
+      className="relative flex h-[9rem] w-full flex-col gap-2 rounded-xl text-[#F5F5F5] shadow-sm md:h-[10rem]"
       style={{
         backgroundColor: classData.cardBackground,
       }}

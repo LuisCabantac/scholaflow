@@ -4,9 +4,10 @@ import { useOptimistic, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { Check, ChevronDown, Clipboard } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { deleteClassStreamPost } from "@/lib/classroom-actions";
@@ -20,9 +21,18 @@ import {
 } from "@/lib/schema";
 
 import ClassForm from "@/components/ClassForm";
+import { Button } from "@/components/ui/button";
 import StreamForm from "@/components/StreamForm";
-import NoClassStreams from "@/components/NoClassStreams";
 import StreamCard from "@/components/StreamCard";
+import NoClassStreams from "@/components/NoClassStreams";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const illustrationArr = [
   "M1 1h46v62H1zM9 63V2M14 15h28M14 21h28M63 3v50l-4 8-4-8V3zM55 7h-4v10",
@@ -126,36 +136,30 @@ export default function StreamsSection({
   return (
     <section className="relative">
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href={`/classroom/class/${classroom.id}`}
-            className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
-          >
-            Stream
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/classwork`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Classwork
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/people`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            People
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/chat`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Chat
-          </Link>
-        </div>
+        <Tabs defaultValue="stream">
+          <TabsList>
+            <TabsTrigger value="stream" asChild>
+              <Link href={`/classroom/class/${classroom.id}`}>Stream</Link>
+            </TabsTrigger>
+            <TabsTrigger value="classwork" asChild>
+              <Link href={`/classroom/class/${classroom.id}/classwork`}>
+                Classwork
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="people" asChild>
+              <Link href={`/classroom/class/${classroom.id}/people`}>
+                People
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="chat" asChild>
+              <Link href={`/classroom/class/${classroom.id}/chat`}>Chat</Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
       <div className="grid gap-2">
         <div
-          className="relative h-[9rem] rounded-md shadow-sm md:h-[10rem]"
+          className="relative h-[9rem] rounded-xl shadow-sm md:h-[10rem]"
           style={{ backgroundColor: classroom.cardBackground }}
         >
           <div className="absolute left-3 top-3 w-[80%] text-balance drop-shadow-sm md:left-4 md:top-4">
@@ -264,7 +268,7 @@ export default function StreamsSection({
             {session.id === classroom.teacherId ||
             classroom.allowUsersToPost ? (
               <div
-                className="mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                 onClick={handleToggleShowStreamForm}
               >
                 <Image
@@ -272,248 +276,173 @@ export default function StreamsSection({
                   alt="user's avatar"
                   width={40}
                   height={40}
-                  className="h-10 w-10 flex-shrink-0 rounded-full"
+                  className="h-8 w-8 flex-shrink-0 rounded-full md:h-10 md:w-10"
                 />
-                <p className="text-[#616572]">Share with your class...</p>
+                <p className="text-foreground">Share with your class...</p>
               </div>
             ) : null}
             <div className="flex items-start justify-start">
-              <div
-                className="relative mb-2 flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
-                onClick={handleToggleShowFilterDropdown}
-                ref={filterWrapperRef}
-              >
-                <div className="flex items-center gap-2 font-medium md:gap-4">
-                  <span>
-                    {searchParams.get("sort") === null
-                      ? "All"
-                      : searchParams.get("sort") === "stream"
-                        ? "Post"
-                        : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={3}
-                    stroke="currentColor"
-                    className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-auto p-0 hover:bg-transparent"
+                    onClick={handleToggleShowFilterDropdown}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    <span>
+                      {searchParams.get("sort") === null
+                        ? "All"
+                        : searchParams.get("sort") === "stream"
+                          ? "Post"
+                          : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
+                    </span>
+                    <ChevronDown
+                      strokeWidth={3}
+                      className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} w-4 transition-transform`}
                     />
-                  </svg>
-                </div>
-                <ul
-                  className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
-                >
-                  <li>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=all`}
                       scroll={false}
-                      className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${(searchParams.get("sort") === "all" || searchParams.get("sort") === null) && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>All</span>
                       {(searchParams.get("sort") === "all" ||
                         searchParams.get("sort") === null) && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=stream`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "stream" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Post</span>
                       {searchParams.get("sort") === "stream" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=assignment`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "assignment" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Assignment</span>
                       {searchParams.get("sort") === "assignment" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=quiz`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "quiz" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Quiz</span>
                       {searchParams.get("sort") === "quiz" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                  <li>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
                       href={`/classroom/class/${classroom.id}?sort=material`}
                       scroll={false}
-                      className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                      className={`${searchParams.get("sort") === "material" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-foreground/20`}
                     >
                       <span>Material</span>
                       {searchParams.get("sort") === "material" && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={3}
-                          stroke="currentColor"
-                          className="size-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <Check strokeWidth={3} className="h-4 w-4" />
                       )}
                     </Link>
-                  </li>
-                </ul>
-              </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <ul className="flex flex-col gap-2">
               {streamsIsPending && (
                 <>
                   <li
-                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
-                      <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+                      <div className="h-10 w-10 animate-pulse rounded-full bg-muted"></div>
                       <div className="grid gap-2">
-                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="h-4 w-24 animate-pulse rounded-md bg-muted"></div>
+                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-muted"></div>
                       </div>
                     </div>
-                    <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="h-4 w-full animate-pulse rounded-md bg-muted"></div>
                   </li>
                   <li
-                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex gap-2 rounded-md border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
-                    <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="size-8 animate-pulse rounded-md bg-muted"></div>
                     <div className="grid gap-2">
-                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-muted"></div>
+                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-muted"></div>
                     </div>
                   </li>
                   <li
-                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
-                      <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+                      <div className="h-10 w-10 animate-pulse rounded-full bg-muted"></div>
                       <div className="grid gap-2">
-                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="h-4 w-24 animate-pulse rounded-md bg-muted"></div>
+                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-muted"></div>
                       </div>
                     </div>
-                    <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="h-4 w-full animate-pulse rounded-md bg-muted"></div>
                   </li>
                   <li
-                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex gap-2 rounded-md border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
-                    <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="size-8 animate-pulse rounded-md bg-muted"></div>
                     <div className="grid gap-2">
-                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-muted"></div>
+                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-muted"></div>
                     </div>
                   </li>
                   <li
-                    className="flex flex-col gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
                     <div className="flex gap-2">
-                      <div className="h-10 w-10 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+                      <div className="h-10 w-10 animate-pulse rounded-full bg-muted"></div>
                       <div className="grid gap-2">
-                        <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="h-4 w-24 animate-pulse rounded-md bg-muted"></div>
+                        <div className="h-[0.875rem] w-20 animate-pulse rounded-md bg-muted"></div>
                       </div>
                     </div>
-                    <div className="h-4 w-full animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="h-4 w-full animate-pulse rounded-md bg-muted"></div>
                   </li>
                   <li
-                    className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="flex gap-2 rounded-md border border-border bg-card p-3 shadow-sm md:p-4"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
-                    <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                    <div className="size-8 animate-pulse rounded-md bg-muted"></div>
                     <div className="grid gap-2">
-                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                      <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-muted"></div>
+                      <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-muted"></div>
                     </div>
                   </li>
                 </>
@@ -582,99 +511,93 @@ export default function StreamsSection({
           </div>
           <aside className="hidden gap-2 md:grid">
             {session.id === classroom.teacherId && (
-              <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
-                <h4 className="pb-2 text-base font-medium tracking-tight">
+              <Card>
+                <CardHeader className="px-4 pb-0 pt-4 text-lg font-medium tracking-tight">
                   Class code
-                </h4>
-                <div className="flex items-center justify-between">
-                  <p className="text-lg text-[#5c7cfa]">{classroom.code}</p>
-                  <div className="flex gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="size-5 cursor-pointer stroke-[#22317c]"
-                      onClick={async () => {
-                        await navigator.clipboard
-                          .writeText(classroom.code)
-                          .then(() => toast.success("Copied to clipboard!"));
-                      }}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 shadow-sm">
-              <Link
-                href={`/classroom/class/${classroom.id}/classwork`}
-                className="text-base font-medium tracking-tight hover:underline"
-              >
-                Recent work
-              </Link>
-              {assignedClasswork ? (
-                <div className="mt-2">
-                  <Link
-                    href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <p className="text-lg text-sidebar-accent-foreground">
+                    {classroom.code}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    className="h-10 w-10"
+                    onClick={async () => {
+                      await navigator.clipboard
+                        .writeText(classroom.code)
+                        .then(() => toast.success("Copied to clipboard!"));
+                    }}
                   >
-                    <div className="flex gap-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                        />
-                      </svg>
-                      <div>
-                        <p className="underline__text font-medium">
-                          {assignedClasswork.title}
-                        </p>
-                        <div className="mt-1 grid gap-1 text-xs">
-                          <p>
-                            Posted{" "}
-                            {isToday(assignedClasswork.createdAt)
-                              ? "today"
-                              : isYesterday(assignedClasswork.createdAt)
-                                ? "yesterday"
-                                : format(assignedClasswork.createdAt, "MMM d")}
+                    <Clipboard className="h-5 w-5 stroke-primary" />
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+            <Card>
+              <CardHeader className="px-4 pb-0 pt-4 text-lg font-medium tracking-tight">
+                Recent work
+              </CardHeader>
+              <CardContent className="flex items-center justify-between">
+                {assignedClasswork ? (
+                  <div className="mt-2">
+                    <Link
+                      href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
+                      className="group flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-card p-4 shadow-sm"
+                    >
+                      <div className="flex gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                          />
+                        </svg>
+                        <div>
+                          <p className="font-medium group-hover:underline">
+                            {assignedClasswork.title}
                           </p>
-                          {assignedClasswork.dueDate ? (
-                            <p className="text-[#616572]">
-                              {isToday(assignedClasswork.dueDate)
-                                ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
-                                : isYesterday(assignedClasswork.dueDate)
-                                  ? `Due yesterday, ${format(assignedClasswork.dueDate, "h:mm a")}`
-                                  : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
+                          <div className="mt-1 grid gap-1 text-xs">
+                            <p>
+                              Posted{" "}
+                              {isToday(assignedClasswork.createdAt)
+                                ? "today"
+                                : isYesterday(assignedClasswork.createdAt)
+                                  ? "yesterday"
+                                  : format(
+                                      assignedClasswork.createdAt,
+                                      "MMM d",
+                                    )}
                             </p>
-                          ) : (
-                            <p className="text-[#616572]">No due date</p>
-                          )}
+                            {assignedClasswork.dueDate ? (
+                              <p className="text-foreground/70">
+                                {isToday(assignedClasswork.dueDate)
+                                  ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                  : isYesterday(assignedClasswork.dueDate)
+                                    ? `Due yesterday, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                    : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
+                              </p>
+                            ) : (
+                              <p className="text-foreground/70">No due date</p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-              ) : (
-                <p className="flex h-[8rem] items-center justify-center text-center font-medium">
-                  No classworks have been given yet.
-                </p>
-              )}
-            </div>
+                    </Link>
+                  </div>
+                ) : (
+                  <p className="flex h-[8rem] items-center justify-center text-center font-medium text-foreground/70">
+                    No classworks have been given yet.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
           </aside>
         </div>
       </div>

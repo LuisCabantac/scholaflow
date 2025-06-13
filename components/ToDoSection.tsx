@@ -12,6 +12,8 @@ import noAssigned from "@/public/app/no_assigned.svg";
 import noMissing from "@/public/app/no_missing.svg";
 import noDone from "@/public/app/no_done.svg";
 
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 export default function ToDoSection({
   session,
   onGetAllClassworks,
@@ -101,26 +103,29 @@ export default function ToDoSection({
 
   return (
     <section className="flex flex-col items-start justify-start">
-      <div className="flex items-start rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-        <Link
-          href="/to-do?sort=assigned"
-          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "assigned" || searchParams.get("sort") === null ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-        >
-          Assigned
-        </Link>
-        <Link
-          href="/to-do?sort=missing"
-          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-        >
-          Missing
-        </Link>
-        <Link
-          href="/to-do?sort=done"
-          className={`px-3 py-2 transition-all ${searchParams.get("sort") === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-        >
-          Done
-        </Link>
-      </div>
+      <Tabs
+        defaultValue="assigned"
+        value={
+          searchParams.get("sort") === "assigned" ||
+          searchParams.get("sort") === null
+            ? "assigned"
+            : searchParams.get("sort") === "missing"
+              ? "missing"
+              : "done"
+        }
+      >
+        <TabsList>
+          <TabsTrigger value="assigned" asChild>
+            <Link href="/to-do?sort=assigned">Assigned</Link>
+          </TabsTrigger>
+          <TabsTrigger value="missing" asChild>
+            <Link href="/to-do?sort=missing">Missing</Link>
+          </TabsTrigger>
+          <TabsTrigger value="done" asChild>
+            <Link href="/to-do?sort=done">Done</Link>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       <ul className="mt-2 grid w-full gap-2">
         {(searchParams.get("sort") === "assigned" ||
           searchParams.get("sort") === null) &&
@@ -130,7 +135,7 @@ export default function ToDoSection({
                 <li key={assignedClasswork.id}>
                   <Link
                     href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="group flex w-full items-center justify-between gap-2 rounded-md border bg-card p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -148,11 +153,13 @@ export default function ToDoSection({
                         />
                       </svg>
                       <div>
-                        <p className="underline__text font-medium">
+                        <p className="font-medium text-foreground group-hover:underline">
                           {assignedClasswork.title}
                         </p>
-                        <p>{assignedClasswork.className}</p>
-                        <div className="mt-2 grid gap-1 text-xs">
+                        <p className="text-foreground/70">
+                          {assignedClasswork.className}
+                        </p>
+                        <div className="mt-2 grid gap-1 text-xs text-foreground/70">
                           <p>
                             Posted{" "}
                             {isToday(assignedClasswork.createdAt)
@@ -162,7 +169,7 @@ export default function ToDoSection({
                                 : format(assignedClasswork.createdAt, "MMM d")}
                           </p>
                           {assignedClasswork.dueDate ? (
-                            <p className="text-[#616572] md:hidden">
+                            <p className="text-foreground md:hidden">
                               {isToday(assignedClasswork.dueDate)
                                 ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
                                 : isYesterday(assignedClasswork.dueDate)
@@ -170,7 +177,7 @@ export default function ToDoSection({
                                   : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
                             </p>
                           ) : (
-                            <p className="text-[#616572] md:hidden">
+                            <p className="text-foreground md:hidden">
                               No due date
                             </p>
                           )}
@@ -178,7 +185,7 @@ export default function ToDoSection({
                       </div>
                     </div>
                     {assignedClasswork.dueDate ? (
-                      <p className="hidden text-[#616572] md:block">
+                      <p className="hidden text-foreground/70 md:block">
                         {isToday(assignedClasswork.dueDate)
                           ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
                           : isYesterday(assignedClasswork.dueDate)
@@ -186,7 +193,7 @@ export default function ToDoSection({
                             : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
                       </p>
                     ) : (
-                      <p className="hidden text-[#616572] md:block">
+                      <p className="hidden text-foreground/70 md:block">
                         No due date
                       </p>
                     )}
@@ -201,7 +208,7 @@ export default function ToDoSection({
                 <li key={missingClasswork.id}>
                   <Link
                     href={`/classroom/class/${missingClasswork.classId}/stream/${missingClasswork.id}`}
-                    className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                    className="group flex w-full items-center justify-between gap-2 rounded-md border bg-card p-3 shadow-sm md:p-4"
                   >
                     <div className="flex gap-2">
                       <svg
@@ -210,7 +217,7 @@ export default function ToDoSection({
                         viewBox="0 0 24 24"
                         strokeWidth={2}
                         stroke="currentColor"
-                        className="mt-1 size-6 flex-shrink-0 stroke-[#f03e3e]"
+                        className="mt-1 size-6 flex-shrink-0 stroke-destructive"
                       >
                         <path
                           strokeLinecap="round"
@@ -219,12 +226,14 @@ export default function ToDoSection({
                         />
                       </svg>
                       <div>
-                        <p className="underline__text font-medium">
+                        <p className="font-medium text-foreground group-hover:underline">
                           {missingClasswork.title}
                         </p>
-                        <p className="">{missingClasswork.className}</p>
+                        <p className="text-foreground/70">
+                          {missingClasswork.className}
+                        </p>
                         <div className="mt-2 grid gap-1 text-xs">
-                          <p>
+                          <p className="text-foreground/70">
                             Posted{" "}
                             {isToday(missingClasswork.createdAt)
                               ? "today"
@@ -233,7 +242,7 @@ export default function ToDoSection({
                                 : format(missingClasswork.createdAt, "MMM d")}
                           </p>
                           {missingClasswork.dueDate && (
-                            <p className="text-[#f03e3e] md:hidden">
+                            <p className="text-destructive md:hidden">
                               {isToday(missingClasswork.dueDate)
                                 ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
                                 : isYesterday(missingClasswork.dueDate)
@@ -245,7 +254,7 @@ export default function ToDoSection({
                       </div>
                     </div>
                     {missingClasswork.dueDate && (
-                      <p className="hidden text-[#f03e3e] md:block">
+                      <p className="hidden text-destructive md:block">
                         {isToday(missingClasswork.dueDate)
                           ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
                           : isYesterday(missingClasswork.dueDate)
@@ -263,7 +272,7 @@ export default function ToDoSection({
               <li key={doneClasswork.id}>
                 <Link
                   href={`/classroom/class/${doneClasswork.classId}/stream/${doneClasswork.streamId}`}
-                  className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                  className="group flex w-full items-center justify-between gap-2 rounded-md border bg-card p-3 shadow-sm md:p-4"
                 >
                   <div className="flex gap-2">
                     <svg
@@ -281,11 +290,13 @@ export default function ToDoSection({
                       />
                     </svg>
                     <div>
-                      <p className="underline__text font-medium">
+                      <p className="font-medium text-foreground group-hover:underline">
                         {doneClasswork.title}
                       </p>
-                      <p>{doneClasswork.className}</p>
-                      <div className="mt-2 grid gap-1 text-xs">
+                      <p className="text-foreground/70">
+                        {doneClasswork.className}
+                      </p>
+                      <div className="mt-2 grid gap-1 text-xs text-foreground/70">
                         <p>
                           Posted{" "}
                           {isToday(doneClasswork.streamCreatedAt)
@@ -304,7 +315,7 @@ export default function ToDoSection({
                       </div>
                     </div>
                   </div>
-                  <p className="hidden md:block">
+                  <p className="hidden text-foreground/70 md:block">
                     {doneClasswork.isGraded && doneClasswork.isTurnedIn
                       ? doneClasswork.points
                       : doneClasswork.isTurnedIn

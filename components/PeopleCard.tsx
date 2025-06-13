@@ -43,7 +43,7 @@ export default function PeopleCard({
   );
 
   return (
-    <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
+    <li className="flex items-center justify-between py-2">
       <div className="flex items-center gap-2">
         <Image
           src={user.userImage}

@@ -6,6 +6,13 @@ import Link from "next/link";
 import { isToday, format, isYesterday, isThisYear } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AlertTriangle,
+  Check,
+  ChevronDown,
+  ClipboardList,
+  PlusIcon,
+} from "lucide-react";
 
 import { joinClass } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
@@ -17,11 +24,19 @@ import {
   Stream,
 } from "@/lib/schema";
 
-import Button from "@/components/Button";
-import ClassroomLists from "@/components/ClassroomLists";
-import ClassForm from "@/components/ClassForm";
-import JoinClassDialog from "@/components/JoinClassDialog";
 import NoClasses from "@/components/NoClasses";
+import ClassForm from "@/components/ClassForm";
+import { Button } from "@/components/ui/button";
+import ClassroomLists from "@/components/ClassroomLists";
+import JoinClassDialog from "@/components/JoinClassDialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ClassroomSection({
   session,
@@ -236,157 +251,137 @@ export default function ClassroomSection({
 
   return (
     <section className="relative overflow-hidden">
-      <div className="grid items-start gap-4 md:grid-cols-[1fr_18rem]">
-        <div>
+      <div className="flex items-start gap-4">
+        <div className="flex-1">
           <div className="flex items-center justify-between">
-            <div
-              className="relative flex cursor-pointer items-center justify-between gap-1 text-nowrap rounded-md md:gap-2"
-              onClick={handleToggleShowFilterDropdown}
-              ref={filterWrapperRef}
-            >
-              <div className="flex items-center gap-2 text-base font-medium md:gap-4">
-                <span>
-                  {searchParams.get("sort") === null
-                    ? "All classes"
-                    : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={3}
-                  stroke="currentColor"
-                  className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} size-4 transition-transform`}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-auto p-0 hover:bg-transparent"
+                  onClick={handleToggleShowFilterDropdown}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  <span className="text-base">
+                    {searchParams.get("sort") === null
+                      ? "All classes"
+                      : `${searchParams.get("sort")?.charAt(0).toUpperCase()}${searchParams.get("sort")?.slice(1).split("-").join(" ")}`}
+                  </span>
+                  <ChevronDown
+                    strokeWidth={3}
+                    className={`${showFilterDropdown ? "rotate-180" : "rotate-0"} h-4 w-4 transition-transform`}
                   />
-                </svg>
-              </div>
-              <ul
-                className={`${showFilterDropdown ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute left-0 z-20 grid justify-start gap-2 rounded-md bg-[#f3f6ff] p-2 shadow-md transition-all ease-in-out`}
-              >
-                <li>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=all-classes"
-                    className={`${(searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null) && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>All classes</span>
                     {(searchParams.get("sort") === "all-classes" ||
                       searchParams.get("sort") === null) && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={3}
-                        stroke="currentColor"
-                        className="size-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 12.75 6 6 9-13.5"
-                        />
-                      </svg>
+                      <Check strokeWidth={3} className="h-4 w-4" />
                     )}
                   </Link>
-                </li>
-                <li>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=created-classes"
-                    className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "created-classes" ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>Created classes</span>
                     {searchParams.get("sort") === "created-classes" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={3}
-                        stroke="currentColor"
-                        className="size-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 12.75 6 6 9-13.5"
-                        />
-                      </svg>
+                      <Check strokeWidth={3} className="h-4 w-4" />
                     )}
                   </Link>
-                </li>
-                <li>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=enrolled-classes"
-                    className={`${searchParams.get("sort") === "enrolled-classes" && "font-medium"} flex w-full items-center justify-between gap-2 text-nowrap rounded-md p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "enrolled-classes" ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>Enrolled classes</span>
                     {searchParams.get("sort") === "enrolled-classes" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={3}
-                        stroke="currentColor"
-                        className="size-4"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 12.75 6 6 9-13.5"
-                        />
-                      </svg>
+                      <Check strokeWidth={3} className="h-4 w-4" />
                     )}
                   </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="relative" ref={btnWrapperRef}>
-              <Button type="primary" onClick={handleToggleShowAddClassPopover}>
-                Add class
-              </Button>
-              <div
-                className={`${showAddClassPopover ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] rounded-md bg-[#f3f6ff] p-2 font-medium shadow-md transition-all ease-in-out`}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button>
+                  <PlusIcon className="h-12 w-12" />
+                  Add class
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <button
+                    onClick={handleToggleShowJoinClass}
+                    className="w-full text-start"
+                  >
+                    Join class
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <button
+                    onClick={handleToggleShowClassForm}
+                    className="w-full text-start"
+                  >
+                    Create class
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <Card className="mt-2 md:hidden">
+            <CardContent className="flex items-center justify-between p-4">
+              <Link
+                href="/to-do?filter=assigned"
+                className="flex items-center gap-2"
               >
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={handleToggleShowJoinClass}
-                >
-                  Join class
-                </button>
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={handleToggleShowClassForm}
-                >
-                  Create class
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 flex items-center justify-around rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:hidden">
-            <Link href="/to-do?filter=assigned">
-              <p className="text-2xl font-semibold">
-                {assignedClassworks?.length ?? 0}
-              </p>
-              <h4 className="text-xs font-medium text-[#616572]">Assigned</h4>
-            </Link>
-            <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
-            <Link href="/to-do?filter=missing">
-              <p className="text-2xl font-semibold">
-                {missingClassworks?.length ?? 0}
-              </p>
-              <h4 className="text-xs font-medium text-[#616572]">Missing</h4>
-            </Link>
-            <div className="mx-4 h-8 w-px bg-[#dddfe6]"></div>
-            <Link href="/to-do?filter=done">
-              <p className="text-2xl font-semibold">
-                {doneClassworks?.length ?? 0}
-              </p>
-              <h4 className="text-xs font-medium text-[#616572]">Done</h4>
-            </Link>
-          </div>
+                <ClipboardList className="h-12 w-12" strokeWidth={1.3} />
+                <div>
+                  <span className="text-[0.65rem] text-foreground/70">
+                    Assigned
+                  </span>
+                  <p className="text-3xl font-semibold">
+                    {assignedClassworks?.length ?? 0}
+                  </p>
+                </div>
+              </Link>
+              <Link
+                href="/to-do?filter=missing"
+                className="flex items-center gap-2"
+              >
+                <AlertTriangle className="h-12 w-12" strokeWidth={1.3} />
+                <div>
+                  <span className="text-[0.65rem] text-foreground/70">
+                    Missing
+                  </span>
+                  <p className="text-3xl font-semibold">
+                    {missingClassworks?.length ?? 0}
+                  </p>
+                </div>
+              </Link>
+              <Link
+                href="/to-do?filter=done"
+                className="mr-2 flex items-center gap-2"
+              >
+                <Check className="h-12 w-12" strokeWidth={1.3} />
+                <div>
+                  <span className="text-[0.65rem] text-foreground/70">
+                    Done
+                  </span>
+                  <p className="text-3xl font-semibold">
+                    {doneClassworks?.length ?? 0}
+                  </p>
+                </div>
+              </Link>
+            </CardContent>
+          </Card>
           {(!createdClasses?.length &&
             !enrolledClasses?.length &&
             !createdClassesIsPending &&
@@ -399,7 +394,7 @@ export default function ClassroomSection({
             !enrolledClassesIsPending) ? (
             <NoClasses />
           ) : (
-            <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-md md:grid md:grid-cols-2">
+            <div className="mt-2 flex w-full flex-col items-start gap-2 rounded-xl md:grid md:grid-cols-2 lg:grid-cols-3">
               {(searchParams.get("sort") === "all-classes" ||
                 searchParams.get("sort") === "created-classes" ||
                 searchParams.get("sort") === null) && (
@@ -425,223 +420,226 @@ export default function ClassroomSection({
             </div>
           )}
         </div>
-        <div className="hidden overflow-hidden rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:block">
-          <h3 className="text-lg font-medium tracking-tight">To-do</h3>
-          <div className="mt-2 flex items-center justify-between rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-            <button
-              onClick={() => setToDoFilter("assigned")}
-              className={`px-3 py-2 transition-all ${toDoFilter === "assigned" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-            >
-              Assigned
-            </button>
-            <button
-              onClick={() => setToDoFilter("missing")}
-              className={`px-3 py-2 transition-all ${toDoFilter === "missing" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-            >
-              Missing
-            </button>
-            <button
-              onClick={() => setToDoFilter("done")}
-              className={`px-3 py-2 transition-all ${toDoFilter === "done" ? "rounded-md bg-[#f3f6ff] shadow-sm" : "text-[#929bb4]"}`}
-            >
-              Done
-            </button>
-          </div>
-          <ul className="mt-2 grid w-full gap-2">
-            {toDoFilter === "assigned" && assignedClassworks?.length
-              ? assignedClassworks.map((assignedClasswork) => {
-                  return (
-                    <li key={assignedClasswork.id}>
-                      <Link
-                        href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
-                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
-                      >
-                        <div className="flex gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                            />
-                          </svg>
-                          <div>
-                            <p className="underline__text font-medium">
-                              {assignedClasswork.title}
-                            </p>
-                            <p className="text-xs">
-                              {assignedClasswork.className}
-                            </p>
-                            <div className="mt-2 grid items-center gap-1 text-xs">
-                              <p>
-                                Posted{" "}
-                                {isToday(assignedClasswork.createdAt)
-                                  ? "today"
-                                  : isYesterday(assignedClasswork.createdAt)
-                                    ? "yesterday"
-                                    : format(
-                                        assignedClasswork.createdAt,
-                                        "MMM d",
-                                      )}
-                              </p>
-                              {assignedClasswork.dueDate ? (
-                                <p className="text-xs text-[#616572]">
-                                  {isToday(assignedClasswork.dueDate)
-                                    ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
-                                    : isYesterday(assignedClasswork.dueDate)
-                                      ? `Due yesterday, ${format(assignedClasswork.dueDate, "h:mm a")}`
-                                      : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
-                                </p>
-                              ) : (
-                                <p className="text-xs text-[#616572]">
-                                  No due date
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                })
-              : null}
-            {toDoFilter === "missing" && missingClassworks?.length
-              ? missingClassworks.map((missingClasswork) => {
-                  return (
-                    <li key={missingClasswork.id}>
-                      <Link
-                        href={`/classroom/class/${missingClasswork.classId}/stream/${missingClasswork.id}`}
-                        className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
-                      >
-                        <div className="flex gap-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
-                            />
-                          </svg>
-                          <div>
-                            <p className="underline__text font-medium">
-                              {missingClasswork.title}
-                            </p>
-                            <p className="text-xs">
-                              {missingClasswork.className}
-                            </p>
-                            <div className="mt-2 grid items-center gap-1 text-xs">
-                              <p>
-                                Posted{" "}
-                                {isToday(missingClasswork.createdAt)
-                                  ? "today"
-                                  : isYesterday(missingClasswork.createdAt)
-                                    ? "yesterday"
-                                    : format(
-                                        missingClasswork.createdAt,
-                                        "MMM d",
-                                      )}
-                              </p>
-                              {missingClasswork.dueDate && (
-                                <p className="text-xs text-[#f03e3e]">
-                                  {isToday(missingClasswork.dueDate)
-                                    ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                    : isYesterday(missingClasswork.dueDate)
-                                      ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
-                                      : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                })
-              : null}
-            {toDoFilter === "done" && doneClassworks?.length
-              ? doneClassworks.map((doneClasswork) => (
-                  <li key={doneClasswork.id}>
-                    <Link
-                      href={`/classroom/class/${doneClasswork.classId}/stream/${doneClasswork.streamId}`}
-                      className="underline__container flex w-full items-center justify-between gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] p-4 shadow-sm"
-                    >
-                      <div className="flex gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                          stroke="currentColor"
-                          className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+        <Card className="hidden w-[18rem] md:block">
+          <CardHeader className="px-4 pb-0 pt-4 text-lg font-medium tracking-tight">
+            To-do
+          </CardHeader>
+          <CardContent className="p-4">
+            <Tabs defaultValue="assigned" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger
+                  value="assigned"
+                  onClick={() => setToDoFilter("assigned")}
+                >
+                  Assigned
+                </TabsTrigger>
+                <TabsTrigger
+                  value="missing"
+                  onClick={() => setToDoFilter("missing")}
+                >
+                  Missing
+                </TabsTrigger>
+                <TabsTrigger value="done" onClick={() => setToDoFilter("done")}>
+                  Done
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <ul className="mt-2 grid w-full gap-2">
+              {toDoFilter === "assigned" && assignedClassworks?.length
+                ? assignedClassworks.map((assignedClasswork) => {
+                    return (
+                      <li key={assignedClasswork.id}>
+                        <Link
+                          href={`/classroom/class/${assignedClasswork.classId}/stream/${assignedClasswork.id}`}
+                          className="group flex w-full items-center justify-between gap-2 rounded-xl border bg-card p-4 shadow-sm"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                          />
-                        </svg>
-                        <div>
-                          <p className="underline__text font-medium">
-                            {doneClasswork.title}
-                          </p>
-                          <p className="text-xs">{doneClasswork.className}</p>
-                          <div className="mt-2 grid items-center gap-1 text-xs">
-                            <p>
-                              Posted{" "}
-                              {isToday(doneClasswork.streamCreatedAt)
-                                ? "today"
-                                : isYesterday(doneClasswork.streamCreatedAt)
-                                  ? "yesterday"
-                                  : format(
-                                      doneClasswork.streamCreatedAt,
-                                      "MMM d",
-                                    )}
+                          <div className="flex gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                              stroke="currentColor"
+                              className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                              />
+                            </svg>
+                            <div>
+                              <p className="font-medium group-hover:underline">
+                                {assignedClasswork.title}
+                              </p>
+                              <p className="text-xs">
+                                {assignedClasswork.className}
+                              </p>
+                              <div className="mt-2 grid items-center gap-1 text-xs">
+                                <p>
+                                  Posted{" "}
+                                  {isToday(assignedClasswork.createdAt)
+                                    ? "today"
+                                    : isYesterday(assignedClasswork.createdAt)
+                                      ? "yesterday"
+                                      : format(
+                                          assignedClasswork.createdAt,
+                                          "MMM d",
+                                        )}
+                                </p>
+                                {assignedClasswork.dueDate ? (
+                                  <p className="text-xs text-foreground/70">
+                                    {isToday(assignedClasswork.dueDate)
+                                      ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                      : isYesterday(assignedClasswork.dueDate)
+                                        ? `Due yesterday, ${format(assignedClasswork.dueDate, "h:mm a")}`
+                                        : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
+                                  </p>
+                                ) : (
+                                  <p className="text-xs text-foreground/70">
+                                    No due date
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  })
+                : null}
+              {toDoFilter === "missing" && missingClassworks?.length
+                ? missingClassworks.map((missingClasswork) => {
+                    return (
+                      <li key={missingClasswork.id}>
+                        <Link
+                          href={`/classroom/class/${missingClasswork.classId}/stream/${missingClasswork.id}`}
+                          className="group flex w-full items-center justify-between gap-2 rounded-xl border bg-card p-4 shadow-sm"
+                        >
+                          <div className="flex gap-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                              stroke="currentColor"
+                              className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                              />
+                            </svg>
+                            <div>
+                              <p className="font-medium group-hover:underline">
+                                {missingClasswork.title}
+                              </p>
+                              <p className="text-xs">
+                                {missingClasswork.className}
+                              </p>
+                              <div className="mt-2 grid items-center gap-1 text-xs">
+                                <p>
+                                  Posted{" "}
+                                  {isToday(missingClasswork.createdAt)
+                                    ? "today"
+                                    : isYesterday(missingClasswork.createdAt)
+                                      ? "yesterday"
+                                      : format(
+                                          missingClasswork.createdAt,
+                                          "MMM d",
+                                        )}
+                                </p>
+                                {missingClasswork.dueDate && (
+                                  <p className="text-xs text-destructive">
+                                    {isToday(missingClasswork.dueDate)
+                                      ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                      : isYesterday(missingClasswork.dueDate)
+                                        ? `Due yesterday, ${format(missingClasswork.dueDate, "h:mm a")}`
+                                        : `Due ${format(missingClasswork.dueDate, "MMM d,")} ${isThisYear(missingClasswork.dueDate) ? "" : `${format(missingClasswork.dueDate, "y ")}`} ${format(missingClasswork.dueDate, "h:mm a")}`}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  })
+                : null}
+              {toDoFilter === "done" && doneClassworks?.length
+                ? doneClassworks.map((doneClasswork) => (
+                    <li key={doneClasswork.id}>
+                      <Link
+                        href={`/classroom/class/${doneClasswork.classId}/stream/${doneClasswork.streamId}`}
+                        className="group flex w-full items-center justify-between gap-2 rounded-xl border bg-card p-4 shadow-sm"
+                      >
+                        <div className="flex gap-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                            />
+                          </svg>
+                          <div>
+                            <p className="font-medium group-hover:underline">
+                              {doneClasswork.title}
                             </p>
-                            <p className="whitespace-nowrap">
-                              {doneClasswork.isGraded &&
-                              doneClasswork.isTurnedIn
-                                ? `Score: ${doneClasswork.points}`
-                                : doneClasswork.isTurnedIn
-                                  ? "Turned in"
-                                  : ""}
-                            </p>
+                            <p className="text-xs">{doneClasswork.className}</p>
+                            <div className="mt-2 grid items-center gap-1 text-xs">
+                              <p>
+                                Posted{" "}
+                                {isToday(doneClasswork.streamCreatedAt)
+                                  ? "today"
+                                  : isYesterday(doneClasswork.streamCreatedAt)
+                                    ? "yesterday"
+                                    : format(
+                                        doneClasswork.streamCreatedAt,
+                                        "MMM d",
+                                      )}
+                              </p>
+                              <p className="whitespace-nowrap">
+                                {doneClasswork.isGraded &&
+                                doneClasswork.isTurnedIn
+                                  ? `Score: ${doneClasswork.points}`
+                                  : doneClasswork.isTurnedIn
+                                    ? "Turned in"
+                                    : ""}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div></div>
-                    </Link>
-                  </li>
-                ))
-              : null}
-            {toDoFilter === "assigned" && !assignedClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
-                No classworks have been given yet.
-              </p>
-            ) : null}
-            {toDoFilter === "missing" && !missingClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
-                You&apos;re all caught up! No missing work.
-              </p>
-            ) : null}
-            {toDoFilter === "done" && !doneClassworks?.length ? (
-              <p className="flex h-[10rem] items-center justify-center text-center font-medium">
-                No work submitted yet.
-              </p>
-            ) : null}
-          </ul>
-        </div>
+                        <div></div>
+                      </Link>
+                    </li>
+                  ))
+                : null}
+              {toDoFilter === "assigned" && !assignedClassworks?.length ? (
+                <p className="flex h-[10rem] items-center justify-center text-center font-medium">
+                  No classworks have been given yet.
+                </p>
+              ) : null}
+              {toDoFilter === "missing" && !missingClassworks?.length ? (
+                <p className="flex h-[10rem] items-center justify-center text-center font-medium">
+                  You&apos;re all caught up! No missing work.
+                </p>
+              ) : null}
+              {toDoFilter === "done" && !doneClassworks?.length ? (
+                <p className="flex h-[10rem] items-center justify-center text-center font-medium">
+                  No work submitted yet.
+                </p>
+              ) : null}
+            </ul>
+          </CardContent>
+        </Card>
       </div>
       {showClassForm && (
         <ClassForm

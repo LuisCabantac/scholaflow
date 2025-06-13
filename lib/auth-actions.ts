@@ -449,7 +449,7 @@ export async function closeUserAccount(token: string): Promise<{
 
 export async function updateUserPassword(
   token: string,
-  formData: FormData,
+  values: { password: string },
 ): Promise<{
   success: boolean;
   message: string;
@@ -492,7 +492,7 @@ export async function updateUserPassword(
         "No account found for this email address. Please double-check your spelling or create a new account.",
     };
 
-  const newPassword = formData.get("password") as string | null;
+  const newPassword = values.password;
 
   if (!newPassword)
     return {

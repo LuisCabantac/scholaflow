@@ -1,10 +1,14 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "motion/react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { addUserToClass } from "@/lib/classroom-actions";
+import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import Button from "@/components/Button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function AddUserToClassDialog({
   classId,
@@ -43,70 +47,71 @@ export default function AddUserToClassDialog({
   );
 
   return (
-    <div className="modal__container">
-      <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
-        <div
-          className="relative grid w-full gap-4 rounded-md bg-[#f3f6ff] p-4"
-          ref={wrapperRef}
-        >
-          <div>
-            <h4 className="text-lg font-semibold tracking-tight">
-              Add user to class
-            </h4>
-            <p>
-              Enter the email address of the user you wish to add to this class.
-            </p>
-          </div>
-          <form onSubmit={handleAddUserToClassSubmit} className="grid gap-4">
-            <input
-              type="text"
-              name="classroomId"
-              defaultValue={classId}
-              hidden
-            />
-            <input
-              disabled={isLoading}
-              required
-              type="email"
-              name="email"
-              className="focus:outline-t-2 w-full rounded-md border border-[#dddfe6] bg-transparent px-4 py-2 placeholder:text-[#616572] focus:border-[#384689] focus:outline-none"
-              placeholder="Email address"
-            />
-            <div className="flex items-center justify-end gap-2">
-              {!isLoading && (
-                <Button type="secondary" onClick={onToggleShowAddUserToClass}>
-                  Cancel
-                </Button>
-              )}
-              <Button type="primary" isLoading={isLoading}>
-                Add
+    <motion.div
+      className="modal__container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+    >
+      <motion.div
+        className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Card className="md:w-[25rem]" ref={wrapperRef}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                Add user to class
+              </h3>
+              <Button
+                className="hover:bg-transparent disabled:cursor-not-allowed"
+                variant="ghost"
+                type="button"
+                size="icon"
+                disabled={isLoading}
+                onClick={onToggleShowAddUserToClass}
+              >
+                <X className="size-5 stroke-foreground" />
               </Button>
             </div>
-          </form>
-
-          <button
-            type="button"
-            className="absolute right-4 top-4 disabled:cursor-not-allowed"
-            disabled={isLoading}
-            onClick={onToggleShowAddUserToClass}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="size-5 transition-all hover:stroke-[#656b70]"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleAddUserToClassSubmit} className="grid gap-4">
+              <input
+                type="text"
+                name="classroomId"
+                defaultValue={classId}
+                hidden
               />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
+              <Input
+                disabled={isLoading}
+                required
+                type="email"
+                name="email"
+                placeholder="Enter user's email address"
+              />
+              <div className="flex items-center justify-end gap-2">
+                {!isLoading && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={onToggleShowAddUserToClass}
+                  >
+                    Cancel
+                  </Button>
+                )}
+                <Button type="submit" disabled={isLoading}>
+                  Add
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }

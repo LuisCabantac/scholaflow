@@ -375,3 +375,42 @@ export const createChatSchema = chatSchema.omit({ id: true, createdAt: true });
 export const nanoidId = z.nanoid();
 
 export const uuidv4Id = z.uuidv4();
+
+export const signInFormSchema = z.object({
+  email: z.email({ message: "Please enter a valid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(20, { message: "Password must be no more than 20 characters long" }),
+});
+
+export const fullNameSchema = z
+  .string()
+  .min(2, { message: "Name must be at least 2 characters long" })
+  .max(50, { message: "Name must be no more than 50 characters long" })
+  .regex(/^[a-zA-Z\s'-]+$/, {
+    message: "Name can only contain letters, spaces, hyphens, and apostrophes",
+  })
+  .refine((name) => name.trim().split(/\s+/).length >= 2, {
+    message: "Please enter both first and last name",
+  });
+
+export const signUpFormSchema = z.object({
+  fullName: fullNameSchema,
+  email: z.email({ message: "Please enter a valid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(20, { message: "Password must be no more than 20 characters long" }),
+});
+
+export const forgetPasswordFormSchema = z.object({
+  email: z.email({ message: "Please enter a valid email address" }),
+});
+
+export const resetPasswordFormSchema = z.object({
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" })
+    .max(20, { message: "Password must be no more than 20 characters long" }),
+});

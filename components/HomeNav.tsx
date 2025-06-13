@@ -7,7 +7,7 @@ import { useNav } from "@/contexts/NavContext";
 import { Session } from "@/lib/schema";
 
 import Logo from "@/components/Logo";
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import ProfileIcon from "@/components/ProfileIcon";
 
 export default function HomeNav({ session }: { session: Session | undefined }) {
@@ -15,9 +15,9 @@ export default function HomeNav({ session }: { session: Session | undefined }) {
 
   return (
     <nav
-      className={`sticky top-0 z-10 flex items-center justify-between transition-all ${isSticky && "bg-[#edf2ffe5] backdrop-blur-md"} px-4 py-4 md:px-8 lg:px-12`}
+      className={`sticky top-0 z-10 flex items-center justify-between bg-background/90 transition-all ${isSticky && "border-b backdrop-blur-3xl"} px-4 py-4 md:px-12 lg:px-20`}
     >
-      <Link href="/" className="cursor-pointer">
+      <Link href="/" className="cursor-pointer select-none">
         <Logo />
       </Link>
       {session ? (
@@ -27,14 +27,14 @@ export default function HomeNav({ session }: { session: Session | undefined }) {
           fullName={session.name}
         />
       ) : (
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <div className="hidden md:block">
-            <Button href="/signin" type="secondary">
-              Log in
+            <Button variant="ghost" asChild>
+              <Link href="/signin">Log in</Link>
             </Button>
           </div>
-          <Button href="/signup" type="primary">
-            Sign up
+          <Button asChild>
+            <Link href="/signup">Sign up</Link>
           </Button>
         </div>
       )}

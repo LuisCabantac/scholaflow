@@ -12,8 +12,8 @@ import {
   StreamPrivateComment,
 } from "@/lib/schema";
 
-import ConfirmationModal from "@/components/ConfirmationModal";
 import EllipsisPopover from "@/components/EllipsisPopover";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function CommentCard({
   stream,
@@ -80,7 +80,7 @@ export default function CommentCard({
         key={key}
         target="_blank"
         rel="noopener noreferrer"
-        className="overflow-wrap break-words break-all text-[#5c7cfa] underline"
+        className="overflow-wrap break-words break-all text-primary underline"
       >
         {text}
       </a>
@@ -102,14 +102,18 @@ export default function CommentCard({
         />
         <div>
           <div className="flex items-center gap-1">
-            <h6 className="text-sm font-medium">{comment.userName}</h6>
-            <p className="pt-[1px] text-xs text-[#616572]">
+            <h6 className="text-sm font-medium text-foreground">
+              {comment.userName}
+            </h6>
+            <p className="pt-[1px] text-xs text-foreground/70">
               {formatDate(comment.createdAt)}
             </p>
           </div>
           {comment.content && (
             <ReactLinkify componentDecorator={captionLinksDecorator}>
-              <p className="mr-[1rem] whitespace-pre-line">{comment.content}</p>
+              <p className="mr-[1rem] whitespace-pre-line text-foreground/90">
+                {comment.content}
+              </p>
             </ReactLinkify>
           )}
           {comment.attachments.length ? (

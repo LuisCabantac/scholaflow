@@ -3,11 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useOptimistic, useRef, useState } from "react";
+import { useOptimistic, useState } from "react";
+import { Search, SquarePen } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import noClasworks from "@/public/app/no_classworks.svg";
-import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import { deleteClassStreamPost, deleteTopic } from "@/lib/classroom-actions";
 import {
   Classroom,
@@ -18,11 +18,19 @@ import {
   EnrolledClass,
 } from "@/lib/schema";
 
+import { Input } from "@/components/ui/input";
+import TopicCard from "@/components/TopicCard";
+import { Button } from "@/components/ui/button";
 import StreamCard from "@/components/StreamCard";
-import Button from "@/components/Button";
 import StreamForm from "@/components/StreamForm";
 import TopicDialog from "@/components/TopicDialog";
-import TopicCard from "@/components/TopicCard";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type StreamType = "stream" | "assignment" | "quiz" | "question" | "material";
 
@@ -45,8 +53,6 @@ export default function ClassworksSection({
   ) => Promise<Stream[] | null>;
 }) {
   const queryClient = useQueryClient();
-  const { useClickOutsideHandler } = useClickOutside();
-  const btnWrapperRef = useRef<HTMLDivElement>(null);
   const [classworkType, setClassworkType] = useState<StreamType>("stream");
   const [search, setSearch] = useState("");
   const [showStreamForm, setShowStreamForm] = useState(false);
@@ -138,110 +144,111 @@ export default function ClassworksSection({
     deleteClassTopic(topicId);
   }
 
-  useClickOutsideHandler(
-    btnWrapperRef,
-    () => {
-      setShowCreateClasswork(false);
-    },
-    false,
-  );
-
   return (
     <section>
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href={`/classroom/class/${classroom.id}`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Stream
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/classwork`}
-            className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
-          >
-            Classwork
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/people`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            People
-          </Link>
-          <Link
-            href={`/classroom/class/${classroom.id}/chat`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Chat
-          </Link>
-        </div>
+        <Tabs defaultValue="classwork">
+          <TabsList>
+            <TabsTrigger value="stream" asChild>
+              <Link href={`/classroom/class/${classroom.id}`}>Stream</Link>
+            </TabsTrigger>
+            <TabsTrigger value="classwork" asChild>
+              <Link href={`/classroom/class/${classroom.id}/classwork`}>
+                Classwork
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="people" asChild>
+              <Link href={`/classroom/class/${classroom.id}/people`}>
+                People
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="chat" asChild>
+              <Link href={`/classroom/class/${classroom.id}/chat`}>Chat</Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
       <div>
         <div className="flex items-center justify-between">
           {session.id === classroom.teacherId && (
-            <input
-              type="search"
-              className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <label className="group flex w-[60%] items-center gap-2 rounded-full border bg-foreground/10 text-sm focus-within:border-ring md:w-[50%]">
+              <Search className="mb-0.5 ml-3 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="mb-0.5 border-0 bg-transparent pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </label>
           )}
           {session.id === classroom.teacherId && (
-            <div className="relative" ref={btnWrapperRef}>
-              <Button type="primary" onClick={handleToggleShowCreateClasswork}>
-                Create
-              </Button>
-              <div
-                className={`${showCreateClasswork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover absolute right-0 z-20 grid w-[10rem] rounded-md bg-[#f3f6ff] p-2 font-medium shadow-md transition-all ease-in-out`}
-              >
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => {
-                    handleSetClassworkType("assignment");
-                    handleToggleShowCreateClasswork();
-                  }}
-                >
-                  Assignment
-                </button>
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => {
-                    handleSetClassworkType("quiz");
-                    handleToggleShowCreateClasswork();
-                  }}
-                >
-                  Quiz
-                </button>
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => {
-                    handleSetClassworkType("material");
-                    handleToggleShowCreateClasswork();
-                  }}
-                >
-                  Material
-                </button>
-                <button
-                  className="flex items-center rounded-md p-2 hover:text-[#242628]"
-                  onClick={() => {
-                    handleToggleShowTopicForm();
-                    handleToggleShowCreateClasswork();
-                  }}
-                >
-                  Topic
-                </button>
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button>
+                  <SquarePen className="h-12 w-12" />
+                  Create
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <button
+                    onClick={() => {
+                      handleSetClassworkType("assignment");
+                      handleToggleShowCreateClasswork();
+                    }}
+                    className="w-full text-start"
+                  >
+                    Assignment
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <button
+                    onClick={() => {
+                      handleSetClassworkType("quiz");
+                      handleToggleShowCreateClasswork();
+                    }}
+                    className="w-full text-start"
+                  >
+                    Quiz
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <button
+                    onClick={() => {
+                      handleSetClassworkType("material");
+                      handleToggleShowCreateClasswork();
+                    }}
+                    className="w-full text-start"
+                  >
+                    Material
+                  </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <button
+                    onClick={() => {
+                      handleToggleShowTopicForm();
+                      handleToggleShowCreateClasswork();
+                    }}
+                    className="w-full text-start"
+                  >
+                    Topic
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           {session.id !== classroom.teacherId && (
-            <input
-              type="search"
-              className="w-full rounded-md border border-[#dddfe6] bg-[#eef3ff] bg-transparent px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <label className="group flex w-full items-center gap-2 rounded-full border bg-foreground/10 text-sm focus-within:border-ring md:w-[50%]">
+              <Search className="mb-0.5 ml-3 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="mb-0.5 border-0 bg-transparent pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </label>
           )}
         </div>
         <div className="grid items-start gap-2">
@@ -254,14 +261,14 @@ export default function ClassworksSection({
                     .map((_, index) => (
                       <li
                         key={index}
-                        className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 shadow-sm md:p-4"
+                        className="flex gap-2 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4"
                         role="status"
                       >
                         <span className="sr-only">Loading…</span>
-                        <div className="size-8 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                        <div className="size-8 animate-pulse rounded-md bg-muted"></div>
                         <div className="grid gap-2">
-                          <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-                          <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                          <div className="h-[0.875rem] w-36 animate-pulse rounded-md bg-muted"></div>
+                          <div className="h-[0.75rem] w-24 animate-pulse rounded-md bg-muted"></div>
                         </div>
                       </li>
                     ))}
@@ -327,7 +334,7 @@ export default function ClassworksSection({
               )}
               {optimisticTopics?.length ? (
                 <li
-                  className={`mt-1 ${optimisticClassworks?.length ? "border-t border-[#dddfe6] pt-2" : ""}`}
+                  className={`mt-1 ${optimisticClassworks?.length ? "border-t border-border pt-2" : ""}`}
                 >
                   <ul className="grid gap-4">
                     {optimisticTopics.map((topic) => (

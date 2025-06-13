@@ -1,16 +1,18 @@
 "use client";
 
 import toast from "react-hot-toast";
+import { Pen, Search } from "lucide-react";
 import { useOptimistic, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Note, Session } from "@/lib/schema";
 import { deleteNote } from "@/lib/notes-actions";
 
-import Button from "@/components/Button";
-import NoteForm from "@/components/NoteForm";
-import NoteCard from "@/components/NoteCard";
 import NoNotes from "@/components/NoNotes";
+import NoteCard from "@/components/NoteCard";
+import NoteForm from "@/components/NoteForm";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function NotesSection({
   session,
@@ -63,14 +65,18 @@ export default function NotesSection({
     <section>
       <div>
         <div className="flex items-center justify-between">
-          <input
-            type="search"
-            className="w-[60%] rounded-md border border-[#dddfe6] bg-[#eef3ff] px-4 py-2 shadow-sm placeholder:text-[#616572] focus:border-[#384689] focus:outline-none md:w-[50%]"
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <Button type="primary" onClick={handleToggleShowNotesForm}>
+          <label className="group flex w-[60%] items-center gap-2 rounded-full border bg-foreground/10 text-sm focus-within:border-ring md:w-[50%]">
+            <Search className="mb-0.5 ml-3 h-5 w-5 stroke-muted-foreground md:h-4 md:w-4" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="mb-0.5 border-0 bg-transparent pl-0 shadow-none drop-shadow-none focus-visible:ring-0"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </label>
+          <Button onClick={handleToggleShowNotesForm}>
+            <Pen className="h-12 w-12" />
             New note
           </Button>
         </div>
@@ -78,45 +84,45 @@ export default function NotesSection({
       {notesIsPending && (
         <ul className="mt-2 columns-2 gap-2 md:columns-4" role="status">
           <li className="sr-only">Loading…</li>
-          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
+          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card p-3 md:p-4">
             <div className="grid gap-2">
-              <div className="h-4 w-28 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              <div className="h-4 w-28 animate-pulse rounded-md bg-muted"></div>
               <div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-muted"></div>
               </div>
             </div>
           </li>
-          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
+          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card p-3 md:p-4">
             <div className="grid gap-2">
-              <div className="h-4 w-24 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              <div className="h-4 w-24 animate-pulse rounded-md bg-muted"></div>
               <div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
               </div>
             </div>
           </li>
-          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
+          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card p-3 md:p-4">
             <div className="grid gap-2">
-              <div className="h-4 w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              <div className="h-4 w-20 animate-pulse rounded-md bg-muted"></div>
               <div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-muted"></div>
               </div>
             </div>
           </li>
-          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
+          <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card p-3 md:p-4">
             <div className="grid gap-2">
-              <div className="h-4 w-20 animate-pulse rounded-md bg-[#dbe4ff]"></div>
+              <div className="h-4 w-20 animate-pulse rounded-md bg-muted"></div>
               <div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
 
-                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-[#dbe4ff]"></div>
+                <div className="mt-1 h-[0.875rem] w-full animate-pulse rounded-md bg-muted"></div>
               </div>
             </div>
           </li>
@@ -125,7 +131,7 @@ export default function NotesSection({
       {!notesIsPending &&
       optimisticNotes?.filter((note) => note.isPinned).length ? (
         <div className="mt-2 grid gap-1">
-          <h4 className="font-medium">Pinned</h4>
+          <h4 className="font-medium text-foreground">Pinned</h4>
           <ul className="columns-2 gap-2 md:columns-4">
             {optimisticNotes
               ?.filter((note) => note.isPinned)

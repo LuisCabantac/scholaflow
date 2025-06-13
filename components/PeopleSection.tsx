@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { UserRoundPlus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Classroom, EnrolledClass } from "@/lib/schema";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import PeopleCard from "@/components/PeopleCard";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AddUserToClassDialog from "@/components/AddUserToClassDialog";
 
 export default function PeopleSection({
@@ -55,38 +57,33 @@ export default function PeopleSection({
   return (
     <section>
       <div className="flex items-center justify-between pb-2">
-        <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-          <Link
-            href={`/classroom/class/${classId}`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Stream
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/classwork`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Classwork
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/people`}
-            className="rounded-md bg-[#edf2ff] px-3 py-2 shadow-sm transition-all"
-          >
-            People
-          </Link>
-          <Link
-            href={`/classroom/class/${classId}/chat`}
-            className="px-3 py-2 text-[#929bb4] transition-all"
-          >
-            Chat
-          </Link>
-        </div>
+        <Tabs defaultValue="people">
+          <TabsList>
+            <TabsTrigger value="stream" asChild>
+              <Link href={`/classroom/class/${classroom.id}`}>Stream</Link>
+            </TabsTrigger>
+            <TabsTrigger value="classwork" asChild>
+              <Link href={`/classroom/class/${classroom.id}/classwork`}>
+                Classwork
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="people" asChild>
+              <Link href={`/classroom/class/${classroom.id}/people`}>
+                People
+              </Link>
+            </TabsTrigger>
+            <TabsTrigger value="chat" asChild>
+              <Link href={`/classroom/class/${classroom.id}/chat`}>Chat</Link>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
       <div className="grid gap-2">
         <div className="flex items-center justify-between">
           <p className="text-base font-medium">All users</p>
           {sessionId === classroom.teacherId && (
-            <Button type="primary" onClick={handleToggleShowAddUserModal}>
+            <Button onClick={handleToggleShowAddUserModal}>
+              <UserRoundPlus className="h-12 w-12" />
               Add user
             </Button>
           )}
@@ -98,7 +95,7 @@ export default function PeopleSection({
             />
           )}
         </div>
-        <ul className="users__list rounded-md">
+        <ul className="rounded-xl">
           {enrolledUsersIsPending ? (
             <>
               {Array(6)
@@ -106,20 +103,20 @@ export default function PeopleSection({
                 .map((_, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-between bg-[#f3f6ff] p-2"
+                    className="flex items-center justify-between py-2"
                     role="status"
                   >
                     <span className="sr-only">Loading…</span>
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 animate-pulse rounded-full bg-[#e0e7ff]"></div>
-                      <div className="h-4 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+                      <div className="h-8 w-8 animate-pulse rounded-full bg-muted"></div>
+                      <div className="h-4 w-24 animate-pulse rounded-md bg-muted"></div>
                     </div>
                   </li>
                 ))}
             </>
           ) : (
             <>
-              <li className="flex items-center justify-between bg-[#f3f6ff] p-2">
+              <li className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-2">
                   <Image
                     src={classroom.teacherImage}
@@ -130,7 +127,7 @@ export default function PeopleSection({
                     onDragStart={(e) => e.preventDefault()}
                   />
                   <p>{classroom.teacherName}</p>
-                  <span className="role teacher mt-1 flex items-center justify-center rounded-md px-2 py-1 text-[0.65rem] font-semibold">
+                  <span className="role teacher mt-1 flex items-center justify-center rounded-xl px-2 py-1 text-[0.65rem] font-semibold">
                     TEACHER
                   </span>
                 </div>

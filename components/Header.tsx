@@ -19,7 +19,7 @@ export default async function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-10 flex w-full items-center justify-between bg-[#edf2ffe5] px-4 py-4 backdrop-blur-md md:px-8">
+    <header className="sticky top-0 z-10 flex w-full items-center justify-between bg-background px-4 py-4 backdrop-blur-md md:px-8">
       <div className="flex w-[88%] items-center gap-2">
         <SidebarHeaderButton />
         <HeaderTitle

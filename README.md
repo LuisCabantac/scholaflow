@@ -23,6 +23,7 @@ Want to experience ScholaFlow firsthand? Join our demo class:
 
 - [Next.js 15](https://nextjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
 - [Supabase](https://supabase.com/)
 - [Drizzle ORM](https://orm.drizzle.team/)
 - [Better Auth](https://www.better-auth.com/)

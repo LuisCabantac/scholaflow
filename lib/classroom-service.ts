@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { validate as validateUUID } from "uuid";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "@/drizzle";
 import { auth } from "@/lib/auth";
@@ -20,7 +20,7 @@ export async function getAllClassesByTeacherId(
     .select()
     .from(classroom)
     .where(eq(classroom.teacherId, id))
-    .orderBy(asc(classroom.createdAt));
+    .orderBy(desc(classroom.createdAt));
 
   return !data?.length ? null : data;
 }

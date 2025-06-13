@@ -32,7 +32,7 @@ export default function Sidebar({
         ></div>
       )}
       <div
-        className={`fixed h-screen overflow-y-auto ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} left-0 top-0 z-30 rounded-r-md border-r border-[#d6e0fd] bg-[#dbe4ff] py-5 transition-all duration-300 ease-in-out md:static`}
+        className={`fixed h-screen overflow-y-auto ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} left-0 top-0 z-30 border-sidebar-border bg-sidebar py-5 transition-all duration-300 ease-in-out md:static md:rounded-r-md md:border-r`}
       >
         <div className="flex items-center justify-between pl-3">
           <Logo showText={sidebarExpand} />
@@ -45,7 +45,7 @@ export default function Sidebar({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
-              className="hidden size-7 stroke-[#5c7cfa] md:block"
+              className="hidden size-7 stroke-sidebar-ring md:block"
             >
               <path stroke="none" d="M0 0h24v24H0z" />
               <path d="M6 4 H18 A2 2 0 0 1 20 6 V18 A2 2 0 0 1 18 20 H6 A2 2 0 0 1 4 18 V6 A2 2 0 0 1 6 4 z" />
