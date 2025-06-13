@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { UseMutateFunction } from "@tanstack/react-query";
 
 import {
@@ -101,22 +102,12 @@ export default function TopicCard({
                 classroom.teacherId === session.id) &&
               stream.topicId === topic.id,
           ).length ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+            <ChevronDown
               strokeWidth={3}
-              stroke="currentColor"
-              className={`${expandTopic ? "rotate-180" : "rotate-0"} size-5 cursor-pointer transition-transform`}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
+              className={`${expandTopic ? "rotate-180" : "rotate-0"} w-5 transition-transform`}
+            />
           ) : null}
-          <h4 className="text-base">{topic.name}</h4>
+          <h4 className="text-base text-foreground">{topic.name}</h4>
         </li>
         <li>
           <ul className="flex items-center">
