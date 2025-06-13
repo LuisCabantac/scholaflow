@@ -81,6 +81,9 @@ export default function StreamsSection({
         queryClient.invalidateQueries({
           queryKey: [`streams--${classroom.id}`],
         });
+        queryClient.invalidateQueries({
+          queryKey: [`classworks--${classroom.id}`],
+        });
       },
       onError: (error) => {
         toast.error(error.message);
@@ -551,7 +554,7 @@ export default function StreamsSection({
                           viewBox="0 0 24 24"
                           strokeWidth={2}
                           stroke="currentColor"
-                          className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                          className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
                         >
                           <path
                             strokeLinecap="round"

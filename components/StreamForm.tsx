@@ -147,12 +147,13 @@ export default function StreamForm({
     if (success) {
       toast.success(message);
       queryClient.invalidateQueries({
-        queryKey: [
-          `classworks--${classroom.id}`,
-          `streams--${classroom.id}`,
-          `topics--${classroom.id}`,
-          search,
-        ],
+        queryKey: [`classworks--${classroom.id}`, search],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`streams--${classroom.id}`, search],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`topics--${classroom.id}`, , search],
       });
       onToggleShowStreamForm();
     } else toast.error(message);

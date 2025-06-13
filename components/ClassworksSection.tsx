@@ -71,11 +71,13 @@ export default function ClassworksSection({
         toast.success("Classwork has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [
-            `classworks--${classroom.id}`,
-            `topics--${classroom.id}`,
-            search,
-          ],
+          queryKey: [`classworks--${classroom.id}`, search],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`streams--${classroom.id}`, search],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`topics--${classroom.id}`, search],
         });
       },
       onError: (error) => {
@@ -95,7 +97,13 @@ export default function ClassworksSection({
         toast.success("Topic has been successfully deleted!");
 
         queryClient.invalidateQueries({
-          queryKey: [`topics--${classroom.id}`, `classworks--${classroom.id}`],
+          queryKey: [`topics--${classroom.id}`],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`classworks--${classroom.id}`],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [`streams--${classroom.id}`],
         });
       },
       onError: (error) => {
