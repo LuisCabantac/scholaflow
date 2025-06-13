@@ -80,34 +80,6 @@ export default function SkeletonTabsStatic({
           </TabsTrigger>
         </TabsList>
       </Tabs>
-      // <div className="flex items-center justify-between pb-2">
-      //   <div className="flex items-center rounded-md bg-[#dbe4ff] p-1 font-medium shadow-sm">
-      //     <Link
-      //       href={`/classroom/class/${extractFirstUuid(pathname)}`}
-      //       className={`${pathname === `/classroom/class/${extractFirstUuid(pathname)}` ? "rounded-md bg-[#edf2ff] shadow-sm" : "text-[#929bb4]"} px-3 py-2 transition-all`}
-      //     >
-      //       Stream
-      //     </Link>
-      //     <Link
-      //       href={`/classroom/class/${extractFirstUuid(pathname)}/classwork`}
-      //       className={`${pathname === `/classroom/class/${extractFirstUuid(pathname)}/classwork` ? "rounded-md bg-[#edf2ff] shadow-sm" : "text-[#929bb4]"} px-3 py-2 transition-all`}
-      //     >
-      //       Classwork
-      //     </Link>
-      //     <Link
-      //       href={`/classroom/class/${extractFirstUuid(pathname)}/people`}
-      //       className={`${pathname === `/classroom/class/${extractFirstUuid(pathname)}/people` ? "rounded-md bg-[#edf2ff] shadow-sm" : "text-[#929bb4]"} px-3 py-2 transition-all`}
-      //     >
-      //       People
-      //     </Link>
-      //     <Link
-      //       href={`/classroom/class/${extractFirstUuid(pathname)}/chat`}
-      //       className={`${pathname === `/classroom/class/${extractFirstUuid(pathname)}/chat` ? "rounded-md bg-[#edf2ff] shadow-sm" : "text-[#929bb4]"} px-3 py-2 transition-all`}
-      //     >
-      //       Chat
-      //     </Link>
-      //   </div>
-      // </div>
     );
 
   if (skeletonRoute === "to-do")

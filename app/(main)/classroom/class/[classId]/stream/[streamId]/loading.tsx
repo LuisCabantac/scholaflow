@@ -31,54 +31,54 @@ export default function Loading() {
           </Link>
         </div>
         <div className="mb-3 mt-2 flex gap-1">
-          <div className="size-10 flex-shrink-0 animate-pulse rounded-full bg-[#e0e7ff]"></div>
+          <div className="size-10 flex-shrink-0 animate-pulse rounded-full bg-muted"></div>
           <div className="grid w-full gap-2">
-            <div className="h-4 w-44 animate-pulse rounded-md bg-[#e0e7ff]"></div>
-            <div className="h-3 w-24 animate-pulse rounded-md bg-[#e0e7ff]"></div>
+            <div className="h-4 w-44 animate-pulse rounded-md bg-muted"></div>
+            <div className="h-3 w-24 animate-pulse rounded-md bg-muted"></div>
           </div>
         </div>
         <div className="w-full animate-pulse space-y-2.5">
           <div className="flex w-full items-center">
-            <div className="h-[0.875rem] w-32 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
+            <div className="h-[0.875rem] w-32 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
+            <div className="h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
+            <div className="h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
+            <div className="h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="ms-2 h-[0.875rem] w-32 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
+            <div className="ms-2 h-[0.875rem] w-32 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-80 rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
           </div>
           <div className="flex w-full items-center">
-            <div className="h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-[#e0e7ff]"></div>
-            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-[#e0e7ff]"></div>
+            <div className="h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-full rounded-full bg-muted"></div>
+            <div className="ms-2 h-[0.875rem] w-24 rounded-full bg-muted"></div>
           </div>
         </div>
       </div>
