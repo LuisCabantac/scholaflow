@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -9,8 +10,9 @@ import {
   getEnrolledClassByClassAndSessionId,
 } from "@/lib/classroom-service";
 
-import Nav from "@/components/Nav";
+import Logo from "@/components/Logo";
 import InviteSection from "@/components/InviteSection";
+import { Card, CardHeader } from "@/components/ui/card";
 
 export async function generateMetadata({
   params,
@@ -53,11 +55,20 @@ export default async function Page({
     return redirect("/classroom");
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f3f6ff] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(116,143,252,0.2),rgba(255,255,255,0))]">
-      <div className="absolute left-0 top-1.5 md:-top-0.5">
-        <Nav showButton={false} />
+    <section className="relative flex min-h-[90dvh] items-center justify-center px-8 py-[8rem] md:grid md:h-full md:px-20 md:py-0">
+      <div className="container">
+        <div className="flex flex-col items-center gap-2">
+          <Link href="/">
+            <Logo size={10} />
+          </Link>
+          <Card className="mx-auto flex flex-col gap-4 border-0 bg-transparent shadow-none md:w-[24rem]">
+            <CardHeader className="w-full text-center text-2xl font-medium tracking-tighter">
+              Join Class
+            </CardHeader>
+            <InviteSection classroom={classroom} session={session.user} />
+          </Card>
+        </div>
       </div>
-      <InviteSection classroom={classroom} session={session.user} />
-    </div>
+    </section>
   );
 }

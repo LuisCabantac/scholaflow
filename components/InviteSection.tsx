@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { CircleCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Session } from "@/lib/schema";
 import { Classroom } from "@/lib/schema";
 import { joinClass } from "@/lib/classroom-actions";
 
-import SpinnerMini from "@/components/SpinnerMini";
+import { Button } from "@/components/ui/button";
 
 export default function InviteSection({
   classroom,
@@ -36,17 +37,17 @@ export default function InviteSection({
   }
 
   return (
-    <section className="z-10 mx-8 grid w-full gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-4 md:mx-60 md:w-[25rem]">
+    <div className="z-10 mx-auto grid w-full max-w-md gap-4 rounded-xl border bg-card p-4">
       <div className="w-full">
-        <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold tracking-tight">
+        <h1 className="text-lg font-semibold tracking-tight text-foreground">
           {classroom.name}
         </h1>
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap font-medium">
+        <p className="text-sm text-foreground/90">
           {classroom.subject && `${classroom.subject} · `}
           {classroom.section}
         </p>
       </div>
-      <div className="flex gap-2 rounded-md border border-[#dddfe6] bg-[#f5f8ff] px-4 py-2">
+      <div className="flex gap-2 rounded-xl border bg-card p-3 text-foreground/70">
         <Image
           src={session.image ?? ""}
           alt={`${session.name}'s avatar`}
@@ -56,30 +57,31 @@ export default function InviteSection({
           onDragStart={(e) => e.preventDefault()}
         />
         <div>
-          <p className="text-sm font-medium">{session.name}</p>
+          <p className="font-medium">{session.name}</p>
           <p className="text-xs">{session.email}</p>
         </div>
       </div>
-      <form onSubmit={handleJoinClass}>
+      <form className="grid gap-3" onSubmit={handleJoinClass}>
         <input
           type="text"
           defaultValue={classroom.id}
           name="classroomId"
           hidden
         />
-        <button
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#22317c] px-3 py-2 text-sm font-medium text-[#edf2ff] transition-colors hover:bg-[#384689] disabled:cursor-not-allowed disabled:bg-[#1b2763] disabled:text-[#d5dae6]"
+        {isSuccessful && (
+          <div className="flex gap-2 rounded-xl border bg-card p-3 text-muted-foreground">
+            <CircleCheck className="h-6 w-6 flex-shrink-0 stroke-success" />
+            <span>You&apos;ve successfully joined the class!</span>
+          </div>
+        )}
+        <Button
           disabled={isLoading || isSuccessful}
           type="submit"
+          className="w-full"
         >
-          {isLoading && <SpinnerMini />}
-          <span>
-            {isSuccessful
-              ? "You've successfully joined the class!"
-              : "Join class"}
-          </span>
-        </button>
+          {isLoading ? "Joining class..." : "Join class"}
+        </Button>
       </form>
-    </section>
+    </div>
   );
 }
