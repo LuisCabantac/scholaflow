@@ -54,20 +54,20 @@ export default function Loading() {
             <ClassLoading />
           </div>
         </div>
-        <div className="hidden overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm md:block">
+        <div className="hidden w-[18rem] overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm md:block">
           <div className="px-4 pb-0 pt-4 text-lg font-medium tracking-tight">
             To-do
           </div>
           <div className="p-4">
             <div className="w-full">
-              <div className="grid h-9 w-full grid-cols-3 items-center justify-center rounded-xl bg-muted p-1 text-muted-foreground">
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-foreground shadow-sm transition-none">
+              <div className="grid h-9 w-full grid-cols-3 items-center justify-center rounded-full bg-muted p-1 text-muted-foreground">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-foreground shadow-sm transition-none">
                   Assigned
                 </div>
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-sm font-medium transition-none">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-full px-3 py-1 text-sm font-medium transition-none">
                   Missing
                 </div>
-                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-sm font-medium transition-none">
+                <div className="inline-flex cursor-not-allowed items-center justify-center whitespace-nowrap rounded-full px-3 py-1 text-sm font-medium transition-none">
                   Done
                 </div>
               </div>

@@ -276,7 +276,7 @@ export default function ClassroomSection({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=all-classes"
-                    className={`${(searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null) && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "all-classes" || searchParams.get("sort") === null ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>All classes</span>
                     {(searchParams.get("sort") === "all-classes" ||
@@ -288,7 +288,7 @@ export default function ClassroomSection({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=created-classes"
-                    className={`${searchParams.get("sort") === "created-classes" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "created-classes" ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>Created classes</span>
                     {searchParams.get("sort") === "created-classes" && (
@@ -299,7 +299,7 @@ export default function ClassroomSection({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/classroom?sort=enrolled-classes"
-                    className={`${searchParams.get("sort") === "enrolled-classes" && "font-medium"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left hover:bg-[#d8e0f5]`}
+                    className={`${searchParams.get("sort") === "enrolled-classes" ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 text-nowrap rounded-xl p-2 text-left`}
                   >
                     <span>Enrolled classes</span>
                     {searchParams.get("sort") === "enrolled-classes" && (
@@ -420,7 +420,7 @@ export default function ClassroomSection({
             </div>
           )}
         </div>
-        <Card className="hidden md:block">
+        <Card className="hidden w-[18rem] md:block">
           <CardHeader className="px-4 pb-0 pt-4 text-lg font-medium tracking-tight">
             To-do
           </CardHeader>
@@ -460,7 +460,7 @@ export default function ClassroomSection({
                               viewBox="0 0 24 24"
                               strokeWidth={2}
                               stroke="currentColor"
-                              className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                              className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
                             >
                               <path
                                 strokeLinecap="round"
@@ -488,7 +488,7 @@ export default function ClassroomSection({
                                         )}
                                 </p>
                                 {assignedClasswork.dueDate ? (
-                                  <p className="text-xs text-[#616572]">
+                                  <p className="text-xs text-foreground/70">
                                     {isToday(assignedClasswork.dueDate)
                                       ? `Due today, ${format(assignedClasswork.dueDate, "h:mm a")}`
                                       : isYesterday(assignedClasswork.dueDate)
@@ -496,7 +496,7 @@ export default function ClassroomSection({
                                         : `Due ${format(assignedClasswork.dueDate, "MMM d,")} ${isThisYear(assignedClasswork.dueDate) ? "" : `${format(assignedClasswork.dueDate, "y ")}`} ${format(assignedClasswork.dueDate, "h:mm a")}`}
                                   </p>
                                 ) : (
-                                  <p className="text-xs text-[#616572]">
+                                  <p className="text-xs text-foreground/70">
                                     No due date
                                   </p>
                                 )}
@@ -523,7 +523,7 @@ export default function ClassroomSection({
                               viewBox="0 0 24 24"
                               strokeWidth={2}
                               stroke="currentColor"
-                              className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                              className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
                             >
                               <path
                                 strokeLinecap="round"
@@ -551,7 +551,7 @@ export default function ClassroomSection({
                                         )}
                                 </p>
                                 {missingClasswork.dueDate && (
-                                  <p className="text-xs text-[#f03e3e]">
+                                  <p className="text-xs text-destructive">
                                     {isToday(missingClasswork.dueDate)
                                       ? `Due today, ${format(missingClasswork.dueDate, "h:mm a")}`
                                       : isYesterday(missingClasswork.dueDate)
@@ -581,7 +581,7 @@ export default function ClassroomSection({
                             viewBox="0 0 24 24"
                             strokeWidth={2}
                             stroke="currentColor"
-                            className="mt-1 size-6 flex-shrink-0 stroke-[#5c7cfa]"
+                            className="mt-1 size-6 flex-shrink-0 stroke-sidebar-ring"
                           >
                             <path
                               strokeLinecap="round"
