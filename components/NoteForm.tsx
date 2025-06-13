@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { ImagePlus, Pin, PinOff, Trash2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
@@ -10,7 +11,7 @@ import { Note, Session } from "@/lib/schema";
 import { createNote, updateNote } from "@/lib/notes-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function NoteForm({
@@ -73,7 +74,15 @@ export default function NoteForm({
   ) {
     if (event.target.files) {
       const files = Array.from(event.target.files);
-      setAttachmentImages((prevFiles) => [...prevFiles, ...files]);
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = files.filter((file) => file.size <= maxSize);
+      const invalidFiles = files.filter((file) => file.size > maxSize);
+
+      if (invalidFiles.length > 0) {
+        toast.error("Each attachment must be 5MB or less.");
+      }
+
+      setAttachmentImages((prevFiles) => [...prevFiles, ...validFiles]);
     }
   }
 
@@ -82,9 +91,11 @@ export default function NoteForm({
   ) {
     const files = event.target.files;
     if (files) {
-      const newFileNames = Array.from(files).map((file) =>
-        URL.createObjectURL(file),
+      const maxSize = 5 * 1024 * 1024;
+      const validFiles = Array.from(files).filter(
+        (file) => file.size <= maxSize,
       );
+      const newFileNames = validFiles.map((file) => URL.createObjectURL(file));
       setAttachmentImagesNames(newFileNames);
     }
   }
@@ -139,11 +150,11 @@ export default function NoteForm({
   return (
     <div className="modal__container">
       <div
-        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-[#f3f6ff]"
+        className="fixed bottom-0 left-0 right-0 z-10 h-[95%] overflow-y-scroll rounded-t-md bg-card"
         ref={notesFormModalWrapperRef}
       >
         <form
-          className="relative min-h-screen w-full rounded-t-md border-t border-[#dddfe6] bg-[#f3f6ff] pb-[6rem] shadow-sm"
+          className="relative min-h-screen w-full rounded-t-md border-t pb-[6rem] shadow-sm"
           onSubmit={handleSubmitNote}
         >
           <button
@@ -158,7 +169,7 @@ export default function NoteForm({
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className="size-5 transition-all hover:stroke-[#656b70]"
+              className="size-5 transition-all hover:stroke-foreground/70"
             >
               <path
                 strokeLinecap="round"
@@ -245,7 +256,7 @@ export default function NoteForm({
             <input type="text" name="noteId" hidden defaultValue={note?.id} />
             <div>
               {note?.createdAt && (
-                <p className="text-xs text-[#616572]">{`Created ${formatDate(note.createdAt)}`}</p>
+                <p className="text-xs text-foreground">{`Created ${formatDate(note.createdAt)}`}</p>
               )}
               <input
                 type="text"
@@ -278,77 +289,68 @@ export default function NoteForm({
               onChange={(event) => setDescription(event.target.value)}
             ></textarea>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-end gap-4 border-t border-[#dddfe6] bg-[#f3f6ff] px-4 py-4 md:px-8">
-            <label
-              className={` ${
-                isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"
-              }`}
-            >
-              <input
-                type="file"
-                className="hidden"
-                multiple
-                accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                disabled={isLoading}
-                onChange={(event) => {
-                  handleAttachmentImageNameChange(event);
-                  handleSetAttachmentImages(event);
-                }}
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="size-5 stroke-[#616572] md:size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                />
-              </svg>
-            </label>
-            <button type="button" onClick={handleTogglePinnedNote}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className={`size-5 md:size-6 ${isPinned ? "stroke-[#5c7cfa]" : "stroke-[#616572]"}`}
-              >
-                <path stroke="none" d="M0 0h24v24H0z" />
-                <path d="M9 4v6l-2 4v2h10v-2l-2-4V4M12 16v5M8 4h8" />
-              </svg>
-            </button>
-            {type === "edit" && (
-              <button
+          <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
+            <div className="flex items-center gap-2">
+              <Button
                 type="button"
-                className="disabled:cursor-not-allowed"
-                disabled={isLoading || deleteNoteIsPending}
-                onClick={handleToggleShowConfirmation}
+                variant="ghost"
+                size="icon"
+                className="p-0 hover:bg-transparent"
+                asChild
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-5 stroke-[#f03e3e] hover:stroke-[#c92a2a]"
+                <label
+                  className={` ${
+                    isLoading ? "disabled:cursor-not-allowed" : "cursor-pointer"
+                  }`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                  <input
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                    disabled={isLoading}
+                    onChange={(event) => {
+                      handleAttachmentImageNameChange(event);
+                      handleSetAttachmentImages(event);
+                    }}
                   />
-                </svg>
-              </button>
-            )}
-            <Button type="primary" isLoading={isLoading}>
-              {type === "edit" ? "Save changes" : "Create"}
-            </Button>
+                  <ImagePlus className="size-5 md:size-6" />
+                </label>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="p-0 hover:bg-transparent"
+                onClick={handleTogglePinnedNote}
+              >
+                {isPinned ? (
+                  <Pin className="size-5 md:size-6" />
+                ) : (
+                  <PinOff className="size-5 md:size-6" />
+                )}
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              {type === "edit" && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={isLoading || deleteNoteIsPending}
+                  onClick={handleToggleShowConfirmation}
+                >
+                  <Trash2 className="size-5 md:size-6" />
+                  Delete
+                </Button>
+              )}
+              <Button
+                disabled={isLoading}
+                type="submit"
+                variant={type === "edit" ? "secondary" : "default"}
+              >
+                {type === "edit" ? "Save changes" : "Create"}
+              </Button>
+            </div>
           </div>
         </form>
         {zoomedImage && (
