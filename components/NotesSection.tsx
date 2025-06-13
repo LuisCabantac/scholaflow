@@ -131,7 +131,7 @@ export default function NotesSection({
       {!notesIsPending &&
       optimisticNotes?.filter((note) => note.isPinned).length ? (
         <div className="mt-2 grid gap-1">
-          <h4 className="font-medium">Pinned</h4>
+          <h4 className="font-medium text-foreground">Pinned</h4>
           <ul className="columns-2 gap-2 md:columns-4">
             {optimisticNotes
               ?.filter((note) => note.isPinned)
