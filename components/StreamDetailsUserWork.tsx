@@ -328,7 +328,7 @@ export default function StreamDetailsUserWork({
   );
 
   return (
-    <article className="fixed bottom-3 left-3 right-3 rounded-md border bg-card p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
+    <article className="fixed bottom-3 left-3 right-3 rounded-xl border bg-card p-3 shadow-lg md:static md:bottom-4 md:left-4 md:right-4 md:w-[30rem] md:p-4 md:shadow-sm">
       <div
         className="flex cursor-pointer items-center justify-between md:cursor-auto"
         onClick={handleToggleExpandModalView}
