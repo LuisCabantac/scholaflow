@@ -1,6 +1,6 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Upload } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -164,8 +164,7 @@ export default function ProfileForm({
             <div className="grid gap-2 px-4 pb-4 md:gap-4 md:px-8 md:pb-8">
               <input type="text" name="userId" defaultValue={user?.id} hidden />
               <div className="grid gap-2">
-                <label className="font-medium">Profile photo</label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
                   <Image
                     src={attachmentPreview}
                     alt={`${user?.name}'s image`}
@@ -191,55 +190,70 @@ export default function ProfileForm({
                           handleSetAttachmentPreview(event);
                         }}
                       />
-                      Change photo
+                      <Upload />
+                      Upload photo
                     </label>
                   </Button>
                 </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="name">
-                  Full name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  required
-                  disabled={isLoading}
-                  name="name"
-                  type="text"
-                  defaultValue={user?.name ?? ""}
-                  placeholder="Add your full name"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="schoolName">School</Label>
-                <Input
-                  disabled={isLoading}
-                  name="schoolName"
-                  type="text"
-                  defaultValue={user?.schoolName ?? ""}
-                  placeholder="Add your school's name"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">
-                  Email <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  required
-                  readOnly
-                  name="email"
-                  type="email"
-                  defaultValue={user?.email ?? ""}
-                  placeholder="Enter your email address"
-                />
-              </div>
-              <div className="mt-2 grid gap-2 border-t pt-4 md:gap-4">
-                <p className="text-lg font-medium">Change you password</p>
+              <h4 className="text-lg font-medium text-foreground">
+                Personal Information
+              </h4>
+              <div className="mt-2 grid gap-4 md:grid-cols-2">
                 <div className="grid gap-2">
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <p className="text-xs text-foreground/70">
-                    Note: If you signed in with Google/OAuth, you can leave this
-                    field empty as you don&apos;t have a current password.
-                  </p>
+                  <Label htmlFor="name">
+                    Full name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    required
+                    disabled={isLoading}
+                    name="name"
+                    type="text"
+                    defaultValue={user?.name ?? ""}
+                    placeholder="Add your full name"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">
+                    Email <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    required
+                    readOnly
+                    name="email"
+                    type="email"
+                    defaultValue={user?.email ?? ""}
+                    placeholder="Enter your email address"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="schoolName">School</Label>
+                  <Input
+                    disabled={isLoading}
+                    name="schoolName"
+                    type="text"
+                    defaultValue={user?.schoolName ?? ""}
+                    placeholder="Add your school's name"
+                  />
+                </div>
+              </div>
+              <h4 className="mt-4 text-lg font-medium text-foreground">
+                Change password
+              </h4>
+              <div className="mt-2 grid items-center gap-4 md:grid-cols-2">
+                <div className="grid gap-2">
+                  <Label
+                    htmlFor="currentPassword"
+                    className="flex items-center justify-between gap-2"
+                  >
+                    Current Password
+                    <span className="hidden text-xs text-foreground/70 md:flex">
+                      Note: Leave empty if using Google/OAuth login.
+                    </span>
+                  </Label>
+                  <span className="text-xs text-foreground/70 md:hidden">
+                    Note: Leave empty if using Google/OAuth login.
+                  </span>
                   <label className="group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50">
                     <Input
                       name="currentPassword"

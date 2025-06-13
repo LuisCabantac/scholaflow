@@ -10,9 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Session } from "@/lib/schema";
 import { checkVerificationToken } from "@/lib/auth-actions";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import ProfileForm from "@/components/ProfileForm";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 async function sendEmail(templateParams: {
   to_email: string;
@@ -83,7 +84,7 @@ export default function ProfileSection({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: user, isPending: userIsPending } = useQuery({
+  const { data: user } = useQuery({
     queryKey: [`profile--${session.id}`],
     queryFn: () => onGetUser(session.email),
   });
@@ -97,115 +98,77 @@ export default function ProfileSection({
   }
 
   return (
-    <section className="grid gap-2">
-      <div className="grid gap-4 rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {userIsPending ? (
-              <div
-                className="h-12 w-12 animate-pulse rounded-full bg-[#dbe4ff]"
-                role="status"
-              >
-                <span className="sr-only">Loading…</span>
-              </div>
-            ) : (
-              <Image
-                src={session.image ?? ""}
-                alt={`${session.name}'s photo`}
-                width={48}
-                height={48}
-                className="h-12 w-12 flex-shrink-0 rounded-full"
-              />
-            )}
-            <div className="flex flex-col items-start justify-start">
-              {userIsPending ? (
-                <div
-                  className="h-[1.125rem] w-40 animate-pulse rounded-md bg-[#dbe4ff]"
-                  role="status"
-                >
-                  <span className="sr-only">Loading…</span>
-                </div>
-              ) : (
-                <h2 className="text-lg font-semibold">{session.name}</h2>
-              )}
-              {!userIsPending && (
-                <button
-                  type="button"
-                  onClick={handleToggleShowEditProfileForm}
-                  className="font-medium text-[#22317c] hover:text-[#384689] disabled:text-[#1b2763]"
-                >
-                  Edit profile
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col items-start justify-start gap-2 md:flex-row md:items-center md:justify-between">
-          <div className="grid gap-2 md:flex md:items-center">
-            <div>
-              {userIsPending ? (
-                <div
-                  className="mb-1 h-[0.875rem] w-48 animate-pulse rounded-md bg-[#dbe4ff]"
-                  role="status"
-                >
-                  <span className="sr-only">Loading…</span>
-                </div>
-              ) : (
-                <p className="font-medium">{session.email}</p>
-              )}
-              <h4 className="text-xs font-medium text-[#616572]">Email</h4>
-            </div>
-            <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
-            <div>
-              {userIsPending ? (
-                <div
-                  className="mb-1 h-[0.875rem] w-20 animate-pulse rounded-md bg-[#dbe4ff]"
-                  role="status"
-                >
-                  <span className="sr-only">Loading…</span>
-                </div>
-              ) : (
-                <p className="font-medium">
-                  {session.schoolName ? session.schoolName : "N/A"}
-                </p>
-              )}
-              <h4 className="text-xs font-medium text-[#616572]">School</h4>
-            </div>
-            <div className="mx-4 hidden h-8 w-px bg-[#dbe4ff] md:block"></div>
-            <div>
-              {userIsPending ? (
-                <div
-                  className="mb-1 h-[0.875rem] w-24 animate-pulse rounded-md bg-[#dbe4ff]"
-                  role="status"
-                >
-                  <span className="sr-only">Loading…</span>
-                </div>
-              ) : (
-                <p className="font-medium">
-                  {format(session.createdAt ?? "", "MMMM dd, yyyy")}
-                </p>
-              )}
-              <h4 className="text-xs font-medium text-[#616572]">Joined</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="grid rounded-md border border-[#dddfe6] bg-[#f3f6ff] p-3 md:p-4">
-        <h3 className="font-medium tracking-tight">Delete account</h3>
-        <div className="flex flex-col items-start gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between">
-          <p className="text-sm font-medium text-[#616572]">
-            Permanently delete your account and all data. This cannot be undone.
-          </p>
-          <Button
-            type="primary"
-            bg="bg-[#f03e3e] hover:bg-[#c92a2a]"
-            isLoading={isLoading}
-            onClick={handleToggleShowConfirmation}
-          >
-            Delete
+    <section className="grid gap-4">
+      <div className="mx-auto">
+        <div className="flex flex-col items-center gap-y-4">
+          <Image
+            src={session.image ?? ""}
+            alt={`${session.name}'s photo`}
+            width={48}
+            height={48}
+            className="h-16 w-16 flex-shrink-0 rounded-full md:h-24 md:w-24"
+          />
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">
+            {session.name}
+          </h3>
+          <Button type="button" onClick={handleToggleShowEditProfileForm}>
+            Edit Profile
           </Button>
         </div>
       </div>
+      <div>
+        <h3 className="pb-2 text-lg font-medium tracking-tight text-foreground">
+          Personal Information
+        </h3>
+        <div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="flex flex-col rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+              <h4 className="text-xs font-semibold text-foreground/70">
+                Email
+              </h4>
+              <p className="mt-1 font-medium text-primary/90">
+                {session.email}
+              </p>
+            </div>
+            <div className="flex flex-col rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+              <h4 className="text-xs font-semibold text-foreground/70">
+                School
+              </h4>
+              <p className="mt-1 font-medium text-primary/90">
+                {session.schoolName ? session.schoolName : "N/A"}
+              </p>
+            </div>
+            <div className="flex flex-col rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+              <h4 className="text-xs font-semibold text-foreground/70">
+                Joined
+              </h4>
+              <p className="mt-1 font-medium text-primary/90">
+                {format(session.createdAt ?? "", "MMMM dd, yyyy")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Card className="p-0 md:p-3">
+        <CardHeader className="text-lg font-medium tracking-tight">
+          Delete account
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-start gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between">
+            <p className="text-fore text-sm font-medium">
+              Permanently delete your account and all data. This cannot be
+              undone.
+            </p>
+            <Button
+              variant="destructive"
+              disabled={isLoading}
+              onClick={handleToggleShowConfirmation}
+            >
+              Delete
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
       {showEditProfileForm && (
         <ProfileForm
           user={user}
