@@ -71,7 +71,7 @@ export default function LandingPage() {
           </div>
         </div>
         <motion.div
-          className="flex max-w-4xl items-center justify-center rounded-2xl shadow-lg md:max-w-6xl lg:max-w-7xl"
+          className="flex max-w-4xl items-center justify-center rounded-2xl md:max-w-6xl lg:max-w-7xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
