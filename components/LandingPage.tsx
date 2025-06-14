@@ -81,7 +81,7 @@ export default function LandingPage() {
             width={1400}
             height={900}
             placeholder="blur"
-            className="block w-[90%] select-none rounded-2xl object-cover dark:hidden md:w-full md:shadow-2xl"
+            className="block w-[90%] select-none rounded-2xl object-cover shadow-xl dark:hidden md:w-full md:shadow-2xl"
             alt="hero image"
             onDragStart={(e) => e.preventDefault()}
           />
@@ -90,7 +90,7 @@ export default function LandingPage() {
             width={1400}
             height={900}
             placeholder="blur"
-            className="hidden w-[90%] select-none rounded-2xl object-cover dark:block md:w-full md:shadow-2xl"
+            className="hidden w-[90%] select-none rounded-2xl object-cover shadow-xl dark:block md:w-full md:shadow-2xl"
             alt="hero image"
             onDragStart={(e) => e.preventDefault()}
           />
