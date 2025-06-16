@@ -6,9 +6,14 @@ export default function Footer() {
       <p className="font-medium">
         &copy; {new Date().getFullYear()} ScholaFlow. All rights reserved.
       </p>
-      <Link href="/privacy" className="hover:underline">
-        Privacy Policy
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link href="/terms-of-use" target="_blank" className="hover:underline">
+          Terms and Conditions
+        </Link>
+        <Link href="/privacy" target="_blank" className="hover:underline">
+          Privacy Policy
+        </Link>
+      </div>
     </footer>
   );
 }

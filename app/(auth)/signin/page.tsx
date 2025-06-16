@@ -40,6 +40,26 @@ export default async function Page() {
                 Sign up
               </Link>
             </p>
+            <p className="mx-8 mt-4 text-center text-sm">
+              By signing in, you agree to our{" "}
+              <span>
+                <Link
+                  href="/terms-of-use"
+                  target="_blank"
+                  className="font-medium underline"
+                >
+                  Terms of Use
+                </Link>
+              </span>{" "}
+              and{" "}
+              <Link
+                href="/privacy"
+                target="_blank"
+                className="font-medium underline"
+              >
+                Privacy Policy
+              </Link>
+            </p>
           </Card>
         </div>
       </div>
