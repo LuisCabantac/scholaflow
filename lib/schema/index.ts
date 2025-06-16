@@ -402,6 +402,9 @@ export const signUpFormSchema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters long" })
     .max(20, { message: "Password must be no more than 20 characters long" }),
+  agreeToPolicy: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the terms and privacy policy",
+  }),
 });
 
 export const forgetPasswordFormSchema = z.object({

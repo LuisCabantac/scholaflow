@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod/v4";
+import Link from "next/link";
 import { toast } from "sonner";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
@@ -14,6 +15,7 @@ import { signUpFormSchema, Verification } from "@/lib/schema";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components//ui/checkbox";
 import SignInGoogleButton from "@/components/SignInGoogleButton";
 import {
   Form,
@@ -62,6 +64,7 @@ export default function SignUpForm({
       fullName: "",
       email: "",
       password: "",
+      agreeToPolicy: false,
     },
   });
 
@@ -183,6 +186,44 @@ export default function SignUpForm({
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="agreeToPolicy"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <Checkbox
+                      disabled={isLoading}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                    <p>
+                      I agree to the{" "}
+                      <Link
+                        href="/privacy"
+                        target="_blank"
+                        className="font-medium underline"
+                      >
+                        Privacy Policy
+                      </Link>{" "}
+                      and{" "}
+                      <span>
+                        <Link
+                          href="/terms-of-use"
+                          target="_blank"
+                          className="font-medium underline"
+                        >
+                          Terms of Use
+                        </Link>
+                      </span>
+                    </p>
+                  </label>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="hidden">
             <label htmlFor="verify__name">Verify your name</label>
             <input
@@ -192,7 +233,6 @@ export default function SignUpForm({
               onChange={(event) => setHoneyPot(event.target.value)}
             />
           </div>
-
           <Button type="submit" className="w-full" disabled={isLoading}>
             Sign up
           </Button>
