@@ -233,7 +233,11 @@ export default function SignUpForm({
               onChange={(event) => setHoneyPot(event.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !form.formState.isValid}
+          >
             Sign up
           </Button>
         </form>

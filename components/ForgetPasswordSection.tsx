@@ -128,7 +128,11 @@ export default function ForgetPasswordSection() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading || !form.formState.isValid}
+        >
           Reset Password
         </Button>
       </form>

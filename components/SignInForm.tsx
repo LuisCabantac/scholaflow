@@ -176,7 +176,11 @@ export default function SignInForm() {
               </Link>
             </Button>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !form.formState.isValid}
+          >
             Sign in
           </Button>
         </form>
