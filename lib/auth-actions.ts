@@ -5,11 +5,10 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { auth } from "@/lib/auth";
-import { supabase } from "@/lib/supabase";
 import { deleteNote } from "@/lib/notes-actions";
 import { extractAvatarFilePath } from "@/lib/utils";
-import { nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import { getAllNotesBySession } from "@/lib/notes-service";
+import { nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
 import { getAccountByUserId, getUserByEmail } from "@/lib/user-service";
 import { account, session, user, verification } from "@/drizzle/schema";
@@ -168,7 +167,7 @@ export async function checkEmail(formData: FormData): Promise<{
 }
 
 export async function deleteVerificationToken(email: string): Promise<void> {
-  await supabase.from("verificationTokens").delete().eq("email", email);
+  await db.delete(verification).where(eq(verification.identifier, email));
 }
 
 export async function createVerificationToken(
