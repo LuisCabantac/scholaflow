@@ -155,7 +155,7 @@ export default function ProfileSection({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-start gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-fore text-sm font-medium">
+            <p className="text-sm font-medium text-foreground">
               Permanently delete your account and all data. This cannot be
               undone.
             </p>
