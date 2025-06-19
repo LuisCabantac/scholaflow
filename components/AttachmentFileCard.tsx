@@ -1,7 +1,21 @@
+import { saveAs } from "file-saver";
+
 import {
   getFileNameFromAttachments,
   removeUUIDFromFilename,
 } from "@/lib/utils";
+
+async function handleDownload(fileUrl: string) {
+  try {
+    const response = await fetch(fileUrl);
+    if (!response.ok) throw new Error("Network response was not ok");
+    const blob = await response.blob();
+    const filename = fileUrl.split("/").pop() || "download";
+    saveAs(blob, filename);
+  } catch {
+    alert("Failed to download file.");
+  }
+}
 
 export default function AttachmentFileCard({
   file,
@@ -20,11 +34,8 @@ export default function AttachmentFileCard({
 }) {
   return (
     <li className="relative flex w-full items-center overflow-hidden rounded-xl border bg-foreground/5 shadow-sm">
-      <a
-        href={file}
-        target="_blank"
+      <div
         className={`flex items-center justify-between p-3 ${!isLoading && location === "form" && onRemoveAttachment ? "w-[88%]" : "w-[90%]"}`}
-        download
       >
         <div className="flex w-full items-center gap-2">
           <svg
@@ -50,24 +61,30 @@ export default function AttachmentFileCard({
             </p>
           )}
         </div>
-      </a>
+      </div>
       <div className="absolute -right-1 bottom-[0.85rem] flex items-center gap-4">
         {type === "curFile" && (
-          <a href={file} target="_blank" download>
+          <button
+            type="button"
+            onClick={() => handleDownload(file)}
+            className="m-0 border-none bg-transparent p-0"
+            aria-label="Download file"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
+              stroke="currentColor"
               className="size-4 flex-shrink-0 stroke-primary hover:stroke-primary/90 md:size-5"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
               />
             </svg>
-          </a>
+          </button>
         )}
         {!isLoading && location === "form" && onRemoveAttachment ? (
           <button
