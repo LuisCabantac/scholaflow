@@ -13,7 +13,6 @@ import { checkVerificationToken } from "@/lib/auth-actions";
 import { Button } from "@/components/ui/button";
 import ProfileForm from "@/components/ProfileForm";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 async function sendEmail(templateParams: {
   to_email: string;
@@ -149,26 +148,24 @@ export default function ProfileSection({
           </div>
         </div>
       </div>
-      <Card className="p-0 md:p-3">
-        <CardHeader className="text-lg font-medium tracking-tight">
+      <div>
+        <h3 className="pb-2 text-lg font-medium tracking-tight text-foreground">
           Delete account
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-start gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-sm font-medium text-foreground">
-              Permanently delete your account and all data. This cannot be
-              undone.
-            </p>
-            <Button
-              variant="destructive"
-              disabled={isLoading}
-              onClick={handleToggleShowConfirmation}
-            >
-              Delete
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </h3>
+        <div className="flex flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md md:flex-row md:items-center md:justify-between">
+          <h4 className="text-xs font-semibold text-foreground/70">
+            Permanently delete your account and all data. This cannot be undone.
+          </h4>
+          <Button
+            variant="destructive"
+            disabled={isLoading}
+            onClick={handleToggleShowConfirmation}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
+
       {showEditProfileForm && (
         <ProfileForm
           user={user}
