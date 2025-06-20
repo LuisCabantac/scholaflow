@@ -1,5 +1,5 @@
-import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "@/drizzle";
 import { auth } from "@/lib/auth";
@@ -20,7 +20,8 @@ export async function getAllNotificationByUserId(
   const data = await db
     .select()
     .from(notification)
-    .where(eq(notification.userId, userId));
+    .where(eq(notification.userId, userId))
+    .orderBy(desc(notification.createdAt));
 
   return data;
 }
