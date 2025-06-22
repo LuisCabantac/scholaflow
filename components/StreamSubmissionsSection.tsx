@@ -479,7 +479,7 @@ export default function StreamSubmissionsSection({
             ) : null}
           </div>
           <div
-            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll bg-card p-3 md:static md:h-auto md:rounded-md md:border md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
+            className={`fixed bottom-0 left-0 right-0 h-full overflow-y-scroll bg-card p-3 md:static md:h-auto md:rounded-xl md:border md:p-4 ${userId && expandUserWork ? "z-10 block" : "hidden"} ${userId ? "md:block" : "md:hidden"}`}
           >
             <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
               <button
@@ -526,7 +526,7 @@ export default function StreamSubmissionsSection({
                 <div className="modal__container">
                   <div className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                     <div
-                      className="relative grid gap-4 rounded-md bg-card p-4"
+                      className="relative grid gap-4 rounded-xl bg-card p-4"
                       ref={wrapperRef}
                     >
                       <div>
