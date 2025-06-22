@@ -340,7 +340,10 @@ export default function ClassChatSection({
                                       alt={attachment}
                                       width={250}
                                       height={250}
-                                      className="w-[10rem] rounded-md object-cover md:w-[15rem]"
+                                      className="w-[10rem] rounded-xl object-cover md:w-[15rem]"
+                                      onDragStart={(event) =>
+                                        event.preventDefault()
+                                      }
                                     />
                                   </div>
                                 );
@@ -519,6 +522,7 @@ export default function ClassChatSection({
               width={500}
               height={500}
               className="max-h-[90vh] max-w-[90vw] object-contain"
+              onDragStart={(event) => event.preventDefault()}
             />
           </div>
         </div>
