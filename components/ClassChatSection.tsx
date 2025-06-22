@@ -315,7 +315,7 @@ export default function ClassChatSection({
                                 {message.message}
                               </p>
                               <p
-                                className={`mt-1 text-nowrap text-xs font-medium text-foreground/70 ${session.id === message.userId ? "text-left" : "text-right"}`}
+                                className={`mt-1 select-none text-nowrap text-xs font-medium text-foreground/70 ${session.id === message.userId ? "text-left" : "text-right"}`}
                               >
                                 {formatMessageDate(message.createdAt)}
                               </p>
