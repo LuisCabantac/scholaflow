@@ -280,6 +280,7 @@ export default function StreamsSection({
                   width={40}
                   height={40}
                   className="h-8 w-8 flex-shrink-0 rounded-full md:h-10 md:w-10"
+                  onDragStart={(event) => event.preventDefault()}
                 />
                 <p className="text-foreground">Share with your class...</p>
               </div>
