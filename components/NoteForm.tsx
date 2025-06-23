@@ -318,9 +318,11 @@ export default function NoteForm({
               </div>
               <input type="text" name="noteId" hidden defaultValue={note?.id} />
               <div>
-                {note?.createdAt && (
-                  <p className="text-xs text-foreground">{`Created ${formatDate(note.createdAt)}`}</p>
-                )}
+                <p className="text-xs text-foreground">
+                  {note && note?.updatedAt
+                    ? `Updated ${formatDate(note.updatedAt)}`
+                    : `Created ${formatDate(note?.createdAt ?? "")}`}
+                </p>
                 <input
                   type="text"
                   name="title"
@@ -332,7 +334,7 @@ export default function NoteForm({
                         !attachmentImages.length
                   }
                   className="w-[90%] border-none bg-transparent text-4xl font-semibold focus:outline-none"
-                  placeholder="Title"
+                  placeholder="Note title..."
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                 />

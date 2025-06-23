@@ -92,7 +92,9 @@ export default function NoteCard({
             </p>
           ) : null}
           <p className="text-xs text-foreground/70">
-            {formatDate(note.createdAt)}
+            {note.updatedAt
+              ? `Updated ${formatDate(note.updatedAt)}`
+              : `Created ${formatDate(note.createdAt)}`}
           </p>
         </div>
       </div>
