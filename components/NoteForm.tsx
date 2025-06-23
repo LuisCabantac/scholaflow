@@ -347,20 +347,6 @@ export default function NoteForm({
                   onSafeInteraction={setSafeInteraction}
                 />
               </div>
-              {/* <textarea
-                name="description"
-                required={
-                  title.length
-                    ? false
-                    : true ||
-                      !currentAttachments.length ||
-                      !attachmentImages.length
-                }
-                className="h-[40rem] resize-none border-none bg-transparent focus:outline-none md:h-[30rem]"
-                placeholder="Note"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-              ></textarea> */}
             </div>
             <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
               <div className="flex items-center gap-2">
