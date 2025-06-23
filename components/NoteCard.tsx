@@ -1,8 +1,8 @@
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 
-import { Note, Session } from "@/lib/schema";
 import { formatDate } from "@/lib/utils";
+import { Note, Session } from "@/lib/schema";
 
 import NoteForm from "@/components/NoteForm";
 
@@ -24,7 +24,7 @@ export default function NoteCard({
   }
 
   return (
-    <li className="mb-2 w-full break-inside-avoid break-all rounded-md border bg-card shadow-sm">
+    <li className="mb-2 w-full break-inside-avoid break-all rounded-xl border bg-card shadow-sm">
       <div
         onClick={handleToggleShowNotesForm}
         className="grid cursor-pointer gap-2 p-3 md:p-4"
@@ -49,9 +49,46 @@ export default function NoteCard({
         <div className="grid gap-1">
           {note.content?.length ? (
             <p className="whitespace-pre-line text-foreground/90">
-              {note.content.length > 250
-                ? note.content.slice(0, 250).concat("...")
-                : note.content}
+              {(() => {
+                try {
+                  const editorState = JSON.parse(note.content);
+                  const textContent =
+                    editorState.root?.children
+                      ?.map(
+                        (node: {
+                          type?: string;
+                          tag?: string;
+                          children?: Array<{ text?: string }>;
+                        }) => {
+                          if (node.type === "heading") {
+                            const headingText =
+                              node.children
+                                ?.map(
+                                  (child: { text?: string }) =>
+                                    child.text || "",
+                                )
+                                .join("") || "";
+                            return headingText;
+                          }
+                          return (
+                            node.children
+                              ?.map(
+                                (child: { text?: string }) => child.text || "",
+                              )
+                              .join("") || ""
+                          );
+                        },
+                      )
+                      .join("\n") || "";
+                  return textContent.length > 250
+                    ? textContent.slice(0, 250).concat("...")
+                    : textContent;
+                } catch {
+                  return note.content.length > 250
+                    ? note.content.slice(0, 250).concat("...")
+                    : note.content;
+                }
+              })()}
             </p>
           ) : null}
           <p className="text-xs text-foreground/70">

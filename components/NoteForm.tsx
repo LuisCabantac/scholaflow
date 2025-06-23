@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { toast } from "sonner";
+import { SerializedEditorState } from "lexical";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { ImagePlus, Pin, PinOff, Trash2 } from "lucide-react";
@@ -14,6 +15,37 @@ import { useClickOutside } from "@/contexts/ClickOutsideContext";
 
 import { Button } from "@/components/ui/button";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import { Editor } from "@/components/blocks/editor-00/editor";
+
+const initialValue = {
+  root: {
+    children: [
+      {
+        children: [
+          {
+            detail: 0,
+            format: 0,
+            mode: "normal",
+            style: "",
+            text: "",
+            type: "text",
+            version: 1,
+          },
+        ],
+        direction: "ltr",
+        format: "",
+        indent: 0,
+        type: "paragraph",
+        version: 1,
+      },
+    ],
+    direction: "ltr",
+    format: "",
+    indent: 0,
+    type: "root",
+    version: 1,
+  },
+} as unknown as SerializedEditorState;
 
 export default function NoteForm({
   note,
@@ -40,7 +72,6 @@ export default function NoteForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isPinned, setIsPinned] = useState(note?.isPinned ?? false);
   const [title, setTitle] = useState(note?.title ?? "");
-  const [description, setDescription] = useState(note?.content ?? "");
   const [currentAttachments, setCurrentAttachments] = useState<string[]>(
     note?.attachments ?? [],
   );
@@ -49,11 +80,22 @@ export default function NoteForm({
   );
   const [attachmentImages, setAttachmentImages] = useState<File[]>([]);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [editorState, setEditorState] = useState<SerializedEditorState>(
+    note?.content ? JSON.parse(note.content) : initialValue,
+  );
+  const [safeInteractionPeriod, setSafeInteractionPeriod] = useState(false);
+  const [editorDropdownIsOpen, setEditorDropdownIsOpen] = useState(false);
+
+  function setSafeInteraction(duration = 300) {
+    setSafeInteractionPeriod(true);
+    setTimeout(() => setSafeInteractionPeriod(false), duration);
+  }
 
   async function handleSubmitNote(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
+    formData.append("description", JSON.stringify(editorState));
     attachmentImages.forEach((attachment) =>
       formData.append("attachments", attachment),
     );
@@ -118,6 +160,7 @@ export default function NoteForm({
 
   function openZoomedImage(imageUrl: string) {
     setZoomedImage(imageUrl);
+    setSafeInteraction();
   }
 
   function closeZoomedImage() {
@@ -135,9 +178,15 @@ export default function NoteForm({
   useClickOutsideHandler(
     notesFormModalWrapperRef,
     () => {
-      onSetShowNotesForm(false);
+      if (!safeInteractionPeriod) {
+        onSetShowNotesForm(false);
+      }
     },
-    isLoading,
+    isLoading ||
+      showConfirmation ||
+      editorDropdownIsOpen ||
+      safeInteractionPeriod ||
+      !!zoomedImage,
   );
 
   useClickOutsideHandler(
@@ -276,19 +325,27 @@ export default function NoteForm({
                   type="text"
                   name="title"
                   required={
-                    description.length
+                    editorState
                       ? false
                       : true ||
                         !currentAttachments.length ||
                         !attachmentImages.length
                   }
-                  className="w-[90%] border-none bg-transparent text-lg font-semibold focus:outline-none"
+                  className="w-[90%] border-none bg-transparent text-4xl font-semibold focus:outline-none"
                   placeholder="Title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                 />
               </div>
-              <textarea
+              <div>
+                <Editor
+                  editorSerializedState={editorState}
+                  onSerializedChange={(value) => setEditorState(value)}
+                  onDropdownStateChange={setEditorDropdownIsOpen}
+                  onSafeInteraction={setSafeInteraction}
+                />
+              </div>
+              {/* <textarea
                 name="description"
                 required={
                   title.length
@@ -301,7 +358,7 @@ export default function NoteForm({
                 placeholder="Note"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-              ></textarea>
+              ></textarea> */}
             </div>
             <div className="fixed bottom-0 left-0 right-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
               <div className="flex items-center gap-2">
