@@ -18,7 +18,8 @@ export function Plugins({
   onDropdownStateChange: Dispatch<SetStateAction<boolean>>;
   onSafeInteraction: (duration?: number) => void;
 }) {
-  const [_floatingAnchorElem, setFloatingAnchorElem] =
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
