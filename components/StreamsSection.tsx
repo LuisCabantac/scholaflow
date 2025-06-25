@@ -282,7 +282,9 @@ export default function StreamsSection({
                   className="h-8 w-8 flex-shrink-0 rounded-full md:h-10 md:w-10"
                   onDragStart={(event) => event.preventDefault()}
                 />
-                <p className="text-foreground">Share with your class...</p>
+                <p className="w-full rounded-xl bg-foreground/10 py-2 pl-4 text-muted-foreground md:p-3 md:pl-3">
+                  Share with your class...
+                </p>
               </div>
             ) : null}
             {(!optimisticStreams && !streamsIsPending) ||

@@ -29,7 +29,7 @@ export default function ClassSuspense({
             <div>
               <div className="mb-2 flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm md:p-4">
                 <div className="h-8 w-8 flex-shrink-0 animate-pulse rounded-full bg-muted md:h-10 md:w-10" />
-                <div className="h-[0.875rem] w-32 animate-pulse rounded-md bg-muted"></div>
+                <div className="h-9 w-full animate-pulse rounded-xl bg-muted md:h-11"></div>
               </div>
               <div className="mb-2 flex cursor-not-allowed items-center gap-2 font-medium text-foreground">
                 <span>All</span>
