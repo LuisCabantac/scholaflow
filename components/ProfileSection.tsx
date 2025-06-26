@@ -125,7 +125,7 @@ export default function ProfileSection({
               <h4 className="text-xs font-semibold text-foreground/70">
                 Email
               </h4>
-              <p className="mt-1 font-medium text-primary/90">
+              <p className="mt-1 font-medium text-foreground">
                 {session.email}
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function ProfileSection({
               <h4 className="text-xs font-semibold text-foreground/70">
                 School
               </h4>
-              <p className="mt-1 font-medium text-primary/90">
+              <p className="mt-1 font-medium text-foreground">
                 {session.schoolName ? session.schoolName : "N/A"}
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function ProfileSection({
               <h4 className="text-xs font-semibold text-foreground/70">
                 Joined
               </h4>
-              <p className="mt-1 font-medium text-primary/90">
+              <p className="mt-1 font-medium text-foreground">
                 {format(session.createdAt ?? "", "MMMM dd, yyyy")}
               </p>
             </div>
