@@ -29,6 +29,7 @@ import AttachmentLinkCard from "@/components/AttachmentLinkCard";
 import AttachmentFileCard from "@/components/AttachmentFileCard";
 import { TextareaAutosize } from "@/components/ui/textarea-autosize";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function StreamDetailsUserWork({
   stream,
@@ -68,10 +69,12 @@ export default function StreamDetailsUserWork({
   );
   const [expandPrivateComments, setExpandPrivateComments] = useState(false);
   const [streamComment, setStreamComment] = useState("");
-  const [attachmentImagesNames, setAttachmentImagesNames] = useState<string[]>(
-    [],
+  const [attachmentImageName, setAttachmentImageName] = useState<string | null>(
+    null,
   );
-  const [attachmentImages, setAttachmentImages] = useState<File[]>([]);
+  const [attachmentImage, setAttachmentImage] = useState<File | null>(null);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const zoomedImageWrapperRef = useRef(null);
 
   async function handleSubmitClasswork(event: React.FormEvent) {
     event.preventDefault();
@@ -170,53 +173,57 @@ export default function StreamDetailsUserWork({
   function handleCommentSubmit(event: React.FormEvent) {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
-    attachmentImages.forEach((attachment) =>
-      formData.append("attachments", attachment),
-    );
+    if (attachmentImage) {
+      formData.append("attachment", attachmentImage);
+    }
     addComment(formData);
     setStreamComment("");
-    setAttachmentImages([]);
-    setAttachmentImagesNames([]);
+    setAttachmentImage(null);
+    setAttachmentImageName(null);
   }
 
-  function handleSetAttachmentImages(
+  function handleSetAttachmentImage(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
       const maxSize = 5 * 1024 * 1024;
-      const validFiles = files.filter((file) => file.size <= maxSize);
-      const invalidFiles = files.filter((file) => file.size > maxSize);
+      const validFile = file.size <= maxSize ? file : null;
+      const invalidFile = file.size > maxSize ? file : null;
 
-      if (invalidFiles.length > 0) {
+      if (invalidFile) {
         toast.error("Each attachment must be 5MB or less.");
       }
 
-      setAttachmentImages((prevFiles) => [...prevFiles, ...validFiles]);
+      setAttachmentImage(() => validFile);
     }
   }
 
   function handleAttachmentImageNameChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
-    const files = event.target.files;
-    if (files) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
       const maxSize = 5 * 1024 * 1024;
-      const validFiles = Array.from(files).filter(
-        (file) => file.size <= maxSize,
-      );
-      const newFileNames = validFiles.map((file) => URL.createObjectURL(file));
-      setAttachmentImagesNames(newFileNames);
+      const validFile = file.size <= maxSize ? file : null;
+      if (validFile) {
+        const newFileName = URL.createObjectURL(validFile);
+        setAttachmentImageName(newFileName);
+      }
     }
   }
 
-  function handleRemoveAttachmentImage(index: number) {
-    setAttachmentImages((prevFiles) =>
-      prevFiles.filter((_, i: number) => i !== index),
-    );
-    setAttachmentImagesNames((prevFiles) =>
-      prevFiles.filter((_, i: number) => i !== index),
-    );
+  function handleRemoveAttachmentImage() {
+    setAttachmentImage(() => null);
+    setAttachmentImageName(() => null);
+  }
+
+  function openZoomedImage(imageUrl: string) {
+    setZoomedImage(imageUrl);
+  }
+
+  function closeZoomedImage() {
+    setZoomedImage(null);
   }
 
   function handleSetNewAttachment(event: React.ChangeEvent<HTMLInputElement>) {
@@ -570,7 +577,7 @@ export default function StreamDetailsUserWork({
                 hidden
               />
               <TextareaAutosize
-                required={!attachmentImages.length}
+                required={!attachmentImage}
                 disabled={addCommentIsPending}
                 name="comment"
                 className="resize-none"
@@ -580,27 +587,31 @@ export default function StreamDetailsUserWork({
                 onChange={(event) => setStreamComment(event.target.value)}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
               />
-              <label
-                className={`px-4 py-2 ${
-                  addCommentIsPending
-                    ? "disabled:cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
+              {!attachmentImage && !addCommentIsPending && (
+                <label
+                  className={`px-4 py-2 ${
+                    addCommentIsPending
+                      ? "disabled:cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                    disabled={addCommentIsPending}
+                    onChange={(event) => {
+                      handleAttachmentImageNameChange(event);
+                      handleSetAttachmentImage(event);
+                    }}
+                  />
+                  <ImagePlus className="size-5 stroke-foreground/90" />
+                </label>
+              )}
+              <button
+                className={`py-2 ${(attachmentImage || addCommentIsPending) && "pl-2"}`}
+                disabled={addCommentIsPending}
               >
-                <input
-                  type="file"
-                  className="hidden"
-                  multiple
-                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                  disabled={addCommentIsPending}
-                  onChange={(event) => {
-                    handleAttachmentImageNameChange(event);
-                    handleSetAttachmentImages(event);
-                  }}
-                />
-                <ImagePlus className="size-5" />
-              </label>
-              <button className="py-2 pr-4" disabled={addCommentIsPending}>
                 {addCommentIsPending ? (
                   <div className="spinner__mini dark"></div>
                 ) : (
@@ -608,20 +619,38 @@ export default function StreamDetailsUserWork({
                 )}
               </button>
             </form>
-            {attachmentImagesNames.length ? (
-              <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
-                {attachmentImagesNames.map((file, index) => (
-                  <AttachmentFileCard
-                    file={file}
-                    index={index}
-                    type="newFile"
-                    location="form"
-                    isLoading={addCommentIsPending}
-                    onRemoveAttachment={handleRemoveAttachmentImage}
-                    key={file}
-                  />
-                ))}
-              </ul>
+            {attachmentImageName ? (
+              <div className="relative">
+                <Image
+                  src={attachmentImageName}
+                  alt={`${attachmentImageName} comment attachment`}
+                  width={150}
+                  height={150}
+                  className="mt-2 cursor-pointer rounded-xl"
+                  onClick={() => openZoomedImage(attachmentImageName)}
+                  onDragStart={(e) => e.preventDefault()}
+                />
+                <button
+                  type="button"
+                  className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+                  onClick={() => handleRemoveAttachmentImage()}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-5 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
             ) : null}
           </div>
         </div>
@@ -768,7 +797,7 @@ export default function StreamDetailsUserWork({
                 hidden
               />
               <TextareaAutosize
-                required={!attachmentImages.length}
+                required={!attachmentImage}
                 disabled={addCommentIsPending}
                 name="comment"
                 className="resize-none"
@@ -778,27 +807,31 @@ export default function StreamDetailsUserWork({
                 onChange={(event) => setStreamComment(event.target.value)}
                 placeholder={`${addCommentIsPending ? "Adding your comment..." : "Add private comment"}`}
               />
-              <label
-                className={`px-4 py-2 ${
-                  addCommentIsPending
-                    ? "disabled:cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
+              {!attachmentImage && !addCommentIsPending && (
+                <label
+                  className={`px-4 py-2 ${
+                    addCommentIsPending
+                      ? "disabled:cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                    disabled={addCommentIsPending}
+                    onChange={(event) => {
+                      handleAttachmentImageNameChange(event);
+                      handleSetAttachmentImage(event);
+                    }}
+                  />
+                  <ImagePlus className="size-5 stroke-foreground/90" />
+                </label>
+              )}
+              <button
+                className={`py-2 ${(attachmentImage || addCommentIsPending) && "pl-2"}`}
+                disabled={addCommentIsPending}
               >
-                <input
-                  type="file"
-                  className="hidden"
-                  multiple
-                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                  disabled={addCommentIsPending}
-                  onChange={(event) => {
-                    handleAttachmentImageNameChange(event);
-                    handleSetAttachmentImages(event);
-                  }}
-                />
-                <ImagePlus className="size-5" />
-              </label>
-              <button className="py-2 pr-4" disabled={addCommentIsPending}>
                 {addCommentIsPending ? (
                   <div className="spinner__mini dark"></div>
                 ) : (
@@ -806,20 +839,38 @@ export default function StreamDetailsUserWork({
                 )}
               </button>
             </form>
-            {attachmentImagesNames.length ? (
-              <ul className="my-2 grid max-h-40 gap-1 overflow-y-auto">
-                {attachmentImagesNames.map((file, index) => (
-                  <AttachmentFileCard
-                    file={file}
-                    index={index}
-                    type="newFile"
-                    location="form"
-                    isLoading={addCommentIsPending}
-                    onRemoveAttachment={handleRemoveAttachmentImage}
-                    key={file}
-                  />
-                ))}
-              </ul>
+            {attachmentImageName ? (
+              <div className="relative">
+                <Image
+                  src={attachmentImageName}
+                  alt={`${attachmentImageName} comment attachment`}
+                  width={150}
+                  height={150}
+                  className="mt-2 cursor-pointer rounded-xl"
+                  onClick={() => openZoomedImage(attachmentImageName)}
+                  onDragStart={(e) => e.preventDefault()}
+                />
+                <button
+                  type="button"
+                  className="absolute left-1 top-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+                  onClick={() => handleRemoveAttachmentImage()}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-5 stroke-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
             ) : null}
           </div>
           {privateCommentsIsPending && (
@@ -916,6 +967,43 @@ export default function StreamDetailsUserWork({
           </button>
         </div>
       </div>
+      {zoomedImage && (
+        <div className="modal__container">
+          <button
+            type="button"
+            className="absolute right-2 top-2"
+            onClick={closeZoomedImage}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6 stroke-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div
+            className="flex max-h-full max-w-full items-center justify-center"
+            ref={zoomedImageWrapperRef}
+          >
+            <Image
+              src={zoomedImage}
+              alt={zoomedImage}
+              width={500}
+              height={500}
+              className="max-h-[90vh] max-w-[90vw] select-none object-contain"
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </div>
+        </div>
+      )}
       {showAddLinkModal && (
         <motion.div
           className="modal__container"

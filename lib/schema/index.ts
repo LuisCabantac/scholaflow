@@ -293,7 +293,7 @@ export const streamCommentSchema = z.object({
   userName: z.string(),
   userImage: z.string(),
   content: z.nullable(z.string()),
-  attachments: z.array(z.string()),
+  attachment: z.nullable(z.string()),
   createdAt: z.date(),
   updatedAt: z.nullable(z.date()),
 });
@@ -318,7 +318,7 @@ export const streamPrivateCommentSchema = z.object({
   userName: z.string(),
   userImage: z.string(),
   content: z.nullable(z.string()),
-  attachments: z.array(z.string()),
+  attachment: z.nullable(z.string()),
   createdAt: z.date(),
   updatedAt: z.nullable(z.date()),
   toUserId: z.string(),
@@ -332,7 +332,6 @@ export const createStreamPrivateCommentSchema = streamPrivateCommentSchema.omit(
 
 export const editStreamPrivateCommentSchema = streamPrivateCommentSchema.omit({
   id: true,
-
   createdAt: true,
 });
 

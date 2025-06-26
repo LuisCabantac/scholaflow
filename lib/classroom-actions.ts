@@ -7,9 +7,11 @@ import { revalidatePath } from "next/cache";
 import { format, parseISO, subHours } from "date-fns";
 
 import { db } from "@/drizzle";
-import { and, eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { and, eq } from "drizzle-orm";
 import { supabase } from "@/lib/supabase";
+import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
+import { deleteFileFromBucket } from "@/lib/user-management-actions";
 import {
   chat,
   classroom,
@@ -33,7 +35,6 @@ import {
   editStreamSchema,
   Stream,
 } from "@/lib/schema";
-import { getUserByEmail, getUserByUserId } from "@/lib/user-service";
 import {
   arraysAreEqual,
   capitalizeFirstLetter,
@@ -468,7 +469,9 @@ export async function deleteAllCommentsByUserId(userId: string) {
 
   if (!comments || !comments.length) return;
 
-  const attachments = comments.map((comment) => comment.attachments).flat();
+  const attachments = comments
+    .map((comment) => comment.attachment)
+    .filter((attachment) => attachment !== null);
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -503,7 +506,9 @@ export async function deleteAllPrivateCommentsByUserId(userId: string) {
 
   if (!comments || !comments.length) return;
 
-  const attachments = comments.map((comment) => comment.attachments).flat();
+  const attachments = comments
+    .map((comment) => comment.attachment)
+    .filter((attachment) => attachment !== null);
 
   if (attachments.length) {
     const chatAttachmentsFilePath: string[] = attachments.map((file) =>
@@ -1071,7 +1076,9 @@ export async function deleteAllClassStreamCommentsByStreamId(streamId: string) {
     }
   }
 
-  const attachments = comments.map((comment) => comment.attachments).flat();
+  const attachments = comments
+    .map((comment) => comment.attachment)
+    .filter((attachment) => attachment !== null);
   if (attachments.length) {
     const filePath = attachments.map((file) => extractCommentFilePath(file));
     await deleteFilesFromBucket("comments", filePath);
@@ -1095,8 +1102,9 @@ export async function deleteAllPrivateStreamCommentsByStreamId(
   }
 
   const attachments = privateComments
-    .map((comment) => comment.attachments)
-    .flat();
+    .map((comment) => comment.attachment)
+    .filter((attachment) => attachment !== null);
+
   if (attachments.length) {
     const filePath = attachments.map((file) => extractCommentFilePath(file));
     await deleteFilesFromBucket("comments", filePath);
@@ -1152,11 +1160,10 @@ export async function deleteStreamComment(
   )
     throw new Error("You're not authorized to delete this comment.");
 
-  if (comment.attachments?.length) {
-    const filePath = comment.attachments.map((file) =>
-      extractCommentFilePath(file),
-    );
-    await deleteFilesFromBucket("comments", filePath);
+  if (comment.attachment) {
+    const filePath = extractCommentFilePath(comment.attachment);
+
+    await deleteFileFromBucket("comments", filePath);
   }
 
   const [data] = await db
@@ -1200,22 +1207,15 @@ export async function addCommentToStream(formData: FormData) {
     throw new Error("You don't have permission to comment on this post.");
   }
 
-  const attachments = formData.getAll("attachments");
-  const commentAttachments = Array.isArray(attachments)
-    ? await Promise.all(
-        attachments.map(async (attachment) => {
-          if (attachment instanceof File && attachment.name !== "undefined") {
-            return await uploadAttachments(
-              "comments",
-              formData.get("classroomId") as string,
-              attachment,
-            );
-          } else {
-            return null;
-          }
-        }),
-      ).then((results) => results.filter((url) => url !== null))
-    : [];
+  const attachment = formData.get("attachment");
+  const commentAttachment =
+    attachment instanceof File && attachment.name !== "undefined"
+      ? await uploadAttachments(
+          "comments",
+          formData.get("classroomId") as string,
+          attachment,
+        )
+      : null;
 
   const newComment = {
     streamId: formData.get("streamId"),
@@ -1224,7 +1224,7 @@ export async function addCommentToStream(formData: FormData) {
     userName: session.user.name,
     userImage: session.user.image,
     content: formData.get("comment"),
-    attachments: commentAttachments,
+    attachment: commentAttachment,
   };
 
   const result = createStreamCommentSchema.safeParse(newComment);
@@ -1242,7 +1242,7 @@ export async function addCommentToStream(formData: FormData) {
       "comment",
       classroom.teacherId,
       data.id,
-      data.content ?? (data.attachments.length ? "Commented an image" : ""),
+      data.content ?? (data.attachment ? "Commented an image" : ""),
       `/classroom/class/${data.classId}/stream/${data.streamId}?comment=${data.id}`,
     );
   }
@@ -1292,22 +1292,15 @@ export async function addPrivateComment(formData: FormData) {
     throw new Error("You don't have permission to comment on this classwork.");
   }
 
-  const attachments = formData.getAll("attachments");
-  const commentAttachments = Array.isArray(attachments)
-    ? await Promise.all(
-        attachments.map(async (attachment) => {
-          if (attachment instanceof File && attachment.name !== "undefined") {
-            return await uploadAttachments(
-              "comments",
-              formData.get("classroomId") as string,
-              attachment,
-            );
-          } else {
-            return null;
-          }
-        }),
-      ).then((results) => results.filter((url) => url !== null))
-    : [];
+  const attachment = formData.get("attachment");
+  const commentAttachment =
+    attachment instanceof File && attachment.name !== "undefined"
+      ? await uploadAttachments(
+          "comments",
+          formData.get("classroomId") as string,
+          attachment,
+        )
+      : null;
 
   const newPrivateComment = {
     streamId: formData.get("streamId") as string,
@@ -1316,7 +1309,7 @@ export async function addPrivateComment(formData: FormData) {
     userName: session.user.name,
     userImage: session.user.image,
     content: formData.get("comment") as string,
-    attachments: commentAttachments,
+    attachment: commentAttachment,
     toUserId:
       session.user.id === classroom.teacherId ? userId : classroom.teacherId,
   };
@@ -1345,7 +1338,7 @@ export async function addPrivateComment(formData: FormData) {
       "comment",
       classroom.teacherId,
       data.id,
-      data.content ?? (data.attachments.length ? "Commented an image" : ""),
+      data.content ?? (data.attachment ? "Commented an image" : ""),
       `/classroom/class/${data.classId}/stream/${data.streamId}/submissions?name=${data.userName.toLowerCase().replace(/\s+/g, "-")}&user=${data.userId}&comment=${data.id}`,
     );
   }
@@ -1382,11 +1375,9 @@ export async function deletePrivateComment(
   )
     throw new Error("You're not authorized to delete this comment.");
 
-  if (comment.attachments?.length) {
-    const filePath = comment.attachments.map((file) =>
-      extractCommentFilePath(file),
-    );
-    await deleteFilesFromBucket("comments", filePath);
+  if (comment.attachment) {
+    const filePath = extractCommentFilePath(comment.attachment);
+    await deleteFileFromBucket("comments", filePath);
   }
 
   const [data] = await db

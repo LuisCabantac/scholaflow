@@ -309,7 +309,7 @@ export const streamComment = pgTable("stream_comment", {
   userName: text("user_name").notNull(),
   userImage: text("user_image").notNull(),
   content: text("content"),
-  attachments: text("attachments").array().notNull().default([]),
+  attachment: text("attachment"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .$defaultFn(() => new Date())
     .notNull(),
@@ -330,7 +330,7 @@ export const streamPrivateComment = pgTable("stream_private_comment", {
   userName: text("user_name").notNull(),
   userImage: text("user_image").notNull(),
   content: text("content"),
-  attachments: text("attachments").array().notNull().default([]),
+  attachment: text("attachment"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .$defaultFn(() => new Date())
     .notNull(),

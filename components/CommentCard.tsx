@@ -116,23 +116,22 @@ export default function CommentCard({
               </p>
             </ReactLinkify>
           )}
-          {comment.attachments.length ? (
+          {comment.attachment ? (
             <ul className="mt-1 grid gap-1">
-              {comment.attachments.map((image) => (
-                <li
-                  key={image}
-                  onClick={() => openZoomedImage(image)}
-                  className="cursor-pointer"
-                >
-                  <Image
-                    src={image}
-                    alt={image}
-                    width={250}
-                    height={250}
-                    className="w-[10rem] rounded-md object-cover md:w-[15rem]"
-                  />
-                </li>
-              ))}
+              <li
+                onClick={() =>
+                  comment.attachment && openZoomedImage(comment.attachment)
+                }
+                className="cursor-pointer"
+              >
+                <Image
+                  src={comment.attachment}
+                  alt={comment.attachment}
+                  width={250}
+                  height={250}
+                  className="w-[10rem] rounded-md object-cover md:w-[15rem]"
+                />
+              </li>
             </ul>
           ) : null}
         </div>
