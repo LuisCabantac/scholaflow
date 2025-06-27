@@ -10,7 +10,11 @@ import { extractAvatarFilePath } from "@/lib/utils";
 import { getAllNotesBySession } from "@/lib/notes-service";
 import { nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
-import { getAccountByUserId, getUserByEmail } from "@/lib/user-service";
+import {
+  getAccountByUserId,
+  getUserByEmail,
+  getUserIdById,
+} from "@/lib/user-service";
 import { account, session, user, verification } from "@/drizzle/schema";
 import {
   generateVerificationToken,
@@ -294,7 +298,7 @@ export async function verifyEmailVerification(token: string): Promise<{
     };
   }
 
-  const existingUser = await getUserByEmail(tokenData.identifier);
+  const existingUser = await getUserIdById(tokenData.identifier);
 
   if (!existingUser)
     return {

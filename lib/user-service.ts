@@ -42,6 +42,17 @@ export async function getUserByEmail(email: string): Promise<User | null> {
   return data || null;
 }
 
+export async function getUserIdById(
+  email: string,
+): Promise<{ id: string } | null> {
+  const [data] = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.email, email));
+
+  return data || null;
+}
+
 export async function getAccountByUserId(
   userId: string,
 ): Promise<Account | null> {
