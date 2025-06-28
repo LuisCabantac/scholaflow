@@ -31,12 +31,6 @@ export async function getUserByUserId(userId: string): Promise<User | null> {
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) return null;
-
   const [data] = await db.select().from(user).where(eq(user.email, email));
 
   return data || null;
