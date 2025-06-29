@@ -25,7 +25,7 @@ export default async function Page() {
 
   async function generateVerificationTokenClient(email: string) {
     "use server";
-    const verification = await generateVerificationToken(email);
+    const verification = await generateVerificationToken(email, "sign-up");
     return verification;
   }
 

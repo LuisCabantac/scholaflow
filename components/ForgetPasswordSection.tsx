@@ -32,6 +32,7 @@ async function sendEmail(email: string) {
 
   const { success, message, data, userName } = await checkVerificationToken(
     email,
+    "forgot-password",
     "nanoid",
   );
 

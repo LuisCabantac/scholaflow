@@ -8,14 +8,14 @@ import { auth } from "@/lib/auth";
 import { deleteNote } from "@/lib/notes-actions";
 import { extractAvatarFilePath } from "@/lib/utils";
 import { getAllNotesBySession } from "@/lib/notes-service";
-import { nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import { getAllClassesStreamByUserId } from "@/lib/stream-service";
+import { account, session, user, verification } from "@/drizzle/schema";
+import { EmailType, nanoidId, uuidv4Id, Verification } from "@/lib/schema";
 import {
   getAccountByUserId,
   getUserByEmail,
   getUserIdById,
 } from "@/lib/user-service";
-import { account, session, user, verification } from "@/drizzle/schema";
 import {
   generateVerificationToken,
   getVerificationToken,
@@ -177,12 +177,14 @@ export async function deleteVerificationToken(email: string): Promise<void> {
 export async function createVerificationToken(
   email: string,
   token: string,
+  emailType: EmailType,
   expiresAt: Date,
 ): Promise<Verification | null> {
   const [data] = await db
     .insert(verification)
     .values({
       id: uuidv4(),
+      type: emailType,
       identifier: email,
       value: token,
       expiresAt,
@@ -198,6 +200,7 @@ export async function createVerificationToken(
 
 export async function checkVerificationToken(
   email: string,
+  emailType: EmailType,
   tokenType: "uuid" | "nanoid",
 ): Promise<{
   success: boolean;
@@ -251,7 +254,11 @@ export async function checkVerificationToken(
     }
   }
 
-  const verification = await generateVerificationToken(email, tokenType);
+  const verification = await generateVerificationToken(
+    email,
+    emailType,
+    tokenType,
+  );
 
   if (!verification) {
     return {

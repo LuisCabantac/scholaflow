@@ -20,6 +20,7 @@ async function sendEmail(templateParams: {
 }) {
   const { success, message, data } = await checkVerificationToken(
     templateParams.to_email,
+    "close-account",
     "uuid",
   );
 

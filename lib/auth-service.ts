@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/drizzle/index";
-import { Verification } from "@/lib/schema";
+import { EmailType, Verification } from "@/lib/schema";
 import { verification } from "@/drizzle/schema";
 import {
   createVerificationToken,
@@ -34,6 +34,7 @@ export async function getVerificationTokenByToken(
 
 export async function generateVerificationToken(
   email: string,
+  emailType: EmailType,
   type: "uuid" | "nanoid" = "uuid",
 ): Promise<Verification | null> {
   if (!type) return null;
@@ -50,6 +51,7 @@ export async function generateVerificationToken(
   const verificationToken = await createVerificationToken(
     email,
     token,
+    emailType,
     expiresAt,
   );
 
