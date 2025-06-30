@@ -416,11 +416,3 @@ export const resetPasswordFormSchema = z.object({
     .min(8, { message: "Password must be at least 8 characters long" })
     .max(20, { message: "Password must be no more than 20 characters long" }),
 });
-
-export const emailTypeSchema = z.union([
-  z.literal("sign-up"),
-  z.literal("forgot-password"),
-  z.literal("close-account"),
-]);
-
-export type EmailType = z.infer<typeof emailTypeSchema>;

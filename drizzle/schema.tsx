@@ -33,12 +33,6 @@ export const notificationTypeEnum = pgEnum("type", [
 
 export const roleRequestStatusEnum = pgEnum("status", ["pending", "rejected"]);
 
-export const emailTypeEnum = pgEnum("type", [
-  "sign-up",
-  "forgot-password",
-  "close-account",
-]);
-
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -90,7 +84,6 @@ export const account = pgTable("account", {
 
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
-  type: emailTypeEnum("type").notNull(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
