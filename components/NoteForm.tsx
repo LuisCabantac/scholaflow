@@ -318,11 +318,13 @@ export default function NoteForm({
               </div>
               <input type="text" name="noteId" hidden defaultValue={note?.id} />
               <div>
-                <p className="text-xs text-foreground">
-                  {note && note?.updatedAt
-                    ? `Updated ${formatDate(note.updatedAt)}`
-                    : `Created ${formatDate(note?.createdAt ?? "")}`}
-                </p>
+                {(note?.updatedAt || note?.updatedAt) && (
+                  <p className="text-xs text-foreground">
+                    {note.updatedAt
+                      ? `Updated ${formatDate(note.updatedAt)}`
+                      : `Created ${formatDate(note?.createdAt ?? "")}`}
+                  </p>
+                )}
                 <input
                   type="text"
                   name="title"
