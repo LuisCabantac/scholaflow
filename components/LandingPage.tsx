@@ -77,26 +77,26 @@ export default function LandingPage() {
           transition={{ duration: 0.5, delay: 0.8 }}
         >
           <div className="w-[90%] md:w-full">
-          <Image
-            src={heroLightImage}
-            width={1400}
-            height={900}
-            placeholder="blur"
+            <Image
+              src={heroLightImage}
+              width={1400}
+              height={900}
+              placeholder="blur"
               priority
               className="block w-full select-none rounded-2xl object-cover dark:hidden md:shadow-2xl"
               alt="hero image light theme"
-            onDragStart={(e) => e.preventDefault()}
-          />
-          <Image
-            src={heroDarkImage}
-            width={1400}
-            height={900}
-            placeholder="blur"
+              onDragStart={(e) => e.preventDefault()}
+            />
+            <Image
+              src={heroDarkImage}
+              width={1400}
+              height={900}
+              placeholder="blur"
               priority
               className="hidden w-full select-none rounded-2xl object-cover dark:block md:shadow-2xl"
               alt="hero image dark theme"
-            onDragStart={(e) => e.preventDefault()}
-          />
+              onDragStart={(e) => e.preventDefault()}
+            />
           </div>
         </motion.div>
       </section>
@@ -121,7 +121,7 @@ export default function LandingPage() {
             one place.
           </motion.p>
         </div>
-        <div className="grid items-start gap-12 rounded-2xl border p-6 md:mx-14 md:grid-cols-3 md:p-12">
+        <div className="grid items-start gap-12 rounded-2xl border bg-card p-6 md:mx-14 md:grid-cols-3 md:p-12">
           <motion.div
             className="w-full"
             initial={{ opacity: 0, y: 20 }}
@@ -255,7 +255,7 @@ export default function LandingPage() {
                     </p>
                   </div>
                 </div>
-                <div className="relative rounded-3xl border border-border/50 p-3 lg:col-span-3">
+                <div className="relative rounded-3xl border border-border/50 bg-card p-3 lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t">
@@ -360,7 +360,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function LandingPage() {
           >
             <div className="mx-auto max-w-6xl px-6">
               <div className="grid items-center gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-5 lg:gap-24">
-                <div className="relative hidden rounded-3xl border border-border/50 p-3 md:block lg:col-span-3">
+                <div className="relative hidden rounded-3xl border border-border/50 bg-card p-3 md:block lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t pr-3">
@@ -511,7 +511,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
                 <div className="lg:col-span-2">
@@ -530,7 +530,7 @@ export default function LandingPage() {
                     </p>
                   </div>
                 </div>
-                <div className="relative rounded-3xl border border-border/50 p-3 md:hidden lg:col-span-3">
+                <div className="relative rounded-3xl border border-border/50 bg-card p-3 md:hidden lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t pr-3">
@@ -667,7 +667,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -696,7 +696,7 @@ export default function LandingPage() {
                     </p>
                   </div>
                 </div>
-                <div className="relative rounded-3xl border border-border/50 p-3 lg:col-span-3">
+                <div className="relative rounded-3xl border border-border/50 bg-card p-3 lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t">
@@ -807,7 +807,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
               </div>
@@ -821,7 +821,7 @@ export default function LandingPage() {
           >
             <div className="mx-auto max-w-6xl px-6">
               <div className="grid items-center gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-5 lg:gap-24">
-                <div className="relative hidden rounded-3xl border border-border/50 p-3 md:block lg:col-span-3">
+                <div className="relative hidden rounded-3xl border border-border/50 bg-card p-3 md:block lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t px-3 py-3">
@@ -955,7 +955,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
                 <div className="lg:col-span-2">
@@ -977,7 +977,7 @@ export default function LandingPage() {
                     </p>
                   </div>
                 </div>
-                <div className="relative rounded-3xl border border-border/50 p-3 md:hidden lg:col-span-3">
+                <div className="relative rounded-3xl border border-border/50 bg-card p-3 md:hidden lg:col-span-3">
                   <div className="relative overflow-hidden">
                     <div className="h-[20rem]">
                       <div className="h-full overflow-hidden text-pretty rounded-t-2xl border-x border-t px-3 py-3">
@@ -1111,7 +1111,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/90 to-transparent"></div>
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card/90 to-transparent"></div>
                   </div>
                 </div>
               </div>
