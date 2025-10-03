@@ -14,6 +14,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { joinClass } from "@/lib/classroom-actions";
 import { useClickOutside } from "@/contexts/ClickOutsideContext";
 import {
@@ -37,6 +38,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export default function ClassroomSection({
   session,
@@ -65,7 +72,9 @@ export default function ClassroomSection({
   const { useClickOutsideHandler } = useClickOutside();
   const btnWrapperRef = useRef<HTMLDivElement>(null);
   const filterWrapperRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(false);
+  const [fabIsOpen, setFabIsOpen] = useState(false);
   const [showClassForm, setShowClassForm] = useState(false);
   const [showJoinClass, setShowJoinClass] = useState(false);
   const [showAddClassPopover, setShowAddClassPopover] = useState(false);
@@ -220,6 +229,10 @@ export default function ClassroomSection({
     setShowAddClassPopover(!showAddClassPopover);
   }
 
+  function handleToggleShowFab() {
+    setFabIsOpen((prev) => !prev);
+  }
+
   function handleToggleShowJoinClass() {
     setShowJoinClass(!showJoinClass);
   }
@@ -310,13 +323,13 @@ export default function ClassroomSection({
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger className="hidden md:flex" asChild>
                 <Button>
                   <PlusIcon className="h-12 w-12" />
                   Add class
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="hidden md:block">
                 <DropdownMenuItem asChild>
                   <button
                     onClick={handleToggleShowJoinClass}
@@ -658,6 +671,47 @@ export default function ClassroomSection({
           setShowJoinClass={setShowJoinClass}
         />
       )}
+      <Sheet open={fabIsOpen && isMobile} onOpenChange={handleToggleShowFab}>
+        <SheetContent side="bottom" className="md:hidden">
+          <SheetHeader>
+            <SheetTitle>Add a new class</SheetTitle>
+          </SheetHeader>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                handleToggleShowJoinClass();
+                handleToggleShowFab();
+              }}
+            >
+              Join class
+            </Button>
+            <Button
+              variant="default"
+              onClick={() => {
+                handleToggleShowClassForm();
+                handleToggleShowFab();
+              }}
+            >
+              Create class
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+      <div className="fixed bottom-8 right-6 z-50 block md:hidden">
+        <Button
+          onClick={handleToggleShowFab}
+          className="flex items-center justify-center p-6"
+          size="icon"
+        >
+          <PlusIcon
+            className={`transform transition-transform duration-300 ease-in-out ${
+              fabIsOpen ? "rotate-45" : "rotate-0"
+            }`}
+            style={{ scale: 1.5 }}
+          />
+        </Button>
+      </div>
     </section>
   );
 }
