@@ -292,6 +292,7 @@ export default function ClassChatSection({
                           alt={`${message.userName}'s avatar`}
                           width={32}
                           height={32}
+                          onDragStart={(e) => e.preventDefault()}
                           className="mb-1 h-8 w-8 flex-shrink-0 rounded-full object-contain"
                         />
                       ) : message.userId !== session.id && !showAvatar ? (
@@ -341,9 +342,7 @@ export default function ClassChatSection({
                                       width={250}
                                       height={250}
                                       className="w-[10rem] rounded-xl object-cover md:w-[15rem]"
-                                      onDragStart={(event) =>
-                                        event.preventDefault()
-                                      }
+                                      onDragStart={(e) => e.preventDefault()}
                                     />
                                   </div>
                                 );
