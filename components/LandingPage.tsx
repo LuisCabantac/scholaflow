@@ -76,13 +76,15 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
+          <div className="w-[90%] md:w-full">
           <Image
             src={heroLightImage}
             width={1400}
             height={900}
             placeholder="blur"
-            className="block w-[90%] select-none rounded-2xl object-cover dark:hidden md:w-full md:shadow-2xl"
-            alt="hero image"
+              priority
+              className="block w-full select-none rounded-2xl object-cover dark:hidden md:shadow-2xl"
+              alt="hero image light theme"
             onDragStart={(e) => e.preventDefault()}
           />
           <Image
@@ -90,10 +92,12 @@ export default function LandingPage() {
             width={1400}
             height={900}
             placeholder="blur"
-            className="hidden w-[90%] select-none rounded-2xl object-cover dark:block md:w-full md:shadow-2xl"
-            alt="hero image"
+              priority
+              className="hidden w-full select-none rounded-2xl object-cover dark:block md:shadow-2xl"
+              alt="hero image dark theme"
             onDragStart={(e) => e.preventDefault()}
           />
+          </div>
         </motion.div>
       </section>
       <section className="mx-6 mb-4 mt-20 grid items-center justify-center gap-16 md:mx-10 md:mb-12 md:mt-24 md:gap-14 lg:mx-20">
