@@ -335,7 +335,7 @@ export default function NoteForm({
                         !currentAttachments.length ||
                         !attachmentImages.length
                   }
-                  className="w-[90%] border-none bg-transparent text-4xl font-semibold focus:outline-none"
+                  className="w-[90%] border-none bg-transparent text-3xl font-semibold focus:outline-none"
                   placeholder="Note title..."
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}

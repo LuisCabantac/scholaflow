@@ -6,9 +6,9 @@ export const editorTheme: EditorThemeClasses = {
   ltr: "text-left",
   rtl: "text-right",
   heading: {
-    h1: "scroll-m-20 text-4xl font-extrabold tracking-tight text-foreground",
-    h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-foreground",
-    h3: "scroll-m-20 text-2xl font-semibold tracking-tight text-foreground",
+    h1: "scroll-m-20 text-3xl font-extrabold tracking-tight text-foreground",
+    h2: "scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 text-foreground",
+    h3: "scroll-m-20 text-xl font-semibold tracking-tight text-foreground",
     h4: "scroll-m-20 text-xl font-semibold tracking-tight text-foreground",
     h5: "scroll-m-20 text-lg font-semibold tracking-tight text-foreground",
     h6: "scroll-m-20 text-base font-semibold tracking-tight text-foreground",
