@@ -61,6 +61,7 @@ export default function ClassroomCard({
       <Link
         href={`/classroom/class/${"classId" in classData ? classData.classId : classData.id}`}
         className="relative h-[9rem] md:h-[10rem]"
+        onDragStart={(e) => e.preventDefault()}
       >
         <div className="absolute left-3 top-3 w-[88%] text-balance drop-shadow-sm md:left-4 md:top-4">
           <h5 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-[#F5F5F5]">
