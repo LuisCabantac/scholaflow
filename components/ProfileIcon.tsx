@@ -69,18 +69,18 @@ export default function ProfileIcon({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="text-foreground/80">
-          <DropdownMenuItem className="mt-1 text-xs font-medium">
+          <DropdownMenuItem className="mt-1 text-xs font-medium" asChild>
             <Link
               href="/profile"
-              className="flex h-4 w-full items-center gap-2"
+              className="flex h-full w-full flex-1 cursor-pointer items-center gap-2"
             >
               <User className="h-4 w-4" />
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="mt-1 text-xs font-medium">
+          <DropdownMenuItem className="mt-1 text-xs font-medium" asChild>
             <button
-              className="flex h-4 w-full items-center gap-2"
+              className="flex h-full w-full cursor-pointer items-center gap-2"
               onClick={() =>
                 theme === "dark" ? setTheme("light") : setTheme("dark")
               }
