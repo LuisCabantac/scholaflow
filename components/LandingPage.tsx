@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useRef } from "react";
 import { motion } from "motion/react";
+import { ChevronUp } from "lucide-react";
 
 import heroLightImage from "@/public/landing_page/hero-light.png";
 import heroDarkImage from "@/public/landing_page/hero-dark.png";
@@ -18,8 +19,10 @@ import notesImage1 from "@/public/landing_page/notes-1-image.svg";
 
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { useNav } from "@/contexts/NavContext";
 
 export default function LandingPage() {
+  const { isSticky } = useNav();
   const featuresSectionRef = useRef<HTMLDivElement | null>(null);
 
   function scrollToSection(ref: React.RefObject<HTMLElement | null>) {
@@ -1143,6 +1146,23 @@ export default function LandingPage() {
         </div>
       </motion.section>
       <Footer />
+      <div className="fixed bottom-8 right-8 z-50 hidden md:block">
+        <div
+          className={`transition-all duration-300`}
+          style={{
+            opacity: isSticky ? 1 : 0,
+            transform: isSticky ? "translateY(0)" : "translateY(20px)",
+            pointerEvents: isSticky ? "auto" : "none",
+          }}
+        >
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex h-10 w-10 items-center justify-center rounded-full border bg-card shadow-md transition-colors hover:bg-muted"
+          >
+            <ChevronUp className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
