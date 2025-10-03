@@ -57,6 +57,8 @@ export default function NotificationsSection({
           </TabsList>
         </Tabs>
         <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent hover:text-foreground/90"
           disabled={
             !!notifications?.filter((notification) => notification.isRead)
               .length
