@@ -701,14 +701,14 @@ export default function ClassroomSection({
       <div className="fixed bottom-8 right-6 z-50 block md:hidden">
         <Button
           onClick={handleToggleShowFab}
-          className="flex items-center justify-center p-6"
+          className="flex items-center justify-center p-8"
           size="icon"
         >
           <PlusIcon
             className={`transform transition-transform duration-300 ease-in-out ${
               fabIsOpen ? "rotate-45" : "rotate-0"
             }`}
-            style={{ scale: 1.5 }}
+            style={{ scale: 2 }}
           />
         </Button>
       </div>
