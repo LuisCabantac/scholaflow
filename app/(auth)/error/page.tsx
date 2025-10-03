@@ -9,7 +9,7 @@ export default function Page() {
       <div className="container">
         <div className="flex flex-col items-center gap-2">
           <Link href="/">
-            <Logo size={10} />
+            <Logo />
           </Link>
           <Card className="mx-auto flex flex-col gap-4 border-0 bg-transparent shadow-none md:w-[24rem]">
             <CardHeader className="w-full text-center text-2xl font-medium tracking-tighter">

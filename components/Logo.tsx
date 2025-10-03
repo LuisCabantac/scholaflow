@@ -11,13 +11,7 @@ const quicksand: FontType = Quicksand({
   display: "swap",
 });
 
-export default function Logo({
-  showText = true,
-  size = 7,
-}: {
-  showText?: boolean;
-  size?: number;
-}) {
+export default function Logo({ showText = true }: { showText?: boolean }) {
   return (
     <div className="flex select-none items-center justify-start gap-1">
       <Image
@@ -25,7 +19,7 @@ export default function Logo({
         alt="logo"
         width={200}
         height={200}
-        className={`h-${size} w-${size} flex-shrink-0 select-none object-cover md:h-8 md:w-8`}
+        className="h-7 w-7 flex-shrink-0 select-none object-cover md:h-8 md:w-8"
         onDragStart={(e) => e.preventDefault()}
       />
       {showText && (
