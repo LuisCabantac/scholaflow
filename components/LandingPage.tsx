@@ -124,7 +124,7 @@ export default function LandingPage() {
             one place.
           </motion.p>
         </div>
-        <div className="grid items-start gap-12 rounded-2xl border bg-card p-6 md:mx-14 md:grid-cols-3 md:p-12">
+        <div className="grid items-start gap-12 rounded-2xl border bg-card p-6 md:mx-14 md:max-w-6xl md:grid-cols-3 md:p-12">
           <motion.div
             className="w-full"
             initial={{ opacity: 0, y: 20 }}
