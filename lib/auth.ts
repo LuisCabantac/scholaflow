@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
+import { passkey } from "better-auth/plugins/passkey";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
@@ -52,6 +53,7 @@ export const auth = betterAuth({
         },
       },
     }),
+    passkey(),
     nextCookies(),
   ],
 });
