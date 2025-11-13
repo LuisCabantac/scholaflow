@@ -5,7 +5,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { authClient } from "@/lib/auth-client";
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/form";
 
 export default function SignInForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
@@ -74,6 +76,32 @@ export default function SignInForm() {
         },
       },
     );
+  }
+
+  async function handlePasskeySignIn() {
+    const data = await authClient.signIn.passkey({
+      autoFill: true,
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("Successfully signed in!");
+          router.push("/classroom");
+        },
+        onError: (ctx) => {
+          if (ctx.error.status === 401) {
+            toast.error("Invalid email or password. Please try again.");
+            return;
+          }
+          if (ctx.error.status === 403) {
+            toast.error(
+              "Please verify your email address before signing in. Check your inbox for a verification link.",
+            );
+            return;
+          }
+          toast.error(ctx.error.message);
+        },
+      },
+    });
+    console.log(data);
   }
 
   function handleShowPassword(event: React.MouseEvent<HTMLButtonElement>) {
@@ -185,6 +213,16 @@ export default function SignInForm() {
           </Button>
         </form>
       </Form>
+      <Button
+        type="button"
+        className="w-full"
+        variant="outline"
+        disabled={isLoading}
+        onClick={handlePasskeySignIn}
+      >
+        <KeyRound className="size-5 stroke-foreground" />
+        Sign in with a passkey
+      </Button>
       <SignInGoogleButton isLoading={isLoading} />
     </>
   );
