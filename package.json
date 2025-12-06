@@ -67,7 +67,7 @@
     "@types/node": "^20",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "15.0.4",
     "postcss": "^8",
@@ -79,6 +79,7 @@
   "overrides": {
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
-    "glob-parent": "^6.0.2"
+    "glob-parent": "^6.0.2",
+    "esbuild": "^0.25.0"
   }
 }
