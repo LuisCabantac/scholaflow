@@ -8,7 +8,6 @@ import emailjs from "@emailjs/browser";
 import { useQuery } from "@tanstack/react-query";
 
 import { Session } from "@/lib/schema";
-import { authClient } from "@/lib/auth-client";
 import { checkVerificationToken } from "@/lib/auth-actions";
 
 import { Button } from "@/components/ui/button";
@@ -89,20 +88,6 @@ export default function ProfileSection({
     queryFn: () => onGetUser(session.email),
   });
 
-  async function handleSetPasskey() {
-    await authClient.passkey.addPasskey({
-      authenticatorAttachment: "cross-platform",
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success("Passkey added successfully");
-        },
-        onError: () => {
-          toast.error("Failed to add passkey");
-        },
-      },
-    });
-  }
-
   function handleToggleShowEditProfileForm() {
     setShowEditProfileForm(!showEditProfileForm);
   }
@@ -179,14 +164,6 @@ export default function ProfileSection({
             Delete
           </Button>
         </div>
-        <Button
-          variant="outline"
-          disabled={isLoading}
-          onClick={handleSetPasskey}
-          className="mt-2"
-        >
-          Set up a passkey
-        </Button>
       </div>
 
       {showEditProfileForm && (
