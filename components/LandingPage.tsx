@@ -1134,8 +1134,7 @@ export default function LandingPage() {
               Learning without the hassle
             </h2>
             <p className="mt-4 text-foreground/70">
-              Ditch the bloated, overcomplicated platforms. We&apos;re building
-              something that just works.
+              Ditch the bloated, overcomplicated platforms.
             </p>
             <div className="mt-12 flex flex-wrap justify-center gap-4">
               <Button asChild>
