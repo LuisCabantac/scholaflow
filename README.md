@@ -6,7 +6,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-0.45-C5F74F?logo=drizzle)](https://orm.drizzle.team/)
 [![Supabase](https://img.shields.io/badge/Supabase-Realtime_%26_Storage-3ECF8E?logo=supabase)](https://supabase.com/)
-[![Better Auth](https://img.shields.io/badge/Better_Auth-1.6-purple?style=flat-square)](https://www.better-auth.com/)
+[![Better Auth](https://img.shields.io/badge/Better_Auth-1.6-purple)](https://www.better-auth.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
