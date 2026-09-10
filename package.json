@@ -3,10 +3,10 @@
   "version": "0.1.5",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "node generate-assetlinks.js && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -45,14 +45,14 @@
     "lucide-react": "^0.513.0",
     "motion": "^12.42.0",
     "nanoid": "^5.1.16",
-    "next": "15.4.8",
+    "next": "16.3.4",
     "next-themes": "^0.4.6",
     "pg": "^8.22.0",
     "postgres": "^3.4.9",
-    "react": "19.0.0",
+    "react": "19.3.0",
     "react-colorful": "^5.7.0",
     "react-day-picker": "^9.14.0",
-    "react-dom": "19.0.0",
+    "react-dom": "19.3.0",
     "react-hook-form": "^7.80.0",
     "react-linkify": "^1.0.0-alpha",
     "react-textarea-autosize": "^8.5.9",
@@ -65,11 +65,11 @@
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20.19.43",
-    "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.39.4",
-    "eslint-config-next": "15.0.4",
+    "eslint-config-next": "16.3.4",
     "postcss": "^8.5.15",
     "prettier": "^3.8.5",
     "prettier-plugin-tailwindcss": "^0.6.14",
@@ -77,8 +77,8 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "@types/react": "19.0.1",
-    "@types/react-dom": "19.0.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "glob-parent": "^6.0.2",
     "esbuild": "^0.25.0"
   }

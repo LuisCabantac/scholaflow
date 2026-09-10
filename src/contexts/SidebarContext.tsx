@@ -19,6 +19,7 @@ const SidebarContext = createContext(sidebarDefaultValue);
 function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarExpand, setSidebarExpand] = useState(isMobile);
+  const [prevIsMobile, setPrevIsMobile] = useState(isMobile);
 
   function handleSidebarExpand() {
     setSidebarExpand(!sidebarExpand);
@@ -38,9 +39,10 @@ function SidebarProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  useEffect(() => {
+  if (isMobile !== prevIsMobile) {
+    setPrevIsMobile(isMobile);
     setSidebarExpand(isMobile);
-  }, [isMobile]);
+  }
 
   return (
     <SidebarContext.Provider

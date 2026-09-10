@@ -5,7 +5,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { ImagePlus, SendHorizontal } from "lucide-react";
-import { useEffect, useOptimistic, useRef, useState } from "react";
+import { useOptimistic, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { capitalizeFirstLetter } from "@/lib/utils";
@@ -64,6 +64,7 @@ export default function StreamSubmissionsSection({
   const { useClickOutsideHandler } = useClickOutside();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [streamComment, setStreamComment] = useState("");
+  const [prevUserId, setPrevUserId] = useState(userId);
   const [showGradeModal, setShowGradeModal] = useState(false);
   const [expandUserWork, setExpandUserWork] = useState(false);
   const [expandPrivateComments, setExpandPrivateComments] = useState(false);
@@ -242,9 +243,10 @@ export default function StreamSubmissionsSection({
     setExpandPrivateComments(!expandPrivateComments);
   }
 
-  useEffect(() => {
+  if (userId !== prevUserId) {
+    setPrevUserId(userId);
     setStreamComment("");
-  }, [userId]);
+  }
 
   useClickOutsideHandler(
     wrapperRef,
