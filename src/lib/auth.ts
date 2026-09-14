@@ -1,10 +1,10 @@
 import { betterAuth } from "better-auth";
-import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
-import { db } from "@/drizzle/index";
-import { schema } from "@/drizzle/schema";
+import { db } from "@/db";
+import { schema } from "@/db/schema";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -52,6 +52,6 @@ export const auth = betterAuth({
         },
       },
     }),
-    nextCookies(),
+    tanstackStartCookies(),
   ],
 });

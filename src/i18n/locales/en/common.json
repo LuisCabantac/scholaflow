@@ -1,0 +1,9 @@
+{
+	"cancel": "Cancel",
+	"save": "Save",
+	"footer": {
+		"copyright": "© {{year}} ScholaFlow. All rights reserved.",
+		"terms": "Terms and Conditions",
+		"privacy": "Privacy Policy"
+	}
+}

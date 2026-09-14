@@ -1,0 +1,94 @@
+{
+	"title": "Terms and Conditions",
+	"lastUpdated": "Last updated June 17, 2025",
+	"sections": {
+		"acceptance": {
+			"title": "Acceptance of Terms",
+			"content": "By accessing or using ScholaFlow (\"the Service\"), you agree to be bound by these Terms and Conditions and our <privacyLink>Privacy Policy</privacyLink>. If you do not agree to these terms, please do not use the Service."
+		},
+		"description": {
+			"title": "Description of Service",
+			"content": "ScholaFlow is an educational platform that facilitates course management, assignment submissions, grading, group communications, and note-taking for students and instructors in academic institutions."
+		},
+		"eligibility": {
+			"title": "User Accounts and Eligibility",
+			"items": [
+				"You must be at least 13 years old to use this Service",
+				"You must provide accurate and complete information when creating an account",
+				"You are responsible for maintaining the confidentiality of your account credentials",
+				"You may only create one account and must not share your account with others",
+				"Institutional affiliation may be required for certain features"
+			]
+		},
+		"acceptableUse": {
+			"title": "Acceptable Use Policy",
+			"intro": "You agree not to use the Service to:",
+			"items": [
+				"Violate any applicable laws or regulations",
+				"Harass, abuse, or harm other users",
+				"Share inappropriate, offensive, or harmful content",
+				"Plagiarize or submit work that is not your own",
+				"Attempt to gain unauthorized access to the Service or other users' accounts",
+				"Upload malicious software or engage in activities that could harm the Service",
+				"Interfere with the proper functioning of the Service",
+				"Use the Service for commercial purposes without permission"
+			]
+		},
+		"content": {
+			"title": "User Content and Intellectual Property",
+			"items": [
+				"You retain ownership of content you create and submit through the Service",
+				"You grant us a license to use, store, and display your content as necessary to provide the Service",
+				"You are responsible for ensuring you have the right to submit any content",
+				"We reserve the right to remove content that violates these terms",
+				"Respect the intellectual property rights of others"
+			]
+		},
+		"privacy": {
+			"title": "Privacy and Data Protection",
+			"content": "Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your personal information. By using the Service, you consent to our data practices as described in the Privacy Policy."
+		},
+		"availability": {
+			"title": "Service Availability and Modifications",
+			"items": [
+				"We strive to provide reliable service but cannot guarantee 100% uptime",
+				"We may modify, suspend, or discontinue the Service at any time",
+				"We may update features and functionality to improve the Service",
+				"Scheduled maintenance may temporarily interrupt service availability"
+			]
+		},
+		"liability": {
+			"title": "Limitation of Liability",
+			"content": "The Service is provided \"as is\" without warranties. We are not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid for the Service, if any."
+		},
+		"termination": {
+			"title": "Account Termination",
+			"items": [
+				"You may close your account at any time through account settings",
+				"We may suspend or terminate accounts that violate these terms",
+				"Upon termination, your data will be removed as described in our Privacy Policy",
+				"Some data may be retained for legal or administrative purposes"
+			]
+		},
+		"integrity": {
+			"title": "Educational Use and Academic Integrity",
+			"content": "Users must maintain academic integrity and follow their institution's policies regarding coursework, assignments, and collaboration. Instructors have access to student submissions and grades as necessary for educational purposes."
+		},
+		"thirdParty": {
+			"title": "Third-Party Services",
+			"content": "The Service uses third-party providers including Vercel for hosting and Supabase for data storage. These providers have their own terms of service and privacy policies that may apply to your use of the Service."
+		},
+		"dispute": {
+			"title": "Dispute Resolution",
+			"content": "Any disputes arising from these terms or your use of the Service will be resolved through binding arbitration in accordance with applicable laws. You waive your right to participate in class action lawsuits."
+		},
+		"changes": {
+			"title": "Changes to Terms",
+			"content": "We may update these Terms and Conditions periodically. Any changes will be posted on the Service with an updated effective date. Continued use of the Service after changes constitutes acceptance of the new terms."
+		},
+		"contact": {
+			"title": "Contact Us",
+			"content": "If you have any questions or concerns about these Terms and Conditions, you can contact us at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+		}
+	}
+}

@@ -1,0 +1,54 @@
+{
+	"title": "Privacy Policy",
+	"lastUpdated": "Last updated June 10, 2025",
+	"sections": {
+		"infoCollect": {
+			"title": "Information We Collect",
+			"items": [
+				"Personal information, including your name, email address, profile picture, and institutional affiliation",
+				"Additional background information provided by instructors relevant to course management",
+				"Usage data such as login details, IP addresses, browser types, device information, pages visited, and features used",
+				"Course data, including assignments, grades, forum posts, and classwork scores",
+				"Communication content like messages in group chats and personal notes",
+				"Cookies and similar technologies to enhance functionality, personalize your experience, and analyze usage (you can manage cookie preferences in your browser settings)"
+			]
+		},
+		"howWeUse": {
+			"title": "How We Use Your Information",
+			"content": "We use your information to operate and improve the Service, personalize your experience, communicate with you, and ensure compliance with legal obligations."
+		},
+		"howWeShare": {
+			"title": "How We Share Your Information",
+			"items": [
+				"Third-party service providers under strict confidentiality agreements",
+				"Vercel for hosting and Service access (does not directly store user data)",
+				"Supabase for secure user data storage",
+				"Educational institutions for relevant course data when applicable",
+				"Group chat participants can see your name, profile picture, and messages",
+				"Notes remain private unless you choose to share them",
+				"Instructors can access student submissions and grades",
+				"Legal authorities when required by law or as part of business transfers when necessary"
+			]
+		},
+		"security": {
+			"title": "Security",
+			"content": "We implement industry-standard security measures to protect your data. However, no method of transmission over the internet or electronic storage is entirely secure."
+		},
+		"children": {
+			"title": "Children's Privacy",
+			"content": "Our Service is not intended for children under 13. We do not knowingly collect personal information from children. If you believe we have collected such information, please contact us immediately."
+		},
+		"choices": {
+			"title": "Your Choices & Data Deletion",
+			"content": "You can access, update, or correct your personal information in your account settings. You may also close your account, which will remove your data from the Service."
+		},
+		"changes": {
+			"title": "Changes to this Privacy Policy",
+			"content": "We may update this Privacy Policy periodically. Any changes will be posted on the Service with an updated effective date."
+		},
+		"contact": {
+			"title": "Contact Us",
+			"content": "If you have any questions or concerns about this Privacy Policy, you can contact us at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+		}
+	}
+}
