@@ -8,6 +8,10 @@
 @tailwind utilities;
 
 @theme inline {
+    --font-sans: "Be Vietnam Pro", sans-serif;
+    --font-brand: "Quicksand Variable", sans-serif;
+
+    --color-brand: hsl(227.41 84.62% 66.86%);
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
     --color-card: hsl(var(--card));
