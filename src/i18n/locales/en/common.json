@@ -1,9 +1,20 @@
 {
-	"cancel": "Cancel",
-	"save": "Save",
-	"footer": {
-		"copyright": "© {{year}} ScholaFlow. All rights reserved.",
-		"terms": "Terms and Conditions",
-		"privacy": "Privacy Policy"
-	}
+  "app": {
+    "name": "ScholaFlow"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "system": "System"
+  },
+  "profile": "Profile",
+  "footer": {
+    "copyright": "© {{year}} ScholaFlow. All rights reserved.",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy"
+  }
 }

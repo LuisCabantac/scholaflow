@@ -1,94 +1,101 @@
 {
 	"title": "Terms and Conditions",
-	"lastUpdated": "Last updated June 17, 2025",
+	"lastUpdated": "Last updated {{date}}",
+	"updatedAt": "September 15, 2026",
 	"sections": {
 		"acceptance": {
 			"title": "Acceptance of Terms",
-			"content": "By accessing or using ScholaFlow (\"the Service\"), you agree to be bound by these Terms and Conditions and our <privacyLink>Privacy Policy</privacyLink>. If you do not agree to these terms, please do not use the Service."
+			"content": "By accessing or using this ScholaFlow deployment (\"the Service\"), you agree to these Terms and Conditions and the <privacyLink>Privacy Policy</privacyLink>. If you do not agree with these terms, please do not use the platform."
 		},
 		"description": {
-			"title": "Description of Service",
-			"content": "ScholaFlow is an educational platform that facilitates course management, assignment submissions, grading, group communications, and note-taking for students and instructors in academic institutions."
+			"title": "About ScholaFlow",
+			"content": "ScholaFlow is a self-hostable learning platform designed to help schools, instructors, and students organize classes, share study materials, turn in assignments, chat in real-time groups, track deadlines, and take notes."
 		},
 		"eligibility": {
-			"title": "User Accounts and Eligibility",
+			"title": "User Accounts and Access",
 			"items": [
-				"You must be at least 13 years old to use this Service",
-				"You must provide accurate and complete information when creating an account",
-				"You are responsible for maintaining the confidentiality of your account credentials",
-				"You may only create one account and must not share your account with others",
-				"Institutional affiliation may be required for certain features"
+				"Access is managed by the administrator, school, or organization hosting this deployment.",
+				"Users of any educational level may participate when authorized and supervised by their educational institution, instructor, or organization.",
+				"You agree to provide accurate and truthful information when creating your account.",
+				"You are responsible for keeping your login credentials confidential and secure.",
+				"Each account is intended for individual use; do not share your credentials with others."
 			]
+		},
+		"roles": {
+			"title": "Student and Instructor Roles",
+			"items": [
+				"Students: Can join classes via class codes, access coursework, submit assignments, participate in class chats, and organize personal notes.",
+				"Instructors: Can create and manage courses, publish announcements, assign homework, grade submissions, and moderate classroom discussions.",
+				"Classroom permissions: Instructors have the authority to decide whether students can post or comment on the class stream, and can remove users who disrupt the learning environment."
+			]
+		},
+		"coursework": {
+			"title": "Assignments, Submissions, and Deadlines",
+			"items": [
+				"Due dates: Instructors set deadlines and scoring rubrics. If an instructor enables due-date cutoff, late submissions will be blocked automatically.",
+				"Original work: Students must turn in their own work through the classwork tab. Graded assignments can be returned with feedback and scores.",
+				"Backups: While this deployment securely stores uploaded files, users are encouraged to maintain copies of their own original schoolwork."
+			]
+		},
+		"communication": {
+			"title": "Classroom Discussions and Real-Time Chat",
+			"items": [
+				"Respectful environment: Stream posts, assignment comments, and real-time chat rooms are meant for constructive learning. Harassment, profanity, and offensive language are strictly prohibited.",
+				"Public vs. private: Stream comments are visible to the entire class roster, while private comments on assignments are seen only by the student and their instructor.",
+				"Chat etiquette: Do not flood, spam, or disrupt live group chats."
+			]
+		},
+		"notes": {
+			"title": "Personal Notes",
+			"content": "The personal notepad is a private workspace for students and teachers to keep study notes and attachments. These notes remain strictly private to your account and are never visible to classmates or instructors."
 		},
 		"acceptableUse": {
 			"title": "Acceptable Use Policy",
-			"intro": "You agree not to use the Service to:",
+			"intro": "To maintain a safe and productive educational environment, you agree not to:",
 			"items": [
-				"Violate any applicable laws or regulations",
-				"Harass, abuse, or harm other users",
-				"Share inappropriate, offensive, or harmful content",
-				"Plagiarize or submit work that is not your own",
-				"Attempt to gain unauthorized access to the Service or other users' accounts",
-				"Upload malicious software or engage in activities that could harm the Service",
-				"Interfere with the proper functioning of the Service",
-				"Use the Service for commercial purposes without permission"
+				"Violate school policies, honor codes, or applicable laws.",
+				"Plagiarize, cheat, or submit another person's work as your own.",
+				"Bully, harass, threaten, or impersonate other students, teachers, or administrators.",
+				"Upload viruses, harmful files, or malicious scripts.",
+				"Attempt to bypass access controls or alter grades without authorization.",
+				"Send spam or unauthorized commercial solicitations."
 			]
 		},
 		"content": {
-			"title": "User Content and Intellectual Property",
+			"title": "Content Ownership and Rights",
 			"items": [
-				"You retain ownership of content you create and submit through the Service",
-				"You grant us a license to use, store, and display your content as necessary to provide the Service",
-				"You are responsible for ensuring you have the right to submit any content",
-				"We reserve the right to remove content that violates these terms",
-				"Respect the intellectual property rights of others"
+				"You retain full ownership of the original homework, notes, and study materials you create.",
+				"You grant this platform deployment permission to host, store, and display your coursework solely as needed to provide class features.",
+				"You confirm that files you upload do not infringe on others' copyright or intellectual property."
 			]
 		},
-		"privacy": {
-			"title": "Privacy and Data Protection",
-			"content": "Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your personal information. By using the Service, you consent to our data practices as described in the Privacy Policy."
-		},
 		"availability": {
-			"title": "Service Availability and Modifications",
+			"title": "Instance Availability and Maintenance",
 			"items": [
-				"We strive to provide reliable service but cannot guarantee 100% uptime",
-				"We may modify, suspend, or discontinue the Service at any time",
-				"We may update features and functionality to improve the Service",
-				"Scheduled maintenance may temporarily interrupt service availability"
+				"The hosting organization or administrator is responsible for maintaining the server, uptime, and backups for this deployment.",
+				"Temporary downtime may occur during server maintenance or software updates.",
+				"The software is provided to assist education, but uninterrupted operation cannot be guaranteed."
 			]
 		},
 		"liability": {
 			"title": "Limitation of Liability",
-			"content": "The Service is provided \"as is\" without warranties. We are not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid for the Service, if any."
+			"content": "ScholaFlow is provided \"as is\" as open-source, self-hostable educational software. The developers and instance administrators are not liable for any lost data, unsaved coursework, missed deadlines, or indirect damages arising from the use of the platform."
 		},
 		"termination": {
-			"title": "Account Termination",
+			"title": "Account Closure and Removal",
 			"items": [
-				"You may close your account at any time through account settings",
-				"We may suspend or terminate accounts that violate these terms",
-				"Upon termination, your data will be removed as described in our Privacy Policy",
-				"Some data may be retained for legal or administrative purposes"
+				"You can close your account through account settings, which will delete your profile, personal notes, and private files.",
+				"Instance administrators or instructors may suspend or remove accounts that violate these terms or institutional policies.",
+				"Academic records and grades may be retained by the institution as required by school guidelines."
 			]
 		},
-		"integrity": {
-			"title": "Educational Use and Academic Integrity",
-			"content": "Users must maintain academic integrity and follow their institution's policies regarding coursework, assignments, and collaboration. Instructors have access to student submissions and grades as necessary for educational purposes."
-		},
-		"thirdParty": {
-			"title": "Third-Party Services",
-			"content": "The Service uses third-party providers including Vercel for hosting and Supabase for data storage. These providers have their own terms of service and privacy policies that may apply to your use of the Service."
-		},
-		"dispute": {
-			"title": "Dispute Resolution",
-			"content": "Any disputes arising from these terms or your use of the Service will be resolved through binding arbitration in accordance with applicable laws. You waive your right to participate in class action lawsuits."
-		},
 		"changes": {
-			"title": "Changes to Terms",
-			"content": "We may update these Terms and Conditions periodically. Any changes will be posted on the Service with an updated effective date. Continued use of the Service after changes constitutes acceptance of the new terms."
+			"title": "Updates to Terms",
+			"content": "These terms may be updated from time to time by the deployment administrator. Continued use of the platform indicates acceptance of any revisions."
 		},
 		"contact": {
-			"title": "Contact Us",
-			"content": "If you have any questions or concerns about these Terms and Conditions, you can contact us at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+			"title": "Contact and Inquiries",
+			"content": "For support or questions regarding this deployment, reach out to your school administrator or contact the open-source project at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
 		}
 	}
 }

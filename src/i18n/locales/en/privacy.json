@@ -1,54 +1,63 @@
 {
 	"title": "Privacy Policy",
-	"lastUpdated": "Last updated June 10, 2025",
+	"lastUpdated": "Last updated {{date}}",
+	"updatedAt": "September 15, 2026",
 	"sections": {
+		"overview": {
+			"title": "Self-Hosted Platform and Your Privacy",
+			"content": "ScholaFlow is a self-hostable learning platform. When you use this instance of ScholaFlow, your account, schoolwork, and personal information are stored and managed directly by the organization or administrator hosting this deployment. The software does not sell personal information or track you across external websites."
+		},
 		"infoCollect": {
-			"title": "Information We Collect",
+			"title": "Information Stored on This Instance",
+			"intro": "This deployment stores information you provide when using the platform:",
 			"items": [
-				"Personal information, including your name, email address, profile picture, and institutional affiliation",
-				"Additional background information provided by instructors relevant to course management",
-				"Usage data such as login details, IP addresses, browser types, device information, pages visited, and features used",
-				"Course data, including assignments, grades, forum posts, and classwork scores",
-				"Communication content like messages in group chats and personal notes",
-				"Cookies and similar technologies to enhance functionality, personalize your experience, and analyze usage (you can manage cookie preferences in your browser settings)"
+				"Account details: Your name, email address, profile picture, and school or organization name.",
+				"Login and session records: Secure credentials (such as password or Google sign-in) and active login sessions (including general device type, browser, and IP address) to keep your account secure.",
+				"Coursework and grades: Assignment files, links, quiz submissions, turn-in timestamps, and grades assigned by instructors.",
+				"Classroom communications: Public announcements, class stream comments, and real-time class chat messages.",
+				"Private messages: One-on-one private feedback and comments exchanged directly between students and instructors.",
+				"Personal notes: Your personal notes, pinned thoughts, and private attachments created in your notepad.",
+				"Preferences: Your selected theme (light or dark mode) and notification read states."
 			]
 		},
-		"howWeUse": {
-			"title": "How We Use Your Information",
-			"content": "We use your information to operate and improve the Service, personalize your experience, communicate with you, and ensure compliance with legal obligations."
-		},
-		"howWeShare": {
-			"title": "How We Share Your Information",
+		"visibility": {
+			"title": "Who Can See Your Content",
+			"intro": "Your privacy depends on the type of content you share:",
 			"items": [
-				"Third-party service providers under strict confidentiality agreements",
-				"Vercel for hosting and Service access (does not directly store user data)",
-				"Supabase for secure user data storage",
-				"Educational institutions for relevant course data when applicable",
-				"Group chat participants can see your name, profile picture, and messages",
-				"Notes remain private unless you choose to share them",
-				"Instructors can access student submissions and grades",
-				"Legal authorities when required by law or as part of business transfers when necessary"
+				"Personal notes: Strictly private to you. No classmates or instructors can view your personal notes or note attachments.",
+				"Coursework and grades: Only visible to you and the instructors of that class. Other students cannot see what you turned in or your grades.",
+				"Private comments: Strictly between you and your instructor on specific assignments.",
+				"Class stream and chats: Visible to all enrolled students and teachers in that specific classroom.",
+				"Class roster: Your name and profile picture are displayed to fellow members of your classes."
 			]
 		},
-		"security": {
-			"title": "Security",
-			"content": "We implement industry-standard security measures to protect your data. However, no method of transmission over the internet or electronic storage is entirely secure."
+		"hostResponsibility": {
+			"title": "How Your Data Is Managed",
+			"content": "Because this is a self-hosted platform, the administrator of this instance controls where data is stored, how backups are handled, and how user accounts are managed. Server logs and files are held within the infrastructure configured by the hosting administrator."
 		},
-		"children": {
-			"title": "Children's Privacy",
-			"content": "Our Service is not intended for children under 13. We do not knowingly collect personal information from children. If you believe we have collected such information, please contact us immediately."
+		"storageRetention": {
+			"title": "Data Storage and Account Deletion",
+			"items": [
+				"Storage: Uploaded documents, homework attachments, and profile images are saved in the storage configured by this instance's administrator.",
+				"Closing your account: If you close your account, your profile, personal notes, and private files are deleted from the system.",
+				"Course records: Past submissions and grades may remain part of the instructor's class records in accordance with the host institution's policies."
+			]
+		},
+		"educationalUse": {
+			"title": "Student and Youth Privacy",
+			"content": "ScholaFlow can be deployed across all educational levels—from primary schools to universities. When used by younger students, accounts and permissions are managed and supervised by the deploying school, organization, or instructor in accordance with their institutional policies and parental consent guidelines."
 		},
 		"choices": {
-			"title": "Your Choices & Data Deletion",
-			"content": "You can access, update, or correct your personal information in your account settings. You may also close your account, which will remove your data from the Service."
+			"title": "Your Choices and Control",
+			"content": "You can update your profile, change your photo, manage notification settings, edit your personal notes, or close your account at any time from your account settings."
 		},
 		"changes": {
-			"title": "Changes to this Privacy Policy",
-			"content": "We may update this Privacy Policy periodically. Any changes will be posted on the Service with an updated effective date."
+			"title": "Changes to this Policy",
+			"content": "This policy may be updated periodically by the deployment administrator to reflect new features or organizational policies."
 		},
 		"contact": {
-			"title": "Contact Us",
-			"content": "If you have any questions or concerns about this Privacy Policy, you can contact us at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+			"title": "Contact and Support",
+			"content": "If you have questions about your account, data, or this platform instance, contact your classroom administrator or reach out to the open-source project at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
 		}
 	}
 }
