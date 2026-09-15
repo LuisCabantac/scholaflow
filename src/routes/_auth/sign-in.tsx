@@ -6,8 +6,8 @@ import { Trans, useTranslation } from "react-i18next";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 import { signIn } from "@/lib/auth-client";
+import { signInFormSchema } from "@/lib/schema";
 import { getSession } from "@/server/functions/auth";
-import { signInFormSchema } from "@/lib/schema/index";
 
 import Logo from "@/components/layout/Logo";
 import { Input } from "@/components/ui/input";
