@@ -1,11 +1,11 @@
 import { betterAuth } from "better-auth";
+import { jwt } from "better-auth/plugins/jwt";
 import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
 import { db } from "@/drizzle/index";
 import { schema } from "@/drizzle/schema";
-import { jwt } from "better-auth/plugins/jwt";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
