@@ -36,3 +36,19 @@ export type AttachmentFileKind = "curFile" | "newFile";
 export type LinkSegment =
   | { type: "text"; value: string }
   | { type: "link"; href: string; text: string };
+
+export type WorkStatus = "graded" | "turnedIn" | "doneLate" | "missing" | null;
+
+export type SubmitLabel = "turnIn" | "resubmit" | "markAsDone";
+
+export type SubmissionCounts = {
+  turnedIn: number;
+  assigned: number;
+  graded: number;
+};
+
+export type DueLabel = {
+  kind: "today" | "yesterday" | "other";
+  time: string;
+  date: string;
+};
