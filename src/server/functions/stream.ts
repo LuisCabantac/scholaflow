@@ -8,7 +8,6 @@ import { readStreamFormFields } from "@/lib/stream-form";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
-import { getClassByClassId, isClassMember } from "@/services/classroom";
 import {
   deleteAllNotificationsByResourceId,
   sendNotification,
@@ -17,6 +16,11 @@ import {
   deleteAllClassworksByStreamIdRecord,
   getAllClassworksByStreamId,
 } from "@/services/classwork";
+import {
+  getAllEnrolledClassesByClassId,
+  getClassByClassId,
+  isClassMember,
+} from "@/services/classroom";
 import {
   arraysAreEqual,
   extractClassworkFilePath,
@@ -42,6 +46,11 @@ import {
   getClassworksByClassIdQuery,
   updateStreamPost,
 } from "@/services/stream";
+
+async function rosterUserIds(classId: string): Promise<string[]> {
+  const enrolled = await getAllEnrolledClassesByClassId(classId);
+  return enrolled?.map((entry) => entry.userId) ?? [];
+}
 
 export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
@@ -192,11 +201,14 @@ export const createStreamFn = createServerFn({ method: "POST" })
       topic = await getClassTopicByTopicId(topicId);
     }
 
-    const announceTo = isAssignToAll ? [] : fields.announceTo;
+    const announceTo = isAssignToAll
+      ? await rosterUserIds(classroomId)
+      : fields.announceTo;
 
     const newStream = {
       type: postType,
       classId: classroomId,
+      className: classroom.name,
       userId: session.user.id,
       userName: session.user.name,
       userImage: session.user.image as string,
@@ -230,7 +242,7 @@ export const createStreamFn = createServerFn({ method: "POST" })
     if (classroom.teacherId === session.user.id) {
       await sendNotification(
         data.type,
-        data.classId,
+        announceTo,
         data.id,
         data.title ?? data.content ?? "",
         `/classroom/class/${data.classId}/stream/${data.id}`,
@@ -285,7 +297,9 @@ export const updateStreamFn = createServerFn({ method: "POST" })
     const newIsAssignToAll = fields.isAssignToAll;
     const curAttachments = fields.currentAttachments;
     const curUrlLinks = fields.currentLinks;
-    const announceTo = newIsAssignToAll ? [] : fields.announceTo;
+    const announceTo = newIsAssignToAll
+      ? await rosterUserIds(currentStream.classId)
+      : fields.announceTo;
 
     let topic = null;
     if (topicId !== "no-topic") {
@@ -356,6 +370,7 @@ export const updateStreamFn = createServerFn({ method: "POST" })
         acceptingSubmissions: fields.acceptingSubmissions,
         closeSubmissionsAfterDueDate: fields.closeSubmissionsAfterDueDate,
         scheduledAt: newScheduledAt,
+        updatedAt: new Date(),
       };
 
       const result = editStreamSchema.safeParse(updatedStream);
