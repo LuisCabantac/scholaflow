@@ -37,7 +37,9 @@ import { Route as MainClassroomClassClassIdIndexRouteImport } from './routes/_ma
 import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_main/classroom/class/$classId.chat'
 import { Route as MainClassroomClassClassIdClassworkRouteImport } from './routes/_main/classroom/class/$classId.classwork'
 import { Route as MainClassroomClassClassIdPeopleRouteImport } from './routes/_main/classroom/class/$classId.people'
-import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId.stream.$streamId'
+import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId'
+import { Route as MainClassroomClassClassIdStreamStreamIdIndexRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.index'
+import { Route as MainClassroomClassClassIdStreamStreamIdSubmissionsRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.submissions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -184,9 +186,21 @@ const MainClassroomClassClassIdPeopleRoute =
   } as any)
 const MainClassroomClassClassIdStreamStreamIdRoute =
   MainClassroomClassClassIdStreamStreamIdRouteImport.update({
-    id: '/stream/$streamId',
-    path: '/stream/$streamId',
-    getParentRoute: () => MainClassroomClassClassIdRoute,
+    id: '/classroom/class/$classId_/stream/$streamId',
+    path: '/classroom/class/$classId/stream/$streamId',
+    getParentRoute: () => MainRoute,
+  } as any)
+const MainClassroomClassClassIdStreamStreamIdIndexRoute =
+  MainClassroomClassClassIdStreamStreamIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MainClassroomClassClassIdStreamStreamIdRoute,
+  } as any)
+const MainClassroomClassClassIdStreamStreamIdSubmissionsRoute =
+  MainClassroomClassClassIdStreamStreamIdSubmissionsRouteImport.update({
+    id: '/submissions',
+    path: '/submissions',
+    getParentRoute: () => MainClassroomClassClassIdStreamStreamIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -216,7 +230,9 @@ export interface FileRoutesByFullPath {
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
   '/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
-  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
+  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
+  '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
+  '/classroom/class/$classId/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -244,7 +260,8 @@ export interface FileRoutesByTo {
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
   '/classroom/class/$classId': typeof MainClassroomClassClassIdIndexRoute
-  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
+  '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
+  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -276,7 +293,9 @@ export interface FileRoutesById {
   '/_main/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/_main/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
   '/_main/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
-  '/_main/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
+  '/_main/classroom/class/$classId_/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
+  '/_main/classroom/class/$classId_/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
+  '/_main/classroom/class/$classId_/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -308,6 +327,8 @@ export interface FileRouteTypes {
     | '/classroom/class/$classId/people'
     | '/classroom/class/$classId/'
     | '/classroom/class/$classId/stream/$streamId'
+    | '/classroom/class/$classId/stream/$streamId/submissions'
+    | '/classroom/class/$classId/stream/$streamId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -335,6 +356,7 @@ export interface FileRouteTypes {
     | '/classroom/class/$classId/classwork'
     | '/classroom/class/$classId/people'
     | '/classroom/class/$classId'
+    | '/classroom/class/$classId/stream/$streamId/submissions'
     | '/classroom/class/$classId/stream/$streamId'
   id:
     | '__root__'
@@ -366,7 +388,9 @@ export interface FileRouteTypes {
     | '/_main/classroom/class/$classId/classwork'
     | '/_main/classroom/class/$classId/people'
     | '/_main/classroom/class/$classId/'
-    | '/_main/classroom/class/$classId/stream/$streamId'
+    | '/_main/classroom/class/$classId_/stream/$streamId'
+    | '/_main/classroom/class/$classId_/stream/$streamId/submissions'
+    | '/_main/classroom/class/$classId_/stream/$streamId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -582,12 +606,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainClassroomClassClassIdPeopleRouteImport
       parentRoute: typeof MainClassroomClassClassIdRoute
     }
-    '/_main/classroom/class/$classId/stream/$streamId': {
-      id: '/_main/classroom/class/$classId/stream/$streamId'
-      path: '/stream/$streamId'
+    '/_main/classroom/class/$classId_/stream/$streamId': {
+      id: '/_main/classroom/class/$classId_/stream/$streamId'
+      path: '/classroom/class/$classId/stream/$streamId'
       fullPath: '/classroom/class/$classId/stream/$streamId'
       preLoaderRoute: typeof MainClassroomClassClassIdStreamStreamIdRouteImport
-      parentRoute: typeof MainClassroomClassClassIdRoute
+      parentRoute: typeof MainRoute
+    }
+    '/_main/classroom/class/$classId_/stream/$streamId/': {
+      id: '/_main/classroom/class/$classId_/stream/$streamId/'
+      path: '/'
+      fullPath: '/classroom/class/$classId/stream/$streamId/'
+      preLoaderRoute: typeof MainClassroomClassClassIdStreamStreamIdIndexRouteImport
+      parentRoute: typeof MainClassroomClassClassIdStreamStreamIdRoute
+    }
+    '/_main/classroom/class/$classId_/stream/$streamId/submissions': {
+      id: '/_main/classroom/class/$classId_/stream/$streamId/submissions'
+      path: '/submissions'
+      fullPath: '/classroom/class/$classId/stream/$streamId/submissions'
+      preLoaderRoute: typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRouteImport
+      parentRoute: typeof MainClassroomClassClassIdStreamStreamIdRoute
     }
   }
 }
@@ -615,7 +653,6 @@ interface MainClassroomClassClassIdRouteChildren {
   MainClassroomClassClassIdClassworkRoute: typeof MainClassroomClassClassIdClassworkRoute
   MainClassroomClassClassIdPeopleRoute: typeof MainClassroomClassClassIdPeopleRoute
   MainClassroomClassClassIdIndexRoute: typeof MainClassroomClassClassIdIndexRoute
-  MainClassroomClassClassIdStreamStreamIdRoute: typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 
 const MainClassroomClassClassIdRouteChildren: MainClassroomClassClassIdRouteChildren =
@@ -625,13 +662,29 @@ const MainClassroomClassClassIdRouteChildren: MainClassroomClassClassIdRouteChil
       MainClassroomClassClassIdClassworkRoute,
     MainClassroomClassClassIdPeopleRoute: MainClassroomClassClassIdPeopleRoute,
     MainClassroomClassClassIdIndexRoute: MainClassroomClassClassIdIndexRoute,
-    MainClassroomClassClassIdStreamStreamIdRoute:
-      MainClassroomClassClassIdStreamStreamIdRoute,
   }
 
 const MainClassroomClassClassIdRouteWithChildren =
   MainClassroomClassClassIdRoute._addFileChildren(
     MainClassroomClassClassIdRouteChildren,
+  )
+
+interface MainClassroomClassClassIdStreamStreamIdRouteChildren {
+  MainClassroomClassClassIdStreamStreamIdSubmissionsRoute: typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
+  MainClassroomClassClassIdStreamStreamIdIndexRoute: typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
+}
+
+const MainClassroomClassClassIdStreamStreamIdRouteChildren: MainClassroomClassClassIdStreamStreamIdRouteChildren =
+  {
+    MainClassroomClassClassIdStreamStreamIdSubmissionsRoute:
+      MainClassroomClassClassIdStreamStreamIdSubmissionsRoute,
+    MainClassroomClassClassIdStreamStreamIdIndexRoute:
+      MainClassroomClassClassIdStreamStreamIdIndexRoute,
+  }
+
+const MainClassroomClassClassIdStreamStreamIdRouteWithChildren =
+  MainClassroomClassClassIdStreamStreamIdRoute._addFileChildren(
+    MainClassroomClassClassIdStreamStreamIdRouteChildren,
   )
 
 interface MainRouteChildren {
@@ -642,6 +695,7 @@ interface MainRouteChildren {
   MainUserManagementRoute: typeof MainUserManagementRoute
   MainClassroomIndexRoute: typeof MainClassroomIndexRoute
   MainClassroomClassClassIdRoute: typeof MainClassroomClassClassIdRouteWithChildren
+  MainClassroomClassClassIdStreamStreamIdRoute: typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
 }
 
 const MainRouteChildren: MainRouteChildren = {
@@ -652,6 +706,8 @@ const MainRouteChildren: MainRouteChildren = {
   MainUserManagementRoute: MainUserManagementRoute,
   MainClassroomIndexRoute: MainClassroomIndexRoute,
   MainClassroomClassClassIdRoute: MainClassroomClassClassIdRouteWithChildren,
+  MainClassroomClassClassIdStreamStreamIdRoute:
+    MainClassroomClassClassIdStreamStreamIdRouteWithChildren,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
