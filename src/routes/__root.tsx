@@ -76,7 +76,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="box-border text-sm antialiased">
         <AppProviders>{children}</AppProviders>
         <Scripts />
         <Toaster position="top-center" />
