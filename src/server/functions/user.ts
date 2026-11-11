@@ -2,11 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import type { User } from "@/lib/schema";
 import {
   getAllUser,
   getUser,
   getUserByUserId,
-  getUsersFilter,
 } from "@/services/user";
 
 export const getUserFn = createServerFn({ method: "GET" })
@@ -34,38 +34,13 @@ export const getUserByUserIdFn = createServerFn({ method: "GET" })
     return await getUserByUserId(userId);
   });
 
-export const getAllUserFn = createServerFn({ method: "GET" }).handler(
-  async () => {
+export const getAllUsersFn = createServerFn({ method: "GET" }).handler(
+  async (): Promise<User[]> => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) {
-      return { success: false, message: "Error getting all users", data: [] };
-    }
+    if (!session || session.user.role !== "admin") return [];
 
-    const data = await getAllUser();
-    if (!data.length) {
-      return { success: false, message: "Error getting all users", data: [] };
-    }
-
-    return { success: true, message: "Fetch success", data };
+    return await getAllUser();
   },
 );
-
-export const getUsersFilterFn = createServerFn({ method: "POST" })
-  .validator((name: string) => name)
-  .handler(async ({ data: name }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) {
-      return { success: false, message: "Error getting all users", data: [] };
-    }
-
-    const data = await getUsersFilter(name);
-    if (!data.length) {
-      return { success: false, message: "Error getting all users", data: [] };
-    }
-
-    return { success: true, message: "Fetch success", data };
-  });

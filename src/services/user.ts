@@ -1,4 +1,4 @@
-import { asc, eq, ilike } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { account, user } from "@/db/schema";
@@ -54,14 +54,6 @@ export async function getAllUser(): Promise<User[]> {
   return data || [];
 }
 
-export async function getUsersFilter(name: string): Promise<User[]> {
-  const data = await db
-    .select()
-    .from(user)
-    .where(ilike(user.name, `%${name}%`));
-  return data || [];
-}
-
 export async function updateUserRecord(
   userId: string,
   data: Partial<User>,
@@ -81,10 +73,5 @@ export async function deleteUserRecord(userId: string): Promise<User | null> {
 
   const [result] = await db.delete(user).where(eq(user.id, userId)).returning();
 
-  return result || null;
-}
-
-export async function createUserRecord(data: any): Promise<User | null> {
-  const [result] = await db.insert(user).values(data).returning();
   return result || null;
 }

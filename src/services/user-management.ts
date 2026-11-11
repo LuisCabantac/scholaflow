@@ -18,15 +18,11 @@ export async function getRoleRequest(
   return data || null;
 }
 
-export async function getAllRoleRequests(
-  status: "pending" | "rejected",
-): Promise<RoleRequest[] | null> {
-  const data = await db
+export async function getAllRoleRequests(): Promise<RoleRequest[]> {
+  return await db
     .select()
     .from(roleRequest)
-    .where(eq(roleRequest.status, status))
     .orderBy(desc(roleRequest.createdAt));
-  return !data?.length ? null : data;
 }
 
 export async function removeRoleRequestByUserId(userId: string): Promise<void> {

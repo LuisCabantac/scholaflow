@@ -4,10 +4,11 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import { extractAvatarFilePath } from "@/lib/utils";
 import { uploadAttachments } from "@/services/storage";
+import { userDetailsChanged } from "@/lib/user-search";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
 import { deleteAllMessagesByUserId } from "@/services/message";
+import type { UserMutationResult } from "@/types/user-management";
 import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { deleteAllNotificationsByUserId } from "@/services/notification";
 import {
   deleteClassStreamPost,
@@ -23,7 +24,12 @@ import {
   deleteAllPrivateCommentsByUserId,
 } from "@/services/comment";
 import {
-  createUserRecord,
+  createRoleRequestSchema,
+  createUserSchema,
+  editUserDetailsSchema,
+  editUserSchema,
+} from "@/lib/schema";
+import {
   deleteUserRecord,
   getAccountsByUserId,
   getUserByUserId,
@@ -59,16 +65,16 @@ export const getRoleRequestFn = createServerFn({ method: "GET" })
     return await getRoleRequest(userId);
   });
 
-export const getAllRoleRequestsFn = createServerFn({ method: "GET" })
-  .validator((status: "pending" | "rejected") => status)
-  .handler(async ({ data: status }) => {
+export const getAllRoleRequestsFn = createServerFn({ method: "GET" }).handler(
+  async () => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session || session.user.role !== "admin") return null;
+    if (!session || session.user.role !== "admin") return [];
 
-    return await getAllRoleRequests(status);
-  });
+    return await getAllRoleRequests();
+  },
+);
 
 export const requestTeacherRoleFn = createServerFn({ method: "POST" })
   .validator((data: FormData) => data)
@@ -144,7 +150,7 @@ export const approveRoleRequestFn = createServerFn({ method: "POST" })
     if (!userRequest)
       return { success: false, message: "Request doesn't exist." };
 
-    await updateUserRecord(userId, { role: "admin" });
+    await updateUserRecord(userId, { role: "user" });
     await deleteRoleRequestRecord(requestId, userId);
 
     return { success: true, message: "Request approved." };
@@ -363,56 +369,90 @@ export const updateProfileFn = createServerFn({ method: "POST" })
   });
 
 export const createUserFn = createServerFn({ method: "POST" })
-  .validator((data: any) => data)
-  .handler(async ({ data: newGuest }) => {
+  .validator(createUserSchema)
+  .handler(async ({ data }): Promise<UserMutationResult> => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
     if (!session || session.user.role !== "admin")
       return { success: false, message: "Unauthorized" };
 
-    const data = await createUserRecord(newGuest);
-    if (!data) return { success: false, message: "User could not be created" };
+    const email = data.email.trim().toLowerCase();
+
+    if (await getUserByEmail(email)) {
+      return {
+        success: false,
+        message: "This email has already been taken.",
+        code: "emailTaken",
+      };
+    }
+
+    const ctx = await auth.$context;
+
+    try {
+      const user = await ctx.internalAdapter.createUser(
+        { name: data.name, email, emailVerified: true, role: "user" },
+        { method: "admin" },
+      );
+
+      if (!user)
+        return { success: false, message: "User could not be created." };
+
+      await ctx.internalAdapter.linkAccount({
+        providerId: "credential",
+        accountId: user.id,
+        userId: user.id,
+        password: await ctx.password.hash(data.password),
+      });
+    } catch {
+      return { success: false, message: "User could not be created." };
+    }
 
     return { success: true, message: "User created successfully!" };
   });
 
 export const updateUserFn = createServerFn({ method: "POST" })
-  .validator((data: FormData) => data)
-  .handler(async ({ data: formData }) => {
+  .validator(editUserDetailsSchema)
+  .handler(async ({ data }): Promise<UserMutationResult> => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
     if (!session || session.user.role !== "admin")
       return { success: false, message: "Unauthorized" };
 
-    const userId = formData.get("userId") as string;
-    const currentUserData = await getUserByUserId(userId);
+    const currentUserData = await getUserByUserId(data.userId);
 
     if (!currentUserData)
       return { success: false, message: "User does not exist." };
 
-    const newEmail = formData.get("email") as string;
-    const newFullName = formData.get("fullName") as string;
-    const newUserRole = formData.get("userRole") as string;
-
-    if (
-      currentUserData.email !== newEmail ||
-      currentUserData.name !== newFullName ||
-      currentUserData.role !== newUserRole
-    ) {
-      const data = await updateUserRecord(userId, {
-        name: newFullName,
-        email: newEmail,
-        role: newUserRole as any,
-      });
-
-      if (!data) return { success: false, message: "Failed to update user." };
-
-      return { success: true, message: "User updated successfully!" };
+    if (!userDetailsChanged(currentUserData, data)) {
+      return {
+        success: true,
+        message: "No changes were made to the user profile.",
+      };
     }
 
-    return { success: true, message: "No changes were made." };
+    const email = data.email.trim().toLowerCase();
+    const existing = await getUserByEmail(email);
+
+    if (existing && existing.id !== currentUserData.id) {
+      return {
+        success: false,
+        message: "This email has already been taken.",
+        code: "emailTaken",
+      };
+    }
+
+    const updated = await updateUserRecord(data.userId, {
+      name: data.name,
+      email,
+      updatedAt: new Date(),
+    });
+
+    if (!updated)
+      return { success: false, message: "User could not be edited." };
+
+    return { success: true, message: "User updated successfully!" };
   });
 
 export const deleteUserFn = createServerFn({ method: "POST" })
