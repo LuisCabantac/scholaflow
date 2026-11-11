@@ -2,17 +2,19 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import enAuth from "@/i18n/locales/en/auth.json";
-import enCommon from "@/i18n/locales/en/common.json";
-import enLanding from "@/i18n/locales/en/landing.json";
-import enLayout from "@/i18n/locales/en/layout.json";
-import enPrivacy from "@/i18n/locales/en/privacy.json";
 import enTerms from "@/i18n/locales/en/terms.json";
+import enCommon from "@/i18n/locales/en/common.json";
+import enLayout from "@/i18n/locales/en/layout.json";
+import enLanding from "@/i18n/locales/en/landing.json";
+import enPrivacy from "@/i18n/locales/en/privacy.json";
+import enClassroom from "@/i18n/locales/en/classroom.json";
 
 export const defaultNS = "common" as const;
 
 export const resources = {
   en: {
     auth: enAuth,
+    classroom: enClassroom,
     common: enCommon,
     landing: enLanding,
     layout: enLayout,
@@ -31,7 +33,15 @@ export function createI18n(language: Language = "en") {
     resources,
     lng: language,
     fallbackLng: "en",
-    ns: ["common", "auth", "landing", "layout", "privacy", "terms"],
+    ns: [
+      "common",
+      "auth",
+      "classroom",
+      "landing",
+      "layout",
+      "privacy",
+      "terms",
+    ],
 
     defaultNS,
 
