@@ -236,12 +236,12 @@ export default function SignUpForm() {
           />
         </div>
         <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+          selector={(state) => [state.canSubmit, state.isPristine]}
+          children={([canSubmit, isPristine]) => (
             <Button
               type="submit"
               className="w-full"
-              disabled={!canSubmit || isLoading}
+              disabled={isPristine || !canSubmit || isLoading}
             >
               {t("actions.submit")}
             </Button>
