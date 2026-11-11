@@ -1,23 +1,39 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
-import { getSession } from "@/server/functions/auth";
+import AuthCard from "@/components/auth/AuthCard";
+import SignUpForm from "@/components/auth/SignUpForm";
 
 export const Route = createFileRoute("/_auth/sign-up")({
-  beforeLoad: async ({ location }) => {
-    const session = await getSession();
-
-    if (session) {
-      throw redirect({
-        to: "/classroom",
-        search: { redirect: location.href },
-      });
-    }
-
-    return;
-  },
-  component: RouteComponent,
+  head: () => ({
+    meta: [
+      { title: "Sign up | ScholaFlow" },
+      {
+        name: "description",
+        content:
+          "Sign up and start learning! Access classes, assignments, and connect with classmates.",
+      },
+    ],
+  }),
+  component: SignUp,
 });
 
-function RouteComponent() {
-  return <div>Hello "/_auth/sign-up"!</div>;
+function SignUp() {
+  const { t } = useTranslation("auth", { keyPrefix: "signUp" });
+
+  return (
+    <AuthCard
+      title={t("title")}
+      footer={
+        <p className="flex items-center justify-center gap-1 text-sm">
+          {t("links.alreadyHaveAccount")}
+          <Link to="/sign-in" className="font-medium hover:underline">
+            {t("links.signIn")}
+          </Link>
+        </p>
+      }
+    >
+      <SignUpForm />
+    </AuthCard>
+  );
 }
