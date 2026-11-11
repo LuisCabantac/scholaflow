@@ -3,11 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import type { User } from "@/lib/schema";
-import {
-  getAllUser,
-  getUser,
-  getUserByUserId,
-} from "@/services/user";
+import { getAllUser, getUser, getUserByUserId } from "@/services/user";
 
 export const getUserFn = createServerFn({ method: "GET" })
   .validator((email: string) => email)
