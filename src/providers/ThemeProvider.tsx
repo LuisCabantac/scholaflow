@@ -9,6 +9,8 @@ type ThemeProviderProps = {
   storageKey?: string;
 };
 
+const THEME_COLORS = { light: "#fbfcfe", dark: "#0a0f24" };
+
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
@@ -18,7 +20,7 @@ function getThemeScript(storageKey: string, defaultTheme: Theme) {
   const key = JSON.stringify(storageKey);
   const fallback = JSON.stringify(defaultTheme);
 
-  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add(r);e.style.colorScheme=r}catch(e){}})();`;
+  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add(r);e.style.colorScheme=r;var m=document.querySelector('meta[name="theme-color"]');if(m){m.setAttribute('content',r==='dark'?${JSON.stringify(THEME_COLORS.dark)}:${JSON.stringify(THEME_COLORS.light)})}}catch(e){}})();`;
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>({
@@ -39,6 +41,9 @@ function applyTheme(theme: Theme) {
 
   root.classList.add(resolved);
   root.style.colorScheme = resolved;
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", THEME_COLORS[resolved]);
 }
 
 export function ThemeProvider({
