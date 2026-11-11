@@ -8,8 +8,10 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
+import { streamKeys } from "@/queries/stream";
 import type { SessionUser } from "@/types/auth";
 import { sortRoster } from "@/lib/people-roster";
+import { classworkKeys } from "@/queries/classwork";
 import type { Classroom, EnrolledClass } from "@/lib/schema";
 import { classroomKeys, classroomQueries } from "@/queries/classroom";
 import { deleteEnrolledClassbyClassAndEnrolledClassIdFn } from "@/server/functions/classroom";
@@ -65,6 +67,8 @@ export default function PeopleSection({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: classroomKeys.all });
+      queryClient.invalidateQueries({ queryKey: classworkKeys.all });
+      queryClient.invalidateQueries({ queryKey: streamKeys.all });
     },
   });
 

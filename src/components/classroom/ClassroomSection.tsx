@@ -10,13 +10,13 @@ import {
 } from "@tanstack/react-query";
 
 import type { SessionUser } from "@/types/auth";
-import { streamQueries } from "@/queries/stream";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { classworkQueries } from "@/queries/classwork";
 import type { ClassroomSort } from "@/types/classroom";
 import { useClickOutside } from "@/hooks/use-click-outside";
+import { streamKeys, streamQueries } from "@/queries/stream";
 import type { Classroom, EnrolledClass } from "@/lib/schema";
 import { classroomKeys, classroomQueries } from "@/queries/classroom";
+import { classworkKeys, classworkQueries } from "@/queries/classwork";
 import { deleteClassFn, joinClassFn } from "@/server/functions/classroom";
 import {
   assignedClassworks,
@@ -121,8 +121,11 @@ export default function ClassroomSection({
       toast.error(error.message);
     },
     onSuccess: () => toast.success(t("messages.deleted")),
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: classroomKeys.all }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: classroomKeys.all });
+      queryClient.invalidateQueries({ queryKey: classworkKeys.all });
+      queryClient.invalidateQueries({ queryKey: streamKeys.all });
+    },
   });
 
   const showCreated = sort === "all-classes" || sort === "created-classes";
@@ -160,7 +163,11 @@ export default function ClassroomSection({
       }
 
       toast.success(result.message);
-      await queryClient.invalidateQueries({ queryKey: classroomKeys.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: classroomKeys.all }),
+        queryClient.invalidateQueries({ queryKey: classworkKeys.all }),
+        queryClient.invalidateQueries({ queryKey: streamKeys.all }),
+      ]);
       setShowJoinClass(false);
       await navigate({
         to: "/classroom/class/$classId",

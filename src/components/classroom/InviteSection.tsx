@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { streamKeys } from "@/queries/stream";
 import type { Classroom } from "@/lib/schema";
 import type { SessionUser } from "@/types/auth";
 import { classroomKeys } from "@/queries/classroom";
+import { classworkKeys } from "@/queries/classwork";
 import { joinClassFn } from "@/server/functions/classroom";
 
 import { Button } from "@/components/ui/button";
@@ -30,7 +32,11 @@ export default function InviteSection({
         toast.error(result.message);
         return;
       }
-      await queryClient.invalidateQueries({ queryKey: classroomKeys.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: classroomKeys.all }),
+        queryClient.invalidateQueries({ queryKey: classworkKeys.all }),
+        queryClient.invalidateQueries({ queryKey: streamKeys.all }),
+      ]);
       await navigate({
         to: "/classroom/class/$classId",
         params: { classId: classroom.id },
