@@ -6,8 +6,12 @@ import { extractAvatarFilePath } from "@/lib/utils";
 import { uploadAttachments } from "@/services/storage";
 import { userDetailsChanged } from "@/lib/user-search";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { deleteUserCascade } from "@/services/account-deletion";
+import { propagateUserProfile } from "@/services/user-profile";
 import type { UserMutationResult } from "@/types/user-management";
+import {
+  collectUserFiles,
+  deleteUserCascade,
+} from "@/services/account-deletion";
 import {
   isAvatarFile,
   isAvatarTooLarge,
@@ -29,6 +33,7 @@ import {
 import {
   createRoleRequestRecord,
   deleteFileFromBucket,
+  deleteFilesFromBucket,
   deleteRoleRequestRecord,
   getAllRoleRequests,
   getRoleRequest,
@@ -338,6 +343,11 @@ export const updateProfileFn = createServerFn({ method: "POST" })
     }
 
     await updateUserRecord(userId, result.data);
+    await propagateUserProfile(userId, {
+      name: result.data.name,
+      image: result.data.image,
+      email: result.data.email,
+    });
 
     if (
       hasAttachment &&
@@ -442,6 +452,12 @@ export const updateUserFn = createServerFn({ method: "POST" })
     if (!updated)
       return { success: false, message: "User could not be edited." };
 
+    await propagateUserProfile(updated.id, {
+      name: updated.name,
+      image: updated.image,
+      email: updated.email,
+    });
+
     return { success: true, message: "User updated successfully!" };
   });
 
@@ -468,9 +484,14 @@ export const closeAccountFn = createServerFn({ method: "POST" })
       await deleteFileFromBucket("avatars", filePath);
     }
 
+    const files = await collectUserFiles(user.id);
     const deleted = await deleteUserCascade(user.id);
     if (!deleted)
       return { success: false, message: "Failed to close account." };
+
+    for (const group of files) {
+      await deleteFilesFromBucket(group.bucket, group.paths);
+    }
 
     return { success: true, message: "Account closed successfully." };
   });
