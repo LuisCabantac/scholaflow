@@ -12,6 +12,7 @@ import {
   matchesTokenType,
   type TokenType,
 } from "@/lib/auth-tokens";
+import { isUploadedAvatarUrl } from "@/lib/default-avatar";
 import { extractAvatarFilePath } from "@/lib/utils";
 import {
   deleteVerificationToken,
@@ -93,6 +94,7 @@ async function deliver(
   try {
     await sendEmail({ to, ...rendered });
   } catch {
+    await deleteVerificationToken(to);
     return { success: false, code: "emailSendFailed" };
   }
 
@@ -100,8 +102,8 @@ async function deliver(
 }
 
 export const sendVerificationEmailFn = createServerFn({ method: "POST" })
-  .validator((data: { email: string; name: string }) => data)
-  .handler(async ({ data: { email, name } }): Promise<AuthResult> => {
+  .validator((email: string) => email)
+  .handler(async ({ data: email }): Promise<AuthResult> => {
     const existingUser = await getUserByEmail(email);
 
     if (!existingUser) return { success: false, code: "emailNotFound" };
@@ -119,7 +121,7 @@ export const sendVerificationEmailFn = createServerFn({ method: "POST" })
     return deliver(
       email,
       renderVerifyEmail({
-        toName: name,
+        toName: existingUser.name.split(" ")[0] ?? existingUser.name,
         verifyUrl: buildAppUrl(`/verify?token=${token.value}`),
       }),
     );
@@ -277,10 +279,7 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
     await deleteAllNotificationsByUserId(existingUser.id);
     await removeRoleRequestByUserId(existingUser.id);
 
-    if (
-      existingUser.image &&
-      !existingUser.image.startsWith("https://lh3.googleusercontent.com/")
-    ) {
+    if (isUploadedAvatarUrl(existingUser.image)) {
       await deleteFileFromBucket(
         "avatars",
         extractAvatarFilePath(existingUser.image),

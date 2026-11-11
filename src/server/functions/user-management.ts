@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { isUploadedAvatarUrl } from "@/lib/default-avatar";
 import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { extractAvatarFilePath } from "@/lib/utils";
 import {
@@ -246,11 +247,7 @@ export const updateProfileFn = createServerFn({ method: "POST" })
           (await uploadAttachments("avatars", session.user.id, attachment)) ??
           currentUserData.image;
 
-        if (
-          !currentUserData.image.startsWith(
-            "https://lh3.googleusercontent.com/",
-          )
-        ) {
+        if (isUploadedAvatarUrl(currentUserData.image)) {
           const filePath = extractAvatarFilePath(currentUserData.image);
           await deleteFileFromBucket("avatars", filePath);
         }
@@ -441,10 +438,7 @@ export const closeAccountFn = createServerFn({ method: "POST" })
     await deleteAllNotificationsByUserId(userId);
     await removeRoleRequestByUserId(userId);
 
-    if (
-      user.image &&
-      !user.image.startsWith("https://lh3.googleusercontent.com/")
-    ) {
+    if (isUploadedAvatarUrl(user.image)) {
       const filePath = extractAvatarFilePath(user.image);
       await deleteFileFromBucket("avatars", filePath);
     }

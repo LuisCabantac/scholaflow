@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function getRoleRequest(
   userId: string,
 ): Promise<RoleRequest | null> {
-  if (!userId || !validateUUID(userId)) return null;
+  if (!userId) return null;
 
   const [data] = await db
     .select()
@@ -30,7 +30,7 @@ export async function getAllRoleRequests(
 }
 
 export async function removeRoleRequestByUserId(userId: string): Promise<void> {
-  if (!userId || !validateUUID(userId)) return;
+  if (!userId) return;
 
   await db.delete(roleRequest).where(eq(roleRequest.userId, userId));
 }
@@ -75,14 +75,7 @@ export async function deleteRoleRequestRecord(
   requestId: string,
   userId: string,
 ): Promise<RoleRequest | null> {
-  if (
-    !requestId ||
-    !validateUUID(requestId) ||
-    !userId ||
-    !validateUUID(userId)
-  ) {
-    return null;
-  }
+  if (!requestId || !validateUUID(requestId) || !userId) return null;
 
   const [result] = await db
     .delete(roleRequest)

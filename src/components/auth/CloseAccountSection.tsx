@@ -21,7 +21,9 @@ export default function CloseAccountSection({ token }: { token: string }) {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setIsLoading(true);
-    const data = await closeUserAccountFn({ data: token });
+    const data = await closeUserAccountFn({ data: token }).catch(
+      (): AuthResult => ({ success: false, code: "closeFailed" }),
+    );
     setResult(data);
     setIsLoading(false);
 

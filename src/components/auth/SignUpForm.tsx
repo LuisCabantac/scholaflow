@@ -53,10 +53,7 @@ export default function SignUpForm() {
           onResponse: () => setIsLoading(false),
           onSuccess: async () => {
             const result = await sendVerificationEmailFn({
-              data: {
-                email: value.email,
-                name: value.fullName.split(" ")[0] ?? value.fullName,
-              },
+              data: value.email,
             });
 
             if (result.success) {
