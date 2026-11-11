@@ -14,13 +14,18 @@ import {
   getAllClassesStreamByUserId,
 } from "@/services/stream";
 import {
+  isAvatarFile,
+  isAvatarTooLarge,
+  pickPasswordAccount,
+} from "@/lib/profile-form";
+import {
   deleteAllCommentsByUserId,
   deleteAllPrivateCommentsByUserId,
 } from "@/services/comment";
 import {
   createUserRecord,
   deleteUserRecord,
-  getAccountByUserId,
+  getAccountsByUserId,
   getUserByEmail,
   getUserByUserId,
   updateUserRecord,
@@ -72,6 +77,14 @@ export const requestTeacherRoleFn = createServerFn({ method: "POST" })
     if (!session) return { success: false, message: "You must be logged in." };
 
     const userId = formData.get("userId") as string;
+
+    if (userId !== session.user.id) {
+      return {
+        success: false,
+        message: "You can only request a role for your own account.",
+      };
+    }
+
     const userData = await getUserByUserId(userId);
 
     if (!userData) return { success: false, message: "User does not exist." };
@@ -88,9 +101,9 @@ export const requestTeacherRoleFn = createServerFn({ method: "POST" })
 
     const request = {
       userId,
-      userName: (formData.get("userName") as string) || "",
-      userEmail: (formData.get("userEmail") as string) || "",
-      userImage: (formData.get("avatar") as string) || "",
+      userName: userData.name,
+      userEmail: userData.email,
+      userImage: userData.image,
       status: "pending" as const,
     };
 
@@ -204,17 +217,38 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       return { success: false, message: "Passwords do not match." };
     }
 
-    const account = await getAccountByUserId(currentUserData.id);
+    const account = pickPasswordAccount(
+      await getAccountsByUserId(currentUserData.id),
+    );
     if (!account) return { success: false, message: "Account not found." };
 
+    const hasAttachment =
+      attachment instanceof File &&
+      attachment.name !== "undefined" &&
+      attachment.size > 0;
+
+    if (hasAttachment && !isAvatarFile(attachment)) {
+      return {
+        success: false,
+        message: "Only image files can be used as a profile photo.",
+      };
+    }
+
+    if (hasAttachment && isAvatarTooLarge(attachment)) {
+      return {
+        success: false,
+        message: "Profile photo must be 4MB or less.",
+      };
+    }
+
     const ctx = await auth.$context;
-    const isPassingCredentialCheck =
-      account.providerId === "credential" && currentPassword && newPassword
+    const newPasswordIsCurrent =
+      account.providerId === "credential" && newPassword
         ? await ctx.password.verify({
-            password: currentPassword,
+            password: newPassword,
             hash: account.password ?? "",
           })
-        : true;
+        : false;
 
     if (
       currentUserData.email !== newEmail ||
@@ -224,11 +258,8 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       (account.providerId === "credential" &&
         currentPassword &&
         newPassword &&
-        !isPassingCredentialCheck) ||
-      (attachment &&
-        attachment instanceof File &&
-        attachment.name !== "undefined" &&
-        attachment.size > 0)
+        !newPasswordIsCurrent) ||
+      hasAttachment
     ) {
       if (currentUserData.email !== newEmail) {
         const emailExist = await getUserByEmail(newEmail);
@@ -237,12 +268,7 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       }
 
       let newProfilePhoto = currentUserData.image;
-      if (
-        attachment &&
-        attachment instanceof File &&
-        attachment.name !== "undefined" &&
-        attachment.size > 0
-      ) {
+      if (hasAttachment) {
         newProfilePhoto =
           (await uploadAttachments("avatars", session.user.id, attachment)) ??
           currentUserData.image;

@@ -43,6 +43,12 @@ export async function getAccountByUserId(
   return data || null;
 }
 
+export async function getAccountsByUserId(userId: string): Promise<Account[]> {
+  if (!userId) return [];
+
+  return await db.select().from(account).where(eq(account.userId, userId));
+}
+
 export async function getAllUser(): Promise<User[]> {
   const data = await db.select().from(user).orderBy(asc(user.createdAt));
   return data || [];
