@@ -3,6 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { extractCommentFilePath } from "@/lib/utils";
+import { isClassMember } from "@/services/classroom";
 import { uploadAttachments } from "@/services/storage";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFileFromBucket } from "@/services/user-management";
@@ -38,6 +39,11 @@ export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
     const session = await auth.api.getSession({ headers });
 
     if (!session) return null;
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
 
     return await getAllCommentsByStreamId(streamId);
   });

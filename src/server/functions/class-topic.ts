@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { isClassMember } from "@/services/classroom";
 import { getClassByClassId } from "@/services/classroom";
 import { createClassTopicSchema, editClassTopicSchema } from "@/lib/schema";
 import {
@@ -30,7 +31,11 @@ export const getAllClassTopicsByClassIdFn = createServerFn({ method: "GET" })
   .handler(async ({ data: classId }) => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
-    if (!session) return null;
+
+    if (!session || !(await isClassMember(session.user.id, classId))) {
+      return null;
+    }
+
     return await getAllClassTopicsByClassId(classId);
   });
 

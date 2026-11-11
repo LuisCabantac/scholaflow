@@ -59,6 +59,7 @@ import {
   getEnrolledClassByUserAndClassId,
   updateClassroom,
   updateEnrolledClass,
+  isClassMember,
 } from "@/services/classroom";
 
 export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
@@ -176,7 +177,9 @@ export const getAllEnrolledClassesByClassIdFn = createServerFn({
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || !(await isClassMember(session.user.id, classId))) {
+      return null;
+    }
 
     return await getAllEnrolledClassesByClassId(classId);
   });

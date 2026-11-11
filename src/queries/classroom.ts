@@ -2,6 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import {
   getAllClassesByTeacherIdFn,
+  getAllEnrolledClassesByClassIdFn,
   getAllEnrolledClassesByUserIdFn,
   getClassByClassCodeFn,
   getClassByClassIdFn,
@@ -18,6 +19,8 @@ export const classroomKeys = {
   byCode: (code: string) => [...classroomKeys.all, "byCode", code] as const,
   enrolledByClassAndSession: (userId: string, classId: string) =>
     [...classroomKeys.all, "enrolled", userId, classId] as const,
+  enrolledByClass: (classId: string) =>
+    [...classroomKeys.all, "enrolledByClass", classId] as const,
 };
 
 export const classroomQueries = {
@@ -46,5 +49,10 @@ export const classroomQueries = {
       queryKey: classroomKeys.enrolledByClassAndSession(userId, classId),
       queryFn: () =>
         getEnrolledClassByClassAndSessionIdFn({ data: { userId, classId } }),
+    }),
+  enrolledByClass: (classId: string) =>
+    queryOptions({
+      queryKey: classroomKeys.enrolledByClass(classId),
+      queryFn: () => getAllEnrolledClassesByClassIdFn({ data: classId }),
     }),
 };

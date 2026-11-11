@@ -4,11 +4,11 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import type { StreamType } from "@/lib/schema";
 import { uploadAttachments } from "@/services/storage";
-import { getClassByClassId } from "@/services/classroom";
 import { readStreamFormFields } from "@/lib/stream-form";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
+import { getClassByClassId, isClassMember } from "@/services/classroom";
 import {
   deleteAllNotificationsByResourceId,
   sendNotification,
@@ -49,7 +49,9 @@ export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || !(await isClassMember(session.user.id, classId))) {
+      return null;
+    }
 
     return await getAllClassStreamsByClassId(classId);
   });
@@ -73,7 +75,12 @@ export const getClassStreamByStreamIdFn = createServerFn({ method: "GET" })
 
     if (!session) return null;
 
-    return await getClassStreamByStreamId(streamId);
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    return stream;
   });
 
 export const getAllClassworkStreamsByClassIdFn = createServerFn({

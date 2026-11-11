@@ -209,3 +209,14 @@ export async function deleteMultipleEnrolledClassRecord(
     }
   }
 }
+
+export async function isClassMember(
+  userId: string,
+  classId: string,
+): Promise<boolean> {
+  const classroom = await getClassByClassId(classId);
+  if (!classroom) return false;
+  if (classroom.teacherId === userId) return true;
+
+  return (await getEnrolledClassByClassAndSessionId(userId, classId)) !== null;
+}
