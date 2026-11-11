@@ -20,7 +20,7 @@ describe("renderActionEmail", () => {
     const email = renderActionEmail(reset);
     expect(email.html).toContain(`href="${reset.actionUrl}"`);
     expect(email.html).toContain("Reset Password");
-    expect(email.html).toMatch(/style="[^"]*background:\s*#2563eb/);
+    expect(email.html).toMatch(/style="[^"]*background(?:-color)?:\s*#2563eb/);
   });
 
   it("includes title, description, footer and the subject", () => {

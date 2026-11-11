@@ -63,7 +63,7 @@ export const auth = betterAuth({
         },
       },
     }),
-    tanstackStartCookies(),
     jwt(),
+    tanstackStartCookies(),
   ],
 });
