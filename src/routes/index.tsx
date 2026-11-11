@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             },
           ],
-        }),
+        }).replace(/</g, "\\u003c"),
       },
     ],
   }),
