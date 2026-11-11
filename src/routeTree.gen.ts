@@ -33,6 +33,10 @@ import { Route as JoinClassClassCodeRouteImport } from './routes/join-class/$cla
 import { Route as MainClassroomIndexRouteImport } from './routes/_main/classroom/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MainClassroomClassClassIdRouteImport } from './routes/_main/classroom/class/$classId'
+import { Route as MainClassroomClassClassIdIndexRouteImport } from './routes/_main/classroom/class/$classId.index'
+import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_main/classroom/class/$classId.chat'
+import { Route as MainClassroomClassClassIdClassworkRouteImport } from './routes/_main/classroom/class/$classId.classwork'
+import { Route as MainClassroomClassClassIdPeopleRouteImport } from './routes/_main/classroom/class/$classId.people'
 import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId.stream.$streamId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -154,6 +158,30 @@ const MainClassroomClassClassIdRoute =
     path: '/classroom/class/$classId',
     getParentRoute: () => MainRoute,
   } as any)
+const MainClassroomClassClassIdIndexRoute =
+  MainClassroomClassClassIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MainClassroomClassClassIdRoute,
+  } as any)
+const MainClassroomClassClassIdChatRoute =
+  MainClassroomClassClassIdChatRouteImport.update({
+    id: '/chat',
+    path: '/chat',
+    getParentRoute: () => MainClassroomClassClassIdRoute,
+  } as any)
+const MainClassroomClassClassIdClassworkRoute =
+  MainClassroomClassClassIdClassworkRouteImport.update({
+    id: '/classwork',
+    path: '/classwork',
+    getParentRoute: () => MainClassroomClassClassIdRoute,
+  } as any)
+const MainClassroomClassClassIdPeopleRoute =
+  MainClassroomClassClassIdPeopleRouteImport.update({
+    id: '/people',
+    path: '/people',
+    getParentRoute: () => MainClassroomClassClassIdRoute,
+  } as any)
 const MainClassroomClassClassIdStreamStreamIdRoute =
   MainClassroomClassClassIdStreamStreamIdRouteImport.update({
     id: '/stream/$streamId',
@@ -184,6 +212,10 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom/': typeof MainClassroomIndexRoute
   '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
+  '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
+  '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRoutesByTo {
@@ -208,7 +240,10 @@ export interface FileRoutesByTo {
   '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom': typeof MainClassroomIndexRoute
-  '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
+  '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
+  '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/classroom/class/$classId': typeof MainClassroomClassClassIdIndexRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRoutesById {
@@ -237,6 +272,10 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/classroom/': typeof MainClassroomIndexRoute
   '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/_main/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
+  '/_main/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
+  '/_main/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/_main/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
   '/_main/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRouteTypes {
@@ -264,6 +303,10 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/classroom/'
     | '/classroom/class/$classId'
+    | '/classroom/class/$classId/chat'
+    | '/classroom/class/$classId/classwork'
+    | '/classroom/class/$classId/people'
+    | '/classroom/class/$classId/'
     | '/classroom/class/$classId/stream/$streamId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -288,6 +331,9 @@ export interface FileRouteTypes {
     | '/join-class/$classCode'
     | '/api/auth/$'
     | '/classroom'
+    | '/classroom/class/$classId/chat'
+    | '/classroom/class/$classId/classwork'
+    | '/classroom/class/$classId/people'
     | '/classroom/class/$classId'
     | '/classroom/class/$classId/stream/$streamId'
   id:
@@ -316,6 +362,10 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_main/classroom/'
     | '/_main/classroom/class/$classId'
+    | '/_main/classroom/class/$classId/chat'
+    | '/_main/classroom/class/$classId/classwork'
+    | '/_main/classroom/class/$classId/people'
+    | '/_main/classroom/class/$classId/'
     | '/_main/classroom/class/$classId/stream/$streamId'
   fileRoutesById: FileRoutesById
 }
@@ -504,6 +554,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainClassroomClassClassIdRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/classroom/class/$classId/': {
+      id: '/_main/classroom/class/$classId/'
+      path: '/'
+      fullPath: '/classroom/class/$classId/'
+      preLoaderRoute: typeof MainClassroomClassClassIdIndexRouteImport
+      parentRoute: typeof MainClassroomClassClassIdRoute
+    }
+    '/_main/classroom/class/$classId/chat': {
+      id: '/_main/classroom/class/$classId/chat'
+      path: '/chat'
+      fullPath: '/classroom/class/$classId/chat'
+      preLoaderRoute: typeof MainClassroomClassClassIdChatRouteImport
+      parentRoute: typeof MainClassroomClassClassIdRoute
+    }
+    '/_main/classroom/class/$classId/classwork': {
+      id: '/_main/classroom/class/$classId/classwork'
+      path: '/classwork'
+      fullPath: '/classroom/class/$classId/classwork'
+      preLoaderRoute: typeof MainClassroomClassClassIdClassworkRouteImport
+      parentRoute: typeof MainClassroomClassClassIdRoute
+    }
+    '/_main/classroom/class/$classId/people': {
+      id: '/_main/classroom/class/$classId/people'
+      path: '/people'
+      fullPath: '/classroom/class/$classId/people'
+      preLoaderRoute: typeof MainClassroomClassClassIdPeopleRouteImport
+      parentRoute: typeof MainClassroomClassClassIdRoute
+    }
     '/_main/classroom/class/$classId/stream/$streamId': {
       id: '/_main/classroom/class/$classId/stream/$streamId'
       path: '/stream/$streamId'
@@ -533,11 +611,20 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface MainClassroomClassClassIdRouteChildren {
+  MainClassroomClassClassIdChatRoute: typeof MainClassroomClassClassIdChatRoute
+  MainClassroomClassClassIdClassworkRoute: typeof MainClassroomClassClassIdClassworkRoute
+  MainClassroomClassClassIdPeopleRoute: typeof MainClassroomClassClassIdPeopleRoute
+  MainClassroomClassClassIdIndexRoute: typeof MainClassroomClassClassIdIndexRoute
   MainClassroomClassClassIdStreamStreamIdRoute: typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 
 const MainClassroomClassClassIdRouteChildren: MainClassroomClassClassIdRouteChildren =
   {
+    MainClassroomClassClassIdChatRoute: MainClassroomClassClassIdChatRoute,
+    MainClassroomClassClassIdClassworkRoute:
+      MainClassroomClassClassIdClassworkRoute,
+    MainClassroomClassClassIdPeopleRoute: MainClassroomClassClassIdPeopleRoute,
+    MainClassroomClassClassIdIndexRoute: MainClassroomClassClassIdIndexRoute,
     MainClassroomClassClassIdStreamStreamIdRoute:
       MainClassroomClassClassIdStreamStreamIdRoute,
   }

@@ -11,7 +11,8 @@ export const Route = createFileRoute("/_main/classroom/")({
   validateSearch: z.object({
     sort: z
       .enum(["all-classes", "created-classes", "enrolled-classes"])
-      .optional(),
+      .optional()
+      .catch(undefined),
   }),
   beforeLoad: ({ context }) => {
     if (context.user.role === "admin") throw redirect({ to: "/" });
