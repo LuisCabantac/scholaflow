@@ -13,17 +13,15 @@ export default function VerifySection({ token }: { token: string }) {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
 
-  const started = useRef(false);
+  const pending = useRef<Promise<AuthResult> | null>(null);
   const [result, setResult] = useState<AuthResult | null>(null);
 
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
-
     let active = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    verifyEmailVerificationFn({ data: token }).then((data) => {
+    pending.current ??= verifyEmailVerificationFn({ data: token });
+    pending.current.then((data) => {
       if (!active) return;
       setResult(data);
       if (data.success) {
