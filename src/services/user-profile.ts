@@ -27,12 +27,12 @@ export async function propagateUserProfile(
 
     await tx
       .update(classroom)
-      .set({ teacherName: profile.name })
+      .set({ teacherName: profile.name, teacherImage: profile.image })
       .where(eq(classroom.teacherId, userId));
     if (classIds.length) {
       await tx
         .update(enrolledClass)
-        .set({ teacherName: profile.name })
+        .set({ teacherName: profile.name, teacherImage: profile.image })
         .where(inArray(enrolledClass.classId, classIds));
     }
     await tx

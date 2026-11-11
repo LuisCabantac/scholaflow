@@ -479,18 +479,13 @@ export const closeAccountFn = createServerFn({ method: "POST" })
       };
     }
 
-    if (isUploadedAvatarUrl(user.image)) {
-      const filePath = extractAvatarFilePath(user.image);
-      await deleteFileFromBucket("avatars", filePath);
-    }
-
     const files = await collectUserFiles(user.id);
     const deleted = await deleteUserCascade(user.id);
     if (!deleted)
       return { success: false, message: "Failed to close account." };
 
     for (const group of files) {
-      await deleteFilesFromBucket(group.bucket, group.paths);
+      await deleteFilesFromBucket(group.bucket, group.paths).catch(() => null);
     }
 
     return { success: true, message: "Account closed successfully." };

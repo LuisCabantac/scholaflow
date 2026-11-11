@@ -8,7 +8,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import type { User } from "@/lib/schema";
 import { authKeys } from "@/queries/auth";
-import { userKeys } from "@/queries/user";
 import type { SessionUser } from "@/types/auth";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { updateProfileFn } from "@/server/functions/user-management";
@@ -87,11 +86,11 @@ export default function ProfileForm({
       }
 
       toast.success(message);
-      await queryClient.invalidateQueries({ queryKey: userKeys.all });
       await queryClient.invalidateQueries({
         queryKey: authKeys.session(),
         refetchType: "all",
       });
+      await queryClient.invalidateQueries();
       await router.invalidate();
       onClose();
     } catch {

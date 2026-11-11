@@ -6,9 +6,8 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { user } from "@/db/schema";
 import { sendEmail } from "@/services/email";
-import { extractAvatarFilePath } from "@/lib/utils";
 import type { AuthResult, TokenType } from "@/types/auth";
-import { isUploadedAvatarUrl } from "@/lib/default-avatar";
+import { deleteFilesFromBucket } from "@/services/user-management";
 import { renderActionEmail } from "@/services/email-templates/action-email";
 import { renderVerifyEmail } from "@/services/email-templates/verify-email";
 import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
@@ -21,10 +20,6 @@ import {
   getUserByEmail,
   getUserIdById,
 } from "@/services/user";
-import {
-  deleteFileFromBucket,
-  deleteFilesFromBucket,
-} from "@/services/user-management";
 import {
   deleteVerificationToken,
   generateVerificationToken,
@@ -224,20 +219,13 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
 
     if (!existingUser) return { success: false, code: "noAccount" };
 
-    if (isUploadedAvatarUrl(existingUser.image)) {
-      await deleteFileFromBucket(
-        "avatars",
-        extractAvatarFilePath(existingUser.image),
-      );
-    }
-
     const files = await collectUserFiles(existingUser.id);
     const deletedUser = await deleteUserCascade(existingUser.id);
 
     if (!deletedUser) return { success: false, code: "closeFailed" };
 
     for (const group of files) {
-      await deleteFilesFromBucket(group.bucket, group.paths);
+      await deleteFilesFromBucket(group.bucket, group.paths).catch(() => null);
     }
 
     await deleteVerificationToken(tokenData.identifier);

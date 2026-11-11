@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import type { User } from "@/lib/schema";
-import { userKeys } from "@/queries/user";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import type { UserFormType } from "@/types/user-management";
 import { createUserFn, updateUserFn } from "@/server/functions/user-management";
@@ -56,7 +55,7 @@ export default function UserForm({
       }
 
       toast.success(result.message);
-      await queryClient.invalidateQueries({ queryKey: userKeys.all });
+      await queryClient.invalidateQueries();
       onClose();
     } catch {
       toast.error(t("failed"));

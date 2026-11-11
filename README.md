@@ -291,7 +291,9 @@ The build output under `.output/` is a Nitro server; on Vercel it deploys as ser
 | `pnpm dev`                     | Vite dev server with HMR on port 3000                          |
 | `pnpm build` / `pnpm preview`  | Production build (Nitro) and local preview                     |
 | `pnpm check`                   | Biome lint + format check and import-group order check         |
-| `pnpm check:fix`               | Apply Biome fixes                                              |
+| `pnpm check:fix`               | Apply Biome fixes and sort import groups                       |
+| `pnpm lint` / `pnpm format`    | Biome lint only / format only                                  |
+| `pnpm generate-routes`         | Regenerate `src/routeTree.gen.ts`                              |
 | `pnpm imports:fix`             | Sort import groups by line length                              |
 | `pnpm typecheck`               | `tsc --noEmit`                                                 |
 | `pnpm test`                    | Vitest suites under `tests/`                                   |

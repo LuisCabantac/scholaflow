@@ -3,13 +3,6 @@ import { eq, inArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import type { BucketFiles } from "@/types/account";
 import {
-  extractClassworkFilePath,
-  extractCommentFilePath,
-  extractMessagesFilePath,
-  extractNoteFilePath,
-  extractStreamFilePath,
-} from "@/lib/utils";
-import {
   chat,
   classroom,
   classTopic,
@@ -111,21 +104,50 @@ export async function deleteUserCascade(userId: string): Promise<boolean> {
   });
 }
 
+function bucketPath(bucket: string, url: string): string | null {
+  const match = url.match(new RegExp(`/${bucket}/(.+)$`));
+  return match ? match[1] : null;
+}
+
 function bucketPaths(
   bucket: string,
   urls: (string | null | undefined)[],
-  extract: (url: string) => string,
 ): BucketFiles {
-  const paths = urls.filter((url): url is string => !!url).map(extract);
+  const paths = urls
+    .filter((url): url is string => !!url)
+    .map((url) => bucketPath(bucket, url))
+    .filter((path): path is string => !!path);
   return { bucket, paths: Array.from(new Set(paths)) };
 }
 
 export async function collectUserFiles(userId: string): Promise<BucketFiles[]> {
+  const [account] = await db
+    .select({ image: user.image })
+    .from(user)
+    .where(eq(user.id, userId));
   const taught = await db
     .select({ id: classroom.id })
     .from(classroom)
     .where(eq(classroom.teacherId, userId));
   const classIds = taught.map((entry) => entry.id);
+  const authored = await db
+    .select({ id: stream.id })
+    .from(stream)
+    .where(eq(stream.userId, userId));
+  const streamIds = authored.map((entry) => entry.id);
+
+  const byUserClassOrStream = <
+    T extends { userId: unknown; classId: unknown; streamId?: unknown },
+  >(
+    table: T,
+  ) =>
+    or(
+      eq(table.userId as never, userId),
+      ...(classIds.length ? [inArray(table.classId as never, classIds)] : []),
+      ...(table.streamId && streamIds.length
+        ? [inArray(table.streamId as never, streamIds)]
+        : []),
+    );
 
   const [notes, streams, classworks, comments, privateComments, messages] =
     await Promise.all([
@@ -137,82 +159,60 @@ export async function collectUserFiles(userId: string): Promise<BucketFiles[]> {
         .select({ files: stream.attachments })
         .from(stream)
         .where(
-          classIds.length
-            ? or(eq(stream.userId, userId), inArray(stream.classId, classIds))
-            : eq(stream.userId, userId),
+          or(
+            eq(stream.userId, userId),
+            ...(classIds.length ? [inArray(stream.classId, classIds)] : []),
+          ),
         ),
       db
         .select({ files: classwork.attachments })
         .from(classwork)
-        .where(
-          classIds.length
-            ? or(
-                eq(classwork.userId, userId),
-                inArray(classwork.classId, classIds),
-              )
-            : eq(classwork.userId, userId),
-        ),
+        .where(byUserClassOrStream(classwork)),
       db
         .select({ file: streamComment.attachment })
         .from(streamComment)
-        .where(
-          classIds.length
-            ? or(
-                eq(streamComment.userId, userId),
-                inArray(streamComment.classId, classIds),
-              )
-            : eq(streamComment.userId, userId),
-        ),
+        .where(byUserClassOrStream(streamComment)),
       db
         .select({ file: streamPrivateComment.attachment })
         .from(streamPrivateComment)
         .where(
-          classIds.length
-            ? or(
-                eq(streamPrivateComment.userId, userId),
-                eq(streamPrivateComment.toUserId, userId),
-                inArray(streamPrivateComment.classId, classIds),
-              )
-            : or(
-                eq(streamPrivateComment.userId, userId),
-                eq(streamPrivateComment.toUserId, userId),
-              ),
+          or(
+            byUserClassOrStream(streamPrivateComment),
+            eq(streamPrivateComment.toUserId, userId),
+          ),
         ),
       db
         .select({ files: chat.attachments })
         .from(chat)
         .where(
-          classIds.length
-            ? or(eq(chat.userId, userId), inArray(chat.classId, classIds))
-            : eq(chat.userId, userId),
+          or(
+            eq(chat.userId, userId),
+            ...(classIds.length ? [inArray(chat.classId, classIds)] : []),
+          ),
         ),
     ]);
 
   return [
+    bucketPaths("avatars", [account?.image]),
     bucketPaths(
       "notes",
       notes.flatMap((row) => row.files),
-      extractNoteFilePath,
     ),
     bucketPaths(
       "streams",
       streams.flatMap((row) => row.files),
-      extractStreamFilePath,
     ),
     bucketPaths(
       "classworks",
       classworks.flatMap((row) => row.files),
-      extractClassworkFilePath,
     ),
     bucketPaths(
       "comments",
       [...comments, ...privateComments].map((row) => row.file),
-      extractCommentFilePath,
     ),
     bucketPaths(
       "messages",
       messages.flatMap((row) => row.files),
-      extractMessagesFilePath,
     ),
   ].filter((group) => group.paths.length > 0);
 }
