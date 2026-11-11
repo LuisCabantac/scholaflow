@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { getUserByUserId } from "@/services/user";
 import { createClassworkSchema } from "@/lib/schema";
 import { uploadAttachments } from "@/services/storage";
+import { submissionsOpen } from "@/lib/classwork-rules";
 import { getClassByClassId } from "@/services/classroom";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFilesFromBucket } from "@/services/user-management";
@@ -152,6 +153,16 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
       };
     }
 
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream)
+      return { success: false, message: "This stream does not exist." };
+    if (!submissionsOpen(stream)) {
+      return {
+        success: false,
+        message: "Submissions are closed for this classwork.",
+      };
+    }
+
     const newAttachments = formData.getAll("attachments");
     const newUrlLinks = (formData.getAll("links") as string[]) || [];
     const newIsTurnedIn = formData.get("isTurned") === "true";
@@ -265,6 +276,13 @@ export const submitClassworkFn = createServerFn({ method: "POST" })
       return {
         success: false,
         message: "You can't submit to this assigned work.",
+      };
+    }
+
+    if (!submissionsOpen(stream)) {
+      return {
+        success: false,
+        message: "Submissions are closed for this classwork.",
       };
     }
 
