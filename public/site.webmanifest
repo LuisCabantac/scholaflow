@@ -8,7 +8,22 @@
   "background_color": "#fbfcfe",
   "theme_color": "#fbfcfe",
   "icons": [
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "/scholaflow_logo.png", "sizes": "1280x1280", "type": "image/png", "purpose": "any" }
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
