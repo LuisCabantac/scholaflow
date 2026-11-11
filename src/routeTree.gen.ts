@@ -12,11 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as MainRouteImport } from './routes/_main'
+import { Route as CloseAccountRouteImport } from './routes/close-account'
+import { Route as ErrorRouteImport } from './routes/error'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SigninRouteImport } from './routes/signin'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TermsOfUseRouteImport } from './routes/terms-of-use'
 import { Route as AuthForgetPasswordRouteImport } from './routes/_auth/forget-password'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
+import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
 import { Route as MainNotesRouteImport } from './routes/_main/notes'
 import { Route as MainNotificationsRouteImport } from './routes/_main/notifications'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
@@ -39,9 +46,29 @@ const MainRoute = MainRouteImport.update({
   id: '/_main',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CloseAccountRoute = CloseAccountRouteImport.update({
+  id: '/close-account',
+  path: '/close-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErrorRoute = ErrorRouteImport.update({
+  id: '/error',
+  path: '/error',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SigninRoute = SigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -49,9 +76,19 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsOfUseRoute = TermsOfUseRouteImport.update({
+  id: '/terms-of-use',
+  path: '/terms-of-use',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthForgetPasswordRoute = AuthForgetPasswordRouteImport.update({
   id: '/forget-password',
   path: '/forget-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthSignInRoute = AuthSignInRouteImport.update({
@@ -62,6 +99,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
   getParentRoute: () => AuthRoute,
 } as any)
 const MainNotesRoute = MainNotesRouteImport.update({
@@ -108,11 +150,18 @@ const MainClassroomClassClassIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/close-account': typeof CloseAccountRoute
+  '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/terms-of-use': typeof TermsOfUseRoute
   '/forget-password': typeof AuthForgetPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/verify': typeof AuthVerifyRoute
   '/notes': typeof MainNotesRoute
   '/notifications': typeof MainNotificationsRoute
   '/profile': typeof MainProfileRoute
@@ -124,11 +173,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/close-account': typeof CloseAccountRoute
+  '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/terms-of-use': typeof TermsOfUseRoute
   '/forget-password': typeof AuthForgetPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/verify': typeof AuthVerifyRoute
   '/notes': typeof MainNotesRoute
   '/notifications': typeof MainNotificationsRoute
   '/profile': typeof MainProfileRoute
@@ -143,11 +199,18 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_main': typeof MainRouteWithChildren
+  '/close-account': typeof CloseAccountRoute
+  '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
+  '/terms-of-use': typeof TermsOfUseRoute
   '/_auth/forget-password': typeof AuthForgetPasswordRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_auth/verify': typeof AuthVerifyRoute
   '/_main/notes': typeof MainNotesRoute
   '/_main/notifications': typeof MainNotificationsRoute
   '/_main/profile': typeof MainProfileRoute
@@ -161,11 +224,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/close-account'
+    | '/error'
     | '/privacy'
+    | '/signin'
+    | '/signup'
     | '/terms'
+    | '/terms-of-use'
     | '/forget-password'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/verify'
     | '/notes'
     | '/notifications'
     | '/profile'
@@ -177,11 +247,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/close-account'
+    | '/error'
     | '/privacy'
+    | '/signin'
+    | '/signup'
     | '/terms'
+    | '/terms-of-use'
     | '/forget-password'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/verify'
     | '/notes'
     | '/notifications'
     | '/profile'
@@ -195,11 +272,18 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/_main'
+    | '/close-account'
+    | '/error'
     | '/privacy'
+    | '/signin'
+    | '/signup'
     | '/terms'
+    | '/terms-of-use'
     | '/_auth/forget-password'
+    | '/_auth/reset-password'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
+    | '/_auth/verify'
     | '/_main/notes'
     | '/_main/notifications'
     | '/_main/profile'
@@ -214,8 +298,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   MainRoute: typeof MainRouteWithChildren
+  CloseAccountRoute: typeof CloseAccountRoute
+  ErrorRoute: typeof ErrorRoute
   PrivacyRoute: typeof PrivacyRoute
+  SigninRoute: typeof SigninRoute
+  SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  TermsOfUseRoute: typeof TermsOfUseRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -242,11 +331,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/close-account': {
+      id: '/close-account'
+      path: '/close-account'
+      fullPath: '/close-account'
+      preLoaderRoute: typeof CloseAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/error': {
+      id: '/error'
+      path: '/error'
+      fullPath: '/error'
+      preLoaderRoute: typeof ErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signin': {
+      id: '/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof SigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -256,11 +373,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms-of-use': {
+      id: '/terms-of-use'
+      path: '/terms-of-use'
+      fullPath: '/terms-of-use'
+      preLoaderRoute: typeof TermsOfUseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth/forget-password': {
       id: '/_auth/forget-password'
       path: '/forget-password'
       fullPath: '/forget-password'
       preLoaderRoute: typeof AuthForgetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/sign-in': {
@@ -275,6 +406,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-up'
       fullPath: '/sign-up'
       preLoaderRoute: typeof AuthSignUpRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/verify': {
+      id: '/_auth/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_main/notes': {
@@ -338,14 +476,18 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthForgetPasswordRoute: typeof AuthForgetPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthSignInRoute: typeof AuthSignInRoute
   AuthSignUpRoute: typeof AuthSignUpRoute
+  AuthVerifyRoute: typeof AuthVerifyRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthForgetPasswordRoute: AuthForgetPasswordRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthSignInRoute: AuthSignInRoute,
   AuthSignUpRoute: AuthSignUpRoute,
+  AuthVerifyRoute: AuthVerifyRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -376,8 +518,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   MainRoute: MainRouteWithChildren,
+  CloseAccountRoute: CloseAccountRoute,
+  ErrorRoute: ErrorRoute,
   PrivacyRoute: PrivacyRoute,
+  SigninRoute: SigninRoute,
+  SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  TermsOfUseRoute: TermsOfUseRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
