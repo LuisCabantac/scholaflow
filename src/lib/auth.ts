@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { inferAdditionalFields } from "better-auth/client/plugins";
+import { jwt } from "better-auth/plugins/jwt";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { db } from "@/db";
@@ -53,5 +54,6 @@ export const auth = betterAuth({
       },
     }),
     tanstackStartCookies(),
+    jwt(),
   ],
 });

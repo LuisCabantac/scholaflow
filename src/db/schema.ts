@@ -18,7 +18,7 @@ export const streamTypeEnum = pgEnum("type", [
   "material",
 ]);
 
-export const notificationTypeEnum = pgEnum("type", [
+export const notificationTypeEnum = pgEnum("notification_type", [
   "stream",
   "assignment",
   "quiz",
@@ -356,6 +356,18 @@ export const streamPrivateComment = pgTable("stream_private_comment", {
     .references(() => user.id),
 });
 
+export const jwks = pgTable("jwks", {
+  id: text("id").primaryKey(),
+  publicKey: text("public_key").notNull(),
+  privateKey: text("private_key").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  expiresAt: timestamp("expires_at"),
+  alg: text("alg"),
+  crv: text("crv"),
+});
+
 export const schema = {
   user,
   account,
@@ -372,4 +384,5 @@ export const schema = {
   classwork,
   streamComment,
   streamPrivateComment,
+  jwks,
 };
