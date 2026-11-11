@@ -3,14 +3,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { useHydrated } from "@/hooks/use-hydrated";
 
+const initialSidebarState = { isMobile: false, sidebarExpand: false };
+
 const SidebarProviderContext = createContext({
-  isMobile: false,
-  sidebarExpand: false,
+  ...initialSidebarState,
   handleSidebarExpand: () => {},
 });
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(initialSidebarState.isMobile);
   const [sidebarExpand, setSidebarExpand] = useState(isMobile);
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile);
 
@@ -54,10 +55,5 @@ export function useSidebar() {
   const context = useContext(SidebarProviderContext);
   const hydrated = useHydrated();
 
-  if (context === undefined)
-    throw new Error("useSidebar must be used within a SidebarProvider");
-
-  return hydrated
-    ? context
-    : { ...context, isMobile: false, sidebarExpand: false };
+  return hydrated ? context : { ...context, ...initialSidebarState };
 }
