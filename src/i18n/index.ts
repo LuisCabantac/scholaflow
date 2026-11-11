@@ -9,6 +9,7 @@ import enStream from "@/i18n/locales/en/stream.json";
 import enLanding from "@/i18n/locales/en/landing.json";
 import enPrivacy from "@/i18n/locales/en/privacy.json";
 import enClassroom from "@/i18n/locales/en/classroom.json";
+import enClasswork from "@/i18n/locales/en/classwork.json";
 
 export const defaultNS = "common" as const;
 
@@ -16,6 +17,7 @@ export const resources = {
   en: {
     auth: enAuth,
     classroom: enClassroom,
+    classwork: enClasswork,
     common: enCommon,
     landing: enLanding,
     layout: enLayout,
@@ -39,6 +41,7 @@ export function createI18n(language: Language = "en") {
       "common",
       "auth",
       "classroom",
+      "classwork",
       "landing",
       "layout",
       "privacy",

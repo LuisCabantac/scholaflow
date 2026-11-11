@@ -126,5 +126,49 @@
     "saveChanges": "Save changes",
     "confirmDelete": "Are you sure you want to delete this post?",
     "close": "Close"
+  },
+  "detail": {
+    "back": "Back to class",
+    "instructions": "Instructions",
+    "submissions": "Submissions",
+    "dueToday": "Due today, {{time}}",
+    "dueYesterday": "Due yesterday, {{time}}",
+    "dueAt": "Due {{date}}",
+    "noDueDate": "No due date",
+    "points": "{{count}} points",
+    "comments": "Comments",
+    "menu": "Post options"
+  },
+  "work": {
+    "title": "Your work",
+    "graded": "{{points}} / {{total}}",
+    "turnedIn": "Turned in",
+    "doneLate": "Done late",
+    "missing": "Missing",
+    "collapse": "Collapse your work",
+    "expand": "Expand your work",
+    "seeAttachments_one": "See {{count}} attachment",
+    "seeAttachments_other": "See {{count}} attachments",
+    "noAttachments": "You have no attachments uploaded.",
+    "files": "Files",
+    "links": "Links",
+    "addWork": "Add work",
+    "uploadFiles": "Upload files",
+    "addLinks": "Add links",
+    "addLink": "Add link",
+    "urlPlaceholder": "Enter a url",
+    "add": "Add",
+    "turnIn": "Turn in",
+    "resubmit": "Resubmit",
+    "markAsDone": "Mark as done",
+    "unsubmit": "Unsubmit",
+    "privateComments": "Private comments",
+    "addPrivateComment": "Add private comment",
+    "expandComments": "Expand",
+    "minimizeComments": "Minimize",
+    "messages": {
+      "fileTooLarge": "Each file must be less than 4MB.",
+      "invalidUrl": "Please enter a valid URL."
+    }
   }
 }

@@ -1,0 +1,46 @@
+{
+  "search": "Search...",
+  "create": "Create",
+  "menu": {
+    "assignment": "Assignment",
+    "quiz": "Quiz",
+    "material": "Material",
+    "topic": "Topic"
+  },
+  "empty": {
+    "message": "Nothing to do for class yet!",
+    "imageAlt": "no classworks"
+  },
+  "deleted": "Classwork has been successfully deleted!",
+  "topic": {
+    "menu": "Topic options",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "delete": "Delete",
+    "deleted": "Topic has been successfully deleted!",
+    "expand": "Show classworks",
+    "collapse": "Hide classworks"
+  },
+  "submissions": {
+    "title": "Submissions",
+    "instructions": "Instructions",
+    "turnedIn": "Turned in",
+    "assigned": "Assigned",
+    "graded": "Graded",
+    "ungraded": "Ungraded",
+    "missing": "Missing",
+    "doneLate": "Done late",
+    "score": "{{points}}/{{total}}",
+    "attachments": "Attachments",
+    "noAttachments": "No attachments",
+    "close": "Close",
+    "grade": "Grade",
+    "addGrade": "Add grade",
+    "addGradeDescription": "Add specific grades for assigned activities and tasks.",
+    "done": "Done",
+    "privateComments": "Private comments",
+    "addPrivateComment": "Add private comment",
+    "expand": "Expand",
+    "minimize": "Minimize",
+    "avatarAlt": "{{name}}'s avatar"
+  }
+}

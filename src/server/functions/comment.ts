@@ -3,7 +3,6 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { extractCommentFilePath } from "@/lib/utils";
-import { isClassMember } from "@/services/classroom";
 import { uploadAttachments } from "@/services/storage";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFileFromBucket } from "@/services/user-management";
@@ -12,13 +11,14 @@ import {
   createStreamPrivateCommentSchema,
 } from "@/lib/schema";
 import {
-  getClassByClassId,
-  getEnrolledClassByClassAndSessionId,
-} from "@/services/classroom";
-import {
   deleteAllNotificationsByResourceId,
   sendNotification,
 } from "@/services/notification";
+import {
+  getClassByClassId,
+  getEnrolledClassByClassAndSessionId,
+  isClassMember,
+} from "@/services/classroom";
 import {
   createPrivateComment,
   createStreamComment,
@@ -80,7 +80,22 @@ export const getAllPrivateCommentsByStreamIdFn = createServerFn({
 
     if (!session) return null;
 
-    return await getAllPrivateCommentsByStreamId(streamId);
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    const classroom = await getClassByClassId(stream.classId);
+    const comments = await getAllPrivateCommentsByStreamId(streamId);
+    if (!classroom || classroom.teacherId === session.user.id) return comments;
+
+    return (
+      comments?.filter(
+        (comment) =>
+          comment.userId === session.user.id ||
+          comment.toUserId === session.user.id,
+      ) ?? null
+    );
   });
 
 export const getAllPrivateCommentsByUserIdFn = createServerFn({
