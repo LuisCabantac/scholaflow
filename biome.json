@@ -8,6 +8,7 @@
   "files": {
     "includes": [
       "**/src/**/*",
+      "**/tests/**/*",
       "**/vite.config.ts",
       "**/vitest.config.ts",
       "!**/src/routeTree.gen.ts",
