@@ -1,0 +1,28 @@
+{
+  "all": "All",
+  "unread": "Unread",
+  "markAllRead": "Mark all as read",
+  "imageAlt": "{{name}}'s image",
+  "titles": {
+    "stream": "New announcement from {{name}}",
+    "assignment": "New assignment from {{name}}",
+    "quiz": "New quiz from {{name}}",
+    "question": "New question from {{name}}",
+    "material": "New material from {{name}}",
+    "comment": "New comment from {{name}}",
+    "join": "{{name}} joined the class",
+    "addToClass": "{{name}} added you to a class",
+    "submit": "{{name}} submitted work",
+    "grade": "{{name}} graded your work"
+  },
+  "when": {
+    "justNow": "Just now",
+    "minutes": "{{count}}m ago",
+    "hours": "{{count}}h ago",
+    "yesterday": "Yesterday"
+  },
+  "empty": {
+    "message": "You're all caught up!",
+    "imageAlt": "no notifications"
+  }
+}

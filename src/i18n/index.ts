@@ -3,6 +3,8 @@ import { initReactI18next } from "react-i18next";
 
 import enAuth from "@/i18n/locales/en/auth.json";
 import enChat from "@/i18n/locales/en/chat.json";
+import enTodo from "@/i18n/locales/en/todo.json";
+import enNotes from "@/i18n/locales/en/notes.json";
 import enTerms from "@/i18n/locales/en/terms.json";
 import enCommon from "@/i18n/locales/en/common.json";
 import enLayout from "@/i18n/locales/en/layout.json";
@@ -13,6 +15,7 @@ import enPrivacy from "@/i18n/locales/en/privacy.json";
 import enProfile from "@/i18n/locales/en/profile.json";
 import enClassroom from "@/i18n/locales/en/classroom.json";
 import enClasswork from "@/i18n/locales/en/classwork.json";
+import enNotifications from "@/i18n/locales/en/notifications.json";
 import enUserManagement from "@/i18n/locales/en/user-management.json";
 
 export const defaultNS = "common" as const;
@@ -27,11 +30,14 @@ export const resources = {
     landing: enLanding,
     layout: enLayout,
     people: enPeople,
+    notes: enNotes,
+    notifications: enNotifications,
     privacy: enPrivacy,
     profile: enProfile,
     stream: enStream,
     terms: enTerms,
     userManagement: enUserManagement,
+    todo: enTodo,
   },
 } as const;
 
@@ -59,6 +65,9 @@ export function createI18n(language: Language = "en") {
       "stream",
       "terms",
       "userManagement",
+      "notes",
+      "notifications",
+      "todo",
     ],
 
     defaultNS,
