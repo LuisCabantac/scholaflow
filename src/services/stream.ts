@@ -1,13 +1,13 @@
-import { validate as validateUUID } from "uuid";
 import { and, desc, eq, ilike, ne } from "drizzle-orm";
+import { validate as validateUUID } from "uuid";
 
 import { db } from "@/db";
 import { stream } from "@/db/schema";
 import type { Stream } from "@/lib/schema";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import {
-  getClassByClassId,
   getAllEnrolledClassesByUserId,
+  getClassByClassId,
 } from "@/services/classroom";
 
 export async function getAllClassStreamsByClassId(

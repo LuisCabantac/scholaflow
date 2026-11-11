@@ -2,64 +2,64 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { getUserByEmail } from "@/services/user";
-import { deleteFilesFromBucket } from "@/services/user-management";
 import { createClassroomSchema, createEnrolledClassSchema } from "@/lib/schema";
 import {
-  deleteClassStreamPost,
-  getAllClassStreamsByClassId,
-} from "@/services/stream";
+  extractClassworkFilePath,
+  extractCommentFilePath,
+  extractMessagesFilePath,
+  extractStreamFilePath,
+  generateClassCode,
+} from "@/lib/utils";
 import {
   deleteClassTopicRecord,
   getAllClassTopicsByClassId,
 } from "@/services/class-topic";
 import {
-  getAllMessagesByClassId,
-  deleteAllMessagesByClassIdRecord,
-} from "@/services/message";
-import {
-  sendNotification,
-  deleteAllNotificationsByResourceId,
-} from "@/services/notification";
-import {
-  generateClassCode,
-  extractStreamFilePath,
-  extractCommentFilePath,
-  extractMessagesFilePath,
-  extractClassworkFilePath,
-} from "@/lib/utils";
-import {
-  getAllCommentsByStreamId,
-  getAllPrivateCommentsByStreamId,
-  deleteAllClassStreamCommentsByStreamIdRecord,
-  deleteAllPrivateStreamCommentsByStreamIdRecord,
-} from "@/services/comment";
-import {
-  getAllClassworksByStreamId,
-  getAllClassworksByClassAndUserId,
-  deleteAllClassworksByStreamIdRecord,
-  deleteAllClassworksByClassAndUserIdRecord,
-} from "@/services/classwork";
-import {
-  deleteClass,
   createClassroom,
-  updateClassroom,
-  getClassByClassId,
-  getClassByClassCode,
   createEnrolledClass,
-  updateEnrolledClass,
-  getClassNameByClassId,
+  deleteClass,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
+  deleteMultipleEnrolledClassRecord,
   getAllClassesByTeacherId,
-  getAllEnrolledClassesByUserId,
+  getAllEnrolledClassesByClassAndSessionId,
   getAllEnrolledClassesByClassId,
-  getEnrolledClassByUserAndClassId,
+  getAllEnrolledClassesByUserId,
+  getClassByClassCode,
+  getClassByClassId,
+  getClassNameByClassId,
+  getEnrolledClassByClassAndSessionId,
   getEnrolledClassByClassAndUserId,
   getEnrolledClassByEnrolledClassId,
-  deleteMultipleEnrolledClassRecord,
-  getEnrolledClassByClassAndSessionId,
-  getAllEnrolledClassesByClassAndSessionId,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
+  getEnrolledClassByUserAndClassId,
+  updateClassroom,
+  updateEnrolledClass,
 } from "@/services/classroom";
+import {
+  deleteAllClassworksByClassAndUserIdRecord,
+  deleteAllClassworksByStreamIdRecord,
+  getAllClassworksByClassAndUserId,
+  getAllClassworksByStreamId,
+} from "@/services/classwork";
+import {
+  deleteAllClassStreamCommentsByStreamIdRecord,
+  deleteAllPrivateStreamCommentsByStreamIdRecord,
+  getAllCommentsByStreamId,
+  getAllPrivateCommentsByStreamId,
+} from "@/services/comment";
+import {
+  deleteAllMessagesByClassIdRecord,
+  getAllMessagesByClassId,
+} from "@/services/message";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
+import {
+  deleteClassStreamPost,
+  getAllClassStreamsByClassId,
+} from "@/services/stream";
+import { getUserByEmail } from "@/services/user";
+import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)
@@ -276,7 +276,8 @@ export const updateClassFn = createServerFn({ method: "POST" })
     const newSubject = formData.get("subject") as string;
     const newSection = formData.get("section") as string | null;
     const newClassDescription = formData.get("classDescription") as
-      string | null;
+      | string
+      | null;
     const newAllowStudentsToComment =
       formData.get("allowStudentsToComment") === "true";
     const newClassCardBackgroundColor = formData.get("color") as string;
@@ -440,10 +441,12 @@ export const deleteEnrolledClassbyClassAndEnrolledClassIdFn = createServerFn({
     if (!classroom)
       return { success: false, message: "This class doesn't exist." };
 
-    if (!(
-      classroom.teacherId === session.user.id ||
-      currentEnrolledClass.userId === session.user.id
-    )) {
+    if (
+      !(
+        classroom.teacherId === session.user.id ||
+        currentEnrolledClass.userId === session.user.id
+      )
+    ) {
       return {
         success: false,
         message: "You're not authorized to remove this user.",

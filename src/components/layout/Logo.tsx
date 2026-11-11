@@ -6,6 +6,7 @@ export default function Logo({ showText = true }: { showText?: boolean }) {
   return (
     <div className="flex items-center justify-start gap-1.5 select-none">
       <svg
+        aria-hidden="true"
         width="958"
         height="709"
         viewBox="0 0 958 709"

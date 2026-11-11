@@ -17,7 +17,7 @@ export const resources = {
   },
 } as const;
 
-export const supportedLanguages = ["en", "fr"] as const;
+export const supportedLanguages = ["en"] as const;
 export type Language = (typeof supportedLanguages)[number];
 
 export function createI18n(language: Language = "en") {

@@ -3,20 +3,20 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { createChatSchema } from "@/lib/schema";
-import { uploadAttachments } from "@/services/storage";
 import { extractMessagesFilePath } from "@/lib/utils";
-import { deleteFilesFromBucket } from "@/services/user-management";
 import {
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
 } from "@/services/classroom";
 import {
   addMessageToChatRecord,
-  getAllMessagesByUserId,
-  getAllMessagesByClassId,
-  deleteAllMessagesByUserId,
   deleteAllMessagesByClassIdRecord,
+  deleteAllMessagesByUserId,
+  getAllMessagesByClassId,
+  getAllMessagesByUserId,
 } from "@/services/message";
+import { uploadAttachments } from "@/services/storage";
+import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllMessagesByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
@@ -137,7 +137,7 @@ export const deleteAllMessagesByUserIdFn = createServerFn({
       return { success: true, message: "No messages to delete." };
     }
 
-    const attachments = messages.map((c) => c.attachments).flat();
+    const attachments = messages.flatMap((c) => c.attachments);
     if (attachments.length) {
       const chatAttachmentsFilePath = attachments.map((file) =>
         extractMessagesFilePath(file),
@@ -167,7 +167,7 @@ export const deleteAllMessagesByClassIdFn = createServerFn({
       return { success: true, message: "No messages to delete." };
     }
 
-    const attachments = messages.map((c) => c.attachments).flat();
+    const attachments = messages.flatMap((c) => c.attachments);
     if (attachments.length) {
       const chatAttachmentsFilePath = attachments.map((file) =>
         extractMessagesFilePath(file),

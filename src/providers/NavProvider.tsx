@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const NavProviderContext = createContext({
   isSticky: false,
@@ -7,7 +8,7 @@ const NavProviderContext = createContext({
 export function NavProvider({ children }: { children: React.ReactNode }) {
   const [isSticky, setIsSticky] = useState<boolean>(false);
 
-  useEffect(function () {
+  useEffect(() => {
     const handleSetIsSticky = () => {
       setIsSticky(window.scrollY >= 20);
     };

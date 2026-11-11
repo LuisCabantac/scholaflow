@@ -2,42 +2,42 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { extractAvatarFilePath } from "@/lib/utils";
-import { uploadAttachments } from "@/services/storage";
+import {
+  deleteClass,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
+  getAllClassesByTeacherId,
+  getAllEnrolledClassesByUserId,
+} from "@/services/classroom";
+import {
+  deleteAllCommentsByUserId,
+  deleteAllPrivateCommentsByUserId,
+} from "@/services/comment";
 import { deleteAllMessagesByUserId } from "@/services/message";
 import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { deleteAllNotificationsByUserId } from "@/services/notification";
+import { uploadAttachments } from "@/services/storage";
 import {
   deleteClassStreamPost,
   getAllClassesStreamByUserId,
 } from "@/services/stream";
 import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
-import {
-  deleteClass,
-  getAllClassesByTeacherId,
-  getAllEnrolledClassesByUserId,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
-} from "@/services/classroom";
-import {
-  getUserByEmail,
-  getUserByUserId,
   createUserRecord,
-  updateUserRecord,
   deleteUserRecord,
   getAccountByUserId,
+  getUserByEmail,
+  getUserByUserId,
+  updateUserRecord,
 } from "@/services/user";
 import {
-  getRoleRequest,
-  getAllRoleRequests,
-  deleteFileFromBucket,
   createRoleRequestRecord,
+  deleteFileFromBucket,
   deleteRoleRequestRecord,
-  updateRoleRequestRecord,
+  getAllRoleRequests,
+  getRoleRequest,
   removeRoleRequestByUserId,
+  updateRoleRequestRecord,
 } from "@/services/user-management";
 
 export const getRoleRequestFn = createServerFn({ method: "GET" })
@@ -196,7 +196,8 @@ export const updateProfileFn = createServerFn({ method: "POST" })
     const currentPassword = formData.get("currentPassword") as string | null;
     const newPassword = formData.get("newPassword") as string | null;
     const confirmNewPassword = formData.get("confirmNewPassword") as
-      string | null;
+      | string
+      | null;
 
     if (newPassword && newPassword !== confirmNewPassword) {
       return { success: false, message: "Passwords do not match." };

@@ -2,34 +2,34 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { extractCommentFilePath } from "@/lib/utils";
-import { uploadAttachments } from "@/services/storage";
-import { getClassStreamByStreamId } from "@/services/stream";
-import { deleteFileFromBucket } from "@/services/user-management";
 import {
   createStreamCommentSchema,
   createStreamPrivateCommentSchema,
 } from "@/lib/schema";
+import { extractCommentFilePath } from "@/lib/utils";
 import {
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
 } from "@/services/classroom";
 import {
-  sendNotification,
-  deleteAllNotificationsByResourceId,
-} from "@/services/notification";
-import {
-  createStreamComment,
   createPrivateComment,
-  getAllCommentsByUserId,
-  getAllCommentsByStreamId,
-  deleteStreamCommentRecord,
+  createStreamComment,
   deletePrivateCommentRecord,
-  getStreamCommentByCommentId,
-  getAllPrivateCommentsByUserId,
+  deleteStreamCommentRecord,
+  getAllCommentsByStreamId,
+  getAllCommentsByUserId,
   getAllPrivateCommentsByStreamId,
+  getAllPrivateCommentsByUserId,
+  getStreamCommentByCommentId,
   getStreamPrivateCommentByCommentId,
 } from "@/services/comment";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
+import { uploadAttachments } from "@/services/storage";
+import { getClassStreamByStreamId } from "@/services/stream";
+import { deleteFileFromBucket } from "@/services/user-management";
 
 export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
   .validator((streamId: string) => streamId)
@@ -123,11 +123,13 @@ export const addCommentToStreamFn = createServerFn({ method: "POST" })
       classroomId,
     );
 
-    if (!(
-      classroom.teacherId === session.user.id ||
-      enrolledClass ||
-      classroom.allowUsersToComment
-    )) {
+    if (
+      !(
+        classroom.teacherId === session.user.id ||
+        enrolledClass ||
+        classroom.allowUsersToComment
+      )
+    ) {
       return {
         success: false,
         message: "You don't have permission to comment on this post.",
@@ -205,10 +207,12 @@ export const deleteStreamCommentFn = createServerFn({ method: "POST" })
         message: "This comment doesn't exist on this post.",
       };
 
-    if (!(
-      comment.userId === session.user.id ||
-      classroom.teacherId === session.user.id
-    )) {
+    if (
+      !(
+        comment.userId === session.user.id ||
+        classroom.teacherId === session.user.id
+      )
+    ) {
       return {
         success: false,
         message: "You're not authorized to delete this comment.",
@@ -261,11 +265,13 @@ export const addPrivateCommentFn = createServerFn({ method: "POST" })
     if (!stream)
       return { success: false, message: "This stream doesn't exist." };
 
-    if (!(
-      stream.announceToAll ||
-      session.user.id === classroom.teacherId ||
-      stream.announceTo.includes(session.user.id)
-    )) {
+    if (
+      !(
+        stream.announceToAll ||
+        session.user.id === classroom.teacherId ||
+        stream.announceTo.includes(session.user.id)
+      )
+    ) {
       return {
         success: false,
         message: "You don't have permission to comment on this classwork.",
@@ -350,10 +356,12 @@ export const deletePrivateCommentFn = createServerFn({ method: "POST" })
         message: "This comment doesn't exist on this post.",
       };
 
-    if (!(
-      comment.userId === session.user.id ||
-      classroom.teacherId === session.user.id
-    )) {
+    if (
+      !(
+        comment.userId === session.user.id ||
+        classroom.teacherId === session.user.id
+      )
+    ) {
       return {
         success: false,
         message: "You're not authorized to delete this comment.",

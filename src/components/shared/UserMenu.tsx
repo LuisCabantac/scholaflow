@@ -1,7 +1,7 @@
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
-import { LogOut, Moon, Sun, User } from "lucide-react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { LogOut, Moon, Sun, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/providers/ThemeProvider";

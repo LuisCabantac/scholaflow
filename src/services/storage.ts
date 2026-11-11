@@ -11,7 +11,7 @@ export async function uploadAttachments(
     const supabase = createClient();
 
     const sanitizedFileName = file.name.replace(/~/g, "").replace(/\s+/g, "_");
-    const [name, extension] = sanitizedFileName.split(/\.(?=[^\.]+$)/);
+    const [name, extension] = sanitizedFileName.split(/\.(?=[^.]+$)/);
 
     const filePath = `${folderId}/${name}_${uuidv4()}.${extension}`;
 

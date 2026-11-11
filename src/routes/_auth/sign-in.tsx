@@ -1,20 +1,20 @@
-import { toast } from "sonner";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
-import { Trans, useTranslation } from "react-i18next";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { signIn } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/schema";
 import { getSession } from "@/server/functions/auth";
 
 import Logo from "@/components/layout/Logo";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
@@ -190,8 +190,12 @@ function SignIn() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-2 text-sm font-medium">
+                  <label
+                    htmlFor="rememberMe"
+                    className="flex items-center gap-2 text-sm font-medium"
+                  >
                     <Checkbox
+                      id="rememberMe"
                       disabled={isLoading}
                       checked={rememberMe}
                       onCheckedChange={handleToggleRememberMe}
@@ -238,6 +242,7 @@ function SignIn() {
               disabled={isLoading}
             >
               <svg
+                aria-hidden="true"
                 viewBox="0 0 24 24"
                 className="fill-primary disabled:fill-primary/90 size-5"
               >

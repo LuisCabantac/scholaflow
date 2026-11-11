@@ -1,7 +1,7 @@
 import {
+  createRootRouteWithContext,
   HeadContent,
   Scripts,
-  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import "@fontsource/be-vietnam-pro/100.css";
 import "@fontsource/be-vietnam-pro/200.css";
@@ -14,8 +14,8 @@ import "@fontsource/be-vietnam-pro/800.css";
 import "@fontsource/be-vietnam-pro/900.css";
 import "@fontsource-variable/quicksand/wght.css";
 
-import appCss from "@/styles.css?url";
 import { AppProviders } from "@/providers";
+import appCss from "@/styles.css?url";
 
 import { Toaster } from "@/components/ui/sonner";
 

@@ -9,7 +9,7 @@ import {
 } from "date-fns";
 
 export function extractImagePath(url: string): string {
-  const match = url.match(/\/([^\/]+)$/);
+  const match = url.match(/\/([^/]+)$/);
   return match ? match[1] : "";
 }
 
@@ -103,7 +103,9 @@ export function formatDate(createdAt: string | Date): string {
 
 export function handleFullName(fullName: string) {
   const nameParts = fullName.trim().split(/\s+/);
-  let firstName, lastName, middleName;
+  let firstName: string;
+  let lastName: string;
+  let middleName: string;
 
   if (nameParts.length === 1) {
     firstName = nameParts[0];
@@ -187,7 +189,7 @@ export function extractFirstUuid(url: string): string | null {
 }
 
 export function extractStreamIdFromUrl(url: string): string | null {
-  const streamIdPattern = /\/stream\/([^\/]+)/;
+  const streamIdPattern = /\/stream\/([^/]+)/;
   const match = url.match(streamIdPattern);
 
   return match ? match[1] : null;

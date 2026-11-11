@@ -1,31 +1,11 @@
-import { eq } from "drizzle-orm";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { auth } from "@/lib/auth";
 import { user } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import { extractAvatarFilePath } from "@/lib/utils";
-import { deleteAllMessagesByUserId } from "@/services/message";
-import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { deleteAllNotificationsByUserId } from "@/services/notification";
-import {
-  deleteFileFromBucket,
-  removeRoleRequestByUserId,
-} from "@/services/user-management";
-import {
-  deleteClassStreamPost,
-  getAllClassesStreamByUserId,
-} from "@/services/stream";
-import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
-import {
-  getUserByEmail,
-  getUserIdById,
-  deleteUserRecord,
-} from "@/services/user";
 import {
   deleteVerificationToken,
   generateVerificationToken,
@@ -33,10 +13,30 @@ import {
 } from "@/services/auth";
 import {
   deleteClass,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
 } from "@/services/classroom";
+import {
+  deleteAllCommentsByUserId,
+  deleteAllPrivateCommentsByUserId,
+} from "@/services/comment";
+import { deleteAllMessagesByUserId } from "@/services/message";
+import { deleteNote, getAllNotesByUserId } from "@/services/notes";
+import { deleteAllNotificationsByUserId } from "@/services/notification";
+import {
+  deleteClassStreamPost,
+  getAllClassesStreamByUserId,
+} from "@/services/stream";
+import {
+  deleteUserRecord,
+  getUserByEmail,
+  getUserIdById,
+} from "@/services/user";
+import {
+  deleteFileFromBucket,
+  removeRoleRequestByUserId,
+} from "@/services/user-management";
 
 export const getSession = createServerFn({ method: "GET" }).handler(
   async () => {

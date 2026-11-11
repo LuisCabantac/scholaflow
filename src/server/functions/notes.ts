@@ -2,18 +2,18 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { uploadAttachments } from "@/services/storage";
-import { deleteFilesFromBucket } from "@/services/user-management";
 import { createNoteSchema, editNoteSchema } from "@/lib/schema";
 import { arraysAreEqual, extractNoteFilePath } from "@/lib/utils";
 import {
   createNote,
-  updateNote,
   deleteNote,
   getAllNotesByUserId,
   getAllNotesByUserIdQuery,
   getNoteByNoteIdAndUserId,
+  updateNote,
 } from "@/services/notes";
+import { uploadAttachments } from "@/services/storage";
+import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllNotesSessionFn = createServerFn({ method: "GET" }).handler(
   async () => {

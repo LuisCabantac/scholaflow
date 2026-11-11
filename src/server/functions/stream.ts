@@ -2,43 +2,43 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { uploadAttachments } from "@/services/storage";
-import { getClassByClassId } from "@/services/classroom";
-import { getClassTopicByTopicId } from "@/services/class-topic";
-import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
 import {
-  sendNotification,
-  deleteAllNotificationsByResourceId,
-} from "@/services/notification";
-import {
   arraysAreEqual,
-  extractStreamFilePath,
-  extractCommentFilePath,
   extractClassworkFilePath,
+  extractCommentFilePath,
+  extractStreamFilePath,
 } from "@/lib/utils";
+import { getClassTopicByTopicId } from "@/services/class-topic";
+import { getClassByClassId } from "@/services/classroom";
 import {
-  getAllCommentsByStreamId,
-  getAllPrivateCommentsByStreamId,
-  deleteAllClassStreamCommentsByStreamIdRecord,
-  deleteAllPrivateStreamCommentsByStreamIdRecord,
-} from "@/services/comment";
-import {
-  getAllClassworksByStreamId,
   deleteAllClassworksByStreamIdRecord,
+  getAllClassworksByStreamId,
 } from "@/services/classwork";
 import {
+  deleteAllClassStreamCommentsByStreamIdRecord,
+  deleteAllPrivateStreamCommentsByStreamIdRecord,
+  getAllCommentsByStreamId,
+  getAllPrivateCommentsByStreamId,
+} from "@/services/comment";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
+import { uploadAttachments } from "@/services/storage";
+import {
   createStreamPost,
-  updateStreamPost,
   deleteClassStreamPost,
-  getClassStreamByStreamId,
   getAllClassesStreamByUserId,
   getAllClassStreamsByClassId,
-  getClassworksByClassIdQuery,
-  getAllClassworkStreamsByTopicId,
   getAllClassworkStreamsByClassId,
+  getAllClassworkStreamsByTopicId,
   getAllEnrolledClassesClassworks,
+  getClassStreamByStreamId,
+  getClassworksByClassIdQuery,
+  updateStreamPost,
 } from "@/services/stream";
+import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
@@ -131,7 +131,11 @@ export const createStreamFn = createServerFn({ method: "POST" })
 
     const classroomId = formData.get("classroomId") as string;
     const postType = formData.get("type") as
-      "stream" | "assignment" | "quiz" | "question" | "material";
+      | "stream"
+      | "assignment"
+      | "quiz"
+      | "question"
+      | "material";
 
     const isAssignToAll = formData.get("isAssignToAll") === "true";
     const topicId = (formData.get("topicId") as string) || "no-topic";
@@ -428,10 +432,12 @@ export const deleteClassStreamFn = createServerFn({ method: "POST" })
         message: "This post doesn't exist in this class.",
       };
 
-    if (!(
-      stream.userId === session.user.id ||
-      classroom.teacherId === session.user.id
-    )) {
+    if (
+      !(
+        stream.userId === session.user.id ||
+        classroom.teacherId === session.user.id
+      )
+    ) {
       return {
         success: false,
         message: "You're not authorized to delete this post.",
