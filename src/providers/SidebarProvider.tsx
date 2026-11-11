@@ -1,6 +1,8 @@
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 const SidebarProviderContext = createContext({
   isMobile: false,
   sidebarExpand: false,
@@ -50,7 +52,12 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 
 export function useSidebar() {
   const context = useContext(SidebarProviderContext);
+  const hydrated = useHydrated();
+
   if (context === undefined)
     throw new Error("useSidebar must be used within a SidebarProvider");
-  return context;
+
+  return hydrated
+    ? context
+    : { ...context, isMobile: false, sidebarExpand: false };
 }
