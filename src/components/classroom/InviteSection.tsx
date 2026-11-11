@@ -20,8 +20,8 @@ export default function InviteSection({
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { t } = useTranslation("classroom", { keyPrefix: "invite" });
   const { t: tClassroom } = useTranslation("classroom");
+  const { t } = useTranslation("classroom", { keyPrefix: "invite" });
 
   const join = useMutation({
     mutationFn: () => joinClassFn({ data: classroom.id }),

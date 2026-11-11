@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { ClientOnly, Link } from "@tanstack/react-router";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
 import type {
@@ -78,31 +78,35 @@ export default function ToDoItem(props: ToDoItemProps) {
               {props.item.title}
             </p>
             <p className="text-xs">{props.item.className}</p>
-            <div className="mt-2 grid items-center gap-1 text-xs">
-              <p>{t("posted", { when: postedWhen(postedAt, t) })}</p>
-              {props.kind === "assigned" &&
-                (props.item.dueDate ? (
-                  <p className="text-foreground/70 text-xs">
+            <ClientOnly fallback={<div className="mt-2 h-8" />}>
+              <div className="mt-2 grid items-center gap-1 text-xs">
+                <p>{t("posted", { when: postedWhen(postedAt, t) })}</p>
+                {props.kind === "assigned" &&
+                  (props.item.dueDate ? (
+                    <p className="text-foreground/70 text-xs">
+                      {dueLabel(props.item.dueDate, t)}
+                    </p>
+                  ) : (
+                    <p className="text-foreground/70 text-xs">
+                      {t("noDueDate")}
+                    </p>
+                  ))}
+                {props.kind === "missing" && props.item.dueDate && (
+                  <p className="text-destructive text-xs">
                     {dueLabel(props.item.dueDate, t)}
                   </p>
-                ) : (
-                  <p className="text-foreground/70 text-xs">{t("noDueDate")}</p>
-                ))}
-              {props.kind === "missing" && props.item.dueDate && (
-                <p className="text-destructive text-xs">
-                  {dueLabel(props.item.dueDate, t)}
-                </p>
-              )}
-              {props.kind === "done" && (
-                <p className="whitespace-nowrap">
-                  {props.item.isGraded && props.item.isTurnedIn
-                    ? t("score", { points: String(props.item.points) })
-                    : props.item.isTurnedIn
-                      ? t("turnedIn")
-                      : ""}
-                </p>
-              )}
-            </div>
+                )}
+                {props.kind === "done" && (
+                  <p className="whitespace-nowrap">
+                    {props.item.isGraded && props.item.isTurnedIn
+                      ? t("score", { points: String(props.item.points) })
+                      : props.item.isTurnedIn
+                        ? t("turnedIn")
+                        : ""}
+                  </p>
+                )}
+              </div>
+            </ClientOnly>
           </div>
         </div>
         {props.kind === "done" && <div />}

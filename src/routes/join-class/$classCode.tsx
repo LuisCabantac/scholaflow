@@ -21,15 +21,17 @@ export const Route = createFileRoute("/join-class/$classCode")({
     return { user: session.user };
   },
   loader: async ({ context: { queryClient, user }, params: { classCode } }) => {
-    const classroom = await queryClient.ensureQueryData(
-      classroomQueries.byCode(classCode),
-    );
+    const classroom = await queryClient.fetchQuery({
+      ...classroomQueries.byCode(classCode),
+      staleTime: 0,
+    });
 
     if (!classroom) throw redirect({ to: "/classroom" });
 
-    const enrolled = await queryClient.ensureQueryData(
-      classroomQueries.enrolledByClassAndSession(user.id, classroom.id),
-    );
+    const enrolled = await queryClient.fetchQuery({
+      ...classroomQueries.enrolledByClassAndSession(user.id, classroom.id),
+      staleTime: 0,
+    });
 
     if (enrolled || classroom.teacherId === user.id) {
       throw redirect({ to: "/classroom" });

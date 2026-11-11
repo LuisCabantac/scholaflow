@@ -360,6 +360,14 @@ export const joinClassFn = createServerFn({ method: "POST" })
     if (!classroom)
       return { success: false, message: "This class doesn't exist" };
 
+    const existingEnrollment = await getEnrolledClassByClassAndSessionId(
+      session.user.id,
+      classroom.id,
+    );
+
+    if (classroom.teacherId === session.user.id || existingEnrollment)
+      return { success: false, message: "You're already in this class." };
+
     const newEnrolledClass = {
       classId: classroom.id,
       userId: session.user.id,

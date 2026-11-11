@@ -47,10 +47,10 @@ export default function ClassForm({
   const [isLoading, setIsLoading] = useState(false);
   const [section, setSection] = useState(classroom?.section ?? "");
   const [subject, setSubject] = useState(classroom?.subject ?? "");
-  const [className, setClassName] = useState(classroom?.name ?? "");
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [updateClassCode, setUpdateClassCode] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [className, setClassName] = useState(classroom?.name ?? "");
   const [cardBackground, setCardBackground] = useState(
     classroom?.cardBackground ?? "#a7adcb",
   );
