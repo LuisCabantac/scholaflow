@@ -9,16 +9,22 @@ import { sendEmail } from "@/services/email";
 import { extractAvatarFilePath } from "@/lib/utils";
 import type { AuthResult, TokenType } from "@/types/auth";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { deleteUserCascade } from "@/services/account-deletion";
-import { deleteFileFromBucket } from "@/services/user-management";
 import { renderActionEmail } from "@/services/email-templates/action-email";
 import { renderVerifyEmail } from "@/services/email-templates/verify-email";
 import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
+import {
+  collectUserFiles,
+  deleteUserCascade,
+} from "@/services/account-deletion";
 import {
   getAccountByUserId,
   getUserByEmail,
   getUserIdById,
 } from "@/services/user";
+import {
+  deleteFileFromBucket,
+  deleteFilesFromBucket,
+} from "@/services/user-management";
 import {
   deleteVerificationToken,
   generateVerificationToken,
@@ -225,9 +231,14 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
       );
     }
 
+    const files = await collectUserFiles(existingUser.id);
     const deletedUser = await deleteUserCascade(existingUser.id);
 
     if (!deletedUser) return { success: false, code: "closeFailed" };
+
+    for (const group of files) {
+      await deleteFilesFromBucket(group.bucket, group.paths);
+    }
 
     await deleteVerificationToken(tokenData.identifier);
 
