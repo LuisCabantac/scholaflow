@@ -33,9 +33,10 @@ export default function ClassChatSection({
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   const messagesKey = messageKeys.byClass(classroom.id);
-  const { data: messages } = useSuspenseQuery(
-    messageQueries.byClass(classroom.id),
-  );
+  const { data: messages } = useSuspenseQuery({
+    ...messageQueries.byClass(classroom.id),
+    refetchInterval: 5000,
+  });
 
   const rows = groupMessages(sortMessages(messages), user.id);
 

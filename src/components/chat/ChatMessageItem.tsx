@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { ClientOnly } from "@tanstack/react-router";
 
 import type { MessageRow } from "@/types/chat";
+import { getFileNameFromAttachments } from "@/lib/utils";
 import { isImageAttachment, messageDateLabel } from "@/lib/chat-messages";
 
 import LinkifiedText from "@/components/stream/LinkifiedText";
@@ -67,7 +68,7 @@ export default function ChatMessageItem({
               >
                 <img
                   src={attachment}
-                  alt={attachment}
+                  alt={getFileNameFromAttachments(attachment)}
                   width={250}
                   height={250}
                   className="w-[10rem] rounded-xl object-cover md:w-[15rem]"

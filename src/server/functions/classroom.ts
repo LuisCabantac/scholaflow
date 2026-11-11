@@ -442,7 +442,7 @@ export const deleteEnrolledClassbyClassAndEnrolledClassIdFn = createServerFn({
 
     const currentEnrolledClass =
       await getEnrolledClassByEnrolledClassId(enrolledClassId);
-    if (!currentEnrolledClass)
+    if (!currentEnrolledClass || currentEnrolledClass.classId !== classId)
       return {
         success: false,
         message: "You are not a member of this class.",
@@ -491,9 +491,9 @@ export const deleteEnrolledClassbyClassAndEnrolledClassIdFn = createServerFn({
       classId,
     );
 
-    if (data) {
-      await deleteAllNotificationsByResourceId(data.id);
-    }
+    if (!data) return { success: false, message: "Failed to remove member." };
+
+    await deleteAllNotificationsByResourceId(data.id);
 
     return { success: true, message: "Member removed from class." };
   });
