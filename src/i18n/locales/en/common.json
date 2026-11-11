@@ -21,5 +21,13 @@
     "message": "Sorry, we could not find the page you are looking for.",
     "goHome": "Go back home",
     "imageAlt": "page not found"
+  },
+  "popover": {
+    "copyLink": "Copy link",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "messages": {
+    "copied": "Copied to clipboard!"
   }
 }
