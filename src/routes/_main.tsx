@@ -1,15 +1,18 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
+import { authQueries } from "@/queries/auth";
 import { classroomQueries } from "@/queries/classroom";
 import { notificationQueries } from "@/queries/notification";
-import { getSession } from "@/server/functions/auth";
 
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 
 export const Route = createFileRoute("/_main")({
-  beforeLoad: async ({ location }) => {
-    const session = await getSession();
+  beforeLoad: async ({ context, location }) => {
+    const session = await context.queryClient.ensureQueryData({
+      ...authQueries.session(),
+      revalidateIfStale: true,
+    });
 
     if (!session) {
       throw redirect({

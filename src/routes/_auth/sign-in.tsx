@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -8,7 +9,7 @@ import { z } from "zod";
 
 import { signIn } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/schema";
-import { getSession } from "@/server/functions/auth";
+import { authKeys, authQueries } from "@/queries/auth";
 
 import Logo from "@/components/layout/Logo";
 import { Button } from "@/components/ui/button";
@@ -24,8 +25,11 @@ import {
 
 export const Route = createFileRoute("/_auth/sign-in")({
   validateSearch: z.object({ redirect: z.string().optional() }),
-  beforeLoad: async () => {
-    const session = await getSession();
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData({
+      ...authQueries.session(),
+      revalidateIfStale: true,
+    });
 
     if (session) {
       throw redirect({
@@ -40,6 +44,7 @@ export const Route = createFileRoute("/_auth/sign-in")({
 
 function SignIn() {
   const { t } = useTranslation("auth", { keyPrefix: "signIn" });
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
@@ -71,6 +76,7 @@ function SignIn() {
             setIsLoading(false);
           },
           onSuccess: () => {
+            queryClient.removeQueries({ queryKey: authKeys.session() });
             toast.success(t("messages.success"));
           },
           onError: (ctx) => {

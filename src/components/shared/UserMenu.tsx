@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -5,6 +6,7 @@ import { toast } from "sonner";
 
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/providers/ThemeProvider";
+import { authKeys } from "@/queries/auth";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +31,7 @@ export default function UserMenu({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { theme, setTheme } = useTheme();
+  const queryClient = useQueryClient();
   const { t } = useTranslation(["common", "auth"]);
 
   const isDark =
@@ -102,6 +105,9 @@ export default function UserMenu({
                 await signOut({
                   fetchOptions: {
                     onSuccess: async () => {
+                      queryClient.removeQueries({
+                        queryKey: authKeys.session(),
+                      });
                       await navigate({
                         to: pathname === "/" ? "/" : "/sign-in",
                       });
