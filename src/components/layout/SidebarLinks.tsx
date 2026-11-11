@@ -133,7 +133,7 @@ export default function SidebarLinks({
         <li>
           <Link
             to="/notifications"
-            className={`sidebar__links hover:bg-sidebar-accent flex items-center gap-2 rounded-xl px-4 py-3 transition-all md:pr-0 ${pathname === "/notifications" ? activeLinkStyle : inactiveLinkStyle}`}
+            className={`sidebar__links group hover:bg-sidebar-accent flex items-center gap-2 rounded-xl px-4 py-3 transition-all md:pr-0 ${pathname === "/notifications" ? activeLinkStyle : inactiveLinkStyle}`}
             onClick={closeOnDesktop}
           >
             <div className="relative">
@@ -151,7 +151,7 @@ export default function SidebarLinks({
               </svg>
               {unreadNotifications?.length ? (
                 <div
-                  className={`absolute top-0 -right-1 size-2 rounded-full ${pathname === "/notifications" ? "bg-sidebar-ring" : "bg-sidebar-foreground"}`}
+                  className={`absolute top-0 -right-1 size-2 rounded-full transition-colors group-hover:bg-sidebar-ring ${pathname === "/notifications" ? "bg-sidebar-ring" : "bg-sidebar-foreground"}`}
                 />
               ) : null}
             </div>
