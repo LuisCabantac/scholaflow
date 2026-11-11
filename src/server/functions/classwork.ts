@@ -165,8 +165,6 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
 
     const newAttachments = formData.getAll("attachments");
     const newUrlLinks = (formData.getAll("links") as string[]) || [];
-    const newIsTurnedIn = formData.get("isTurned") === "true";
-
     let curAttachments = formData.getAll("curAttachments") as string[];
     if (curAttachments.length === 1 && curAttachments[0].startsWith("[")) {
       try {
@@ -188,7 +186,7 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
     const hasChanges =
       newAttachments.length > 0 ||
       newUrlLinks.length > 0 ||
-      newIsTurnedIn !== currentClasswork.isTurnedIn ||
+      !currentClasswork.isTurnedIn ||
       !arraysAreEqual(curAttachments, currentClasswork.attachments ?? []) ||
       !arraysAreEqual(curUrlLinks, currentClasswork.links ?? []);
 

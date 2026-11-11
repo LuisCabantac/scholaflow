@@ -1,8 +1,8 @@
 import { toast } from "sonner";
 import { motion } from "motion/react";
-import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { streamKeys } from "@/queries/stream";
@@ -76,6 +76,14 @@ export default function StreamUserWork({
   const hasWork = attachmentCount > 0;
   const label = submitLabel(hasWork, classwork, stream);
   const removalLocked = showEditSubmission ? showEditSubmission : isLoading;
+
+  const storedLinks = classwork?.links;
+  const storedAttachments = classwork?.attachments;
+
+  useEffect(() => {
+    if (storedLinks) setCurrentUrlLinks(storedLinks);
+    if (storedAttachments) setCurrentAttachments(storedAttachments);
+  }, [storedLinks, storedAttachments]);
 
   useClickOutside(addWorkRef, () => setShowAddWork(false), isLoading);
   useClickOutside(addLinkRef, () => setShowAddLink(false), isLoading);
