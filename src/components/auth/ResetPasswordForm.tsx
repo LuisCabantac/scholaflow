@@ -19,6 +19,7 @@ import {
 export default function ResetPasswordForm({ token }: { token: string }) {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

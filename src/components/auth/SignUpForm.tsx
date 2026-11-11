@@ -22,11 +22,12 @@ import {
 
 export default function SignUpForm() {
   const navigate = useNavigate();
-  const { t } = useTranslation("auth", { keyPrefix: "signUp" });
   const { t: tAuth } = useTranslation("auth");
+  const { t } = useTranslation("auth", { keyPrefix: "signUp" });
+
+  const [honeyPot, setHoneyPot] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [honeyPot, setHoneyPot] = useState("");
 
   const form = useForm({
     defaultValues: {

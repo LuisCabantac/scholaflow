@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 export default function VerifySection({ token }: { token: string }) {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
-  const [result, setResult] = useState<AuthResult | null>(null);
+
   const started = useRef(false);
+  const [result, setResult] = useState<AuthResult | null>(null);
 
   useEffect(() => {
     if (started.current) return;

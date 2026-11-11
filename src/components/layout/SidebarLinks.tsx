@@ -23,8 +23,8 @@ export default function SidebarLinks({
   role: string;
 }) {
   const { pathname } = useLocation();
-  const { isMobile, sidebarExpand, handleSidebarExpand } = useSidebar();
   const { t } = useTranslation("layout", { keyPrefix: "sidebar" });
+  const { isMobile, sidebarExpand, handleSidebarExpand } = useSidebar();
 
   const { data: createdClasses } = useSuspenseQuery(
     classroomQueries.byTeacher(userId),

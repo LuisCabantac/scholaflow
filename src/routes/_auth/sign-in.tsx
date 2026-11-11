@@ -40,14 +40,16 @@ export const Route = createFileRoute("/_auth/sign-in")({
 });
 
 function SignIn() {
-  const { t } = useTranslation("auth", { keyPrefix: "signIn" });
-  const { redirect } = Route.useSearch();
   const queryClient = useQueryClient();
+  const { redirect } = Route.useSearch();
+  const { t } = useTranslation("auth", { keyPrefix: "signIn" });
+
   const callbackURL = resolveRedirect(redirect);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+
   const [honeyPot, setHoneyPot] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const signInForm = useForm({
     defaultValues: {

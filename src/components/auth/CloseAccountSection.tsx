@@ -15,6 +15,7 @@ export default function CloseAccountSection({ token }: { token: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t } = useTranslation("auth");
+
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AuthResult | null>(null);
 

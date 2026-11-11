@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 export default function ForgetPasswordForm() {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
