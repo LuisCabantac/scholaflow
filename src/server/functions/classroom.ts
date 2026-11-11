@@ -57,9 +57,9 @@ import {
   getEnrolledClassByClassAndUserId,
   getEnrolledClassByEnrolledClassId,
   getEnrolledClassByUserAndClassId,
+  isClassMember,
   updateClassroom,
   updateEnrolledClass,
-  isClassMember,
 } from "@/services/classroom";
 
 export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })

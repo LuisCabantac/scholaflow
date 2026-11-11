@@ -2,8 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { isClassMember } from "@/services/classroom";
-import { getClassByClassId } from "@/services/classroom";
+import { getClassByClassId, isClassMember } from "@/services/classroom";
 import { createClassTopicSchema, editClassTopicSchema } from "@/lib/schema";
 import {
   getAllClassworkStreamsByTopicId,
@@ -102,7 +101,7 @@ export const updateTopicFn = createServerFn({ method: "POST" })
     const currentTopic =
       topicId !== "no-topic" ? await getClassTopicByTopicId(topicId) : null;
 
-    if (!currentTopic)
+    if (!currentTopic || currentTopic.classId !== classroomId)
       return { success: false, message: "This topic doesn't exist." };
 
     const newTopicName = (formData.get("topicName") as string) || "";

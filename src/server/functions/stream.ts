@@ -8,6 +8,7 @@ import { readStreamFormFields } from "@/lib/stream-form";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
+import { canSeeStream, visibleStreams } from "@/lib/stream-visibility";
 import {
   deleteAllNotificationsByResourceId,
   sendNotification,
@@ -47,6 +48,11 @@ import {
   updateStreamPost,
 } from "@/services/stream";
 
+async function classTopic(topicId: string, classId: string) {
+  const topic = await getClassTopicByTopicId(topicId);
+  return topic && topic.classId === classId ? topic : null;
+}
+
 async function rosterUserIds(classId: string): Promise<string[]> {
   const enrolled = await getAllEnrolledClassesByClassId(classId);
   return enrolled?.map((entry) => entry.userId) ?? [];
@@ -62,7 +68,14 @@ export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
       return null;
     }
 
-    return await getAllClassStreamsByClassId(classId);
+    const classroom = await getClassByClassId(classId);
+    if (!classroom) return null;
+
+    return visibleStreams(
+      await getAllClassStreamsByClassId(classId),
+      session.user.id,
+      classroom.teacherId,
+    );
   });
 
 export const getAllClassesStreamByUserIdFn = createServerFn({ method: "GET" })
@@ -86,6 +99,14 @@ export const getClassStreamByStreamIdFn = createServerFn({ method: "GET" })
 
     const stream = await getClassStreamByStreamId(streamId);
     if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    const classroom = await getClassByClassId(stream.classId);
+    if (
+      !classroom ||
+      !canSeeStream(stream, session.user.id, classroom.teacherId)
+    ) {
       return null;
     }
 
@@ -160,10 +181,23 @@ export const createStreamFn = createServerFn({ method: "POST" })
     if (!classroom)
       return { success: false, message: "This class doesn't exist." };
 
-    if (session.user.role === "admin") {
+    if (
+      session.user.role === "admin" ||
+      !(await isClassMember(session.user.id, classroomId))
+    ) {
       return {
         success: false,
         message: "You can't create a post on this class.",
+      };
+    }
+
+    if (
+      classroom.teacherId !== session.user.id &&
+      !classroom.allowUsersToPost
+    ) {
+      return {
+        success: false,
+        message: "Students are not allowed to post to the class.",
       };
     }
 
@@ -198,7 +232,7 @@ export const createStreamFn = createServerFn({ method: "POST" })
 
     let topic = null;
     if (topicId !== "no-topic") {
-      topic = await getClassTopicByTopicId(topicId);
+      topic = await classTopic(topicId, classroomId);
     }
 
     const announceTo = isAssignToAll
@@ -239,17 +273,15 @@ export const createStreamFn = createServerFn({ method: "POST" })
     const data = await createStreamPost(result.data);
     if (!data) return { success: false, message: "Failed to create post." };
 
-    if (classroom.teacherId === session.user.id) {
-      await sendNotification(
-        data.type,
-        announceTo,
-        data.id,
-        data.title ?? data.content ?? "",
-        `/classroom/class/${data.classId}/stream/${data.id}`,
-        session.user.name,
-        session.user.image as string,
-      );
-    }
+    await sendNotification(
+      data.type,
+      announceTo,
+      data.id,
+      data.title ?? data.content ?? "",
+      `/classroom/class/${data.classId}/stream/${data.id}`,
+      session.user.name,
+      session.user.image as string,
+    );
 
     return {
       success: true,
@@ -303,7 +335,7 @@ export const updateStreamFn = createServerFn({ method: "POST" })
 
     let topic = null;
     if (topicId !== "no-topic") {
-      topic = await getClassTopicByTopicId(topicId);
+      topic = await classTopic(topicId, currentStream.classId);
     }
 
     const hasChanges =
@@ -321,7 +353,10 @@ export const updateStreamFn = createServerFn({ method: "POST" })
       newUrlLinks.length > 0 ||
       !arraysAreEqual(curAttachments, currentStream.attachments ?? []) ||
       !arraysAreEqual(curUrlLinks, currentStream.links ?? []) ||
-      !arraysAreEqual(announceTo, currentStream.announceTo ?? []);
+      !arraysAreEqual(
+        [...announceTo].sort(),
+        [...(currentStream.announceTo ?? [])].sort(),
+      );
 
     if (hasChanges) {
       const removedAttachments = (currentStream.attachments || []).filter(
@@ -406,16 +441,16 @@ export const deleteClassStreamFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const classroom = await getClassByClassId(classroomId);
-    if (!classroom)
-      return { success: false, message: "This class doesn't exist." };
-
     const stream = await getClassStreamByStreamId(streamId);
-    if (!stream)
+    if (!stream || stream.classId !== classroomId)
       return {
         success: false,
         message: "This post doesn't exist in this class.",
       };
+
+    const classroom = await getClassByClassId(stream.classId);
+    if (!classroom)
+      return { success: false, message: "This class doesn't exist." };
 
     if (
       !(

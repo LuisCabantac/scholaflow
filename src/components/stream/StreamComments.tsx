@@ -43,10 +43,7 @@ export default function StreamComments({
     null,
   );
 
-  const comments = useQuery({
-    ...commentQueries.byStream(stream.id),
-    enabled: showClassComments,
-  });
+  const comments = useQuery(commentQueries.byStream(stream.id));
 
   const addComment = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -122,9 +119,7 @@ export default function StreamComments({
   }
 
   function toggleComments() {
-    const next = !showClassComments;
-    setShowClassComments(next);
-    if (next) comments.refetch();
+    setShowClassComments((current) => !current);
   }
 
   return (

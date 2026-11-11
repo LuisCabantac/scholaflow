@@ -129,12 +129,10 @@ export const addCommentToStreamFn = createServerFn({ method: "POST" })
       classroomId,
     );
 
+    const isTeacher = classroom.teacherId === session.user.id;
     if (
-      !(
-        classroom.teacherId === session.user.id ||
-        enrolledClass ||
-        classroom.allowUsersToComment
-      )
+      !(isTeacher || enrolledClass) ||
+      (!isTeacher && !classroom.allowUsersToComment)
     ) {
       return {
         success: false,
@@ -200,14 +198,14 @@ export const deleteStreamCommentFn = createServerFn({ method: "POST" })
       return { success: false, message: "This class doesn't exist." };
 
     const stream = await getClassStreamByStreamId(streamId);
-    if (!stream)
+    if (!stream || stream.classId !== classroomId)
       return {
         success: false,
         message: "This post doesn't exist in this class.",
       };
 
     const comment = await getStreamCommentByCommentId(commentId);
-    if (!comment)
+    if (!comment || comment.streamId !== streamId)
       return {
         success: false,
         message: "This comment doesn't exist on this post.",

@@ -14,6 +14,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+function withTimeOf(day: Date, time: Date): Date {
+  const next = new Date(day);
+  next.setHours(
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds(),
+  );
+  return next;
+}
+
 export function DateTimePicker({
   date,
   disabled,
@@ -71,7 +82,9 @@ export function DateTimePicker({
               captionLayout="dropdown"
               disabled={{ before: new Date() }}
               onSelect={(selected) => {
-                onSetDate(selected);
+                onSetDate(
+                  selected && date ? withTimeOf(selected, date) : selected,
+                );
                 onSetDatePickerIsOpen(false);
               }}
             />
@@ -96,6 +109,17 @@ export function DateTimePicker({
               : undefined
           }
           disabled={!date || disabled}
+          onChange={(event) => {
+            const [hours, minutes, seconds] = event.target.value
+              .split(":")
+              .map(Number);
+            onSetDate((current) => {
+              if (!current) return current;
+              const next = new Date(current);
+              next.setHours(hours || 0, minutes || 0, seconds || 0, 0);
+              return next;
+            });
+          }}
         />
       </div>
     </div>

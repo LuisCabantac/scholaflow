@@ -111,7 +111,7 @@ export default function StreamForm({
     stream?.scheduledAt ? new Date(stream.scheduledAt) : undefined,
   );
   const [audience, setAudience] = useState<string[]>(
-    stream?.announceTo?.length
+    stream && !stream.announceToAll && stream.announceTo?.length
       ? stream.announceTo
       : (enrolledClasses?.map((u) => u.userId) ?? []),
   );
@@ -154,25 +154,28 @@ export default function StreamForm({
     for (const file of currentAttachments)
       formData.append("curAttachments", file);
 
-    const { success, message } = await (formType === "create"
-      ? createStreamFn({ data: formData })
-      : updateStreamFn({ data: formData }));
-    setIsLoading(false);
+    try {
+      const { success, message } = await (formType === "create"
+        ? createStreamFn({ data: formData })
+        : updateStreamFn({ data: formData }));
 
-    if (!success) {
-      toast.error(message);
-      return;
+      if (!success) {
+        toast.error(message);
+        return;
+      }
+
+      toast.success(message);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: streamKeys.all }),
+        queryClient.invalidateQueries({ queryKey: classworkKeys.all }),
+        queryClient.invalidateQueries({
+          queryKey: classTopicKeys.byClass(classroom.id),
+        }),
+      ]);
+      onClose();
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success(message);
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: streamKeys.all }),
-      queryClient.invalidateQueries({ queryKey: classworkKeys.all }),
-      queryClient.invalidateQueries({
-        queryKey: classTopicKeys.byClass(classroom.id),
-      }),
-    ]);
-    onClose();
   }
 
   function handlePickFiles(event: React.ChangeEvent<HTMLInputElement>) {

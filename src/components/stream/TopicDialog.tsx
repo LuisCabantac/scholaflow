@@ -36,21 +36,24 @@ export default function TopicDialog({
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.currentTarget);
-    const { success, message } = await (type === "create"
-      ? createTopicFn({ data: formData })
-      : updateTopicFn({ data: formData }));
-    setIsLoading(false);
+    try {
+      const { success, message } = await (type === "create"
+        ? createTopicFn({ data: formData })
+        : updateTopicFn({ data: formData }));
 
-    if (!success) {
-      toast.error(message);
-      return;
+      if (!success) {
+        toast.error(message);
+        return;
+      }
+
+      toast.success(message);
+      await queryClient.invalidateQueries({
+        queryKey: classTopicKeys.byClass(classroom.id),
+      });
+      onClose();
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success(message);
-    await queryClient.invalidateQueries({
-      queryKey: classTopicKeys.byClass(classroom.id),
-    });
-    onClose();
   }
 
   useClickOutside(wrapperRef, onClose, isLoading);

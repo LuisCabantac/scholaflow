@@ -8,21 +8,26 @@ function linkifyString(text: string): ReactNode {
 
   if (segments.length <= 1 && segments[0]?.type !== "link") return text;
 
-  return segments.map((segment) =>
-    segment.type === "text" ? (
-      segment.value
-    ) : (
+  const seen = new Map<string, number>();
+
+  return segments.map((segment) => {
+    if (segment.type === "text") return segment.value;
+
+    const occurrence = (seen.get(segment.href) ?? 0) + 1;
+    seen.set(segment.href, occurrence);
+
+    return (
       <a
         href={segment.href}
-        key={segment.href + segment.text}
+        key={`${segment.href}#${occurrence}`}
         target="_blank"
         rel="noopener noreferrer"
         className="overflow-wrap text-ring break-words break-all underline"
       >
         {segment.text}
       </a>
-    ),
-  );
+    );
+  });
 }
 
 function linkifyNode(node: ReactNode): ReactNode {
