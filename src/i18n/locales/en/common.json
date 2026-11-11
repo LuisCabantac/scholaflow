@@ -16,5 +16,10 @@
     "copyright": "© {{year}} ScholaFlow. All rights reserved.",
     "terms": "Terms and Conditions",
     "privacy": "Privacy Policy"
+  },
+  "notFound": {
+    "message": "Sorry, we could not find the page you are looking for.",
+    "goHome": "Go back home",
+    "imageAlt": "page not found"
   }
 }

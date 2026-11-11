@@ -1,0 +1,101 @@
+{
+  "hero": {
+    "title": "Your All-in-One Learning Platform",
+    "description": "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
+    "getStarted": "Get Started",
+    "viewFeatures": "View features",
+    "imageAlt": {
+      "light": "hero image light theme",
+      "dark": "hero image dark theme"
+    }
+  },
+  "steps": {
+    "title": "Simple Steps, Powerful Results",
+    "description": "ScholaFlow streamlines your teaching and learning process—just create, collaborate, and give feedback. Everything you need, all in one place.",
+    "items": {
+      "create": {
+        "title": "Create and assign",
+        "description": "Easily create assignments, share resources, and set deadlines. Quickly set up assignments, attach materials like documents or links, and schedule deadlines to keep your class organized."
+      },
+      "collaborate": {
+        "title": "Collaborate and communicate",
+        "description": "Connect with students through chat or comments for questions and discussions. Use chat and comments to answer questions, share updates, and encourage group discussions."
+      },
+      "grade": {
+        "title": "Grade and feedback",
+        "description": "Provide timely and helpful feedback while managing classwork grading. Review and grade assignments, leave comments, and help students stay on top of their progress."
+      }
+    }
+  },
+  "features": {
+    "feedback": {
+      "eyebrow": "Make feedback more impactful",
+      "title": "Visual feedback",
+      "description": "Streamline your academic workflow with powerful, intuitive tools designed to meet the needs of both students and educators. From feedback to communication, everything you need is built right in."
+    },
+    "chat": {
+      "eyebrow": "All conversations in one place",
+      "title": "Centralized communication",
+      "description": "Say goodbye to juggling multiple platforms. With integrated group chat, you can discuss projects, answer questions, and share updates without the distraction of external messaging apps."
+    },
+    "notes": {
+      "eyebrow": "Your thoughts, organized and accessible",
+      "title": "Personal note hub",
+      "description": "Capture, organize, and manage your academic thoughts with a built-in note-taking system. Your ideas, always at your fingertips."
+    },
+    "classroom": {
+      "eyebrow": "Simplified classroom management",
+      "title": "Familiar yet refined workflow",
+      "description": "Experience the core functionalities of a learning management system in a way that feels familiar yet more efficient. With an intuitive interface, you'll navigate through tasks, assignments, and communication with ease. The refined workflow reduces complexity, allowing you to focus on what really matters—managing your classroom effectively without unnecessary distractions."
+    }
+  },
+  "mocks": {
+    "people": {
+      "zachariah": "Zachariah Wheeler",
+      "elissa": "Elissa Patrick",
+      "lori": "Lori Cantrell",
+      "gerald": "Gerald Yoder"
+    },
+    "avatarAlt": "{{name}} avatar",
+    "comments": {
+      "header": "Comments",
+      "placeholder": "Add class comment...",
+      "question": "I'm a bit confused about the light-dependent reactions. I understand they happen in the thylakoid membrane, but I'm not sure about the specific steps and how energy is transferred. Can you clarify?",
+      "related": "I think this is related, but I'm not 100% sure.",
+      "visual": "Great question! Let me break it down visually.",
+      "imageAlt": "comment 1 image"
+    },
+    "chat": {
+      "transform": "So the energy is basically being transformed from light to chemical energy?",
+      "exactly": "Exactly!",
+      "stepByStep": "Oh, now I see how the energy transfers step by step!",
+      "excited": "Wait, so what exactly happens to those excited electrons? Do they just go back to their original state?",
+      "file": "Electron_Transport_Chain_Diagram.pdf",
+      "imageAlt": "chat image 1"
+    },
+    "note": {
+      "created": "Created about 3 hours ago",
+      "title": "Light-dependent reactions",
+      "imageAlt": "notes image 1",
+      "body": "PSII absorbs a photon to produce a so-called high energy electron which transfers via an electron transport chain to cytochrome b6f and then to PSI. The then-reduced PSI, absorbs another photon producing a more highly reducing electron, which converts NADP+ to NADPH. In oxygenic photosynthesis, the first electron donor is water, creating oxygen (O2) as a by-product. In anoxygenic photosynthesis, various electron donors are used. Cytochrome b6f and ATP synthase work together to produce ATP (photophosphorylation) in two distinct ways. In non-cyclic photophosphorylation, cytochrome b6f uses electrons from PSII and energy from PSI[citation needed] to pump protons from the stroma to the lumen. The resulting proton gradient across the thylakoid membrane creates a proton-motive force, used by ATP synthase to form ATP. In cyclic photophosphorylation, cytochrome b6f uses electrons and energy from PSI to create more ATP and to stop the production of NADPH. Cyclic phosphorylation is important to create ATP and maintain NADPH in the right proportion for the light-independent reactions."
+    },
+    "classroom": {
+      "name": "Calculus and Analytical Geometry",
+      "section": "MATH 141-A · 001",
+      "share": "Share with your class...",
+      "items": {
+        "theorems": "Green's Theorem, Stokes' Theorem, Divergence Theorem",
+        "surface": "Surface Integrals",
+        "planes": "Planes and Lines in 3D Space",
+        "modeling": "Modeling Real-World Phenomena with Calculus",
+        "numerical": "Developing a Numerical Method for Integration"
+      }
+    }
+  },
+  "cta": {
+    "title": "Learning without the hassle",
+    "description": "Ditch the bloated, overcomplicated platforms.",
+    "button": "Get started for free"
+  },
+  "backToTop": "Back to top"
+}
