@@ -8,6 +8,7 @@ import enLayout from "@/i18n/locales/en/layout.json";
 import enStream from "@/i18n/locales/en/stream.json";
 import enLanding from "@/i18n/locales/en/landing.json";
 import enPrivacy from "@/i18n/locales/en/privacy.json";
+import enProfile from "@/i18n/locales/en/profile.json";
 import enClassroom from "@/i18n/locales/en/classroom.json";
 import enClasswork from "@/i18n/locales/en/classwork.json";
 
@@ -22,6 +23,7 @@ export const resources = {
     landing: enLanding,
     layout: enLayout,
     privacy: enPrivacy,
+    profile: enProfile,
     stream: enStream,
     terms: enTerms,
   },
@@ -45,6 +47,7 @@ export function createI18n(language: Language = "en") {
       "landing",
       "layout",
       "privacy",
+      "profile",
       "terms",
     ],
 
