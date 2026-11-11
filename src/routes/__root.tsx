@@ -18,6 +18,7 @@ import type { RouterContext } from "@/integrations/tanstack-query/root-provider"
 import { AppProviders } from "@/providers";
 import appCss from "@/styles.css?url";
 
+import NotFound from "@/components/shared/NotFound";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -33,6 +34,30 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       {
         title: "ScholaFlow",
       },
+      {
+        name: "description",
+        content:
+          "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://scholaflow.vercel.app" },
+      {
+        property: "og:title",
+        content: "ScholaFlow - Your All-in-One Learning Platform",
+      },
+      {
+        property: "og:description",
+        content:
+          "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
+      },
+      { property: "og:site_name", content: "ScholaFlow" },
+      {
+        property: "og:image",
+        content:
+          "https://github.com/user-attachments/assets/45ab4040-3e8b-4aea-9925-a944167168b8",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
     ],
     links: [
       {
@@ -42,6 +67,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: NotFound,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
