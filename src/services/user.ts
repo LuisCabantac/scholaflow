@@ -1,5 +1,4 @@
 import { asc, eq, ilike } from "drizzle-orm";
-import { validate as validateUUID } from "uuid";
 
 import { db } from "@/db";
 import { account, user } from "@/db/schema";
@@ -11,7 +10,7 @@ export async function getUser(email: string): Promise<User | null> {
 }
 
 export async function getUserByUserId(userId: string): Promise<User | null> {
-  if (!userId || !validateUUID(userId)) return null;
+  if (!userId) return null;
 
   const [data] = await db.select().from(user).where(eq(user.id, userId));
   return data || null;
@@ -35,7 +34,7 @@ export async function getUserIdById(
 export async function getAccountByUserId(
   userId: string,
 ): Promise<Account | null> {
-  if (!userId || !validateUUID(userId)) return null;
+  if (!userId) return null;
 
   const [data] = await db
     .select()
@@ -61,7 +60,7 @@ export async function updateUserRecord(
   userId: string,
   data: Partial<User>,
 ): Promise<User | null> {
-  if (!userId || !validateUUID(userId)) return null;
+  if (!userId) return null;
 
   const [result] = await db
     .update(user)
@@ -72,7 +71,7 @@ export async function updateUserRecord(
 }
 
 export async function deleteUserRecord(userId: string): Promise<User | null> {
-  if (!userId || !validateUUID(userId)) return null;
+  if (!userId) return null;
 
   const [result] = await db.delete(user).where(eq(user.id, userId)).returning();
 
