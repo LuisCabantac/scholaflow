@@ -1,11 +1,6 @@
 import { escapeHtml } from "@/services/email-templates/escape-html";
-import {
-  actionButton,
-  type RenderedEmail,
-  wrapEmailHtml,
-} from "@/services/email-templates/layout";
-
-export type VerifyEmailParams = { toName: string; verifyUrl: string };
+import type { RenderedEmail, VerifyEmailParams } from "@/types/email";
+import { actionButton, wrapEmailHtml } from "@/services/email-templates/layout";
 
 const subject = "Verify your ScholaFlow email";
 

@@ -3,7 +3,7 @@ import { CircleCheck, CircleX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
-import type { AuthResult } from "@/lib/auth-result";
+import type { AuthResult } from "@/types/auth";
 import { verifyEmailVerificationFn } from "@/server/functions/auth";
 
 import { Button } from "@/components/ui/button";

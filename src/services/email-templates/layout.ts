@@ -1,5 +1,3 @@
-export type RenderedEmail = { subject: string; html: string; text: string };
-
 export function wrapEmailHtml(title: string, body: string): string {
   return `<!doctype html>
 <html lang="en">

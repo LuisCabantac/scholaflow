@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import type { Classroom } from "@/lib/schema";
+import type { SessionUser } from "@/types/auth";
 import { classroomKeys } from "@/queries/classroom";
-import type { SessionUser } from "@/server/functions/auth";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import {
   createClassFn,

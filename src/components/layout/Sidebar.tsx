@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import type { SessionUser } from "@/types/auth";
 import { useSidebar } from "@/providers/SidebarProvider";
-import type { SessionUser } from "@/server/functions/auth";
 
 import Logo from "@/components/layout/Logo";
 import SidebarLinks from "@/components/layout/SidebarLinks";

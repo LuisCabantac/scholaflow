@@ -5,9 +5,9 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { Classroom } from "@/lib/schema";
+import type { SessionUser } from "@/types/auth";
 import { classroomKeys } from "@/queries/classroom";
 import { joinClassFn } from "@/server/functions/classroom";
-import type { SessionUser } from "@/server/functions/auth";
 
 import { Button } from "@/components/ui/button";
 

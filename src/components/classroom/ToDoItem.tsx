@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
-import type { TFunction } from "i18next";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { format, isThisYear, isToday, isYesterday } from "date-fns";
 
-import type { Classwork, Stream } from "@/lib/schema";
-
-export type ToDoKind = "assigned" | "missing" | "done";
+import type {
+  ToDoItemProps,
+  ToDoKind,
+  ToDoTranslator,
+} from "@/types/classroom";
 
 const icons: Record<ToDoKind, ReactNode> = {
   assigned: (
@@ -32,15 +33,13 @@ const icons: Record<ToDoKind, ReactNode> = {
   ),
 };
 
-type TodoT = TFunction<"classroom", "todo">;
-
-export function postedWhen(date: Date | string, t: TodoT) {
+export function postedWhen(date: Date | string, t: ToDoTranslator) {
   if (isToday(date)) return t("today");
   if (isYesterday(date)) return t("yesterday");
   return format(date, "MMM d");
 }
 
-export function dueLabel(date: Date | string, t: TodoT) {
+export function dueLabel(date: Date | string, t: ToDoTranslator) {
   const time = format(date, "h:mm a");
   if (isToday(date)) return t("dueToday", { time });
   if (isYesterday(date)) return t("dueYesterday", { time });
@@ -48,10 +47,7 @@ export function dueLabel(date: Date | string, t: TodoT) {
   return t("due", { date: `${format(date, "MMM d,")} ${year} ${time}` });
 }
 
-type StreamItem = { kind: "assigned" | "missing"; item: Stream };
-type DoneItem = { kind: "done"; item: Classwork };
-
-export default function ToDoItem(props: StreamItem | DoneItem) {
+export default function ToDoItem(props: ToDoItemProps) {
   const { t } = useTranslation("classroom", { keyPrefix: "todo" });
 
   const streamId = props.kind === "done" ? props.item.streamId : props.item.id;

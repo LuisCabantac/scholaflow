@@ -16,7 +16,7 @@ import {
 
 import appCss from "@/styles.css?url";
 import { AppProviders } from "@/providers";
-import type { RouterContext } from "@/integrations/tanstack-query/root-provider";
+import type { RouterContext } from "@/types/router";
 
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/components/shared/NotFound";

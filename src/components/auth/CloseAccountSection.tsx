@@ -6,7 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { authKeys } from "@/queries/auth";
-import type { AuthResult } from "@/lib/auth-result";
+import type { AuthResult } from "@/types/auth";
 import { closeUserAccountFn } from "@/server/functions/auth";
 
 import { Button } from "@/components/ui/button";

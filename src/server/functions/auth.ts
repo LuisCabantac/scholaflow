@@ -7,23 +7,18 @@ import { auth } from "@/lib/auth";
 import { user } from "@/db/schema";
 import { sendEmail } from "@/services/email";
 import { extractAvatarFilePath } from "@/lib/utils";
-import type { AuthResult } from "@/lib/auth-result";
+import type { AuthResult, TokenType } from "@/types/auth";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
 import { deleteAllMessagesByUserId } from "@/services/message";
 import { deleteNote, getAllNotesByUserId } from "@/services/notes";
 import { deleteAllNotificationsByUserId } from "@/services/notification";
 import { renderActionEmail } from "@/services/email-templates/action-email";
 import { renderVerifyEmail } from "@/services/email-templates/verify-email";
+import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
 import {
   deleteClassStreamPost,
   getAllClassesStreamByUserId,
 } from "@/services/stream";
-import {
-  buildAppUrl,
-  isExpired,
-  matchesTokenType,
-  type TokenType,
-} from "@/lib/auth-tokens";
 import {
   deleteFileFromBucket,
   removeRoleRequestByUserId,
@@ -59,10 +54,6 @@ export const getSession = createServerFn({ method: "GET" }).handler(
     return session;
   },
 );
-
-export type SessionUser = NonNullable<
-  Awaited<ReturnType<typeof getSession>>
->["user"];
 
 export const ensureSession = createServerFn({ method: "GET" }).handler(
   async () => {

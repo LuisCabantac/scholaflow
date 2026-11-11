@@ -1,6 +1,5 @@
+import type { TokenType } from "@/types/auth";
 import { nanoidId, uuidv4Id } from "@/lib/schema";
-
-export type TokenType = "uuid" | "nanoid";
 
 export function isExpired(
   expiresAt: Date | string,

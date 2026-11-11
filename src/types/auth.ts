@@ -1,3 +1,11 @@
+import type { getSession } from "@/server/functions/auth";
+
+export type TokenType = "uuid" | "nanoid";
+
+export type SessionUser = NonNullable<
+  Awaited<ReturnType<typeof getSession>>
+>["user"];
+
 export type AuthResultCode =
   | "verificationSent"
   | "alreadySent"

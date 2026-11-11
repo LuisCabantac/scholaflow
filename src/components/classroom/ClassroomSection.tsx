@@ -9,10 +9,11 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
+import type { SessionUser } from "@/types/auth";
 import { streamQueries } from "@/queries/stream";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { classworkQueries } from "@/queries/classwork";
-import type { SessionUser } from "@/server/functions/auth";
+import type { ClassroomSort } from "@/types/classroom";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import type { Classroom, EnrolledClass } from "@/lib/schema";
 import { classroomKeys, classroomQueries } from "@/queries/classroom";
@@ -42,11 +43,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-export type ClassroomSort =
-  | "all-classes"
-  | "created-classes"
-  | "enrolled-classes";
 
 const sortOptions: {
   value: ClassroomSort;

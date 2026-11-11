@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import type { ToDoKind } from "@/types/classroom";
 import type { Classwork, Stream } from "@/lib/schema";
 
+import ToDoItem from "@/components/classroom/ToDoItem";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import ToDoItem, { type ToDoKind } from "@/components/classroom/ToDoItem";
 
 export default function ToDoCard({
   assigned,

@@ -1,21 +1,6 @@
 import { escapeHtml } from "@/services/email-templates/escape-html";
-import {
-  actionButton,
-  type RenderedEmail,
-  wrapEmailHtml,
-} from "@/services/email-templates/layout";
-
-export type ActionEmailParams = {
-  toName: string;
-  subject: string;
-  title: string;
-  description: string;
-  buttonText: string;
-  buttonColor: string;
-  actionUrl: string;
-  footerMessage: string;
-  warningMessage?: string;
-};
+import type { ActionEmailParams, RenderedEmail } from "@/types/email";
+import { actionButton, wrapEmailHtml } from "@/services/email-templates/layout";
 
 export function renderActionEmail(params: ActionEmailParams): RenderedEmail {
   const name = escapeHtml(params.toName);

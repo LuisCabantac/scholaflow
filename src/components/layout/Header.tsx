@@ -1,4 +1,4 @@
-import type { SessionUser } from "@/server/functions/auth";
+import type { SessionUser } from "@/types/auth";
 
 import UserMenu from "@/components/shared/UserMenu";
 import HeaderTitle from "@/components/layout/HeaderTitle";
