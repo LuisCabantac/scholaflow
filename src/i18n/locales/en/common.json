@@ -29,5 +29,17 @@
   },
   "messages": {
     "copied": "Copied to clipboard!"
+  },
+  "loading": "Loading…",
+  "dateTime": {
+    "date": "Date",
+    "time": "Time",
+    "selectDate": "Select date"
+  },
+  "attachments": {
+    "download": "Download file",
+    "remove": "Remove attachment",
+    "open": "Open link",
+    "downloadFailed": "Failed to download file."
   }
 }
