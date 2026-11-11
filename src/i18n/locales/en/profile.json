@@ -21,7 +21,9 @@
     "title": "Teacher role",
     "dialogTitle": "Role request",
     "description": "Become a Teacher and manage your digital classroom. Create and organize classes, assignments, and grading workflows.",
-    "pending": "Your request is currently under review. You cannot submit a new request while this is pending."
+    "pending": "Your request is currently under review. You cannot submit a new request while this is pending.",
+    "rejected": "Your previous request was declined. You can submit a new request.",
+    "failed": "Failed to submit request. Please try again."
   },
   "delete": {
     "title": "Delete account",
@@ -53,7 +55,8 @@
       "mismatch": "Passwords do not match. Please ensure both password fields are identical.",
       "tooShort": "Password must be between 8 and 20 characters long.",
       "tooLong": "Password must be between 8 and 20 characters long.",
-      "currentRequired": "Current password is required to change your password."
+      "currentRequired": "Current password is required to change your password.",
+      "failed": "Failed to update your profile. Please try again."
     }
   }
 }

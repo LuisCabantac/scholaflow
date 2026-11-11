@@ -77,19 +77,28 @@ export default function ProfileForm({
 
     if (attachment) formData.append("attachment", attachment);
     setIsLoading(true);
-    const { success, message } = await updateProfileFn({ data: formData });
-    setIsLoading(false);
 
-    if (!success) {
-      toast.error(message);
-      return;
+    try {
+      const { success, message } = await updateProfileFn({ data: formData });
+
+      if (!success) {
+        toast.error(message);
+        return;
+      }
+
+      toast.success(message);
+      await queryClient.invalidateQueries({ queryKey: userKeys.all });
+      await queryClient.invalidateQueries({
+        queryKey: authKeys.session(),
+        refetchType: "all",
+      });
+      await router.invalidate();
+      onClose();
+    } catch {
+      toast.error(t("form.messages.failed"));
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success(message);
-    await queryClient.invalidateQueries({ queryKey: userKeys.all });
-    await queryClient.invalidateQueries({ queryKey: authKeys.session() });
-    await router.invalidate();
-    onClose();
   }
 
   function handleSetAttachment(event: React.ChangeEvent<HTMLInputElement>) {

@@ -28,23 +28,33 @@ export default function RoleRequestDialog({
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const pending = existingRequest?.status === "pending";
+
   async function handleSubmitRoleRequest(
     event: React.FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
     setIsLoading(true);
     const formData = new FormData(event.currentTarget);
-    const { success, message } = await requestTeacherRoleFn({ data: formData });
-    setIsLoading(false);
 
-    if (!success) {
-      toast.error(message);
-      return;
+    try {
+      const { success, message } = await requestTeacherRoleFn({
+        data: formData,
+      });
+
+      if (!success) {
+        toast.error(message);
+        return;
+      }
+
+      toast.success(message);
+      await queryClient.invalidateQueries({ queryKey: userManagementKeys.all });
+      onClose();
+    } catch {
+      toast.error(t("role.failed"));
+    } finally {
+      setIsLoading(false);
     }
-
-    toast.success(message);
-    await queryClient.invalidateQueries({ queryKey: userManagementKeys.all });
-    onClose();
   }
 
   useClickOutside(wrapperRef, onClose, isLoading);
@@ -60,9 +70,15 @@ export default function RoleRequestDialog({
             <h4 className="text-lg font-semibold tracking-tight">
               {t("role.dialogTitle")}
             </h4>
-            <p>{existingRequest ? t("role.pending") : t("role.description")}</p>
+            <p>
+              {pending
+                ? t("role.pending")
+                : existingRequest
+                  ? t("role.rejected")
+                  : t("role.description")}
+            </p>
           </div>
-          {!existingRequest && (
+          {!pending && (
             <form className="grid gap-4" onSubmit={handleSubmitRoleRequest}>
               <input type="text" name="userId" defaultValue={user.id} hidden />
               <div className="flex items-center justify-end gap-2">

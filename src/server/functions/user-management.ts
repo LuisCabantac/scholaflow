@@ -26,7 +26,6 @@ import {
   createUserRecord,
   deleteUserRecord,
   getAccountsByUserId,
-  getUserByEmail,
   getUserByUserId,
   updateUserRecord,
 } from "@/services/user";
@@ -53,6 +52,9 @@ export const getRoleRequestFn = createServerFn({ method: "GET" })
     const session = await auth.api.getSession({ headers });
 
     if (!session) return null;
+    if (session.user.id !== userId && session.user.role !== "admin") {
+      return null;
+    }
 
     return await getRoleRequest(userId);
   });
@@ -92,12 +94,13 @@ export const requestTeacherRoleFn = createServerFn({ method: "POST" })
       return { success: false, message: "Admin users do not need requests." };
 
     const existingRequest = await getRoleRequest(userId);
-    if (existingRequest) {
+    if (existingRequest?.status === "pending") {
       return {
         success: false,
         message: "Request already submitted. Please wait.",
       };
     }
+    if (existingRequest) await removeRoleRequestByUserId(userId);
 
     const request = {
       userId,
@@ -203,7 +206,6 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       };
     }
 
-    const newEmail = formData.get("email") as string;
     const newFullName = formData.get("name") as string;
     const newSchoolName = formData.get("schoolName") as string | null;
     const attachment = formData.get("attachment");
@@ -214,13 +216,23 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       | null;
 
     if (newPassword && newPassword !== confirmNewPassword) {
-      return { success: false, message: "Passwords do not match." };
+      return {
+        success: false,
+        message:
+          "Passwords do not match. Please ensure both password fields are identical.",
+      };
     }
 
     const account = pickPasswordAccount(
       await getAccountsByUserId(currentUserData.id),
     );
-    if (!account) return { success: false, message: "Account not found." };
+    if (!account) {
+      return {
+        success: false,
+        message:
+          "Account not found. Please ensure you're logged in with a valid account.",
+      };
+    }
 
     const hasAttachment =
       attachment instanceof File &&
@@ -241,6 +253,17 @@ export const updateProfileFn = createServerFn({ method: "POST" })
       };
     }
 
+    if (
+      account.providerId === "credential" &&
+      newPassword &&
+      !currentPassword
+    ) {
+      return {
+        success: false,
+        message: "Current password is required to change your password.",
+      };
+    }
+
     const ctx = await auth.$context;
     const newPasswordIsCurrent =
       account.providerId === "credential" && newPassword
@@ -250,91 +273,93 @@ export const updateProfileFn = createServerFn({ method: "POST" })
           })
         : false;
 
-    if (
-      currentUserData.email !== newEmail ||
+    const hasChanges =
       currentUserData.name !== newFullName ||
       currentUserData.schoolName !== newSchoolName ||
       (account.providerId === "google" && newPassword) ||
       (account.providerId === "credential" &&
-        currentPassword &&
         newPassword &&
         !newPasswordIsCurrent) ||
-      hasAttachment
-    ) {
-      if (currentUserData.email !== newEmail) {
-        const emailExist = await getUserByEmail(newEmail);
-        if (emailExist)
-          return { success: false, message: "Email address already in use." };
-      }
+      hasAttachment;
 
-      let newProfilePhoto = currentUserData.image;
-      if (hasAttachment) {
-        newProfilePhoto =
-          (await uploadAttachments("avatars", session.user.id, attachment)) ??
-          currentUserData.image;
-
-        if (isUploadedAvatarUrl(currentUserData.image)) {
-          const filePath = extractAvatarFilePath(currentUserData.image);
-          await deleteFileFromBucket("avatars", filePath);
-        }
-      }
-
-      if (newPassword) {
-        if (newPassword.length < 8 || newPassword.length > 20) {
-          return {
-            success: false,
-            message: "Password must be between 8 and 20 characters long.",
-          };
-        }
-
-        if (account.providerId === "google") {
-          const result = await auth.api.setPassword({
-            body: { newPassword },
-            headers,
-          });
-          if (!result)
-            return { success: false, message: "Failed to change password." };
-        }
-
-        if (account.providerId === "credential") {
-          if (!currentPassword)
-            return { success: false, message: "Current password is required." };
-          try {
-            await auth.api.changePassword({
-              body: { newPassword, currentPassword, revokeOtherSessions: true },
-              headers,
-            });
-          } catch {
-            return {
-              success: false,
-              message: "Current password may be incorrect or failed to change.",
-            };
-          }
-        }
-      }
-
-      const updatedGuest = {
-        name: newFullName,
-        email: newEmail,
-        image: newProfilePhoto,
-        schoolName: newSchoolName,
-        updatedAt: new Date(),
+    if (!hasChanges) {
+      return {
+        success: true,
+        message: "No changes were made to your profile.",
       };
+    }
 
-      const result = editUserSchema.safeParse(updatedGuest);
-      if (result.error) {
+    if (newPassword) {
+      if (newPassword.length < 8 || newPassword.length > 20) {
         return {
           success: false,
-          message: "Invalid profile data.",
+          message: "Password must be between 8 and 20 characters long.",
         };
       }
 
-      await updateUserRecord(userId, result.data);
+      if (account.providerId === "google") {
+        const result = await auth.api.setPassword({
+          body: { newPassword },
+          headers,
+        });
+        if (!result) {
+          return {
+            success: false,
+            message: "Failed to change password. Please try again later.",
+          };
+        }
+      }
 
-      return { success: true, message: "Profile updated!" };
+      if (account.providerId === "credential" && currentPassword) {
+        try {
+          await auth.api.changePassword({
+            body: { newPassword, currentPassword, revokeOtherSessions: true },
+            headers,
+          });
+        } catch {
+          return {
+            success: false,
+            message: "Current password is incorrect. Please try again.",
+          };
+        }
+      }
     }
 
-    return { success: true, message: "No changes were made to your profile." };
+    const newProfilePhoto = hasAttachment
+      ? ((await uploadAttachments("avatars", session.user.id, attachment)) ??
+        currentUserData.image)
+      : currentUserData.image;
+
+    const updatedGuest = {
+      name: newFullName,
+      email: currentUserData.email,
+      image: newProfilePhoto,
+      schoolName: newSchoolName,
+      updatedAt: new Date(),
+    };
+
+    const result = editUserSchema.safeParse(updatedGuest);
+    if (result.error) {
+      return {
+        success: false,
+        message: "Invalid profile data.",
+      };
+    }
+
+    await updateUserRecord(userId, result.data);
+
+    if (
+      hasAttachment &&
+      newProfilePhoto !== currentUserData.image &&
+      isUploadedAvatarUrl(currentUserData.image)
+    ) {
+      await deleteFileFromBucket(
+        "avatars",
+        extractAvatarFilePath(currentUserData.image),
+      );
+    }
+
+    return { success: true, message: "Profile updated!" };
   });
 
 export const createUserFn = createServerFn({ method: "POST" })

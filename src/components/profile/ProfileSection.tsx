@@ -113,14 +113,18 @@ export default function ProfileSection({ user }: { user: SessionUser }) {
           </h3>
           <div className="bg-card flex flex-col gap-2 rounded-xl border p-4 shadow-sm transition-all hover:shadow-md md:flex-row md:items-center md:justify-between">
             <h4 className="text-foreground/70 text-xs font-semibold">
-              {existingRequest ? t("role.pending") : t("role.description")}
+              {existingRequest?.status === "pending"
+                ? t("role.pending")
+                : existingRequest
+                  ? t("role.rejected")
+                  : t("role.description")}
             </h4>
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowRoleRequest(true)}
             >
-              {existingRequest
+              {existingRequest?.status === "pending"
                 ? t("actions.viewRequest")
                 : t("actions.requestRole")}
             </Button>

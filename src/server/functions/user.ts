@@ -3,7 +3,6 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import {
-  getAccountByUserId,
   getAllUser,
   getUser,
   getUserByUserId,
@@ -28,19 +27,11 @@ export const getUserByUserIdFn = createServerFn({ method: "GET" })
     const session = await auth.api.getSession({ headers });
 
     if (!session) return null;
+    if (session.user.id !== userId && session.user.role !== "admin") {
+      return null;
+    }
 
     return await getUserByUserId(userId);
-  });
-
-export const getAccountByUserIdFn = createServerFn({ method: "GET" })
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAccountByUserId(userId);
   });
 
 export const getAllUserFn = createServerFn({ method: "GET" }).handler(
