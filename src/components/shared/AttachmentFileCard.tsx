@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { saveAs } from "file-saver";
+import FileSaver from "file-saver";
 import { useTranslation } from "react-i18next";
 
 import type { AttachmentFileKind, AttachmentLocation } from "@/types/stream";
@@ -32,7 +32,7 @@ export default function AttachmentFileCard({
       const response = await fetch(fileUrl);
       if (!response.ok) throw new Error(response.statusText);
       const blob = await response.blob();
-      saveAs(blob, fileUrl.split("/").pop() || "download");
+      FileSaver.saveAs(blob, fileUrl.split("/").pop() || "download");
     } catch {
       toast.error(t("downloadFailed"));
     }

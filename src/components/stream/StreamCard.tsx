@@ -52,10 +52,7 @@ export default function StreamCard({
   const isScheduled =
     !!stream.scheduledAt && new Date(stream.scheduledAt) > new Date();
   const dayLabels = { today: t("today"), yesterday: t("yesterday") };
-  const clipboardUrl =
-    typeof window === "undefined"
-      ? ""
-      : `${window.location.origin}/classroom/class/${classroom.id}/stream/${stream.id}`;
+  const clipboardUrl = `/classroom/class/${classroom.id}/stream/${stream.id}`;
 
   function scheduledText(date: Date | string) {
     const day = relativeDay(date, dayLabels);

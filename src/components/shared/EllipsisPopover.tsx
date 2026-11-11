@@ -31,7 +31,8 @@ export default function EllipsisPopover({
           type="button"
           className="hover:text-foreground flex w-full items-center gap-1 rounded-md"
           onClick={async () => {
-            await navigator.clipboard.writeText(clipboardUrl).then(() => {
+            const href = new URL(clipboardUrl, window.location.origin).href;
+            await navigator.clipboard.writeText(href).then(() => {
               toast.success(t("messages.copied"));
               onToggleEllipsis();
             });

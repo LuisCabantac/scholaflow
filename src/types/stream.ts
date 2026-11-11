@@ -32,3 +32,7 @@ export type StreamFormFields = {
 export type AttachmentLocation = "form" | "stream";
 
 export type AttachmentFileKind = "curFile" | "newFile";
+
+export type LinkSegment =
+  | { type: "text"; value: string }
+  | { type: "link"; href: string; text: string };

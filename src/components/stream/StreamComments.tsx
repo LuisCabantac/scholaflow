@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { ImagePlus, SendHorizontal } from "lucide-react";
@@ -92,6 +92,11 @@ export default function StreamComments({
   });
 
   const hasComments = !!comments.data?.length;
+
+  useEffect(() => {
+    onHasComments(hasComments);
+  }, [hasComments, onHasComments]);
+
   const canComment =
     classroom.allowUsersToComment || classroom.teacherId === user.id;
 
@@ -159,7 +164,6 @@ export default function StreamComments({
                 loadingRows.map((row) => <CommentsLoading key={row} />)}
               {!comments.isPending &&
                 comments.data?.map((comment) => {
-                  onHasComments(true);
                   return (
                     <CommentCard
                       key={comment.id}
