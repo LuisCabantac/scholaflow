@@ -6,6 +6,7 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { db } from "@/db";
 import { schema } from "@/db/schema";
+import { defaultAvatarUrl } from "@/lib/default-avatar";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -22,6 +23,15 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => ({
+          data: { ...user, image: user.image ?? defaultAvatarUrl() },
+        }),
+      },
     },
   },
   user: {

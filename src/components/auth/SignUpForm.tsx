@@ -23,6 +23,7 @@ import {
 export default function SignUpForm() {
   const navigate = useNavigate();
   const { t } = useTranslation("auth", { keyPrefix: "signUp" });
+  const { t: tAuth } = useTranslation("auth");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [honeyPot, setHoneyPot] = useState("");
@@ -58,10 +59,10 @@ export default function SignUpForm() {
               },
             });
 
-            if (!result.success) {
-              toast.error(t("messages.errors.emailSendFailed"));
-            } else {
+            if (result.success) {
               toast.success(t("messages.success"));
+            } else {
+              toast.error(tAuth(`results.${result.code}`));
             }
 
             await navigate({ to: "/sign-in" });
