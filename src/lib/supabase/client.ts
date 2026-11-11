@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import { createBrowserClient } from "@supabase/ssr";
+
 export function createClient() {
   return createBrowserClient(
     import.meta.env.VITE_SUPABASE_URL!,
