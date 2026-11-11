@@ -5,7 +5,13 @@ import type { SerializedEditorState } from "lexical";
 import { AnimatePresence, motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImagePlus, Pin, PinOff, Trash2, X } from "lucide-react";
-import { type FormEvent, type ChangeEvent, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 
 import { formatDate } from "@/lib/utils";
 import type { Note } from "@/lib/schema";
@@ -100,6 +106,16 @@ export default function NoteForm({
     setTimeout(() => setSafeInteraction(false), duration);
   }
 
+  const attachmentsRef = useRef(newAttachments);
+  attachmentsRef.current = newAttachments;
+
+  useEffect(
+    () => () => {
+      for (const item of attachmentsRef.current) URL.revokeObjectURL(item.url);
+    },
+    [],
+  );
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
@@ -126,6 +142,8 @@ export default function NoteForm({
         onClose();
         queryClient.invalidateQueries({ queryKey: notesKeys.all });
       } else toast.error(message);
+    } catch {
+      toast.error(t("form.saveFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +151,13 @@ export default function NoteForm({
 
   function handleAddAttachments(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
-    const validFiles = files.filter((file) => file.size <= MAX_FILE_BYTES);
+    let total = newAttachments.reduce((sum, item) => sum + item.file.size, 0);
+    const validFiles = files.filter((file) => {
+      if (file.size > MAX_FILE_BYTES || total + file.size > MAX_FILE_BYTES)
+        return false;
+      total += file.size;
+      return true;
+    });
 
     if (validFiles.length !== files.length) {
       toast.error(t("form.attachmentTooLarge"));

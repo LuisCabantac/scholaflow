@@ -7,13 +7,14 @@ import {
 
 export const notesKeys = {
   all: ["notes"] as const,
-  bySession: (query: string) => [...notesKeys.all, "bySession", query] as const,
+  bySession: (userId: string, query: string) =>
+    [...notesKeys.all, "bySession", userId, query] as const,
 };
 
 export const notesQueries = {
-  bySession: (query: string) =>
+  bySession: (userId: string, query: string) =>
     queryOptions({
-      queryKey: notesKeys.bySession(query),
+      queryKey: notesKeys.bySession(userId, query),
       queryFn: () =>
         query
           ? getAllNotesBySessionQueryFn({ data: query })

@@ -36,8 +36,8 @@ export const resources = {
     profile: enProfile,
     stream: enStream,
     terms: enTerms,
-    userManagement: enUserManagement,
     todo: enTodo,
+    userManagement: enUserManagement,
   },
 } as const;
 
@@ -64,10 +64,10 @@ export function createI18n(language: Language = "en") {
       "profile",
       "stream",
       "terms",
+      "todo",
       "userManagement",
       "notes",
       "notifications",
-      "todo",
     ],
 
     defaultNS,

@@ -51,10 +51,7 @@ export const readUnreadNotificationFn = createServerFn({ method: "POST" })
     );
     if (!existingNotification) return;
 
-    await updateNotificationIsRead(
-      notificationId,
-      !existingNotification.isRead,
-    );
+    await updateNotificationIsRead(notificationId, true);
   });
 
 export const deleteAllNotificationsByUserIdFn = createServerFn({

@@ -6,8 +6,10 @@ import NotesLoading from "@/components/notes/NotesLoading";
 import NotesSection from "@/components/notes/NotesSection";
 
 export const Route = createFileRoute("/_main/notes")({
-  loader: async ({ context: { queryClient } }) => {
-    await queryClient.ensureQueryData(notesQueries.bySession(""));
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      notesQueries.bySession(context.user.id, ""),
+    );
   },
   head: () => ({
     meta: [

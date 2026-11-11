@@ -22,7 +22,8 @@
     "addImages": "Add images",
     "pin": "Pin note",
     "unpin": "Unpin note",
-    "attachmentTooLarge": "Each attachment must be 4MB or less."
+    "attachmentTooLarge": "Each attachment must be 4MB or less.",
+    "saveFailed": "Failed to save the note. Please try again."
   },
   "messages": {
     "deleted": "Notes removed"

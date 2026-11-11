@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Pen, Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useRouteContext } from "@tanstack/react-router";
 import {
   keepPreviousData,
   useMutation,
@@ -23,6 +24,7 @@ import NoteForm from "@/components/notes/NoteForm";
 import NotesLoading from "@/components/notes/NotesLoading";
 
 export default function NotesSection() {
+  const { user } = useRouteContext({ from: "/_main/notes" });
   const queryClient = useQueryClient();
   const { t } = useTranslation("notes");
 
@@ -32,7 +34,7 @@ export default function NotesSection() {
   const query = useDebouncedValue(search.trim());
 
   const { data: notes, isPending } = useQuery({
-    ...notesQueries.bySession(query),
+    ...notesQueries.bySession(user.id, query),
     placeholderData: keepPreviousData,
   });
 
@@ -42,7 +44,7 @@ export default function NotesSection() {
       if (!result.success) throw new Error(result.message);
     },
     onMutate: async (noteId) => {
-      const key = notesKeys.bySession(query);
+      const key = notesKeys.bySession(user.id, query);
       await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<Note[] | null>(key);
       queryClient.setQueryData<Note[] | null>(key, (current) =>

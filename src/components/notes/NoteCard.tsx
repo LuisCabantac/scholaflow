@@ -31,7 +31,7 @@ export default function NoteCard({
         className="grid w-full cursor-pointer gap-2 p-3 text-left md:p-4"
       >
         {note.attachments.length ? (
-          <div className="columns-2 gap-0.5">
+          <span className="block columns-2 gap-0.5">
             {note.attachments.slice(0, 4).map((image) => (
               <img
                 key={image}
@@ -42,25 +42,29 @@ export default function NoteCard({
                 className="mb-0.5 w-auto break-inside-avoid rounded-md object-cover select-none"
               />
             ))}
-          </div>
+          </span>
         ) : null}
         {note.title && (
-          <h6 className="text-foreground font-medium">{note.title}</h6>
+          <span className="text-foreground block font-medium">
+            {note.title}
+          </span>
         )}
-        <div className="grid gap-1">
+        <span className="grid gap-1">
           {preview ? (
-            <p className="text-foreground/90 whitespace-pre-line">{preview}</p>
+            <span className="text-foreground/90 block whitespace-pre-line">
+              {preview}
+            </span>
           ) : null}
           <ClientOnly
-            fallback={<p className="text-foreground/70 h-4 text-xs" />}
+            fallback={<span className="text-foreground/70 block h-4 text-xs" />}
           >
-            <p className="text-foreground/70 text-xs">
+            <span className="text-foreground/70 block text-xs">
               {note.updatedAt
                 ? t("updated", { date: formatDate(note.updatedAt) })
                 : t("created", { date: formatDate(note.createdAt) })}
-            </p>
+            </span>
           </ClientOnly>
-        </div>
+        </span>
       </button>
       {showNotesForm && (
         <NoteForm
