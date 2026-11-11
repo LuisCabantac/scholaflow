@@ -5,6 +5,7 @@ import { LinkIcon, Upload, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { isWebUrl } from "@/lib/links";
 import { streamKeys } from "@/queries/stream";
 import type { SessionUser } from "@/types/auth";
 import { classworkKeys } from "@/queries/classwork";
@@ -187,14 +188,13 @@ export default function StreamForm({
   }
 
   function handleAddUrl() {
-    try {
-      new URL(url);
-      setNewUrlLinks([...newUrlLinks, url]);
-      setUrl("");
-      setShowAddLinkModal(false);
-    } catch {
+    if (!isWebUrl(url)) {
       toast.error(t("stream:form.messages.invalidUrl"));
+      return;
     }
+    setNewUrlLinks([...newUrlLinks, url]);
+    setUrl("");
+    setShowAddLinkModal(false);
   }
 
   function handleGradeChange(event: React.ChangeEvent<HTMLInputElement>) {

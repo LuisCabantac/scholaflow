@@ -6,6 +6,7 @@ import { ClientOnly } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { isWebUrl } from "@/lib/links";
 import { streamKeys } from "@/queries/stream";
 import type { SessionUser } from "@/types/auth";
 import { classworkKeys } from "@/queries/classwork";
@@ -155,16 +156,13 @@ export default function StreamUserWork({
   }
 
   function handleAddUrl() {
-    try {
-      const parsed = new URL(url);
-      if (parsed.protocol !== "http:" && parsed.protocol !== "https:")
-        throw new Error("unsupported protocol");
-      setNewUrlLinks((current) => [...current, url]);
-      setUrl("");
-      setShowAddLink(false);
-    } catch {
+    if (!isWebUrl(url)) {
       toast.error(t("messages.invalidUrl"));
+      return;
     }
+    setNewUrlLinks((current) => [...current, url]);
+    setUrl("");
+    setShowAddLink(false);
   }
 
   const statusText =
