@@ -29,9 +29,11 @@ import { Route as MainNotificationsRouteImport } from './routes/_main/notificati
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainToDoRouteImport } from './routes/_main/to-do'
 import { Route as MainUserManagementRouteImport } from './routes/_main/user-management'
+import { Route as JoinClassClassCodeRouteImport } from './routes/join-class/$classCode'
 import { Route as MainClassroomIndexRouteImport } from './routes/_main/classroom/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MainClassroomClassClassIdRouteImport } from './routes/_main/classroom/class/$classId'
+import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId.stream.$streamId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -131,6 +133,11 @@ const MainUserManagementRoute = MainUserManagementRouteImport.update({
   path: '/user-management',
   getParentRoute: () => MainRoute,
 } as any)
+const JoinClassClassCodeRoute = JoinClassClassCodeRouteImport.update({
+  id: '/join-class/$classCode',
+  path: '/join-class/$classCode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainClassroomIndexRoute = MainClassroomIndexRouteImport.update({
   id: '/classroom/',
   path: '/classroom/',
@@ -146,6 +153,12 @@ const MainClassroomClassClassIdRoute =
     id: '/classroom/class/$classId',
     path: '/classroom/class/$classId',
     getParentRoute: () => MainRoute,
+  } as any)
+const MainClassroomClassClassIdStreamStreamIdRoute =
+  MainClassroomClassClassIdStreamStreamIdRouteImport.update({
+    id: '/stream/$streamId',
+    path: '/stream/$streamId',
+    getParentRoute: () => MainClassroomClassClassIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -167,9 +180,11 @@ export interface FileRoutesByFullPath {
   '/profile': typeof MainProfileRoute
   '/to-do': typeof MainToDoRoute
   '/user-management': typeof MainUserManagementRoute
+  '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom/': typeof MainClassroomIndexRoute
-  '/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
+  '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -190,9 +205,11 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileRoute
   '/to-do': typeof MainToDoRoute
   '/user-management': typeof MainUserManagementRoute
+  '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom': typeof MainClassroomIndexRoute
-  '/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
+  '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -216,9 +233,11 @@ export interface FileRoutesById {
   '/_main/profile': typeof MainProfileRoute
   '/_main/to-do': typeof MainToDoRoute
   '/_main/user-management': typeof MainUserManagementRoute
+  '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/classroom/': typeof MainClassroomIndexRoute
-  '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
+  '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
+  '/_main/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -241,9 +260,11 @@ export interface FileRouteTypes {
     | '/profile'
     | '/to-do'
     | '/user-management'
+    | '/join-class/$classCode'
     | '/api/auth/$'
     | '/classroom/'
     | '/classroom/class/$classId'
+    | '/classroom/class/$classId/stream/$streamId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -264,9 +285,11 @@ export interface FileRouteTypes {
     | '/profile'
     | '/to-do'
     | '/user-management'
+    | '/join-class/$classCode'
     | '/api/auth/$'
     | '/classroom'
     | '/classroom/class/$classId'
+    | '/classroom/class/$classId/stream/$streamId'
   id:
     | '__root__'
     | '/'
@@ -289,9 +312,11 @@ export interface FileRouteTypes {
     | '/_main/profile'
     | '/_main/to-do'
     | '/_main/user-management'
+    | '/join-class/$classCode'
     | '/api/auth/$'
     | '/_main/classroom/'
     | '/_main/classroom/class/$classId'
+    | '/_main/classroom/class/$classId/stream/$streamId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -305,6 +330,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
   TermsOfUseRoute: typeof TermsOfUseRoute
+  JoinClassClassCodeRoute: typeof JoinClassClassCodeRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -450,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainUserManagementRouteImport
       parentRoute: typeof MainRoute
     }
+    '/join-class/$classCode': {
+      id: '/join-class/$classCode'
+      path: '/join-class/$classCode'
+      fullPath: '/join-class/$classCode'
+      preLoaderRoute: typeof JoinClassClassCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/classroom/': {
       id: '/_main/classroom/'
       path: '/classroom'
@@ -470,6 +503,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/classroom/class/$classId'
       preLoaderRoute: typeof MainClassroomClassClassIdRouteImport
       parentRoute: typeof MainRoute
+    }
+    '/_main/classroom/class/$classId/stream/$streamId': {
+      id: '/_main/classroom/class/$classId/stream/$streamId'
+      path: '/stream/$streamId'
+      fullPath: '/classroom/class/$classId/stream/$streamId'
+      preLoaderRoute: typeof MainClassroomClassClassIdStreamStreamIdRouteImport
+      parentRoute: typeof MainClassroomClassClassIdRoute
     }
   }
 }
@@ -492,6 +532,21 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MainClassroomClassClassIdRouteChildren {
+  MainClassroomClassClassIdStreamStreamIdRoute: typeof MainClassroomClassClassIdStreamStreamIdRoute
+}
+
+const MainClassroomClassClassIdRouteChildren: MainClassroomClassClassIdRouteChildren =
+  {
+    MainClassroomClassClassIdStreamStreamIdRoute:
+      MainClassroomClassClassIdStreamStreamIdRoute,
+  }
+
+const MainClassroomClassClassIdRouteWithChildren =
+  MainClassroomClassClassIdRoute._addFileChildren(
+    MainClassroomClassClassIdRouteChildren,
+  )
+
 interface MainRouteChildren {
   MainNotesRoute: typeof MainNotesRoute
   MainNotificationsRoute: typeof MainNotificationsRoute
@@ -499,7 +554,7 @@ interface MainRouteChildren {
   MainToDoRoute: typeof MainToDoRoute
   MainUserManagementRoute: typeof MainUserManagementRoute
   MainClassroomIndexRoute: typeof MainClassroomIndexRoute
-  MainClassroomClassClassIdRoute: typeof MainClassroomClassClassIdRoute
+  MainClassroomClassClassIdRoute: typeof MainClassroomClassClassIdRouteWithChildren
 }
 
 const MainRouteChildren: MainRouteChildren = {
@@ -509,7 +564,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainToDoRoute: MainToDoRoute,
   MainUserManagementRoute: MainUserManagementRoute,
   MainClassroomIndexRoute: MainClassroomIndexRoute,
-  MainClassroomClassClassIdRoute: MainClassroomClassClassIdRoute,
+  MainClassroomClassClassIdRoute: MainClassroomClassClassIdRouteWithChildren,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
@@ -525,6 +580,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
   TermsOfUseRoute: TermsOfUseRoute,
+  JoinClassClassCodeRoute: JoinClassClassCodeRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
