@@ -5,6 +5,7 @@ import enAuth from "@/i18n/locales/en/auth.json";
 import enTerms from "@/i18n/locales/en/terms.json";
 import enCommon from "@/i18n/locales/en/common.json";
 import enLayout from "@/i18n/locales/en/layout.json";
+import enStream from "@/i18n/locales/en/stream.json";
 import enLanding from "@/i18n/locales/en/landing.json";
 import enPrivacy from "@/i18n/locales/en/privacy.json";
 import enClassroom from "@/i18n/locales/en/classroom.json";
@@ -19,6 +20,7 @@ export const resources = {
     landing: enLanding,
     layout: enLayout,
     privacy: enPrivacy,
+    stream: enStream,
     terms: enTerms,
   },
 } as const;
