@@ -54,7 +54,7 @@ export const getAllClassworksByUserIdFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || session.user.id !== userId) return null;
 
     return await getAllClassworksByUserId(userId);
   });

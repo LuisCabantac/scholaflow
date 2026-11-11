@@ -67,7 +67,7 @@ export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || session.user.id !== id) return null;
 
     return await getAllClassesByTeacherId(id);
   });
@@ -113,7 +113,7 @@ export const getEnrolledClassByClassAndSessionIdFn = createServerFn({
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || session.user.id !== userId) return null;
 
     return await getEnrolledClassByClassAndSessionId(userId, classId);
   });
@@ -163,7 +163,7 @@ export const getAllEnrolledClassesByUserIdFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || session.user.id !== userId) return null;
 
     return await getAllEnrolledClassesByUserId(userId);
   });
