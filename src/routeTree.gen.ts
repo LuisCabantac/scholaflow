@@ -10,17 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MainRouteImport } from './routes/_main'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
+import { Route as MainNotesRouteImport } from './routes/_main/notes'
+import { Route as MainNotificationsRouteImport } from './routes/_main/notifications'
 import { Route as MainProfileRouteImport } from './routes/_main/profile'
+import { Route as MainToDoRouteImport } from './routes/_main/to-do'
+import { Route as MainUserManagementRouteImport } from './routes/_main/user-management'
 import { Route as MainClassroomIndexRouteImport } from './routes/_main/classroom/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as MainClassroomClassClassIdRouteImport } from './routes/_main/classroom/class/$classId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MainRoute = MainRouteImport.update({
+  id: '/_main',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -43,21 +53,47 @@ const AuthSignUpRoute = AuthSignUpRouteImport.update({
   path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainNotesRoute = MainNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainNotificationsRoute = MainNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainProfileRoute = MainProfileRouteImport.update({
-  id: '/_main/profile',
+  id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRoute,
+} as any)
+const MainToDoRoute = MainToDoRouteImport.update({
+  id: '/to-do',
+  path: '/to-do',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainUserManagementRoute = MainUserManagementRouteImport.update({
+  id: '/user-management',
+  path: '/user-management',
+  getParentRoute: () => MainRoute,
 } as any)
 const MainClassroomIndexRoute = MainClassroomIndexRouteImport.update({
-  id: '/_main/classroom/',
+  id: '/classroom/',
   path: '/classroom/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainClassroomClassClassIdRoute =
+  MainClassroomClassClassIdRouteImport.update({
+    id: '/classroom/class/$classId',
+    path: '/classroom/class/$classId',
+    getParentRoute: () => MainRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,9 +101,14 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/notes': typeof MainNotesRoute
+  '/notifications': typeof MainNotificationsRoute
   '/profile': typeof MainProfileRoute
+  '/to-do': typeof MainToDoRoute
+  '/user-management': typeof MainUserManagementRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom/': typeof MainClassroomIndexRoute
+  '/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,20 +116,31 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/notes': typeof MainNotesRoute
+  '/notifications': typeof MainNotificationsRoute
   '/profile': typeof MainProfileRoute
+  '/to-do': typeof MainToDoRoute
+  '/user-management': typeof MainUserManagementRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/classroom': typeof MainClassroomIndexRoute
+  '/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_main': typeof MainRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_main/notes': typeof MainNotesRoute
+  '/_main/notifications': typeof MainNotificationsRoute
   '/_main/profile': typeof MainProfileRoute
+  '/_main/to-do': typeof MainToDoRoute
+  '/_main/user-management': typeof MainUserManagementRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_main/classroom/': typeof MainClassroomIndexRoute
+  '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,9 +150,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/sign-in'
     | '/sign-up'
+    | '/notes'
+    | '/notifications'
     | '/profile'
+    | '/to-do'
+    | '/user-management'
     | '/api/auth/$'
     | '/classroom/'
+    | '/classroom/class/$classId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,30 +165,40 @@ export interface FileRouteTypes {
     | '/terms'
     | '/sign-in'
     | '/sign-up'
+    | '/notes'
+    | '/notifications'
     | '/profile'
+    | '/to-do'
+    | '/user-management'
     | '/api/auth/$'
     | '/classroom'
+    | '/classroom/class/$classId'
   id:
     | '__root__'
     | '/'
+    | '/_main'
     | '/privacy'
     | '/terms'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
+    | '/_main/notes'
+    | '/_main/notifications'
     | '/_main/profile'
+    | '/_main/to-do'
+    | '/_main/user-management'
     | '/api/auth/$'
     | '/_main/classroom/'
+    | '/_main/classroom/class/$classId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MainRoute: typeof MainRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   AuthSignInRoute: typeof AuthSignInRoute
   AuthSignUpRoute: typeof AuthSignUpRoute
-  MainProfileRoute: typeof MainProfileRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  MainClassroomIndexRoute: typeof MainClassroomIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof MainRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -171,19 +245,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main/notes': {
+      id: '/_main/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof MainNotesRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/notifications': {
+      id: '/_main/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof MainNotificationsRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/profile': {
       id: '/_main/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof MainProfileRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/to-do': {
+      id: '/_main/to-do'
+      path: '/to-do'
+      fullPath: '/to-do'
+      preLoaderRoute: typeof MainToDoRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/user-management': {
+      id: '/_main/user-management'
+      path: '/user-management'
+      fullPath: '/user-management'
+      preLoaderRoute: typeof MainUserManagementRouteImport
+      parentRoute: typeof MainRoute
     }
     '/_main/classroom/': {
       id: '/_main/classroom/'
       path: '/classroom'
       fullPath: '/classroom/'
       preLoaderRoute: typeof MainClassroomIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof MainRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -192,18 +294,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main/classroom/class/$classId': {
+      id: '/_main/classroom/class/$classId'
+      path: '/classroom/class/$classId'
+      fullPath: '/classroom/class/$classId'
+      preLoaderRoute: typeof MainClassroomClassClassIdRouteImport
+      parentRoute: typeof MainRoute
+    }
   }
 }
 
+interface MainRouteChildren {
+  MainNotesRoute: typeof MainNotesRoute
+  MainNotificationsRoute: typeof MainNotificationsRoute
+  MainProfileRoute: typeof MainProfileRoute
+  MainToDoRoute: typeof MainToDoRoute
+  MainUserManagementRoute: typeof MainUserManagementRoute
+  MainClassroomIndexRoute: typeof MainClassroomIndexRoute
+  MainClassroomClassClassIdRoute: typeof MainClassroomClassClassIdRoute
+}
+
+const MainRouteChildren: MainRouteChildren = {
+  MainNotesRoute: MainNotesRoute,
+  MainNotificationsRoute: MainNotificationsRoute,
+  MainProfileRoute: MainProfileRoute,
+  MainToDoRoute: MainToDoRoute,
+  MainUserManagementRoute: MainUserManagementRoute,
+  MainClassroomIndexRoute: MainClassroomIndexRoute,
+  MainClassroomClassClassIdRoute: MainClassroomClassClassIdRoute,
+}
+
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MainRoute: MainRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   AuthSignInRoute: AuthSignInRoute,
   AuthSignUpRoute: AuthSignUpRoute,
-  MainProfileRoute: MainProfileRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  MainClassroomIndexRoute: MainClassroomIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

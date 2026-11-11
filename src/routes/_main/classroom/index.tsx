@@ -1,23 +1,14 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { getSession } from "@/server/functions/auth";
-
 export const Route = createFileRoute("/_main/classroom/")({
-  beforeLoad: async ({ location }) => {
-    const session = await getSession();
-
-    if (!session) {
-      throw redirect({
-        to: "/sign-in",
-        search: { redirect: location.href },
-      });
-    }
-
-    return { user: session.user };
+  beforeLoad: ({ context }) => {
+    if (context.user.role === "admin") throw redirect({ to: "/" });
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <div>Hello "/_main/classroom/"!</div>;
+  const { user } = Route.useRouteContext();
+
+  return <div>Hello {user.name}</div>;
 }

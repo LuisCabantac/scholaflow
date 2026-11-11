@@ -1,0 +1,20 @@
+{
+  "sidebar": {
+    "userManagement": "User Management",
+    "classroom": "Classroom",
+    "todo": "To-do",
+    "notes": "Notes",
+    "notifications": "Notifications",
+    "created": "Created",
+    "enrolled": "Enrolled",
+    "toggle": "Toggle sidebar"
+  },
+  "header": {
+    "classroom": "Classroom",
+    "todo": "To-do",
+    "notes": "Notes",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "userManagement": "User Management"
+  }
+}

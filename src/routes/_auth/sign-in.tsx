@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { signIn } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/schema";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/input-group";
 
 export const Route = createFileRoute("/_auth/sign-in")({
+  validateSearch: z.object({ redirect: z.string().optional() }),
   beforeLoad: async () => {
     const session = await getSession();
 

@@ -47,6 +47,10 @@ export const getSession = createServerFn({ method: "GET" }).handler(
   },
 );
 
+export type SessionUser = NonNullable<
+  Awaited<ReturnType<typeof getSession>>
+>["user"];
+
 export const ensureSession = createServerFn({ method: "GET" }).handler(
   async () => {
     const headers = getRequestHeaders();
