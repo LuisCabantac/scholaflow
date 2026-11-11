@@ -2,8 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import type { StreamType } from "@/lib/schema";
 import { uploadAttachments } from "@/services/storage";
 import { getClassByClassId } from "@/services/classroom";
+import { readStreamFormFields } from "@/lib/stream-form";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
@@ -20,6 +22,7 @@ import {
   extractClassworkFilePath,
   extractCommentFilePath,
   extractStreamFilePath,
+  capitalizeFirstLetter,
 } from "@/lib/utils";
 import {
   deleteAllClassStreamCommentsByStreamIdRecord,
@@ -121,6 +124,11 @@ export const getClassworksByClassIdQueryFn = createServerFn({ method: "GET" })
     return await getClassworksByClassIdQuery(classId, query);
   });
 
+function streamLabel(type: StreamType, capitalized: boolean): string {
+  const label = type === "stream" ? "post" : type;
+  return capitalized ? capitalizeFirstLetter(label) : label;
+}
+
 export const createStreamFn = createServerFn({ method: "POST" })
   .validator((data: FormData) => data)
   .handler(async ({ data: formData }) => {
@@ -129,17 +137,8 @@ export const createStreamFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const classroomId = formData.get("classroomId") as string;
-    const postType = formData.get("type") as
-      | "stream"
-      | "assignment"
-      | "quiz"
-      | "question"
-      | "material";
-
-    const isAssignToAll = formData.get("isAssignToAll") === "true";
-    const topicId = (formData.get("topicId") as string) || "no-topic";
-    const dueDate = formData.get("dueDate") as string | null;
+    const fields = readStreamFormFields(formData);
+    const { classroomId, type: postType, topicId, isAssignToAll } = fields;
 
     const classroom = await getClassByClassId(classroomId);
     if (!classroom)
@@ -186,39 +185,27 @@ export const createStreamFn = createServerFn({ method: "POST" })
       topic = await getClassTopicByTopicId(topicId);
     }
 
-    let announceTo: string[] = [];
-    if (!isAssignToAll) {
-      const announceToData = formData.getAll("announceTo") as string[];
-      if (announceToData.length === 1 && announceToData[0].startsWith("[")) {
-        try {
-          announceTo = JSON.parse(announceToData[0]);
-        } catch {
-          announceTo = [];
-        }
-      } else {
-        announceTo = announceToData;
-      }
-    }
+    const announceTo = isAssignToAll ? [] : fields.announceTo;
 
     const newStream = {
-      type: postType || "stream",
+      type: postType,
       classId: classroomId,
       userId: session.user.id,
       userName: session.user.name,
       userImage: session.user.image as string,
-      title: (formData.get("title") as string | null) || null,
-      content: (formData.get("description") as string | null) || null,
+      title: fields.title,
+      content: fields.content,
       attachments: postAttachments,
-      links: (formData.getAll("links") as string[]) || [],
-      points: formData.get("points") ? Number(formData.get("points")) : null,
-      dueDate: dueDate ? new Date(dueDate) : null,
+      links: fields.links,
+      points: fields.points,
+      dueDate: fields.dueDate,
       topicId: topic ? topic.id : null,
       topicName: topic ? topic.name : null,
       announceToAll: isAssignToAll,
       announceTo,
-      acceptingSubmissions: true,
-      closeSubmissionsAfterDueDate: false,
-      scheduledAt: null,
+      acceptingSubmissions: fields.acceptingSubmissions,
+      closeSubmissionsAfterDueDate: fields.closeSubmissionsAfterDueDate,
+      scheduledAt: fields.scheduledAt,
     };
 
     const result = createStreamSchema.safeParse(newStream);
@@ -247,8 +234,7 @@ export const createStreamFn = createServerFn({ method: "POST" })
 
     return {
       success: true,
-      message:
-        postType === "stream" ? "Announcement posted!" : "Work assigned!",
+      message: `${streamLabel(postType, true)} published!`,
     };
   });
 
@@ -260,8 +246,9 @@ export const updateStreamFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const classroomId = formData.get("classroomId") as string;
-    const streamId = formData.get("streamId") as string;
+    const fields = readStreamFormFields(formData);
+    const { classroomId, topicId } = fields;
+    const streamId = fields.streamId ?? "";
 
     const classroom = await getClassByClassId(classroomId);
     if (!classroom)
@@ -281,50 +268,17 @@ export const updateStreamFn = createServerFn({ method: "POST" })
       };
     }
 
-    const newTitle = (formData.get("title") as string | null) || null;
-    const newContent = (formData.get("description") as string | null) || null;
+    const newTitle = fields.title;
+    const newContent = fields.content;
     const newAttachments = formData.getAll("attachments");
-    const newUrlLinks = (formData.getAll("links") as string[]) || [];
-    const newPoints = formData.get("points")
-      ? Number(formData.get("points"))
-      : null;
-    const newDueDate = formData.get("dueDate")
-      ? new Date(formData.get("dueDate") as string)
-      : null;
-    const newIsAssignToAll = formData.get("isAssignToAll") === "true";
-    const topicId = (formData.get("topicId") as string) || "no-topic";
-
-    let curAttachments = formData.getAll("curAttachments") as string[];
-    if (curAttachments.length === 1 && curAttachments[0].startsWith("[")) {
-      try {
-        curAttachments = JSON.parse(curAttachments[0]);
-      } catch {
-        curAttachments = [];
-      }
-    }
-
-    let curUrlLinks = formData.getAll("curUrlLinks") as string[];
-    if (curUrlLinks.length === 1 && curUrlLinks[0].startsWith("[")) {
-      try {
-        curUrlLinks = JSON.parse(curUrlLinks[0]);
-      } catch {
-        curUrlLinks = [];
-      }
-    }
-
-    let announceTo: string[] = [];
-    if (!newIsAssignToAll) {
-      const announceToData = formData.getAll("announceTo") as string[];
-      if (announceToData.length === 1 && announceToData[0].startsWith("[")) {
-        try {
-          announceTo = JSON.parse(announceToData[0]);
-        } catch {
-          announceTo = [];
-        }
-      } else {
-        announceTo = announceToData;
-      }
-    }
+    const newUrlLinks = fields.links;
+    const newPoints = fields.points;
+    const newDueDate = fields.dueDate;
+    const newScheduledAt = fields.scheduledAt;
+    const newIsAssignToAll = fields.isAssignToAll;
+    const curAttachments = fields.currentAttachments;
+    const curUrlLinks = fields.currentLinks;
+    const announceTo = newIsAssignToAll ? [] : fields.announceTo;
 
     let topic = null;
     if (topicId !== "no-topic") {
@@ -338,6 +292,10 @@ export const updateStreamFn = createServerFn({ method: "POST" })
       newDueDate?.getTime() !== currentStream.dueDate?.getTime() ||
       topicId !== (currentStream.topicId || "no-topic") ||
       newIsAssignToAll !== currentStream.announceToAll ||
+      newScheduledAt?.getTime() !== currentStream.scheduledAt?.getTime() ||
+      fields.acceptingSubmissions !== currentStream.acceptingSubmissions ||
+      fields.closeSubmissionsAfterDueDate !==
+        currentStream.closeSubmissionsAfterDueDate ||
       newAttachments.length > 0 ||
       newUrlLinks.length > 0 ||
       !arraysAreEqual(curAttachments, currentStream.attachments ?? []) ||
@@ -388,10 +346,9 @@ export const updateStreamFn = createServerFn({ method: "POST" })
         topicName: topic ? topic.name : null,
         announceToAll: newIsAssignToAll,
         announceTo,
-        acceptingSubmissions: currentStream.acceptingSubmissions,
-        closeSubmissionsAfterDueDate:
-          currentStream.closeSubmissionsAfterDueDate,
-        scheduledAt: currentStream.scheduledAt,
+        acceptingSubmissions: fields.acceptingSubmissions,
+        closeSubmissionsAfterDueDate: fields.closeSubmissionsAfterDueDate,
+        scheduledAt: newScheduledAt,
       };
 
       const result = editStreamSchema.safeParse(updatedStream);
@@ -407,10 +364,16 @@ export const updateStreamFn = createServerFn({ method: "POST" })
 
       if (!data) return { success: false, message: "Failed to update post." };
 
-      return { success: true, message: "Post updated successfully!" };
+      return {
+        success: true,
+        message: `${streamLabel(currentStream.type, true)} updated successfully!`,
+      };
     }
 
-    return { success: true, message: "No changes were made to the post." };
+    return {
+      success: true,
+      message: `No changes were made to the ${streamLabel(currentStream.type, false)}.`,
+    };
   });
 
 export const deleteClassStreamFn = createServerFn({ method: "POST" })
