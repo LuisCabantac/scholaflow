@@ -9,6 +9,7 @@
     "includes": [
       "**/src/**/*",
       "**/tests/**/*",
+      "**/scripts/**/*",
       "**/vite.config.ts",
       "**/vitest.config.ts",
       "!**/src/routeTree.gen.ts",
