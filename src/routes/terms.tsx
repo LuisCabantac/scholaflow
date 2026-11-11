@@ -1,12 +1,20 @@
 import { Trans, useTranslation } from "react-i18next";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { pageHead } from "@/lib/seo";
+
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { LegalSection } from "@/components/shared/LegalSection";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({ meta: [{ title: "Terms and Conditions | ScholaFlow" }] }),
+  head: () =>
+    pageHead({
+      title: "Terms and Conditions | ScholaFlow",
+      description:
+        "The terms and conditions for using ScholaFlow: accounts, content, acceptable use and your rights as a teacher or student.",
+      path: "/terms",
+    }),
   component: RouteComponent,
 });
 

@@ -17,6 +17,7 @@ export const Route = createFileRoute("/_auth/verify")({
   head: () => ({
     meta: [
       { title: "Verify Email | ScholaFlow" },
+      { name: "robots", content: "noindex, nofollow" },
       {
         name: "description",
         content:

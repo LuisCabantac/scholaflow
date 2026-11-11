@@ -1,12 +1,20 @@
 import { Trans, useTranslation } from "react-i18next";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { pageHead } from "@/lib/seo";
+
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { LegalSection } from "@/components/shared/LegalSection";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({ meta: [{ title: "Privacy Policy | ScholaFlow" }] }),
+  head: () =>
+    pageHead({
+      title: "Privacy Policy | ScholaFlow",
+      description:
+        "How ScholaFlow collects, uses and protects your data, and the choices you have over your account and content.",
+      path: "/privacy",
+    }),
   component: RouteComponent,
 });
 

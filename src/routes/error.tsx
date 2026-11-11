@@ -6,7 +6,12 @@ import AuthCard from "@/components/auth/AuthCard";
 import { CardContent } from "@/components/ui/card";
 
 export const Route = createFileRoute("/error")({
-  head: () => ({ meta: [{ title: "Something went wrong | ScholaFlow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Something went wrong | ScholaFlow" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: ErrorPage,
 });
 

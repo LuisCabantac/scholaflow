@@ -17,6 +17,7 @@ export const Route = createFileRoute("/_auth/reset-password")({
   head: () => ({
     meta: [
       { title: "Reset Password | ScholaFlow" },
+      { name: "robots", content: "noindex, nofollow" },
       {
         name: "description",
         content:

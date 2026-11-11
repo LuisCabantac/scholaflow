@@ -17,6 +17,7 @@ export const Route = createFileRoute("/close-account")({
   head: () => ({
     meta: [
       { title: "Close Account | ScholaFlow" },
+      { name: "robots", content: "noindex, nofollow" },
       {
         name: "description",
         content:

@@ -1,20 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { pageHead } from "@/lib/seo";
+
 import AuthCard from "@/components/auth/AuthCard";
 import ForgetPasswordForm from "@/components/auth/ForgetPasswordForm";
 
 export const Route = createFileRoute("/_auth/forget-password")({
-  head: () => ({
-    meta: [
-      { title: "Forgot Password | ScholaFlow" },
-      {
-        name: "description",
-        content:
-          "Reset your password to regain access to your ScholaFlow account.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Forgot Password | ScholaFlow",
+      description:
+        "Reset your password to regain access to your ScholaFlow account.",
+      path: "/forget-password",
+      index: false,
+    }),
   component: ForgetPassword,
 });
 

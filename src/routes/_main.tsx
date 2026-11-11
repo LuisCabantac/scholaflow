@@ -23,6 +23,9 @@ export const Route = createFileRoute("/_main")({
 
     return { user: session.user };
   },
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex, nofollow" }],
+  }),
   loader: async ({ context: { queryClient, user } }) => {
     await Promise.all([
       queryClient.ensureQueryData(classroomQueries.byTeacher(user.id)),

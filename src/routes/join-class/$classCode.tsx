@@ -42,6 +42,7 @@ export const Route = createFileRoute("/join-class/$classCode")({
   head: ({ loaderData }) => ({
     meta: [
       { title: `Join - ${loaderData?.classroom.name ?? ""} | ScholaFlow` },
+      { name: "robots", content: "noindex, nofollow" },
       {
         name: "description",
         content:

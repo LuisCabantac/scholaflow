@@ -15,8 +15,10 @@ import { Route as MainRouteImport } from './routes/_main'
 import { Route as CloseAccountRouteImport } from './routes/close-account'
 import { Route as ErrorRouteImport } from './routes/error'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TermsOfUseRouteImport } from './routes/terms-of-use'
 import { Route as AuthForgetPasswordRouteImport } from './routes/_auth/forget-password'
@@ -69,6 +71,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SigninRoute = SigninRouteImport.update({
   id: '/signin',
   path: '/signin',
@@ -77,6 +84,11 @@ const SigninRoute = SigninRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -208,8 +220,10 @@ export interface FileRoutesByFullPath {
   '/close-account': typeof CloseAccountRoute
   '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/terms-of-use': typeof TermsOfUseRoute
   '/forget-password': typeof AuthForgetPasswordRoute
@@ -239,8 +253,10 @@ export interface FileRoutesByTo {
   '/close-account': typeof CloseAccountRoute
   '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/terms-of-use': typeof TermsOfUseRoute
   '/forget-password': typeof AuthForgetPasswordRoute
@@ -271,8 +287,10 @@ export interface FileRoutesById {
   '/close-account': typeof CloseAccountRoute
   '/error': typeof ErrorRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/terms-of-use': typeof TermsOfUseRoute
   '/_auth/forget-password': typeof AuthForgetPasswordRoute
@@ -304,8 +322,10 @@ export interface FileRouteTypes {
     | '/close-account'
     | '/error'
     | '/privacy'
+    | '/robots.txt'
     | '/signin'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/terms-of-use'
     | '/forget-password'
@@ -335,8 +355,10 @@ export interface FileRouteTypes {
     | '/close-account'
     | '/error'
     | '/privacy'
+    | '/robots.txt'
     | '/signin'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/terms-of-use'
     | '/forget-password'
@@ -366,8 +388,10 @@ export interface FileRouteTypes {
     | '/close-account'
     | '/error'
     | '/privacy'
+    | '/robots.txt'
     | '/signin'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/terms-of-use'
     | '/_auth/forget-password'
@@ -400,8 +424,10 @@ export interface RootRouteChildren {
   CloseAccountRoute: typeof CloseAccountRoute
   ErrorRoute: typeof ErrorRoute
   PrivacyRoute: typeof PrivacyRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SigninRoute: typeof SigninRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   TermsOfUseRoute: typeof TermsOfUseRoute
   JoinClassClassCodeRoute: typeof JoinClassClassCodeRoute
@@ -452,6 +478,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signin': {
       id: '/signin'
       path: '/signin'
@@ -464,6 +497,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -719,8 +759,10 @@ const rootRouteChildren: RootRouteChildren = {
   CloseAccountRoute: CloseAccountRoute,
   ErrorRoute: ErrorRoute,
   PrivacyRoute: PrivacyRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SigninRoute: SigninRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   TermsOfUseRoute: TermsOfUseRoute,
   JoinClassClassCodeRoute: JoinClassClassCodeRoute,

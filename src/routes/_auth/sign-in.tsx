@@ -7,6 +7,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { pageHead } from "@/lib/seo";
 import { authKeys } from "@/queries/auth";
 import { signIn } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/schema";
@@ -26,16 +27,13 @@ import {
 
 export const Route = createFileRoute("/_auth/sign-in")({
   validateSearch: z.object({ redirect: z.string().optional() }),
-  head: () => ({
-    meta: [
-      { title: "Sign in | ScholaFlow" },
-      {
-        name: "description",
-        content:
-          "Sign in to access your classes, assignments, and connect with your classmates.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Sign in | ScholaFlow",
+      description:
+        "Sign in to access your classes, assignments, and connect with your classmates.",
+      path: "/sign-in",
+    }),
   component: SignIn,
 });
 
