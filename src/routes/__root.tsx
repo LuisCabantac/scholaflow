@@ -14,12 +14,13 @@ import "@fontsource/be-vietnam-pro/800.css";
 import "@fontsource/be-vietnam-pro/900.css";
 import "@fontsource-variable/quicksand/wght.css";
 
+import type { RouterContext } from "@/integrations/tanstack-query/root-provider";
 import { AppProviders } from "@/providers";
 import appCss from "@/styles.css?url";
 
 import { Toaster } from "@/components/ui/sonner";
 
-export const Route = createRootRouteWithContext()({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {
