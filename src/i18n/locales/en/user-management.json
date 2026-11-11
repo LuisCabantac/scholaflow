@@ -36,7 +36,8 @@
     "passwordPlaceholder": "Set up user's password",
     "cancel": "Cancel",
     "create": "Create",
-    "save": "Save changes"
+    "save": "Save changes",
+    "failed": "Failed to save the user. Please try again."
   },
   "roleRequests": {
     "title": "Role requests",

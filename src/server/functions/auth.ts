@@ -9,26 +9,12 @@ import { sendEmail } from "@/services/email";
 import { extractAvatarFilePath } from "@/lib/utils";
 import type { AuthResult, TokenType } from "@/types/auth";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { deleteAllMessagesByUserId } from "@/services/message";
-import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { deleteAllNotificationsByUserId } from "@/services/notification";
+import { deleteUserCascade } from "@/services/account-deletion";
+import { deleteFileFromBucket } from "@/services/user-management";
 import { renderActionEmail } from "@/services/email-templates/action-email";
 import { renderVerifyEmail } from "@/services/email-templates/verify-email";
 import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
 import {
-  deleteClassStreamPost,
-  getAllClassesStreamByUserId,
-} from "@/services/stream";
-import {
-  deleteFileFromBucket,
-  removeRoleRequestByUserId,
-} from "@/services/user-management";
-import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
-import {
-  deleteUserRecord,
   getAccountByUserId,
   getUserByEmail,
   getUserIdById,
@@ -39,12 +25,6 @@ import {
   getVerificationToken,
   getVerificationTokenByToken,
 } from "@/services/auth";
-import {
-  deleteClass,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
-  getAllClassesByTeacherId,
-  getAllEnrolledClassesByUserId,
-} from "@/services/classroom";
 
 export const getSession = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -238,38 +218,6 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
 
     if (!existingUser) return { success: false, code: "noAccount" };
 
-    await deleteAllMessagesByUserId(existingUser.id);
-    await deleteAllCommentsByUserId(existingUser.id);
-    await deleteAllPrivateCommentsByUserId(existingUser.id);
-
-    const posts = await getAllClassesStreamByUserId(existingUser.id);
-    for (const post of posts ?? []) {
-      await deleteClassStreamPost(post.id);
-    }
-
-    const enrolledClasses = await getAllEnrolledClassesByUserId(
-      existingUser.id,
-    );
-    for (const enrolledClass of enrolledClasses ?? []) {
-      await deleteEnrolledClassbyClassAndEnrolledClassId(
-        enrolledClass.id,
-        enrolledClass.classId,
-      );
-    }
-
-    const createdClasses = await getAllClassesByTeacherId(existingUser.id);
-    for (const createdClass of createdClasses ?? []) {
-      await deleteClass(createdClass.id);
-    }
-
-    const allNotes = await getAllNotesByUserId(existingUser.id);
-    for (const note of allNotes ?? []) {
-      await deleteNote(note.id);
-    }
-
-    await deleteAllNotificationsByUserId(existingUser.id);
-    await removeRoleRequestByUserId(existingUser.id);
-
     if (isUploadedAvatarUrl(existingUser.image)) {
       await deleteFileFromBucket(
         "avatars",
@@ -277,7 +225,7 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
       );
     }
 
-    const deletedUser = await deleteUserRecord(existingUser.id);
+    const deletedUser = await deleteUserCascade(existingUser.id);
 
     if (!deletedUser) return { success: false, code: "closeFailed" };
 

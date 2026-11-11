@@ -58,6 +58,8 @@ export default function UserForm({
       toast.success(result.message);
       await queryClient.invalidateQueries({ queryKey: userKeys.all });
       onClose();
+    } catch {
+      toast.error(t("failed"));
     } finally {
       setIsLoading(false);
     }

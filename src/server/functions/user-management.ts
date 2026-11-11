@@ -6,23 +6,13 @@ import { extractAvatarFilePath } from "@/lib/utils";
 import { uploadAttachments } from "@/services/storage";
 import { userDetailsChanged } from "@/lib/user-search";
 import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { deleteAllMessagesByUserId } from "@/services/message";
+import { deleteUserCascade } from "@/services/account-deletion";
 import type { UserMutationResult } from "@/types/user-management";
-import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { deleteAllNotificationsByUserId } from "@/services/notification";
-import {
-  deleteClassStreamPost,
-  getAllClassesStreamByUserId,
-} from "@/services/stream";
 import {
   isAvatarFile,
   isAvatarTooLarge,
   pickPasswordAccount,
 } from "@/lib/profile-form";
-import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
 import {
   createRoleRequestSchema,
   createUserSchema,
@@ -36,12 +26,6 @@ import {
   getUserByUserId,
   updateUserRecord,
 } from "@/services/user";
-import {
-  deleteClass,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
-  getAllClassesByTeacherId,
-  getAllEnrolledClassesByUserId,
-} from "@/services/classroom";
 import {
   createRoleRequestRecord,
   deleteFileFromBucket,
@@ -399,12 +383,17 @@ export const createUserFn = createServerFn({ method: "POST" })
       if (!user)
         return { success: false, message: "User could not be created." };
 
-      await ctx.internalAdapter.linkAccount({
-        providerId: "credential",
-        accountId: user.id,
-        userId: user.id,
-        password: await ctx.password.hash(data.password),
-      });
+      try {
+        await ctx.internalAdapter.linkAccount({
+          providerId: "credential",
+          accountId: user.id,
+          userId: user.id,
+          password: await ctx.password.hash(data.password),
+        });
+      } catch {
+        await deleteUserRecord(user.id);
+        return { success: false, message: "User could not be created." };
+      }
     } catch {
       return { success: false, message: "User could not be created." };
     }
@@ -456,24 +445,6 @@ export const updateUserFn = createServerFn({ method: "POST" })
     return { success: true, message: "User updated successfully!" };
   });
 
-export const deleteUserFn = createServerFn({ method: "POST" })
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return { success: false, message: "Unauthorized" };
-    if (session.user.role !== "admin" && session.user.id !== userId) {
-      return { success: false, message: "Unauthorized" };
-    }
-
-    const user = await getUserByUserId(userId);
-    if (!user) return { success: false, message: "User does not exist." };
-
-    await deleteUserRecord(userId);
-    return { success: true, message: "User deleted successfully." };
-  });
-
 export const closeAccountFn = createServerFn({ method: "POST" })
   .validator((userId: string) => userId)
   .handler(async ({ data: userId }) => {
@@ -492,50 +463,14 @@ export const closeAccountFn = createServerFn({ method: "POST" })
       };
     }
 
-    await deleteAllMessagesByUserId(userId);
-    await deleteAllCommentsByUserId(userId);
-    await deleteAllPrivateCommentsByUserId(userId);
-
-    const posts = await getAllClassesStreamByUserId(userId);
-    if (posts?.length) {
-      for (const post of posts) {
-        await deleteClassStreamPost(post.id);
-      }
-    }
-
-    const enrolledClasses = await getAllEnrolledClassesByUserId(userId);
-    if (enrolledClasses?.length) {
-      for (const enrolledClass of enrolledClasses) {
-        await deleteEnrolledClassbyClassAndEnrolledClassId(
-          enrolledClass.id,
-          enrolledClass.classId,
-        );
-      }
-    }
-
-    const createdClasses = await getAllClassesByTeacherId(userId);
-    if (createdClasses?.length) {
-      for (const createdClass of createdClasses) {
-        await deleteClass(createdClass.id);
-      }
-    }
-
-    const allNotes = await getAllNotesByUserId(userId);
-    if (allNotes?.length) {
-      for (const note of allNotes) {
-        await deleteNote(note.id);
-      }
-    }
-
-    await deleteAllNotificationsByUserId(userId);
-    await removeRoleRequestByUserId(userId);
-
     if (isUploadedAvatarUrl(user.image)) {
       const filePath = extractAvatarFilePath(user.image);
       await deleteFileFromBucket("avatars", filePath);
     }
 
-    await deleteUserRecord(user.id);
+    const deleted = await deleteUserCascade(user.id);
+    if (!deleted)
+      return { success: false, message: "Failed to close account." };
 
     return { success: true, message: "Account closed successfully." };
   });
