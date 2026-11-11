@@ -20,12 +20,18 @@ export default function VerifySection({ token }: { token: string }) {
     if (started.current) return;
     started.current = true;
 
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
     verifyEmailVerificationFn({ data: token }).then((data) => {
       setResult(data);
       if (data.success) {
-        setTimeout(() => navigate({ to: "/sign-in" }), 2000);
+        timer = setTimeout(() => navigate({ to: "/sign-in" }), 2000);
       }
     });
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [token, navigate]);
 
   return (
