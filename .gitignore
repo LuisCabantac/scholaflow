@@ -13,3 +13,4 @@ __unconfig*
 todos.json
 .next
 next-env.d.ts
+.vercel
