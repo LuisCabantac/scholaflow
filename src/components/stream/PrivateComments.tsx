@@ -24,12 +24,14 @@ export default function PrivateComments({
   user,
   otherUserId,
   classworkId,
+  variant = "work",
 }: {
   stream: Stream;
   classroom: Classroom;
   user: SessionUser;
   otherUserId: string;
   classworkId?: string;
+  variant?: "work" | "submissions";
 }) {
   const { t } = useTranslation("stream", { keyPrefix: "work" });
   const { t: tCard } = useTranslation("stream", { keyPrefix: "card" });
@@ -110,6 +112,62 @@ export default function PrivateComments({
     </ul>
   );
 
+  const form = (
+    <CommentForm
+      fields={fields}
+      isPending={addComment.isPending}
+      placeholder={t("addPrivateComment")}
+      pendingPlaceholder={tCard("addingComment")}
+      onSubmit={(formData) => addComment.mutate(formData)}
+    />
+  );
+  const toggle = (className: string) =>
+    thread.length ? (
+      <button
+        type="button"
+        onClick={() => setExpanded((current) => !current)}
+        className={className}
+      >
+        {expanded ? t("minimizeComments") : t("expandComments")}
+      </button>
+    ) : null;
+
+  if (variant === "submissions") {
+    return (
+      <>
+        <div className="bg-card hidden flex-col md:flex">
+          <div>
+            <div className="mt-2 border-t pt-2">
+              <p className="font-medium">{t("privateComments")}</p>
+              <div className="bg-card w-full py-2">{form}</div>
+              {thread.length || comments.isPending
+                ? list("mt-2 grid max-h-[20rem] gap-2 overflow-y-auto")
+                : null}
+            </div>
+          </div>
+        </div>
+        <div className="bg-card fixed right-0 bottom-0 left-0 flex flex-col md:static md:hidden">
+          <div>
+            <div className="flex-end flex flex-col gap-2 border-t px-3 pt-2 md:mt-2 md:px-0">
+              <div className="flex items-center justify-between">
+                <p className="font-medium">{t("privateComments")}</p>
+                {toggle("text-primary block text-xs md:hidden")}
+              </div>
+              {thread.length || comments.isPending
+                ? list(
+                    `grid gap-2 ${expanded ? "max-h-[15rem] overflow-y-auto" : "max-h-0"}`,
+                  )
+                : null}
+            </div>
+          </div>
+          <div className="bg-card z-10 w-full px-3 pt-1 pb-3 md:px-0 md:pb-0">
+            {form}
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="z-10 block md:hidden">
@@ -121,15 +179,7 @@ export default function PrivateComments({
               <span className="text-sm font-medium">
                 {t("privateComments")}
               </span>
-              {thread.length ? (
-                <button
-                  type="button"
-                  onClick={() => setExpanded((current) => !current)}
-                  className="text-primary block text-sm md:hidden"
-                >
-                  {expanded ? t("minimizeComments") : t("expandComments")}
-                </button>
-              ) : null}
+              {toggle("text-primary block text-sm md:hidden")}
             </div>
             {thread.length || comments.isPending
               ? list(
@@ -138,27 +188,11 @@ export default function PrivateComments({
               : null}
           </div>
         </div>
-        <div className="mt-1 w-full">
-          <CommentForm
-            fields={fields}
-            isPending={addComment.isPending}
-            placeholder={t("addPrivateComment")}
-            pendingPlaceholder={tCard("addingComment")}
-            onSubmit={(formData) => addComment.mutate(formData)}
-          />
-        </div>
+        <div className="mt-1 w-full">{form}</div>
       </div>
       <div className="hidden md:block">
         <span className="text-sm font-medium">{t("privateComments")}</span>
-        <div className="mt-1">
-          <CommentForm
-            fields={fields}
-            isPending={addComment.isPending}
-            placeholder={t("addPrivateComment")}
-            pendingPlaceholder={tCard("addingComment")}
-            onSubmit={(formData) => addComment.mutate(formData)}
-          />
-        </div>
+        <div className="mt-1">{form}</div>
         {thread.length || comments.isPending
           ? list("mt-2 grid max-h-[20rem] gap-2 overflow-y-auto")
           : null}
