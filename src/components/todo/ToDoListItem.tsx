@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ClientOnly, Link } from "@tanstack/react-router";
 
+import { useNow } from "@/hooks/use-now";
 import { dueLabel, relativeDay } from "@/lib/stream-dates";
 import type { ToDoItemProps, ToDoKind } from "@/types/classroom";
 
@@ -40,6 +41,7 @@ const icons: Record<ToDoKind, { className: string; path: ReactNode }> = {
 
 export default function ToDoListItem(props: ToDoItemProps) {
   const { t } = useTranslation("todo");
+  const now = useNow();
 
   const streamId = props.kind === "done" ? props.item.streamId : props.item.id;
   const postedAt =
@@ -48,7 +50,7 @@ export default function ToDoListItem(props: ToDoItemProps) {
   const dayLabels = { today: t("today"), yesterday: t("yesterday") };
 
   const dueText = (date: Date | string) => {
-    const label = dueLabel(date);
+    const label = dueLabel(date, now);
     if (label.kind === "today") return t("dueToday", { time: label.time });
     if (label.kind === "yesterday")
       return t("dueYesterday", { time: label.time });

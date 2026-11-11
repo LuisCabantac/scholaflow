@@ -9,6 +9,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { ClassroomSort } from "@/types/classroom";
@@ -61,6 +62,7 @@ export default function ClassroomSection({
   sort: ClassroomSort;
 }) {
   const navigate = useNavigate();
+  const now = useNow();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const { t } = useTranslation("classroom");
@@ -86,8 +88,18 @@ export default function ClassroomSection({
     streamQueries.enrolledClassworks(user.id),
   );
 
-  const assigned = assignedClassworks(enrolledClassworks, classworks, user.id);
-  const missing = missingClassworks(enrolledClassworks, classworks, user.id);
+  const assigned = assignedClassworks(
+    enrolledClassworks,
+    classworks,
+    user.id,
+    now,
+  );
+  const missing = missingClassworks(
+    enrolledClassworks,
+    classworks,
+    user.id,
+    now,
+  );
   const done = doneClassworks(classworks, enrolledClasses);
 
   const deleteClass = useMutation({

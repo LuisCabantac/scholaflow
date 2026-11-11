@@ -10,6 +10,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
+import { useNow } from "@/hooks/use-now";
 import type { StreamType } from "@/lib/schema";
 import type { SessionUser } from "@/types/auth";
 import { classworkKeys } from "@/queries/classwork";
@@ -45,6 +46,7 @@ export default function ClassworksSection({
   user: SessionUser;
 }) {
   const { t } = useTranslation("classwork");
+  const now = useNow();
   const queryClient = useQueryClient();
 
   const [search, setSearch] = useState("");
@@ -127,6 +129,7 @@ export default function ClassworksSection({
     classworks.data,
     user.id,
     classroom.teacherId,
+    now,
   ).filter((stream) => !stream.topicId);
   const isEmpty = !untopiced.length && !topics?.length && !classworks.isPending;
 

@@ -7,6 +7,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import type { StreamSort } from "@/types/stream";
 import { classworkKeys } from "@/queries/classwork";
@@ -41,6 +42,7 @@ export default function StreamsSection({
   sort: StreamSort;
 }) {
   const queryClient = useQueryClient();
+  const now = useNow();
   const { t } = useTranslation("stream");
 
   const [showClassForm, setShowClassForm] = useState(false);
@@ -57,12 +59,13 @@ export default function StreamsSection({
   );
 
   const isTeacher = classroom.teacherId === user.id;
-  const visible = visibleStreams(streams, user.id, classroom.teacherId);
+  const visible = visibleStreams(streams, user.id, classroom.teacherId, now);
   const listed = filterStreamsByType(visible, sort);
   const recentWork = latestAssignedClasswork(
     streams,
     user.id,
     classroom.teacherId,
+    now,
   );
 
   const deleteStream = useMutation({

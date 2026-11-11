@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import { streamsForTopic } from "@/lib/stream-visibility";
 import { useClickOutside } from "@/hooks/use-click-outside";
@@ -41,6 +42,7 @@ export default function TopicCard({
   deleteStreamIsPending: boolean;
 }) {
   const { t } = useTranslation("classwork", { keyPrefix: "topic" });
+  const now = useNow();
 
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
@@ -55,6 +57,7 @@ export default function TopicCard({
     topic.id,
     user.id,
     classroom.teacherId,
+    now,
   );
 
   useClickOutside(ellipsisRef, () => setEllipsis(false), false);

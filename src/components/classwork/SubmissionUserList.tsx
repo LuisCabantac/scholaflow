@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ClientOnly, Link } from "@tanstack/react-router";
 
+import { useNow } from "@/hooks/use-now";
 import { workStatus } from "@/lib/classwork-rules";
 import type { Classwork, EnrolledClass, Stream } from "@/lib/schema";
 
@@ -20,6 +21,7 @@ export default function SubmissionUserList({
   onSelect: () => void;
 }) {
   const { t } = useTranslation("classwork", { keyPrefix: "submissions" });
+  const now = useNow();
 
   const turnedIn = classworks.filter(
     (work) => work.isTurnedIn || (stream.points && work.isGraded),
@@ -91,7 +93,7 @@ export default function SubmissionUserList({
               const work = classworks.find(
                 (entry) => entry.userId === user.userId,
               );
-              const status = workStatus(work, stream);
+              const status = workStatus(work, stream, now);
               const submitted = work?.isTurnedIn || work?.isGraded;
 
               return (

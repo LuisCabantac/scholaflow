@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { isWebUrl } from "@/lib/links";
+import { useNow } from "@/hooks/use-now";
 import { streamKeys } from "@/queries/stream";
 import type { SessionUser } from "@/types/auth";
 import { classworkKeys } from "@/queries/classwork";
@@ -45,6 +46,7 @@ export default function StreamUserWork({
   classwork: Classwork | null;
 }) {
   const { t } = useTranslation("stream", { keyPrefix: "work" });
+  const now = useNow();
   const { t: tCommon } = useTranslation("common");
   const queryClient = useQueryClient();
 
@@ -68,8 +70,8 @@ export default function StreamUserWork({
     classwork?.isTurnedIn ?? false,
   );
 
-  const status = workStatus(classwork, stream);
-  const open = submissionsOpen(stream);
+  const status = workStatus(classwork, stream, now);
+  const open = submissionsOpen(stream, now);
   const attachmentCount =
     currentAttachments.length +
     currentUrlLinks.length +

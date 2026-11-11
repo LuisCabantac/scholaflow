@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ClientOnly, Link } from "@tanstack/react-router";
 
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { longDateTime, relativeDay, timeOfDay } from "@/lib/stream-dates";
@@ -41,6 +42,7 @@ export default function StreamCard({
   deleteIsPending: boolean;
 }) {
   const { t } = useTranslation("stream", { keyPrefix: "card" });
+  const now = useNow();
 
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +52,7 @@ export default function StreamCard({
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const isScheduled =
-    !!stream.scheduledAt && new Date(stream.scheduledAt) > new Date();
+    !!stream.scheduledAt && new Date(stream.scheduledAt) > now;
   const dayLabels = { today: t("today"), yesterday: t("yesterday") };
   const clipboardUrl = `/classroom/class/${classroom.id}/stream/${stream.id}`;
 

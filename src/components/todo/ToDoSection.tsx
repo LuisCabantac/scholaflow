@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import { streamQueries } from "@/queries/stream";
 import type { ToDoKind } from "@/types/classroom";
@@ -27,6 +28,7 @@ export default function ToDoSection({
   filter: ToDoKind;
 }) {
   const { t } = useTranslation("todo");
+  const now = useNow();
 
   const { data: classworks } = useSuspenseQuery(
     classworkQueries.byUser(user.id),
@@ -38,8 +40,18 @@ export default function ToDoSection({
     streamQueries.enrolledClassworks(user.id),
   );
 
-  const assigned = assignedClassworks(enrolledClassworks, classworks, user.id);
-  const missing = missingClassworks(enrolledClassworks, classworks, user.id);
+  const assigned = assignedClassworks(
+    enrolledClassworks,
+    classworks,
+    user.id,
+    now,
+  );
+  const missing = missingClassworks(
+    enrolledClassworks,
+    classworks,
+    user.id,
+    now,
+  );
   const done = doneClassworks(classworks, enrolledClasses);
 
   const isEmpty =

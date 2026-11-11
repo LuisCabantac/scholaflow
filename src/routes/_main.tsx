@@ -32,6 +32,8 @@ export const Route = createFileRoute("/_main")({
       queryClient.ensureQueryData(classroomQueries.enrolledByUser(user.id)),
       queryClient.ensureQueryData(notificationQueries.unreadByUser(user.id)),
     ]);
+
+    return { renderedAt: Date.now() };
   },
   component: MainLayout,
 });

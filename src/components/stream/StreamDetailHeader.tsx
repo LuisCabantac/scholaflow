@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ClientOnly } from "@tanstack/react-router";
 
+import { useNow } from "@/hooks/use-now";
 import type { Stream } from "@/lib/schema";
 import {
   dueLabel,
@@ -34,10 +35,11 @@ function EditedIcon({ title }: { title: string }) {
 
 export default function StreamDetailHeader({ stream }: { stream: Stream }) {
   const { t } = useTranslation("stream", { keyPrefix: "card" });
+  const now = useNow();
   const { t: tDetail } = useTranslation("stream", { keyPrefix: "detail" });
 
   const isScheduled =
-    !!stream.scheduledAt && new Date(stream.scheduledAt) > new Date();
+    !!stream.scheduledAt && new Date(stream.scheduledAt) > now;
   const dayLabels = { today: t("today"), yesterday: t("yesterday") };
 
   function scheduledText(date: Date | string) {
@@ -50,7 +52,7 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
   }
 
   function dueText(date: Date | string) {
-    const label = dueLabel(date);
+    const label = dueLabel(date, now);
     if (label.kind === "today")
       return tDetail("dueToday", { time: label.time });
     if (label.kind === "yesterday")
