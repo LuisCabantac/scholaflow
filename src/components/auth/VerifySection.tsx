@@ -13,15 +13,26 @@ export default function VerifySection({ token }: { token: string }) {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
 
-  const pending = useRef<Promise<AuthResult> | null>(null);
+  const pending = useRef<{
+    token: string;
+    promise: Promise<AuthResult>;
+  } | null>(null);
   const [result, setResult] = useState<AuthResult | null>(null);
 
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    pending.current ??= verifyEmailVerificationFn({ data: token });
-    pending.current.then((data) => {
+    if (pending.current?.token !== token) {
+      pending.current = {
+        token,
+        promise: verifyEmailVerificationFn({ data: token }).catch(
+          (): AuthResult => ({ success: false, code: "verifyFailed" }),
+        ),
+      };
+    }
+
+    pending.current.promise.then((data) => {
       if (!active) return;
       setResult(data);
       if (data.success) {
