@@ -1,4 +1,6 @@
-export const SITE_URL = "https://scholaflow.vercel.app";
+export const SITE_URL = (
+  import.meta.env.VITE_SITE_URL || "https://scholaflow.vercel.app"
+).replace(/\/+$/, "");
 export const SITE_NAME = "ScholaFlow";
 export const SITE_TAGLINE = "ScholaFlow - Your All-in-One Learning Platform";
 export const SITE_DESCRIPTION =
