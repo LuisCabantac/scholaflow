@@ -190,6 +190,11 @@
         color: #354164;
     }
 
+    .role.user {
+        background-color: #d3f9d8;
+        color: #2f9e44;
+    }
+
     .role.teacher {
         background-color: #d3f9d8;
         color: #2f9e44;

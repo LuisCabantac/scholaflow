@@ -32,6 +32,7 @@ import {
 import {
   deleteUserRecord,
   getAccountsByUserId,
+  getUserByEmail,
   getUserByUserId,
   updateUserRecord,
 } from "@/services/user";
