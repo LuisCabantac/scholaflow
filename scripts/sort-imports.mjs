@@ -1,41 +1,55 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const check = process.argv.includes("--check");
-const roots = process.argv.filter((a) => !a.startsWith("--")).slice(2);
-const targets = roots.length
-  ? roots
-  : ["src", "tests", "scripts", "vite.config.ts", "vitest.config.ts"];
-const skip = new Set(["src/routeTree.gen.ts"]);
+const defaultTargets = [
+  "src",
+  "tests",
+  "scripts",
+  "vite.config.ts",
+  "vitest.config.ts",
+];
+const skipExact = new Set(["src/routeTree.gen.ts"]);
+const skipDirs = ["src/components/ui/"];
+const keepInSkippedDirs = new Set(["src/components/ui/color-picker.tsx"]);
+
+function isSkipped(file) {
+  const rel = file.replace(/^\.\//, "");
+  if (skipExact.has(rel)) return true;
+  if (keepInSkippedDirs.has(rel)) return false;
+  return skipDirs.some((dir) => rel.startsWith(dir));
+}
 
 function walk(entry, out) {
   const stat = fs.statSync(entry);
   if (stat.isDirectory()) {
     for (const name of fs.readdirSync(entry)) walk(path.join(entry, name), out);
-  } else if (
-    /\.(ts|tsx|mjs)$/.test(entry) &&
-    !skip.has(entry.replace(/^\.\//, ""))
-  ) {
+  } else if (/\.(ts|tsx|mjs)$/.test(entry) && !isSkipped(entry)) {
     out.push(entry);
   }
 }
 
 function groupOf(source) {
   if (source.startsWith("@/components/")) return 2;
-  if (
-    source.startsWith("@/") ||
-    source.startsWith("./") ||
-    source.startsWith("../") ||
-    source.startsWith("#/")
-  )
-    return 1;
+  if (/^(@\/|\.\.?\/|#\/)/.test(source)) return 1;
   return 0;
 }
 
-function parseImports(text) {
+const prefixLine = /^(["']use [a-z-]+["'];?|\/\/\/.*|\/\/.*|\/\*.*\*\/)\s*$/;
+const statementEnd = /["'][^"']*["'];?\s*$/;
+
+function parse(text) {
   const lines = text.split("\n");
-  const statements = [];
   let i = 0;
+  const prefix = [];
+  while (
+    i < lines.length &&
+    (lines[i].trim() === "" || prefixLine.test(lines[i]))
+  ) {
+    prefix.push(lines[i]);
+    i++;
+  }
+  const statements = [];
   while (i < lines.length) {
     const line = lines[i];
     if (line.trim() === "") {
@@ -45,63 +59,92 @@ function parseImports(text) {
     if (!line.startsWith("import ")) break;
     let j = i;
     let stmt = lines[j];
-    while (
-      !/\bfrom\s+["'][^"']+["'];?\s*$/.test(stmt) &&
-      !/^import\s+["'][^"']+["'];?\s*$/.test(stmt) &&
-      !/^import\s+type\s+\{[^}]*\}\s+from/.test(stmt.replace(/\n/g, " "))
-    ) {
+    while (!statementEnd.test(stmt)) {
       j++;
       if (j >= lines.length) return null;
       stmt += `\n${lines[j]}`;
-      if (/["'];?\s*$/.test(lines[j])) break;
     }
-    const m = stmt.match(/["']([^"']+)["'];?\s*$/);
-    if (!m) return null;
-    statements.push({ text: stmt, source: m[1] });
+    const match = stmt.match(/["']([^"']+)["'];?\s*$/);
+    if (!match) return null;
+    statements.push({
+      text: stmt,
+      source: match[1],
+      sideEffect: /^import\s+["']/.test(stmt),
+      order: statements.length,
+    });
     i = j + 1;
   }
-  return {
-    statements,
-    rest: lines.slice(i).join("\n"),
-    hadImports: statements.length > 0,
-  };
+  return { prefix, statements, rest: lines.slice(i).join("\n") };
 }
 
 function render(statements) {
   const groups = [[], [], []];
-  for (const s of statements) groups[groupOf(s.source)].push(s);
-  for (const g of groups) {
-    g.sort((a, b) => {
-      const la = a.text.replace(/\s+/g, " ").length;
-      const lb = b.text.replace(/\s+/g, " ").length;
-      return la - lb || a.text.localeCompare(b.text);
-    });
+  for (const statement of statements)
+    groups[groupOf(statement.source)].push(statement);
+  const rendered = [];
+  for (const group of groups) {
+    if (!group.length) continue;
+    const regular = group
+      .filter((s) => !s.sideEffect)
+      .sort((a, b) => {
+        const la = a.text.replace(/\s+/g, " ").length;
+        const lb = b.text.replace(/\s+/g, " ").length;
+        return la - lb || a.text.localeCompare(b.text);
+      });
+    const sideEffects = group
+      .filter((s) => s.sideEffect)
+      .sort((a, b) => a.order - b.order);
+    rendered.push([...regular, ...sideEffects].map((s) => s.text).join("\n"));
   }
-  return groups
-    .filter((g) => g.length)
-    .map((g) => g.map((s) => s.text).join("\n"))
-    .join("\n\n");
+  return rendered.join("\n\n");
 }
 
-const files = [];
-for (const t of targets) if (fs.existsSync(t)) walk(t, files);
-
-let changed = 0;
-for (const file of files) {
-  const original = fs.readFileSync(file, "utf8");
-  const parsed = parseImports(original);
-  if (!parsed || !parsed.hadImports) continue;
+export function sortImportBlock(text) {
+  const parsed = parse(text);
+  if (!parsed || !parsed.statements.length) return text;
+  const prefix = parsed.prefix
+    .filter((line, index, all) => line.trim() !== "" || index < all.length)
+    .join("\n");
+  const prefixText = parsed.prefix.length
+    ? `${prefix.replace(/\n+$/, "")}\n`
+    : "";
+  const imports = render(parsed.statements);
   const rest = parsed.rest.replace(/^\n+/, "");
-  const next = `${render(parsed.statements)}\n\n${rest}`;
-  if (next !== original) {
-    changed++;
-    if (check) console.log(`imports out of order: ${file}`);
-    else fs.writeFileSync(file, next);
-  }
+  if (rest.trim() === "") return `${prefixText}${imports}\n`;
+  return `${prefixText}${imports}\n\n${rest}`;
 }
 
-if (check && changed) {
-  console.error(`${changed} file(s) need \`pnpm imports:fix\``);
-  process.exit(1);
+function main() {
+  const check = process.argv.includes("--check");
+  const roots = process.argv.filter((a) => !a.startsWith("--")).slice(2);
+  const files = [];
+  for (const target of roots.length ? roots : defaultTargets) {
+    if (fs.existsSync(target)) walk(target, files);
+  }
+
+  let changed = 0;
+  for (const file of files) {
+    const original = fs.readFileSync(file, "utf8");
+    const next = sortImportBlock(original);
+    if (next !== original) {
+      changed++;
+      if (check) console.log(`imports out of order: ${file}`);
+      else fs.writeFileSync(file, next);
+    }
+  }
+
+  if (check && changed) {
+    console.error(`${changed} file(s) need \`pnpm imports:fix\``);
+    process.exit(1);
+  }
+  console.log(
+    check ? "imports ordered" : `imports fixed in ${changed} file(s)`,
+  );
 }
-console.log(check ? "imports ordered" : `imports fixed in ${changed} file(s)`);
+
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  main();
+}
