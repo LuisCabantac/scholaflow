@@ -1,6 +1,6 @@
 import {
   format,
-  formatDistanceToNow,
+  formatDistance,
   isSameYear,
   isThisYear,
   isToday,
@@ -80,16 +80,18 @@ export function removeUUIDFromFilename(filename: string): string {
 export const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
-export function formatDate(createdAt: string | Date): string {
+export function formatDate(
+  createdAt: string | Date,
+  now: Date = new Date(),
+): string {
   const date = typeof createdAt === "string" ? new Date(createdAt) : createdAt;
-  const now = new Date();
 
   const differenceInDays =
     (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
   const differenceInYears = now.getFullYear() - date.getFullYear();
 
   if (differenceInDays < 1) {
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistance(date, now, { addSuffix: true });
   } else if (differenceInDays < 2) {
     return `Yesterday at ${format(date, "h:mm a")}`;
   } else if (differenceInDays < 7) {

@@ -14,6 +14,7 @@ import {
 } from "react";
 
 import { formatDate } from "@/lib/utils";
+import { useNow } from "@/hooks/use-now";
 import type { Note } from "@/lib/schema";
 import { notesKeys } from "@/queries/notes";
 import type { NoteFormType } from "@/types/notes";
@@ -80,6 +81,7 @@ export default function NoteForm({
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
+  const now = useNow();
   const { t } = useTranslation("notes");
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -281,10 +283,10 @@ export default function NoteForm({
                     <p className="text-foreground text-xs">
                       {note.updatedAt
                         ? t("card.updated", {
-                            date: formatDate(note.updatedAt),
+                            date: formatDate(note.updatedAt, now),
                           })
                         : t("card.created", {
-                            date: formatDate(note.createdAt),
+                            date: formatDate(note.createdAt, now),
                           })}
                     </p>
                   </ClientOnly>

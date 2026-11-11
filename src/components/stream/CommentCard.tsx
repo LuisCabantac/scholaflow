@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatDate } from "@/lib/utils";
+import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import type {
@@ -36,6 +37,7 @@ export default function CommentCard({
   deleteCommentIsPending: boolean;
 }) {
   const { t } = useTranslation("stream", { keyPrefix: "comment" });
+  const now = useNow();
   const { t: tCard } = useTranslation("stream", { keyPrefix: "card" });
 
   const ellipsisRef = useRef<HTMLDivElement>(null);
@@ -65,7 +67,7 @@ export default function CommentCard({
               {comment.userName}
             </h6>
             <p className="text-foreground/70 pt-[1px] text-xs">
-              {formatDate(comment.createdAt)}
+              {formatDate(comment.createdAt, now)}
             </p>
           </div>
           {comment.content && (

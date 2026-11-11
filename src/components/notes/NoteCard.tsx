@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ClientOnly } from "@tanstack/react-router";
 
 import { formatDate } from "@/lib/utils";
+import { useNow } from "@/hooks/use-now";
 import type { Note } from "@/lib/schema";
 import { notePreview } from "@/lib/notes";
 
@@ -18,6 +19,7 @@ export default function NoteCard({
   deleteNoteIsPending: boolean;
 }) {
   const { t } = useTranslation("notes", { keyPrefix: "card" });
+  const now = useNow();
 
   const [showNotesForm, setShowNotesForm] = useState(false);
 
@@ -60,8 +62,8 @@ export default function NoteCard({
           >
             <span className="text-foreground/70 block text-xs">
               {note.updatedAt
-                ? t("updated", { date: formatDate(note.updatedAt) })
-                : t("created", { date: formatDate(note.createdAt) })}
+                ? t("updated", { date: formatDate(note.updatedAt, now) })
+                : t("created", { date: formatDate(note.createdAt, now) })}
             </span>
           </ClientOnly>
         </span>
