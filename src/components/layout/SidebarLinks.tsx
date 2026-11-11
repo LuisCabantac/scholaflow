@@ -1,9 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
 
-import { useSidebar } from "@/providers/SidebarProvider";
 import { classroomQueries } from "@/queries/classroom";
+import { useSidebar } from "@/providers/SidebarProvider";
 import { notificationQueries } from "@/queries/notification";
 
 const activeLinkStyle =

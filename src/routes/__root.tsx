@@ -1,8 +1,3 @@
-import {
-  createRootRouteWithContext,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
 import "@fontsource/be-vietnam-pro/100.css";
 import "@fontsource/be-vietnam-pro/200.css";
 import "@fontsource/be-vietnam-pro/300.css";
@@ -13,13 +8,18 @@ import "@fontsource/be-vietnam-pro/700.css";
 import "@fontsource/be-vietnam-pro/800.css";
 import "@fontsource/be-vietnam-pro/900.css";
 import "@fontsource-variable/quicksand/wght.css";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
+} from "@tanstack/react-router";
 
-import type { RouterContext } from "@/integrations/tanstack-query/root-provider";
-import { AppProviders } from "@/providers";
 import appCss from "@/styles.css?url";
+import { AppProviders } from "@/providers";
+import type { RouterContext } from "@/integrations/tanstack-query/root-provider";
 
-import NotFound from "@/components/shared/NotFound";
 import { Toaster } from "@/components/ui/sonner";
+import NotFound from "@/components/shared/NotFound";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({

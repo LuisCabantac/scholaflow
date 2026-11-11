@@ -2,7 +2,25 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { getUserByEmail } from "@/services/user";
+import { deleteFilesFromBucket } from "@/services/user-management";
 import { createClassroomSchema, createEnrolledClassSchema } from "@/lib/schema";
+import {
+  deleteClassStreamPost,
+  getAllClassStreamsByClassId,
+} from "@/services/stream";
+import {
+  deleteClassTopicRecord,
+  getAllClassTopicsByClassId,
+} from "@/services/class-topic";
+import {
+  deleteAllMessagesByClassIdRecord,
+  getAllMessagesByClassId,
+} from "@/services/message";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
 import {
   extractClassworkFilePath,
   extractCommentFilePath,
@@ -11,9 +29,17 @@ import {
   generateClassCode,
 } from "@/lib/utils";
 import {
-  deleteClassTopicRecord,
-  getAllClassTopicsByClassId,
-} from "@/services/class-topic";
+  deleteAllClassworksByClassAndUserIdRecord,
+  deleteAllClassworksByStreamIdRecord,
+  getAllClassworksByClassAndUserId,
+  getAllClassworksByStreamId,
+} from "@/services/classwork";
+import {
+  deleteAllClassStreamCommentsByStreamIdRecord,
+  deleteAllPrivateStreamCommentsByStreamIdRecord,
+  getAllCommentsByStreamId,
+  getAllPrivateCommentsByStreamId,
+} from "@/services/comment";
 import {
   createClassroom,
   createEnrolledClass,
@@ -34,32 +60,6 @@ import {
   updateClassroom,
   updateEnrolledClass,
 } from "@/services/classroom";
-import {
-  deleteAllClassworksByClassAndUserIdRecord,
-  deleteAllClassworksByStreamIdRecord,
-  getAllClassworksByClassAndUserId,
-  getAllClassworksByStreamId,
-} from "@/services/classwork";
-import {
-  deleteAllClassStreamCommentsByStreamIdRecord,
-  deleteAllPrivateStreamCommentsByStreamIdRecord,
-  getAllCommentsByStreamId,
-  getAllPrivateCommentsByStreamId,
-} from "@/services/comment";
-import {
-  deleteAllMessagesByClassIdRecord,
-  getAllMessagesByClassId,
-} from "@/services/message";
-import {
-  deleteAllNotificationsByResourceId,
-  sendNotification,
-} from "@/services/notification";
-import {
-  deleteClassStreamPost,
-  getAllClassStreamsByClassId,
-} from "@/services/stream";
-import { getUserByEmail } from "@/services/user";
-import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
   .validator((id: string) => id)

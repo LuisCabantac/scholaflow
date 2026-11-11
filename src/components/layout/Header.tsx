@@ -1,8 +1,8 @@
 import type { SessionUser } from "@/server/functions/auth";
 
+import UserMenu from "@/components/shared/UserMenu";
 import HeaderTitle from "@/components/layout/HeaderTitle";
 import SidebarHeaderButton from "@/components/layout/SidebarHeaderButton";
-import UserMenu from "@/components/shared/UserMenu";
 
 export default function Header({ user }: { user: SessionUser }) {
   return (

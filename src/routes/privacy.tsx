@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Trans, useTranslation } from "react-i18next";
+import { createFileRoute } from "@tanstack/react-router";
 
-import Footer from "@/components/layout/Footer";
 import Nav from "@/components/layout/Nav";
+import Footer from "@/components/layout/Footer";
 import { LegalSection } from "@/components/shared/LegalSection";
 
 export const Route = createFileRoute("/privacy")({

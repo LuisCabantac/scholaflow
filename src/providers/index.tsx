@@ -1,9 +1,9 @@
 import type React from "react";
 
-import { I18nProvider } from "@/providers/I18nProvider";
 import { NavProvider } from "@/providers/NavProvider";
-import { SidebarProvider } from "@/providers/SidebarProvider";
+import { I18nProvider } from "@/providers/I18nProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { SidebarProvider } from "@/providers/SidebarProvider";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (

@@ -1,8 +1,8 @@
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { inferAdditionalFields } from "better-auth/client/plugins";
 import { jwt } from "better-auth/plugins/jwt";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 import { db } from "@/db";
 import { schema } from "@/db/schema";

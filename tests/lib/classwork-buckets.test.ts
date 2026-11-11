@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import type { Classwork, EnrolledClass, Stream } from "@/lib/schema";
 import {
   assignedClassworks,
   doneClassworks,
   missingClassworks,
   sortByDayDesc,
 } from "@/lib/classwork-buckets";
-import type { Classwork, EnrolledClass, Stream } from "@/lib/schema";
 
 const now = new Date("2026-06-15T12:00:00Z");
 const past = new Date("2026-06-01T12:00:00Z");

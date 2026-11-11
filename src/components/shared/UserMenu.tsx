@@ -1,12 +1,12 @@
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { LogOut, Moon, Sun, User } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
+import { authKeys } from "@/queries/auth";
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/providers/ThemeProvider";
-import { authKeys } from "@/queries/auth";
 
 import { Button } from "@/components/ui/button";
 import {

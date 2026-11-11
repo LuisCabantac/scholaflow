@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 
 import Logo from "@/components/layout/Logo";
 import { Card, CardHeader } from "@/components/ui/card";

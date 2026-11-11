@@ -2,11 +2,11 @@ import type { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 
 import ChatMock from "@/components/landing/ChatMock";
-import ClassStreamMock from "@/components/landing/ClassStreamMock";
+import NoteMock from "@/components/landing/NoteMock";
 import CommentsMock from "@/components/landing/CommentsMock";
 import FeatureBlock from "@/components/landing/FeatureBlock";
 import FeaturePreview from "@/components/landing/FeaturePreview";
-import NoteMock from "@/components/landing/NoteMock";
+import ClassStreamMock from "@/components/landing/ClassStreamMock";
 
 export default function FeaturesSection({
   sectionRef,

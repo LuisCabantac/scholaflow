@@ -1,9 +1,9 @@
-import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useForm } from "@tanstack/react-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 
 import { resetPasswordFormSchema } from "@/lib/schema";
 import { updateUserPasswordFn } from "@/server/functions/auth";

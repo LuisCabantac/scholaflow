@@ -1,5 +1,5 @@
-import { and, desc, eq, ilike } from "drizzle-orm";
 import { validate as validateUUID } from "uuid";
+import { and, desc, eq, ilike } from "drizzle-orm";
 
 import { db } from "@/db";
 import { note } from "@/db/schema";

@@ -1,7 +1,7 @@
-import { Trash2 } from "lucide-react";
 import { motion } from "motion/react";
-import { type ReactNode, startTransition, useRef } from "react";
+import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { type ReactNode, startTransition, useRef } from "react";
 
 import { useClickOutside } from "@/hooks/use-click-outside";
 

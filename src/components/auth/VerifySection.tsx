@@ -1,13 +1,13 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { CircleCheck, CircleX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 
 import type { AuthResult } from "@/lib/auth-result";
 import { verifyEmailVerificationFn } from "@/server/functions/auth";
 
-import SpinnerMini from "@/components/shared/SpinnerMini";
 import { Button } from "@/components/ui/button";
+import SpinnerMini from "@/components/shared/SpinnerMini";
 
 export default function VerifySection({ token }: { token: string }) {
   const navigate = useNavigate();

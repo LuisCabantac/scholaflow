@@ -2,9 +2,17 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { getUserByUserId } from "@/services/user";
 import { createClassworkSchema } from "@/lib/schema";
-import { arraysAreEqual, extractClassworkFilePath } from "@/lib/utils";
+import { uploadAttachments } from "@/services/storage";
 import { getClassByClassId } from "@/services/classroom";
+import { getClassStreamByStreamId } from "@/services/stream";
+import { deleteFilesFromBucket } from "@/services/user-management";
+import { arraysAreEqual, extractClassworkFilePath } from "@/lib/utils";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
 import {
   createClasswork,
   deleteAllClassworksByClassAndUserIdRecord,
@@ -17,14 +25,6 @@ import {
   getClassworkByStreamAndUserId,
   updateClassworkRecord,
 } from "@/services/classwork";
-import {
-  deleteAllNotificationsByResourceId,
-  sendNotification,
-} from "@/services/notification";
-import { uploadAttachments } from "@/services/storage";
-import { getClassStreamByStreamId } from "@/services/stream";
-import { getUserByUserId } from "@/services/user";
-import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllClassworksByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)

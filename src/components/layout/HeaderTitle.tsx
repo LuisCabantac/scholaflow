@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { validate as validateUUID } from "uuid";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "@tanstack/react-router";
 
-import { extractFirstUuid, getLastRouteName } from "@/lib/utils";
 import { classroomQueries } from "@/queries/classroom";
+import { extractFirstUuid, getLastRouteName } from "@/lib/utils";
 
 const titleClass =
   "text-foreground overflow-hidden text-xl font-semibold text-ellipsis whitespace-nowrap md:text-2xl";

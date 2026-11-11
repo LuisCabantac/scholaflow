@@ -2,15 +2,22 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { extractCommentFilePath } from "@/lib/utils";
+import { uploadAttachments } from "@/services/storage";
+import { getClassStreamByStreamId } from "@/services/stream";
+import { deleteFileFromBucket } from "@/services/user-management";
 import {
   createStreamCommentSchema,
   createStreamPrivateCommentSchema,
 } from "@/lib/schema";
-import { extractCommentFilePath } from "@/lib/utils";
 import {
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
 } from "@/services/classroom";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
 import {
   createPrivateComment,
   createStreamComment,
@@ -23,13 +30,6 @@ import {
   getStreamCommentByCommentId,
   getStreamPrivateCommentByCommentId,
 } from "@/services/comment";
-import {
-  deleteAllNotificationsByResourceId,
-  sendNotification,
-} from "@/services/notification";
-import { uploadAttachments } from "@/services/storage";
-import { getClassStreamByStreamId } from "@/services/stream";
-import { deleteFileFromBucket } from "@/services/user-management";
 
 export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
   .validator((streamId: string) => streamId)

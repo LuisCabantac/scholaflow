@@ -24,24 +24,7 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": {
-          "level": "on",
-          "options": {
-            "groups": [
-              [
-                ":BUN:",
-                ":NODE:",
-                ":PACKAGE:",
-                ":PACKAGE_WITH_PROTOCOL:",
-                ":URL:"
-              ],
-              ":BLANK_LINE:",
-              ["@/**", "!@/components/**"],
-              ":BLANK_LINE:",
-              ["@/components/**"]
-            ]
-          }
-        }
+        "organizeImports": "off"
       }
     }
   },

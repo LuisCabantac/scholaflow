@@ -1,12 +1,12 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { CircleCheck, CircleX } from "lucide-react";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { CircleCheck, CircleX } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
-import type { AuthResult } from "@/lib/auth-result";
 import { authKeys } from "@/queries/auth";
+import type { AuthResult } from "@/lib/auth-result";
 import { closeUserAccountFn } from "@/server/functions/auth";
 
 import { Button } from "@/components/ui/button";

@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-import AuthCard from "@/components/auth/AuthCard";
 import { Button } from "@/components/ui/button";
+import AuthCard from "@/components/auth/AuthCard";
 import { CardContent } from "@/components/ui/card";
 
 export const Route = createFileRoute("/error")({

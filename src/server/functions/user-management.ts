@@ -2,27 +2,21 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { extractAvatarFilePath } from "@/lib/utils";
-import {
-  deleteClass,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
-  getAllClassesByTeacherId,
-  getAllEnrolledClassesByUserId,
-} from "@/services/classroom";
-import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
+import { uploadAttachments } from "@/services/storage";
+import { isUploadedAvatarUrl } from "@/lib/default-avatar";
 import { deleteAllMessagesByUserId } from "@/services/message";
 import { deleteNote, getAllNotesByUserId } from "@/services/notes";
+import { createRoleRequestSchema, editUserSchema } from "@/lib/schema";
 import { deleteAllNotificationsByUserId } from "@/services/notification";
-import { uploadAttachments } from "@/services/storage";
 import {
   deleteClassStreamPost,
   getAllClassesStreamByUserId,
 } from "@/services/stream";
+import {
+  deleteAllCommentsByUserId,
+  deleteAllPrivateCommentsByUserId,
+} from "@/services/comment";
 import {
   createUserRecord,
   deleteUserRecord,
@@ -31,6 +25,12 @@ import {
   getUserByUserId,
   updateUserRecord,
 } from "@/services/user";
+import {
+  deleteClass,
+  deleteEnrolledClassbyClassAndEnrolledClassId,
+  getAllClassesByTeacherId,
+  getAllEnrolledClassesByUserId,
+} from "@/services/classroom";
 import {
   createRoleRequestRecord,
   deleteFileFromBucket,

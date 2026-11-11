@@ -1,19 +1,43 @@
+import { eq } from "drizzle-orm";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { user } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { user } from "@/db/schema";
+import { sendEmail } from "@/services/email";
+import { extractAvatarFilePath } from "@/lib/utils";
 import type { AuthResult } from "@/lib/auth-result";
+import { isUploadedAvatarUrl } from "@/lib/default-avatar";
+import { deleteAllMessagesByUserId } from "@/services/message";
+import { deleteNote, getAllNotesByUserId } from "@/services/notes";
+import { deleteAllNotificationsByUserId } from "@/services/notification";
+import { renderActionEmail } from "@/services/email-templates/action-email";
+import { renderVerifyEmail } from "@/services/email-templates/verify-email";
+import {
+  deleteClassStreamPost,
+  getAllClassesStreamByUserId,
+} from "@/services/stream";
 import {
   buildAppUrl,
   isExpired,
   matchesTokenType,
   type TokenType,
 } from "@/lib/auth-tokens";
-import { isUploadedAvatarUrl } from "@/lib/default-avatar";
-import { extractAvatarFilePath } from "@/lib/utils";
+import {
+  deleteFileFromBucket,
+  removeRoleRequestByUserId,
+} from "@/services/user-management";
+import {
+  deleteAllCommentsByUserId,
+  deleteAllPrivateCommentsByUserId,
+} from "@/services/comment";
+import {
+  deleteUserRecord,
+  getAccountByUserId,
+  getUserByEmail,
+  getUserIdById,
+} from "@/services/user";
 import {
   deleteVerificationToken,
   generateVerificationToken,
@@ -26,30 +50,6 @@ import {
   getAllClassesByTeacherId,
   getAllEnrolledClassesByUserId,
 } from "@/services/classroom";
-import {
-  deleteAllCommentsByUserId,
-  deleteAllPrivateCommentsByUserId,
-} from "@/services/comment";
-import { sendEmail } from "@/services/email";
-import { renderActionEmail } from "@/services/email-templates/action-email";
-import { renderVerifyEmail } from "@/services/email-templates/verify-email";
-import { deleteAllMessagesByUserId } from "@/services/message";
-import { deleteNote, getAllNotesByUserId } from "@/services/notes";
-import { deleteAllNotificationsByUserId } from "@/services/notification";
-import {
-  deleteClassStreamPost,
-  getAllClassesStreamByUserId,
-} from "@/services/stream";
-import {
-  deleteUserRecord,
-  getAccountByUserId,
-  getUserByEmail,
-  getUserIdById,
-} from "@/services/user";
-import {
-  deleteFileFromBucket,
-  removeRoleRequestByUserId,
-} from "@/services/user-management";
 
 export const getSession = createServerFn({ method: "GET" }).handler(
   async () => {

@@ -1,15 +1,15 @@
-import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 
 import { forgetPasswordFormSchema } from "@/lib/schema";
 import { requestPasswordResetFn } from "@/server/functions/auth";
 
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 
 export default function ForgetPasswordForm() {
   const navigate = useNavigate();

@@ -4,6 +4,8 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import { createChatSchema } from "@/lib/schema";
 import { extractMessagesFilePath } from "@/lib/utils";
+import { uploadAttachments } from "@/services/storage";
+import { deleteFilesFromBucket } from "@/services/user-management";
 import {
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
@@ -15,8 +17,6 @@ import {
   getAllMessagesByClassId,
   getAllMessagesByUserId,
 } from "@/services/message";
-import { uploadAttachments } from "@/services/storage";
-import { deleteFilesFromBucket } from "@/services/user-management";
 
 export const getAllMessagesByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)

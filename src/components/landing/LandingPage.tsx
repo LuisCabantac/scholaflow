@@ -1,14 +1,14 @@
-import { ChevronUp } from "lucide-react";
 import { useRef } from "react";
+import { ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { useNav } from "@/providers/NavProvider";
 
+import Footer from "@/components/layout/Footer";
 import CtaSection from "@/components/landing/CtaSection";
-import FeaturesSection from "@/components/landing/FeaturesSection";
 import HeroSection from "@/components/landing/HeroSection";
 import StepsSection from "@/components/landing/StepsSection";
-import Footer from "@/components/layout/Footer";
+import FeaturesSection from "@/components/landing/FeaturesSection";
 
 export default function LandingPage() {
   const { isSticky } = useNav();

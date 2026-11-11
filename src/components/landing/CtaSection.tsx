@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";

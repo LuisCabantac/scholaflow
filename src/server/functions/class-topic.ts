@@ -2,7 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
+import { getClassByClassId } from "@/services/classroom";
 import { createClassTopicSchema, editClassTopicSchema } from "@/lib/schema";
+import {
+  getAllClassworkStreamsByTopicId,
+  updateClassStreamPostTopic,
+} from "@/services/stream";
 import {
   createClassTopicRecord,
   deleteClassTopicRecord,
@@ -10,11 +15,6 @@ import {
   getClassTopicByTopicId,
   updateClassTopicRecord,
 } from "@/services/class-topic";
-import { getClassByClassId } from "@/services/classroom";
-import {
-  getAllClassworkStreamsByTopicId,
-  updateClassStreamPostTopic,
-} from "@/services/stream";
 
 export const getClassTopicByTopicIdFn = createServerFn({ method: "GET" })
   .validator((topicId: string) => topicId)

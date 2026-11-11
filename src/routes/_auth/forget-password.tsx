@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import AuthCard from "@/components/auth/AuthCard";
 import ForgetPasswordForm from "@/components/auth/ForgetPasswordForm";

@@ -1,5 +1,5 @@
-import { type ReactNode, useMemo } from "react";
 import { I18nextProvider } from "react-i18next";
+import { type ReactNode, useMemo } from "react";
 
 import { createI18n, type Language } from "@/i18n";
 
