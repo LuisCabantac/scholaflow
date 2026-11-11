@@ -21,6 +21,18 @@ export const editUserSchema = userSchema.omit({
   role: true,
 });
 
+export const createUserSchema = z.object({
+  name: z.string().trim().min(1),
+  email: z.email(),
+  password: z.string().min(8).max(20),
+});
+
+export const editUserDetailsSchema = z.object({
+  userId: z.string().min(1),
+  name: z.string().trim().min(1),
+  email: z.email(),
+});
+
 export const accountSchema = z.object({
   id: z.string(),
   accountId: z.string(),
