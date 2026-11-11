@@ -3,6 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { extractCommentFilePath } from "@/lib/utils";
+import { canSeeStream } from "@/lib/stream-visibility";
 import { uploadAttachments } from "@/services/storage";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFileFromBucket } from "@/services/user-management";
@@ -42,6 +43,14 @@ export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
 
     const stream = await getClassStreamByStreamId(streamId);
     if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    const classroom = await getClassByClassId(stream.classId);
+    if (
+      !classroom ||
+      !canSeeStream(stream, session.user.id, classroom.teacherId)
+    ) {
       return null;
     }
 
@@ -152,6 +161,18 @@ export const addCommentToStreamFn = createServerFn({ method: "POST" })
       return {
         success: false,
         message: "You don't have permission to comment on this post.",
+      };
+    }
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (
+      !stream ||
+      stream.classId !== classroomId ||
+      !canSeeStream(stream, session.user.id, classroom.teacherId)
+    ) {
+      return {
+        success: false,
+        message: "This post doesn't exist in this class.",
       };
     }
 
@@ -281,7 +302,7 @@ export const addPrivateCommentFn = createServerFn({ method: "POST" })
     }
 
     const stream = await getClassStreamByStreamId(streamId);
-    if (!stream)
+    if (!stream || stream.classId !== classroomId)
       return { success: false, message: "This stream doesn't exist." };
 
     if (
@@ -335,7 +356,7 @@ export const addPrivateCommentFn = createServerFn({ method: "POST" })
 
     await sendNotification(
       "comment",
-      classroom.teacherId,
+      data.toUserId,
       data.id,
       data.content ?? (data.attachment ? "Commented an image" : ""),
       `/classroom/class/${data.classId}/stream/${data.streamId}/submissions?name=${data.userName.toLowerCase().replace(/\s+/g, "-")}&user=${data.userId}&comment=${data.id}`,
@@ -362,14 +383,14 @@ export const deletePrivateCommentFn = createServerFn({ method: "POST" })
       return { success: false, message: "This class doesn't exist." };
 
     const stream = await getClassStreamByStreamId(streamId);
-    if (!stream)
+    if (!stream || stream.classId !== classroomId)
       return {
         success: false,
         message: "This post doesn't exist in this class.",
       };
 
     const comment = await getStreamPrivateCommentByCommentId(commentId);
-    if (!comment)
+    if (!comment || comment.streamId !== streamId)
       return {
         success: false,
         message: "This comment doesn't exist on this post.",

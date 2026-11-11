@@ -35,6 +35,18 @@ export function workStatus(
   return pastDue ? "missing" : null;
 }
 
+export function submissionLabel(
+  classwork: Classwork | null | undefined,
+  stream: Pick<Stream, "dueDate">,
+  now: Date = new Date(),
+): Exclude<WorkStatus, "graded"> {
+  const pastDue = isPastDue(stream.dueDate, now);
+
+  if (classwork?.isTurnedIn || classwork?.isGraded)
+    return pastDue ? "doneLate" : "turnedIn";
+  return pastDue ? "missing" : null;
+}
+
 export function submitLabel(
   hasNewWork: boolean,
   classwork: Classwork | null | undefined,

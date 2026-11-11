@@ -6,10 +6,13 @@ import { getUserByUserId } from "@/services/user";
 import { createClassworkSchema } from "@/lib/schema";
 import { uploadAttachments } from "@/services/storage";
 import { submissionsOpen } from "@/lib/classwork-rules";
-import { getClassByClassId } from "@/services/classroom";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { arraysAreEqual, extractClassworkFilePath } from "@/lib/utils";
+import {
+  getClassByClassId,
+  getEnrolledClassByUserAndClassId,
+} from "@/services/classroom";
 import {
   deleteAllNotificationsByResourceId,
   sendNotification,
@@ -90,7 +93,10 @@ export const getClassworkByClassAndUserIdFn = createServerFn({ method: "GET" })
     if (!classroom) return null;
 
     const stream = await getClassStreamByStreamId(streamId);
-    if (!stream) return null;
+    if (!stream || stream.classId !== classId) return null;
+
+    const isTeacher = classroom.teacherId === session.user.id;
+    if (!isTeacher && userId !== session.user.id) return null;
 
     if (!(stream.announceToAll || stream.announceTo.includes(userId)))
       return null;
@@ -139,7 +145,6 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
 
     const classroomId = formData.get("classroomId") as string;
     const streamId = formData.get("streamId") as string;
-    const classworkId = formData.get("classworkId") as string;
 
     const currentClasswork = await getClassworkByStreamAndUserId(
       streamId,
@@ -238,7 +243,10 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
         };
       }
 
-      const data = await updateClassworkRecord(classworkId, result.data);
+      const data = await updateClassworkRecord(
+        currentClasswork.id,
+        result.data,
+      );
 
       if (!data)
         return { success: false, message: "Failed to update classwork." };
@@ -351,7 +359,7 @@ export const unsubmitClassworkFn = createServerFn({ method: "POST" })
     (data: { classworkId: string; classroomId: string; streamId: string }) =>
       data,
   )
-  .handler(async ({ data: { classworkId, streamId } }) => {
+  .handler(async ({ data: { streamId } }) => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
@@ -372,7 +380,17 @@ export const unsubmitClassworkFn = createServerFn({ method: "POST" })
         message: "This post doesn't exist in this class.",
       };
 
-    const data = await updateClassworkRecord(classworkId, {
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream)
+      return { success: false, message: "This stream does not exist." };
+    if (!submissionsOpen(stream)) {
+      return {
+        success: false,
+        message: "Submissions are closed for this classwork.",
+      };
+    }
+
+    const data = await updateClassworkRecord(currentClasswork.id, {
       isTurnedIn: false,
     });
     if (!data)
@@ -445,7 +463,6 @@ export const addGradeClassworkFn = createServerFn({ method: "POST" })
     const userId = formData.get("userId") as string;
     const streamId = formData.get("streamId") as string;
     const classId = formData.get("classroomId") as string;
-    const classworkId = formData.get("classworkId") as string;
     const userPoints = formData.get("userPoints")
       ? Number(formData.get("userPoints"))
       : null;
@@ -461,6 +478,7 @@ export const addGradeClassworkFn = createServerFn({ method: "POST" })
     const stream = await getClassStreamByStreamId(streamId);
     if (
       !stream ||
+      stream.classId !== classId ||
       (!stream.announceToAll && !stream.announceTo.includes(userId))
     ) {
       return {
@@ -477,6 +495,14 @@ export const addGradeClassworkFn = createServerFn({ method: "POST" })
     if (!currentClasswork) {
       const user = await getUserByUserId(userId);
       if (!user) return { success: false, message: "User not found." };
+
+      const enrolled = await getEnrolledClassByUserAndClassId(userId, classId);
+      if (!enrolled) {
+        return {
+          success: false,
+          message: "This user is not enrolled in this class.",
+        };
+      }
 
       const newClasswork = {
         userId: user.id,
@@ -540,13 +566,10 @@ export const addGradeClassworkFn = createServerFn({ method: "POST" })
         };
       }
 
-      const data = await updateClassworkRecord(
-        classworkId || currentClasswork.id,
-        {
-          points: userPoints,
-          isGraded: true,
-        },
-      );
+      const data = await updateClassworkRecord(currentClasswork.id, {
+        points: userPoints,
+        isGraded: true,
+      });
       if (!data) return { success: false, message: "Failed to update grade." };
 
       await sendNotification(

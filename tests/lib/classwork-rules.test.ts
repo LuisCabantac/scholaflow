@@ -9,6 +9,7 @@ import {
   assignedUsers,
   privateThread,
   submissionCounts,
+  submissionLabel,
   submissionsOpen,
   submitLabel,
   workStatus,
@@ -238,5 +239,41 @@ describe("privateThread", () => {
 
   it("returns an empty list without comments", () => {
     expect(privateThread(null, "a", "b")).toEqual([]);
+  });
+});
+
+describe("submissionLabel", () => {
+  it("shows done late for graded work that was turned in after the due date", () => {
+    expect(
+      submissionLabel(
+        classwork({ isGraded: true, isTurnedIn: true }),
+        { dueDate: past },
+        now,
+      ),
+    ).toBe("doneLate");
+  });
+
+  it("shows turned in before the due date or without one", () => {
+    expect(
+      submissionLabel(
+        classwork({ isTurnedIn: true }),
+        { dueDate: future },
+        now,
+      ),
+    ).toBe("turnedIn");
+    expect(
+      submissionLabel(classwork({ isTurnedIn: true }), { dueDate: null }, now),
+    ).toBe("turnedIn");
+  });
+
+  it("shows missing when nothing was submitted after the due date", () => {
+    expect(submissionLabel(undefined, { dueDate: past }, now)).toBe("missing");
+    expect(submissionLabel(classwork(), { dueDate: past }, now)).toBe(
+      "missing",
+    );
+  });
+
+  it("shows nothing before the due date without a submission", () => {
+    expect(submissionLabel(undefined, { dueDate: future }, now)).toBeNull();
   });
 });

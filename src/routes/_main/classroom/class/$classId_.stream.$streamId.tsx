@@ -11,7 +11,7 @@ import StreamDetailLoading from "@/components/stream/StreamDetailLoading";
 export const Route = createFileRoute(
   "/_main/classroom/class/$classId_/stream/$streamId",
 )({
-  beforeLoad: async ({ context, params: { streamId } }) => {
+  beforeLoad: async ({ context, params: { classId, streamId } }) => {
     if (context.user.role === "admin") throw redirect({ to: "/classroom" });
 
     const stream = await context.queryClient.fetchQuery({
@@ -19,6 +19,12 @@ export const Route = createFileRoute(
       staleTime: 0,
     });
     if (!stream) throw redirect({ to: "/classroom" });
+    if (stream.classId !== classId) {
+      throw redirect({
+        to: "/classroom/class/$classId/stream/$streamId",
+        params: { classId: stream.classId, streamId },
+      });
+    }
 
     const classroom = await context.queryClient.fetchQuery({
       ...classroomQueries.byId(stream.classId),

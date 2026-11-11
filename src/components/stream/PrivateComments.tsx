@@ -25,6 +25,7 @@ export default function PrivateComments({
   otherUserId,
   classworkId,
   variant = "work",
+  layout = "both",
 }: {
   stream: Stream;
   classroom: Classroom;
@@ -32,6 +33,7 @@ export default function PrivateComments({
   otherUserId: string;
   classworkId?: string;
   variant?: "work" | "submissions";
+  layout?: "mobile" | "desktop" | "both";
 }) {
   const { t } = useTranslation("stream", { keyPrefix: "work" });
   const { t: tCard } = useTranslation("stream", { keyPrefix: "card" });
@@ -168,35 +170,42 @@ export default function PrivateComments({
     );
   }
 
+  const mobile = layout !== "desktop";
+  const desktop = layout !== "mobile";
+
   return (
     <>
-      <div className="z-10 block md:hidden">
-        <div>
-          <div className="flex-end flex flex-col">
-            <div
-              className={`flex items-center justify-between ${expanded ? "mb-2" : ""}`}
-            >
-              <span className="text-sm font-medium">
-                {t("privateComments")}
-              </span>
-              {toggle("text-primary block text-sm md:hidden")}
+      {mobile && (
+        <div className="z-10 block md:hidden">
+          <div>
+            <div className="flex-end flex flex-col">
+              <div
+                className={`flex items-center justify-between ${expanded ? "mb-2" : ""}`}
+              >
+                <span className="text-sm font-medium">
+                  {t("privateComments")}
+                </span>
+                {toggle("text-primary block text-sm md:hidden")}
+              </div>
+              {thread.length || comments.isPending
+                ? list(
+                    `grid gap-2 overflow-y-auto md:max-h-[15rem] ${expanded ? "max-h-[15rem]" : "h-0"}`,
+                  )
+                : null}
             </div>
-            {thread.length || comments.isPending
-              ? list(
-                  `grid gap-2 overflow-y-auto md:max-h-[15rem] ${expanded ? "max-h-[15rem]" : "h-0"}`,
-                )
-              : null}
           </div>
+          <div className="mt-1 w-full">{form}</div>
         </div>
-        <div className="mt-1 w-full">{form}</div>
-      </div>
-      <div className="hidden md:block">
-        <span className="text-sm font-medium">{t("privateComments")}</span>
-        <div className="mt-1">{form}</div>
-        {thread.length || comments.isPending
-          ? list("mt-2 grid max-h-[20rem] gap-2 overflow-y-auto")
-          : null}
-      </div>
+      )}
+      {desktop && (
+        <div className="hidden md:block">
+          <span className="text-sm font-medium">{t("privateComments")}</span>
+          <div className="mt-1">{form}</div>
+          {thread.length || comments.isPending
+            ? list("mt-2 grid max-h-[20rem] gap-2 overflow-y-auto")
+            : null}
+        </div>
+      )}
     </>
   );
 }

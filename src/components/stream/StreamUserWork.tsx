@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Plus } from "lucide-react";
+import { ClientOnly } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -155,7 +156,9 @@ export default function StreamUserWork({
 
   function handleAddUrl() {
     try {
-      new URL(url);
+      const parsed = new URL(url);
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:")
+        throw new Error("unsupported protocol");
       setNewUrlLinks((current) => [...current, url]);
       setUrl("");
       setShowAddLink(false);
@@ -182,13 +185,15 @@ export default function StreamUserWork({
           {t("title")}
         </h4>
         <div className="flex items-center gap-1">
-          {statusText && (
-            <p
-              className={`font-medium ${status === "missing" ? "text-destructive" : status === "graded" ? "text-foreground" : "text-foreground/90"}`}
-            >
-              {statusText}
-            </p>
-          )}
+          <ClientOnly fallback={null}>
+            {statusText && (
+              <p
+                className={`font-medium ${status === "missing" ? "text-destructive" : status === "graded" ? "text-foreground" : "text-foreground/90"}`}
+              >
+                {statusText}
+              </p>
+            )}
+          </ClientOnly>
           <button
             type="button"
             className="block md:hidden"
@@ -305,15 +310,14 @@ export default function StreamUserWork({
             </ul>
           </div>
         ) : null}
-        <div className="md:hidden">
-          <PrivateComments
-            stream={stream}
-            classroom={classroom}
-            user={user}
-            otherUserId={classroom.teacherId}
-            classworkId={classwork?.id}
-          />
-        </div>
+        <PrivateComments
+          layout="mobile"
+          stream={stream}
+          classroom={classroom}
+          user={user}
+          otherUserId={classroom.teacherId}
+          classworkId={classwork?.id}
+        />
       </div>
       <div className="item-center relative mt-2 grid gap-2" ref={addWorkRef}>
         {!showEditSubmission && (
@@ -375,20 +379,19 @@ export default function StreamUserWork({
             variant="secondary"
             type="button"
             onClick={handleUnsubmit}
-            disabled={isLoading}
+            disabled={isLoading || !open}
           >
             {isLoading ? <SpinnerMini /> : t("unsubmit")}
           </Button>
         )}
-        <div className="hidden md:block">
-          <PrivateComments
-            stream={stream}
-            classroom={classroom}
-            user={user}
-            otherUserId={classroom.teacherId}
-            classworkId={classwork?.id}
-          />
-        </div>
+        <PrivateComments
+          layout="desktop"
+          stream={stream}
+          classroom={classroom}
+          user={user}
+          otherUserId={classroom.teacherId}
+          classworkId={classwork?.id}
+        />
         <div
           className={`${showAddWork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} bg-card absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-xl border p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
         >
