@@ -2,8 +2,10 @@ import { queryOptions } from "@tanstack/react-query";
 
 import {
   getAllClassStreamsByClassIdFn,
+  getAllClassworkStreamsByClassIdFn,
   getAllEnrolledClassesClassworksFn,
   getClassStreamByStreamIdFn,
+  getClassworksByClassIdQueryFn,
 } from "@/server/functions/stream";
 
 export const streamKeys = {
@@ -13,6 +15,8 @@ export const streamKeys = {
   byClass: (classId: string) =>
     [...streamKeys.all, "byClass", classId] as const,
   byId: (streamId: string) => [...streamKeys.all, "byId", streamId] as const,
+  classworksByClass: (classId: string, query: string) =>
+    [...streamKeys.all, "classworksByClass", classId, query] as const,
 };
 
 export const streamQueries = {
@@ -30,5 +34,13 @@ export const streamQueries = {
     queryOptions({
       queryKey: streamKeys.byId(streamId),
       queryFn: () => getClassStreamByStreamIdFn({ data: streamId }),
+    }),
+  classworksByClass: (classId: string, query: string) =>
+    queryOptions({
+      queryKey: streamKeys.classworksByClass(classId, query),
+      queryFn: () =>
+        query
+          ? getClassworksByClassIdQueryFn({ data: { classId, query } })
+          : getAllClassworkStreamsByClassIdFn({ data: classId }),
     }),
 };
