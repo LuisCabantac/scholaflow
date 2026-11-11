@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { LegalSection } from "@/components/shared/LegalSection";
 
 export const Route = createFileRoute("/terms")({
+  head: () => ({ meta: [{ title: "Terms and Conditions | ScholaFlow" }] }),
   component: RouteComponent,
 });
 

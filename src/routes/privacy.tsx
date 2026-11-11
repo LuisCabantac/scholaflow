@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { LegalSection } from "@/components/shared/LegalSection";
 
 export const Route = createFileRoute("/privacy")({
+  head: () => ({ meta: [{ title: "Privacy Policy | ScholaFlow" }] }),
   component: RouteComponent,
 });
 
