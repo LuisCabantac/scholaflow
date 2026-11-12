@@ -70,7 +70,7 @@ export default function StreamCard({
 
   const meta = (
     <ClientOnly fallback={<p className="text-foreground/70 h-4 text-xs" />}>
-      <p className="text-foreground/70 flex items-center gap-1 text-xs">
+      <p className="text-foreground/70 flex flex-wrap items-center gap-1 text-xs">
         {t("posted", { when: relativeDay(stream.createdAt, dayLabels) })}
         {stream.updatedAt && (
           <svg
@@ -116,17 +116,19 @@ export default function StreamCard({
                   height={40}
                   className="h-10 w-10 shrink-0 rounded-full"
                 />
-                <div>
-                  <p className="font-medium">{stream.userName}</p>
+                <div className="min-w-0 pr-8">
+                  <p className="font-medium [overflow-wrap:anywhere]">
+                    {stream.userName}
+                  </p>
                   {meta}
                 </div>
               </div>
             </Link>
             <LinkifiedText>
-              <p className="text-foreground/90 hidden whitespace-pre-line md:block">
+              <p className="text-foreground/90 hidden whitespace-pre-line [overflow-wrap:anywhere] md:block">
                 {stream.content}
               </p>
-              <p className="text-foreground/90 block whitespace-pre-line md:hidden">
+              <p className="text-foreground/90 block whitespace-pre-line [overflow-wrap:anywhere] md:hidden">
                 {stream.content && stream.content.length > 80
                   ? stream.content.slice(0, 80).concat("...")
                   : stream.content}
@@ -177,8 +179,8 @@ export default function StreamCard({
               className="group flex gap-2"
             >
               <StreamTypeIcon type={stream.type} />
-              <div>
-                <p className="pr-3 font-medium group-hover:underline">
+              <div className="min-w-0">
+                <p className="pr-8 font-medium [overflow-wrap:anywhere] group-hover:underline">
                   {stream.title}
                 </p>
                 {meta}

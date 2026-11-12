@@ -81,12 +81,14 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
           height={40}
           className="h-10 w-10 shrink-0 rounded-full"
         />
-        <div>
-          <p className="font-medium">{stream.userName}</p>
+        <div className="min-w-0">
+          <p className="font-medium [overflow-wrap:anywhere]">
+            {stream.userName}
+          </p>
           <ClientOnly
             fallback={<p className="text-foreground/70 h-4 text-xs" />}
           >
-            <p className="text-foreground/70 flex items-center gap-1 text-xs">
+            <p className="text-foreground/70 flex flex-wrap items-center gap-1 text-xs">
               {postedMeta}
             </p>
           </ClientOnly>
@@ -98,7 +100,7 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
   return (
     <div className="grid gap-2">
       {stream.type !== "material" && (
-        <div className="text-foreground/70 flex items-center justify-between">
+        <div className="text-foreground/70 flex items-center justify-between gap-2">
           <ClientOnly fallback={<p className="h-6" />}>
             {stream.dueDate ? (
               <p>{dueText(stream.dueDate)}</p>
@@ -107,7 +109,7 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
             )}
           </ClientOnly>
           {stream.points !== null && (
-            <p className="font-medium">
+            <p className="shrink-0 font-medium whitespace-nowrap tabular-nums">
               {tDetail("points", { count: stream.points })}
             </p>
           )}
@@ -115,13 +117,15 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
       )}
       <div className="flex gap-2">
         <StreamTypeIcon type={stream.type} />
-        <div className="mb-2">
-          <p className="text-base font-medium">{stream.title}</p>
+        <div className="mb-2 min-w-0">
+          <p className="text-base font-medium [overflow-wrap:anywhere]">
+            {stream.title}
+          </p>
           <ClientOnly fallback={<div className="h-4" />}>
-            <div className="text-foreground/70 flex items-center gap-1 text-xs">
-              <p>{stream.userName}</p>
+            <div className="text-foreground/70 flex flex-wrap items-center gap-1 text-xs">
+              <p className="[overflow-wrap:anywhere]">{stream.userName}</p>
               <span>•</span>
-              <p className="flex items-center gap-1">{postedMeta}</p>
+              <p className="flex flex-wrap items-center gap-1">{postedMeta}</p>
             </div>
           </ClientOnly>
         </div>
