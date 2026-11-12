@@ -31,17 +31,6 @@ export const getAllNotesSessionFn = createServerFn({ method: "GET" }).handler(
   },
 );
 
-export const getNoteByNoteIdSessionFn = createServerFn({ method: "GET" })
-  .validator((noteId: string) => noteId)
-  .handler(async ({ data: noteId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getNoteByNoteIdAndUserId(noteId, session.user.id);
-  });
-
 export const getAllNotesBySessionQueryFn = createServerFn({ method: "GET" })
   .validator((query: string) => query)
   .handler(async ({ data: query }) => {

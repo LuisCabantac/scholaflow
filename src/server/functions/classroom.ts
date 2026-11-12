@@ -354,22 +354,6 @@ export const joinClassFn = createServerFn({ method: "POST" })
     };
   });
 
-export const deleteMultipleEnrolledClassFn = createServerFn({ method: "POST" })
-  .validator((classIds: string[]) => classIds)
-  .handler(async ({ data: classIds }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session || session.user.role !== "admin") return { success: false };
-
-    for (const id of classIds) {
-      await deleteAllNotificationsByResourceId(id);
-    }
-
-    await deleteMultipleEnrolledClassRecord(classIds);
-    return { success: true };
-  });
-
 export const deleteEnrolledClassbyClassAndEnrolledClassIdFn = createServerFn({
   method: "POST",
 })

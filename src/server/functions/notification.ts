@@ -3,9 +3,6 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import {
-  deleteAllNotificationsByResourceId,
-  deleteAllNotificationsByUserAndResourceId,
-  deleteAllNotificationsByUserId,
   getAllNotificationByUserId,
   getAllUnreadNotificationByUserId,
   getNotificationByUserAndNotificationId,
@@ -52,45 +49,6 @@ export const readUnreadNotificationFn = createServerFn({ method: "POST" })
     if (!existingNotification) return;
 
     await updateNotificationIsRead(notificationId, true);
-  });
-
-export const deleteAllNotificationsByUserIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session || !userId || session.user.id !== userId) return;
-
-    await deleteAllNotificationsByUserId(userId);
-  });
-
-export const deleteAllNotificationsByResourceIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((resourceId: string) => resourceId)
-  .handler(async ({ data: resourceId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return;
-
-    await deleteAllNotificationsByResourceId(resourceId);
-  });
-
-export const deleteAllNotificationsByUserAndResourceIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((data: { userId: string; resourceId: string }) => data)
-  .handler(async ({ data: { userId, resourceId } }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session || !userId || session.user.id !== userId) return;
-
-    await deleteAllNotificationsByUserAndResourceId(userId, resourceId);
   });
 
 export const markAllAsReadNotificationsByUserIdFn = createServerFn({

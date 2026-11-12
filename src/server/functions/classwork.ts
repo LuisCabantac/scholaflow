@@ -368,59 +368,6 @@ export const unsubmitClassworkFn = createServerFn({ method: "POST" })
     return { success: true, message: "Your classwork has been unsubmitted." };
   });
 
-export const createEmptyClassworkFn = createServerFn({ method: "POST" })
-  .validator(
-    (data: {
-      userId: string;
-      classId: string;
-      streamId: string;
-      userPoints?: number | null;
-    }) => data,
-  )
-  .handler(async ({ data: { userId, classId, streamId, userPoints } }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    const classroom = await getClassByClassId(classId);
-    if (!classroom || session.user?.id !== classroom.teacherId) return null;
-
-    const stream = await getClassStreamByStreamId(streamId);
-    if (!stream) return null;
-
-    const user = await getUserByUserId(userId);
-    if (!user) return null;
-
-    const newClasswork = {
-      userId,
-      userName: user.name,
-      userImage: user.image as string,
-      classId,
-      className: classroom.name,
-      streamId,
-      title: stream.title,
-      attachments: [],
-      links: [],
-      points: userPoints ?? null,
-      isGraded:
-        userPoints !== undefined &&
-        userPoints !== null &&
-        Number.isFinite(userPoints) &&
-        userPoints >= 0,
-      isReturned: false,
-      streamCreatedAt: stream.createdAt,
-      isTurnedIn: false,
-      turnedInDate: null,
-    };
-
-    const result = createClassworkSchema.safeParse(newClasswork);
-    if (result.error) return null;
-
-    const data = await createClasswork(result.data);
-    return data;
-  });
-
 export const addGradeClassworkFn = createServerFn({ method: "POST" })
   .validator((data: FormData) => data)
   .handler(async ({ data: formData }) => {

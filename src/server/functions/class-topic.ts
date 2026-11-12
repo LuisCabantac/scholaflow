@@ -16,15 +16,6 @@ import {
   updateClassTopicRecord,
 } from "@/services/class-topic";
 
-export const getClassTopicByTopicIdFn = createServerFn({ method: "GET" })
-  .validator((topicId: string) => topicId)
-  .handler(async ({ data: topicId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-    if (!session) return null;
-    return await getClassTopicByTopicId(topicId);
-  });
-
 export const getAllClassTopicsByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
   .handler(async ({ data: classId }) => {
