@@ -26,7 +26,7 @@ export default function NoteCard({
   const preview = notePreview(note.content);
 
   return (
-    <li className="bg-card mb-2 w-full break-inside-avoid rounded-xl border break-all shadow-sm">
+    <li className="bg-card mb-2 w-full break-inside-avoid rounded-xl border [overflow-wrap:anywhere] shadow-sm">
       <button
         type="button"
         onClick={() => setShowNotesForm(true)}

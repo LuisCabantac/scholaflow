@@ -103,10 +103,12 @@ export default function SubmissionDetail({
         )}
         {work ? (
           <div>
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-medium">{work.userName}</p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="min-w-0 text-lg font-medium [overflow-wrap:anywhere]">
+                {work.userName}
+              </p>
               {stream.points && (
-                <p className="pr-6">
+                <p className="shrink-0 pr-6 whitespace-nowrap tabular-nums">
                   {work.points} / {stream.points}
                 </p>
               )}

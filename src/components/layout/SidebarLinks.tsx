@@ -170,19 +170,19 @@ export default function SidebarLinks({
                 <Link
                   to="/classroom/class/$classId"
                   params={{ classId: curClass.id }}
-                  className={`${pathname.includes(curClass.id) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid items-center rounded-xl px-4 py-3 transition-all`}
+                  className={`${pathname.includes(curClass.id) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid min-w-0 items-center rounded-xl px-4 py-3 transition-all`}
                   onClick={closeOnDesktop}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
                     <div
                       className="h-3 w-3 shrink-0 rounded-full"
                       style={{ backgroundColor: curClass.cardBackground }}
                     />
-                    <span className="block whitespace-nowrap">
+                    <span className="block truncate">
                       {truncate(curClass.name, 18)}
                     </span>
                   </div>
-                  <span className="block pl-5 text-xs whitespace-nowrap">
+                  <span className="block truncate pl-5 text-xs">
                     {curClass.subject && `${curClass.subject} · `}
                     {truncate(curClass.section, 20)}
                   </span>
@@ -199,19 +199,19 @@ export default function SidebarLinks({
                 <Link
                   to="/classroom/class/$classId"
                   params={{ classId: enrolledClass.classId }}
-                  className={`${pathname.includes(enrolledClass.classId) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid rounded-xl px-4 py-3 transition-all`}
+                  className={`${pathname.includes(enrolledClass.classId) ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground"} sidebar__links hover:bg-sidebar-accent grid min-w-0 rounded-xl px-4 py-3 transition-all`}
                   onClick={closeOnDesktop}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
                     <div
                       className="h-3 w-3 shrink-0 rounded-full"
                       style={{ backgroundColor: enrolledClass.cardBackground }}
                     />
-                    <span className="block whitespace-nowrap">
+                    <span className="block truncate">
                       {truncate(enrolledClass.name, 18)}
                     </span>
                   </div>
-                  <span className="block pl-5 text-xs whitespace-nowrap">
+                  <span className="block truncate pl-5 text-xs">
                     {enrolledClass.subject && `${enrolledClass.subject} · `}
                     {truncate(enrolledClass.section, 20)}
                   </span>

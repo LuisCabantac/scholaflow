@@ -31,7 +31,7 @@ export default function PeopleCard({
 
   return (
     <li className="flex items-center justify-between py-2">
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
         <UserAvatar
           src={user.userImage}
           alt={t("avatarAlt", { name: user.userName })}
@@ -40,10 +40,10 @@ export default function PeopleCard({
           className="h-8 w-8 shrink-0 rounded-full select-none"
           onDragStart={(e) => e.preventDefault()}
         />
-        <p>{user.userName}</p>
+        <p className="min-w-0 [overflow-wrap:anywhere]">{user.userName}</p>
       </div>
       {classroom.teacherId === sessionId && (
-        <div className="relative" ref={wrapperRef}>
+        <div className="relative shrink-0" ref={wrapperRef}>
           <button
             type="button"
             onClick={() => setEllipsis(!ellipsis)}

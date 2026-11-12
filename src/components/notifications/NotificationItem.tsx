@@ -44,10 +44,10 @@ export default function NotificationItem({
             className="size-10 shrink-0 rounded-full"
             onDragStart={(e) => e.preventDefault()}
           />
-          <div className="w-full">
-            <div className="flex items-center justify-between">
+          <div className="w-full min-w-0">
+            <div className="flex items-center justify-between gap-2">
               <h3
-                className={`${notification.isRead ? "font-medium" : "font-bold"} text-foreground text-start group-hover:underline`}
+                className={`${notification.isRead ? "font-medium" : "font-bold"} text-foreground min-w-0 text-start [overflow-wrap:anywhere] group-hover:underline`}
               >
                 {t(`titles.${notificationTitleKey(notification.type)}`, {
                   name: notification.fromUserName,
@@ -55,14 +55,14 @@ export default function NotificationItem({
               </h3>
               <ClientOnly fallback={<p className="hidden h-5 w-16 md:block" />}>
                 <p
-                  className={`${weight} text-foreground/70 hidden text-sm md:block`}
+                  className={`${weight} text-foreground/70 hidden shrink-0 text-sm whitespace-nowrap md:block`}
                 >
                   {whenText()}
                 </p>
               </ClientOnly>
             </div>
             <p
-              className={`${notification.isRead ? "font-normal" : "font-semibold"} text-foreground/70 text-start text-sm group-hover:underline`}
+              className={`${notification.isRead ? "font-normal" : "font-semibold"} text-foreground/70 line-clamp-2 text-start text-sm [overflow-wrap:anywhere] group-hover:underline`}
             >
               {notification.resourceContent}
             </p>

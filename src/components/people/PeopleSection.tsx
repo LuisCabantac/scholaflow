@@ -93,7 +93,7 @@ export default function PeopleSection({
         </div>
         <ul className="rounded-xl">
           <li className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               <UserAvatar
                 src={classroom.teacherImage}
                 alt={t("avatarAlt", { name: classroom.teacherName })}
@@ -102,8 +102,10 @@ export default function PeopleSection({
                 className="h-8 w-8 shrink-0 rounded-full select-none"
                 onDragStart={(e) => e.preventDefault()}
               />
-              <p>{classroom.teacherName}</p>
-              <span className="role teacher mt-1 flex items-center justify-center rounded-xl px-2 py-1 text-[0.65rem] font-semibold">
+              <p className="min-w-0 [overflow-wrap:anywhere]">
+                {classroom.teacherName}
+              </p>
+              <span className="role teacher mt-1 flex shrink-0 items-center justify-center rounded-xl px-2 py-1 text-[0.65rem] font-semibold whitespace-nowrap">
                 {t("teacherBadge")}
               </span>
             </div>
