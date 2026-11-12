@@ -33,14 +33,16 @@ export default function ChatMessageItem({
             width={32}
             height={32}
             onDragStart={(e) => e.preventDefault()}
-            className="mb-1 h-8 w-8 shrink-0 rounded-full object-contain"
+            className="mb-1 h-8 w-8 shrink-0 rounded-full"
           />
         ) : !isOwn ? (
           <div className="mb-1 h-8 w-8 shrink-0 rounded-full" />
         ) : null}
         <div className="min-w-0 flex-1">
           {!isOwn && startsGroup && (
-            <p className="mb-1 text-xs font-semibold">{message.userName}</p>
+            <p className="mb-1 text-xs font-semibold [overflow-wrap:anywhere]">
+              {message.userName}
+            </p>
           )}
           {message.message && (
             <div
