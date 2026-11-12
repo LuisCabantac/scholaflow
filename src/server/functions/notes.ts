@@ -7,6 +7,11 @@ import { createNoteSchema, editNoteSchema } from "@/lib/schema";
 import { arraysAreEqual, extractNoteFilePath } from "@/lib/utils";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import {
+  keptAttachments,
+  pathsInFolder,
+  removedAttachments,
+} from "@/lib/attachments";
+import {
   createNote,
   deleteNote,
   getAllNotesByUserId,
@@ -140,14 +145,14 @@ export const updateNoteFn = createServerFn({ method: "POST" })
       newNoteAttachments.length > 0 ||
       arraysAreEqual(curAttachments, currentNote.attachments ?? []) === false
     ) {
-      const removedAttachments = (currentNote.attachments || []).filter(
-        (attachment) => !curAttachments.includes(attachment),
+      const filePaths = pathsInFolder(
+        removedAttachments(currentNote.attachments, curAttachments).map(
+          extractNoteFilePath,
+        ),
+        session.user.id,
       );
 
-      if (removedAttachments.length) {
-        const filePaths = removedAttachments.map((file) =>
-          extractNoteFilePath(file),
-        );
+      if (filePaths.length) {
         await deleteFilesFromBucket("notes", filePaths);
       }
 
@@ -175,7 +180,9 @@ export const updateNoteFn = createServerFn({ method: "POST" })
       const updatedNote = {
         title: newTitle,
         content: newDescription,
-        attachments: noteAttachments.concat(curAttachments),
+        attachments: noteAttachments.concat(
+          keptAttachments(currentNote.attachments, curAttachments),
+        ),
         isPinned,
         updatedAt: new Date(),
       };

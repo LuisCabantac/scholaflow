@@ -10,6 +10,11 @@ import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
 import { canSeeStream, visibleStreams } from "@/lib/stream-visibility";
 import {
+  keptAttachments,
+  pathsInFolder,
+  removedAttachments,
+} from "@/lib/attachments";
+import {
   deleteAllNotificationsByResourceId,
   sendNotification,
 } from "@/services/notification";
@@ -108,9 +113,18 @@ export const getAllClassworkStreamsByClassIdFn = createServerFn({
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || !(await isClassMember(session.user.id, classId))) {
+      return null;
+    }
 
-    return await getAllClassworkStreamsByClassId(classId);
+    const classroom = await getClassByClassId(classId);
+    if (!classroom) return null;
+
+    return visibleStreams(
+      await getAllClassworkStreamsByClassId(classId),
+      session.user.id,
+      classroom.teacherId,
+    );
   });
 
 export const getAllEnrolledClassesClassworksFn = createServerFn({
@@ -130,9 +144,18 @@ export const getClassworksByClassIdQueryFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session) return null;
+    if (!session || !(await isClassMember(session.user.id, classId))) {
+      return null;
+    }
 
-    return await getClassworksByClassIdQuery(classId, query);
+    const classroom = await getClassByClassId(classId);
+    if (!classroom) return null;
+
+    return visibleStreams(
+      await getClassworksByClassIdQuery(classId, query),
+      session.user.id,
+      classroom.teacherId,
+    );
   });
 
 function streamLabel(type: StreamType, capitalized: boolean): string {
@@ -333,14 +356,14 @@ export const updateStreamFn = createServerFn({ method: "POST" })
       );
 
     if (hasChanges) {
-      const removedAttachments = (currentStream.attachments || []).filter(
-        (attachment) => !curAttachments.includes(attachment),
+      const filePaths = pathsInFolder(
+        removedAttachments(currentStream.attachments, curAttachments).map(
+          extractStreamFilePath,
+        ),
+        currentStream.classId,
       );
 
-      if (removedAttachments.length) {
-        const filePaths = removedAttachments.map((file) =>
-          extractStreamFilePath(file),
-        );
+      if (filePaths.length) {
         await deleteFilesFromBucket("streams", filePaths);
       }
 
@@ -368,7 +391,9 @@ export const updateStreamFn = createServerFn({ method: "POST" })
       const updatedStream = {
         title: newTitle,
         content: newContent,
-        attachments: postAttachments.concat(curAttachments),
+        attachments: postAttachments.concat(
+          keptAttachments(currentStream.attachments, curAttachments),
+        ),
         links: newUrlLinks.concat(curUrlLinks),
         points: newPoints,
         dueDate: newDueDate,

@@ -11,6 +11,11 @@ import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { arraysAreEqual, extractClassworkFilePath } from "@/lib/utils";
 import {
+  keptAttachments,
+  pathsInFolder,
+  removedAttachments,
+} from "@/lib/attachments";
+import {
   getClassByClassId,
   getEnrolledClassByUserAndClassId,
 } from "@/services/classroom";
@@ -150,12 +155,14 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
       !arraysAreEqual(curUrlLinks, currentClasswork.links ?? []);
 
     if (hasChanges) {
-      const removedAttachments = (currentClasswork.attachments || []).filter(
-        (attachment) => !curAttachments.includes(attachment),
+      const filePaths = pathsInFolder(
+        removedAttachments(currentClasswork.attachments, curAttachments).map(
+          extractClassworkFilePath,
+        ),
+        currentClasswork.classId,
       );
 
-      if (removedAttachments.length) {
-        const filePaths = removedAttachments.map(extractClassworkFilePath);
+      if (filePaths.length) {
         await deleteFilesFromBucket("classworks", filePaths);
       }
 
@@ -182,7 +189,9 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
 
       const updatedClasswork = {
         ...currentClasswork,
-        attachments: postAttachments.concat(curAttachments),
+        attachments: postAttachments.concat(
+          keptAttachments(currentClasswork.attachments, curAttachments),
+        ),
         links: newUrlLinks.concat(curUrlLinks),
         turnedInDate: new Date(),
         isTurnedIn: true,
