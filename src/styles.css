@@ -385,6 +385,17 @@
     -webkit-touch-callout: none;
   }
 
+  @media (pointer: coarse) {
+    :where(
+      input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]),
+      textarea,
+      select,
+      [contenteditable="true"]
+    ) {
+      font-size: max(1rem, 1em);
+    }
+  }
+
   @media (hover: none) {
     :where(button, [role="button"], a[href], summary):active:not(
         :disabled,
