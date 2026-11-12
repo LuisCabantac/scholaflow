@@ -2,7 +2,13 @@ import { nanoid } from "nanoid";
 import { v4 as uuidv4 } from "uuid";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
+import {
+  buildAppUrl,
+  isExpired,
+  matchesTokenType,
+  parseTokenIdentifier,
+  tokenIdentifier,
+} from "@/lib/auth-tokens";
 
 describe("isExpired", () => {
   it("is true for a past date", () => {
@@ -57,5 +63,41 @@ describe("buildAppUrl", () => {
   it("throws when APP_URL is unset", () => {
     delete process.env.APP_URL;
     expect(() => buildAppUrl("/verify")).toThrow();
+  });
+});
+
+describe("tokenIdentifier", () => {
+  it("prefixes the email with the purpose", () => {
+    expect(tokenIdentifier("verify", "a@b.co")).toBe("verify:a@b.co");
+    expect(tokenIdentifier("reset", "a@b.co")).toBe("reset:a@b.co");
+    expect(tokenIdentifier("close", "a@b.co")).toBe("close:a@b.co");
+  });
+});
+
+describe("parseTokenIdentifier", () => {
+  it("round-trips a namespaced identifier", () => {
+    expect(parseTokenIdentifier(tokenIdentifier("close", "a@b.co"))).toEqual({
+      purpose: "close",
+      email: "a@b.co",
+    });
+  });
+
+  it("keeps colons that belong to the email", () => {
+    expect(parseTokenIdentifier("reset:odd:name@b.co")).toEqual({
+      purpose: "reset",
+      email: "odd:name@b.co",
+    });
+  });
+
+  it("returns null for a legacy bare email", () => {
+    expect(parseTokenIdentifier("a@b.co")).toBeNull();
+  });
+
+  it("returns null for an unknown prefix", () => {
+    expect(parseTokenIdentifier("oauth:a@b.co")).toBeNull();
+  });
+
+  it("returns null for a namespaced identifier without an email", () => {
+    expect(parseTokenIdentifier("verify:")).toBeNull();
   });
 });

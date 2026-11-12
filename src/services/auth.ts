@@ -1,18 +1,21 @@
 import { nanoid } from "nanoid";
-import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
+import { eq, or } from "drizzle-orm";
 
 import { db } from "@/db";
 import { verification } from "@/db/schema";
 import type { Verification } from "@/lib/schema";
+import { tokenIdentifier } from "@/lib/auth-tokens";
+import type { TokenPurpose, TokenType } from "@/types/auth";
 
 export async function getVerificationToken(
   email: string,
+  purpose: TokenPurpose,
 ): Promise<Verification | null> {
   const [data] = await db
     .select()
     .from(verification)
-    .where(eq(verification.identifier, email));
+    .where(eq(verification.identifier, tokenIdentifier(purpose, email)));
 
   return data || null;
 }
@@ -28,12 +31,18 @@ export async function getVerificationTokenByToken(
   return data || null;
 }
 
-export async function deleteVerificationToken(email: string): Promise<void> {
-  await db.delete(verification).where(eq(verification.identifier, email));
+export async function deleteVerificationToken(
+  email: string,
+  purpose: TokenPurpose,
+): Promise<void> {
+  await db
+    .delete(verification)
+    .where(eq(verification.identifier, tokenIdentifier(purpose, email)));
 }
 
 export async function createVerificationToken(
   email: string,
+  purpose: TokenPurpose,
   token: string,
   expiresAt: Date,
 ): Promise<Verification> {
@@ -41,7 +50,7 @@ export async function createVerificationToken(
     .insert(verification)
     .values({
       id: uuidv4(),
-      identifier: email,
+      identifier: tokenIdentifier(purpose, email),
       value: token,
       expiresAt,
     })
@@ -56,24 +65,22 @@ export async function createVerificationToken(
 
 export async function generateVerificationToken(
   email: string,
-  type: "uuid" | "nanoid" = "uuid",
+  purpose: TokenPurpose,
+  type: TokenType = "uuid",
 ): Promise<Verification | null> {
   if (!type) return null;
 
   const token = type === "nanoid" ? nanoid() : uuidv4();
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-  const existingToken = await getVerificationToken(email);
+  await db
+    .delete(verification)
+    .where(
+      or(
+        eq(verification.identifier, email),
+        eq(verification.identifier, tokenIdentifier(purpose, email)),
+      ),
+    );
 
-  if (existingToken) {
-    await deleteVerificationToken(email);
-  }
-
-  const verificationToken = await createVerificationToken(
-    email,
-    token,
-    expiresAt,
-  );
-
-  return verificationToken;
+  return createVerificationToken(email, purpose, token, expiresAt);
 }

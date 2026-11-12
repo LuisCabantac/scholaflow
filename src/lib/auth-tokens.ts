@@ -1,5 +1,5 @@
-import type { TokenType } from "@/types/auth";
 import { nanoidId, uuidv4Id } from "@/lib/schema";
+import type { TokenPurpose, TokenType } from "@/types/auth";
 
 export function isExpired(
   expiresAt: Date | string,
@@ -21,4 +21,23 @@ export function buildAppUrl(path: string): string {
   }
 
   return `${base.replace(/\/+$/, "")}${path}`;
+}
+
+const tokenPurposes: TokenPurpose[] = ["verify", "reset", "close"];
+
+export function tokenIdentifier(purpose: TokenPurpose, email: string): string {
+  return `${purpose}:${email}`;
+}
+
+export function parseTokenIdentifier(
+  identifier: string,
+): { purpose: TokenPurpose; email: string } | null {
+  const separator = identifier.indexOf(":");
+  if (separator === -1) return null;
+
+  const purpose = identifier.slice(0, separator) as TokenPurpose;
+  const email = identifier.slice(separator + 1);
+  if (!tokenPurposes.includes(purpose) || !email) return null;
+
+  return { purpose, email };
 }
