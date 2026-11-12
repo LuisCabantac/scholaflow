@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
 const HERO_SIZES =
-  "(min-width: 1024px) min(100vw, 1280px), (min-width: 768px) min(100vw, 1152px), 81vw";
+  "(min-width: 1024px) min(100vw, 1280px), (min-width: 768px) min(100vw, 1152px), 90vw";
 
 export default function HeroSection({
   onViewFeatures,
@@ -52,7 +52,7 @@ export default function HeroSection({
         </div>
       </div>
       <motion.div
-        className="flex max-w-4xl items-center justify-center rounded-2xl md:max-w-6xl lg:max-w-7xl"
+        className="flex w-full max-w-4xl items-center justify-center rounded-2xl md:max-w-6xl lg:max-w-7xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
@@ -71,7 +71,7 @@ export default function HeroSection({
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="block aspect-[14/9] w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
+              className="block w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
               alt={t("imageAlt.light")}
               onDragStart={(e) => e.preventDefault()}
             />
@@ -88,7 +88,7 @@ export default function HeroSection({
               height={1080}
               loading="lazy"
               decoding="async"
-              className="hidden aspect-[14/9] w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
+              className="hidden w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
               alt={t("imageAlt.dark")}
               onDragStart={(e) => e.preventDefault()}
             />
