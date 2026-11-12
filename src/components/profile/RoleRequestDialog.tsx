@@ -95,7 +95,7 @@ export default function RoleRequestDialog({
           )}
           <button
             type="button"
-            className="absolute top-4 right-4 disabled:cursor-not-allowed"
+            className="absolute top-4 right-4"
             aria-label={t("actions.close")}
             disabled={isLoading}
             onClick={onClose}

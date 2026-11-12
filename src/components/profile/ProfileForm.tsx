@@ -168,7 +168,6 @@ export default function ProfileForm({
                 {t("form.title")}
               </h3>
               <button
-                className="disabled:cursor-not-allowed"
                 type="button"
                 aria-label={t("actions.close")}
                 disabled={isLoading}

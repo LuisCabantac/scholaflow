@@ -395,11 +395,11 @@ export default function StreamUserWork({
         <div
           className={`${showAddWork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} bg-card absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-xl border p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
         >
-          <label className="hover:bg-card/89 flex cursor-pointer items-center gap-2 rounded-md p-2">
+          <label className="hover:bg-card/89 flex items-center gap-2 rounded-md p-2">
             <input
               type="file"
               multiple
-              className="input__file hidden disabled:cursor-not-allowed"
+              className="input__file hidden"
               disabled={isLoading}
               onChange={handlePickFiles}
             />

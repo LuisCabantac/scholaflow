@@ -277,7 +277,7 @@ export default function StreamForm({
                 {t(`stream:form.titles.${titleKey}`)}
               </h3>
               <Button
-                className="hover:bg-transparent disabled:cursor-not-allowed"
+                className="hover:bg-transparent"
                 variant="ghost"
                 type="button"
                 size="icon"
@@ -741,12 +741,12 @@ export default function StreamForm({
                   disabled={isLoading}
                   asChild
                 >
-                  <label className="cursor-pointer disabled:cursor-not-allowed">
+                  <label>
                     <span className="sr-only">{t("stream:form.upload")}</span>
                     <input
                       type="file"
                       multiple
-                      className="input__file hidden disabled:cursor-not-allowed"
+                      className="input__file hidden"
                       disabled={isLoading}
                       onChange={handlePickFiles}
                     />

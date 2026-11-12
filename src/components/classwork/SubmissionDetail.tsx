@@ -48,7 +48,7 @@ export default function SubmissionDetail({
       <div className="relative min-h-screen pb-[6rem] md:min-h-0 md:pb-0">
         <button
           type="button"
-          className="disabled:cursor-not-allowed md:hidden"
+          className="md:hidden"
           aria-label={t("close")}
           onClick={onClose}
         >

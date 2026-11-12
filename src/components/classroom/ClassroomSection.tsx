@@ -227,7 +227,7 @@ export default function ClassroomSection({
                     <Link
                       to="/classroom"
                       search={{ sort: option.value }}
-                      className={`${sort === option.value ? "font-medium" : "text-foreground/70"} flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl p-2 text-left text-nowrap`}
+                      className={`${sort === option.value ? "font-medium" : "text-foreground/70"} flex w-full items-center justify-between gap-2 rounded-xl p-2 text-left text-nowrap`}
                     >
                       <span>{t(`filters.${option.key}`)}</span>
                       {sort === option.value && (

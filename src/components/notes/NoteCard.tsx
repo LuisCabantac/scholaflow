@@ -30,7 +30,7 @@ export default function NoteCard({
       <button
         type="button"
         onClick={() => setShowNotesForm(true)}
-        className="grid w-full cursor-pointer gap-2 p-3 text-left md:p-4"
+        className="grid w-full gap-2 p-3 text-left md:p-4"
       >
         {note.attachments.length ? (
           <span className="block columns-2 gap-0.5">

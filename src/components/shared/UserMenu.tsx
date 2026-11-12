@@ -62,7 +62,7 @@ export default function UserMenu({
             alt="profile"
             width={20}
             height={20}
-            className="h-6 w-6 cursor-pointer rounded-full border object-cover transition-all md:h-10 md:w-10"
+            className="h-6 w-6 rounded-full border object-cover transition-all md:h-10 md:w-10"
             onDragStart={(e) => e.preventDefault()}
           />
           <div className="min-w-0 flex-1">
@@ -79,7 +79,7 @@ export default function UserMenu({
           <DropdownMenuItem className="mt-1 text-xs font-medium" asChild>
             <Link
               to="/profile"
-              className="flex h-full w-full flex-1 cursor-pointer items-center gap-2"
+              className="flex h-full w-full flex-1 items-center gap-2"
             >
               <User className="h-4 w-4" />
               <span>{t("common:profile")}</span>
@@ -88,7 +88,7 @@ export default function UserMenu({
           <DropdownMenuItem className="mt-1 text-xs font-medium" asChild>
             <button
               type="button"
-              className="flex h-full w-full cursor-pointer items-center gap-2"
+              className="flex h-full w-full items-center gap-2"
               onClick={() => setTheme(isDark ? "light" : "dark")}
             >
               <div className="relative h-4 w-4">
@@ -101,7 +101,7 @@ export default function UserMenu({
           <DropdownMenuItem className="mt-1 mb-2 text-xs font-medium">
             <button
               type="button"
-              className="flex h-4 w-full cursor-pointer items-center gap-2"
+              className="flex h-4 w-full items-center gap-2"
               onClick={async () => {
                 await signOut({
                   fetchOptions: {

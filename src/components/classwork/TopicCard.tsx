@@ -68,7 +68,7 @@ export default function TopicCard({
         <li className="flex w-full items-center gap-2 font-semibold">
           <button
             type="button"
-            className="flex w-full cursor-pointer items-center gap-2"
+            className="flex w-full items-center gap-2"
             aria-label={expanded ? t("collapse") : t("expand")}
             onClick={() => {
               if (topicStreams.length) setExpanded((current) => !current);

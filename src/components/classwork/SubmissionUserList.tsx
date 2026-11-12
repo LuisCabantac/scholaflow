@@ -64,7 +64,12 @@ export default function SubmissionUserList({
           <p className="font-medium">{t("turnedIn")}</p>
           <ul className="grid gap-2">
             {turnedIn.map((work) => (
-              <li key={work.id} onClick={onSelect} onKeyDown={() => undefined}>
+              <li
+                key={work.id}
+                className="cursor-pointer"
+                onClick={onSelect}
+                onKeyDown={() => undefined}
+              >
                 {userLink(
                   work.userId,
                   work.userName,
@@ -101,6 +106,7 @@ export default function SubmissionUserList({
               return (
                 <li
                   key={user.id}
+                  className="cursor-pointer"
                   onClick={onSelect}
                   onKeyDown={() => undefined}
                 >

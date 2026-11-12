@@ -63,7 +63,7 @@ export default function ChatMessageItem({
               <button
                 key={attachment}
                 type="button"
-                className="mt-2 block cursor-pointer"
+                className="mt-2 block"
                 onClick={() => onZoom(attachment)}
                 aria-label={t("zoomImage")}
               >
