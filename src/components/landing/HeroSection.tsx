@@ -71,7 +71,7 @@ export default function HeroSection({
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="block w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
+              className="block aspect-[14/9] w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
               alt={t("imageAlt.light")}
               onDragStart={(e) => e.preventDefault()}
             />
@@ -88,7 +88,7 @@ export default function HeroSection({
               height={1080}
               loading="lazy"
               decoding="async"
-              className="hidden w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
+              className="hidden aspect-[14/9] w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
               alt={t("imageAlt.dark")}
               onDragStart={(e) => e.preventDefault()}
             />
