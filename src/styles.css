@@ -4,6 +4,13 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover:where(:not(:disabled, [aria-disabled="true"], [data-disabled])) {
+      @slot;
+    }
+  }
+}
 
 @tailwind utilities;
 
