@@ -42,7 +42,7 @@ function MainLayout() {
   const { user } = Route.useRouteContext();
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-dvh overflow-hidden">
       <Sidebar user={user} />
       <main className="h-full w-full overflow-auto">
         <Header user={user} />

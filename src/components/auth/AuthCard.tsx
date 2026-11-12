@@ -14,7 +14,7 @@ export default function AuthCard({
   footer?: ReactNode;
 }) {
   return (
-    <section className="relative flex min-h-[90dvh] items-center justify-center px-8 py-32 md:grid md:h-full md:px-20 md:py-0">
+    <section className="relative flex min-h-[90svh] items-center justify-center px-8 py-32 md:grid md:h-full md:px-20 md:py-0">
       <div className="container">
         <div className="flex flex-col items-center gap-2">
           <Link to="/">
