@@ -34,6 +34,9 @@ import { Route as MainUserManagementRouteImport } from './routes/_main/user-mana
 import { Route as JoinClassClassCodeRouteImport } from './routes/join-class/$classCode'
 import { Route as MainClassroomIndexRouteImport } from './routes/_main/classroom/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
+import { Route as ApiV1MeRouteImport } from './routes/api/v1/me'
+import { Route as ApiV1OpenapiDotjsonRouteImport } from './routes/api/v1/openapi[.]json'
 import { Route as MainClassroomClassClassIdRouteImport } from './routes/_main/classroom/class/$classId'
 import { Route as MainClassroomClassClassIdIndexRouteImport } from './routes/_main/classroom/class/$classId.index'
 import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_main/classroom/class/$classId.chat'
@@ -166,6 +169,21 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
+  id: '/api/v1/health',
+  path: '/api/v1/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1MeRoute = ApiV1MeRouteImport.update({
+  id: '/api/v1/me',
+  path: '/api/v1/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1OpenapiDotjsonRoute = ApiV1OpenapiDotjsonRouteImport.update({
+  id: '/api/v1/openapi.json',
+  path: '/api/v1/openapi.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainClassroomClassClassIdRoute =
   MainClassroomClassClassIdRouteImport.update({
     id: '/classroom/class/$classId',
@@ -238,6 +256,9 @@ export interface FileRoutesByFullPath {
   '/user-management': typeof MainUserManagementRoute
   '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/me': typeof ApiV1MeRoute
+  '/api/v1/openapi.json': typeof ApiV1OpenapiDotjsonRoute
   '/classroom/': typeof MainClassroomIndexRoute
   '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
@@ -271,6 +292,9 @@ export interface FileRoutesByTo {
   '/user-management': typeof MainUserManagementRoute
   '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/me': typeof ApiV1MeRoute
+  '/api/v1/openapi.json': typeof ApiV1OpenapiDotjsonRoute
   '/classroom': typeof MainClassroomIndexRoute
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
@@ -305,6 +329,9 @@ export interface FileRoutesById {
   '/_main/user-management': typeof MainUserManagementRoute
   '/join-class/$classCode': typeof JoinClassClassCodeRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/me': typeof ApiV1MeRoute
+  '/api/v1/openapi.json': typeof ApiV1OpenapiDotjsonRoute
   '/_main/classroom/': typeof MainClassroomIndexRoute
   '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
   '/_main/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
@@ -340,6 +367,9 @@ export interface FileRouteTypes {
     | '/user-management'
     | '/join-class/$classCode'
     | '/api/auth/$'
+    | '/api/v1/health'
+    | '/api/v1/me'
+    | '/api/v1/openapi.json'
     | '/classroom/'
     | '/classroom/class/$classId'
     | '/classroom/class/$classId/chat'
@@ -373,6 +403,9 @@ export interface FileRouteTypes {
     | '/user-management'
     | '/join-class/$classCode'
     | '/api/auth/$'
+    | '/api/v1/health'
+    | '/api/v1/me'
+    | '/api/v1/openapi.json'
     | '/classroom'
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
@@ -406,6 +439,9 @@ export interface FileRouteTypes {
     | '/_main/user-management'
     | '/join-class/$classCode'
     | '/api/auth/$'
+    | '/api/v1/health'
+    | '/api/v1/me'
+    | '/api/v1/openapi.json'
     | '/_main/classroom/'
     | '/_main/classroom/class/$classId'
     | '/_main/classroom/class/$classId/chat'
@@ -432,6 +468,9 @@ export interface RootRouteChildren {
   TermsOfUseRoute: typeof TermsOfUseRoute
   JoinClassClassCodeRoute: typeof JoinClassClassCodeRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiV1HealthRoute: typeof ApiV1HealthRoute
+  ApiV1MeRoute: typeof ApiV1MeRoute
+  ApiV1OpenapiDotjsonRoute: typeof ApiV1OpenapiDotjsonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -611,6 +650,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/health': {
+      id: '/api/v1/health'
+      path: '/api/v1/health'
+      fullPath: '/api/v1/health'
+      preLoaderRoute: typeof ApiV1HealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/me': {
+      id: '/api/v1/me'
+      path: '/api/v1/me'
+      fullPath: '/api/v1/me'
+      preLoaderRoute: typeof ApiV1MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/openapi.json': {
+      id: '/api/v1/openapi.json'
+      path: '/api/v1/openapi.json'
+      fullPath: '/api/v1/openapi.json'
+      preLoaderRoute: typeof ApiV1OpenapiDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/classroom/class/$classId': {
       id: '/_main/classroom/class/$classId'
       path: '/classroom/class/$classId'
@@ -767,6 +827,9 @@ const rootRouteChildren: RootRouteChildren = {
   TermsOfUseRoute: TermsOfUseRoute,
   JoinClassClassCodeRoute: JoinClassClassCodeRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiV1HealthRoute: ApiV1HealthRoute,
+  ApiV1MeRoute: ApiV1MeRoute,
+  ApiV1OpenapiDotjsonRoute: ApiV1OpenapiDotjsonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

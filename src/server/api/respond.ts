@@ -10,8 +10,15 @@ export type Handler = (ctx: HandlerContext) => Promise<Response>;
 
 const jsonHeaders = { "content-type": "application/json; charset=utf-8" };
 
-export function ok(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), { status, headers: jsonHeaders });
+export function ok(
+  data: unknown,
+  status = 200,
+  headers: Record<string, string> = {},
+): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...jsonHeaders, ...headers },
+  });
 }
 
 export function noContent(): Response {
