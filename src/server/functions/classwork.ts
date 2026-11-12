@@ -18,6 +18,7 @@ import {
 import {
   getClassByClassId,
   getEnrolledClassByUserAndClassId,
+  isClassMember,
 } from "@/services/classroom";
 import {
   createClasswork,
@@ -240,6 +241,12 @@ export const submitClassworkFn = createServerFn({ method: "POST" })
     const stream = await getClassStreamByStreamId(streamId);
     if (!stream)
       return { success: false, message: "This stream does not exist." };
+    if (stream.classId !== classId)
+      return { success: false, message: "This stream does not exist." };
+
+    if (!(await isClassMember(session.user.id, classId))) {
+      return { success: false, message: "You are not a member of this class." };
+    }
 
     if (!stream.announceToAll && !stream.announceTo.includes(session.user.id)) {
       return {
