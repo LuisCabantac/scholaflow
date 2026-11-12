@@ -65,12 +65,45 @@ function RouteComponent() {
         />
 
         <LegalSection
+          title={t("sections.thirdParties.title")}
+          intro={t("sections.thirdParties.intro")}
+          items={
+            t("sections.thirdParties.items", {
+              returnObjects: true,
+            }) as string[]
+          }
+        />
+
+        <LegalSection
           title={t("sections.storageRetention.title")}
           items={
             t("sections.storageRetention.items", {
               returnObjects: true,
             }) as string[]
           }
+        />
+
+        <LegalSection
+          title={t("sections.cookies.title")}
+          items={
+            t("sections.cookies.items", {
+              returnObjects: true,
+            }) as string[]
+          }
+        />
+
+        <LegalSection
+          title={t("sections.emails.title")}
+          items={
+            t("sections.emails.items", {
+              returnObjects: true,
+            }) as string[]
+          }
+        />
+
+        <LegalSection
+          title={t("sections.security.title")}
+          content={t("sections.security.content")}
         />
 
         <LegalSection

@@ -119,6 +119,15 @@ function RouteComponent() {
         />
 
         <LegalSection
+          title={t("sections.attachments.title")}
+          items={
+            t("sections.attachments.items", {
+              returnObjects: true,
+            }) as string[]
+          }
+        />
+
+        <LegalSection
           title={t("sections.availability.title")}
           items={
             t("sections.availability.items", {
@@ -130,6 +139,11 @@ function RouteComponent() {
         <LegalSection
           title={t("sections.liability.title")}
           content={t("sections.liability.content")}
+        />
+
+        <LegalSection
+          title={t("sections.openSource.title")}
+          content={t("sections.openSource.content")}
         />
 
         <LegalSection
