@@ -62,7 +62,7 @@ export default function ChatComposer({
   }
 
   return (
-    <div className="bg-background fixed right-3 bottom-3 left-3 z-10 pt-2 md:absolute md:right-0 md:bottom-0 md:left-0 md:w-full md:bg-card md:pt-0">
+    <div className="bg-background fixed right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-3 z-10 pt-2 md:absolute md:right-0 md:bottom-0 md:left-0 md:w-full md:bg-card md:pt-0">
       {attachments.length ? (
         <>
           <div className="flex justify-between border-t pt-2">

@@ -90,30 +90,32 @@
         }
     }
 
-    .profile__icon:hover > div {
-        border-color: #5c7cfa;
-    }
+    @media (hover: hover) {
+        .profile__icon:hover > div {
+            border-color: #5c7cfa;
+        }
 
-    .sidebar__links:hover > svg {
-        stroke: hsl(var(--sidebar-ring));
-        fill: hsl(var(--sidebar-accent));
-    }
+        .sidebar__links:hover > svg {
+            stroke: hsl(var(--sidebar-ring));
+            fill: hsl(var(--sidebar-accent));
+        }
 
-    .sidebar__links:hover > div > svg {
-        stroke: hsl(var(--sidebar-ring));
-        fill: hsl(var(--sidebar-accent));
-    }
+        .sidebar__links:hover > div > svg {
+            stroke: hsl(var(--sidebar-ring));
+            fill: hsl(var(--sidebar-accent));
+        }
 
-    .sidebar__links:hover > span {
-        color: hsl(var(--sidebar-accent-foreground));
-    }
+        .sidebar__links:hover > span {
+            color: hsl(var(--sidebar-accent-foreground));
+        }
 
-    .sidebar__links:hover > div > span {
-        color: hsl(var(--sidebar-accent-foreground));
-    }
+        .sidebar__links:hover > div > span {
+            color: hsl(var(--sidebar-accent-foreground));
+        }
 
-    .signout__button:hover > svg {
-        fill: #c7d2f1;
+        .signout__button:hover > svg {
+            fill: #c7d2f1;
+        }
     }
 
     .ellipsis__popover {
@@ -275,9 +277,11 @@
         border-color: hsl(var(--primary));
     }
 
-    .underline__container:hover .underline__text {
-        text-decoration: underline;
-        color: #474c50;
+    @media (hover: hover) {
+        .underline__container:hover .underline__text {
+            text-decoration: underline;
+            color: #474c50;
+        }
     }
 }
 
@@ -338,6 +342,68 @@
   [data-disabled],
   label:has(input:disabled) {
     cursor: not-allowed;
+  }
+
+  :where(
+    button,
+    [role="button"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="tab"],
+    [role="option"],
+    [role="checkbox"],
+    [role="radio"],
+    [role="switch"],
+    [role="combobox"],
+    [role="link"],
+    a[href],
+    summary,
+    select,
+    label[for],
+    input[type="checkbox"],
+    input[type="radio"],
+    input[type="submit"],
+    input[type="button"]
+  ) {
+    touch-action: manipulation;
+  }
+
+  :where(
+    button,
+    [role="button"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="tab"],
+    [role="option"],
+    [role="switch"],
+    summary
+  ) {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  @media (pointer: coarse) {
+    :where(
+      input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]),
+      textarea,
+      select,
+      [contenteditable="true"]
+    ) {
+      font-size: max(1rem, 1em);
+    }
+  }
+
+  @media (hover: none) {
+    :where(button, [role="button"], a[href], summary):active:not(
+        :disabled,
+        [aria-disabled="true"],
+        [data-disabled]
+      ) {
+      opacity: 0.7;
+    }
   }
 }
 
@@ -419,7 +485,12 @@
     * {
         @apply border-border;
     }
+    html,
+    body {
+        overscroll-behavior: none;
+    }
     body {
         @apply bg-background text-foreground;
+        padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
     }
 }

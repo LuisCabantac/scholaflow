@@ -20,7 +20,7 @@ export default function FeaturesSection({
       ref={sectionRef}
       className="mb-24 grid gap-16 pt-12 md:mx-10 md:gap-24 lg:mx-24"
     >
-      <div className="grid w-full items-start gap-x-12 gap-y-4 md:gap-y-24">
+      <div className="grid w-full grid-cols-1 items-start gap-x-12 gap-y-4 md:gap-y-24">
         <FeatureBlock
           eyebrow={t("feedback.eyebrow")}
           title={t("feedback.title")}

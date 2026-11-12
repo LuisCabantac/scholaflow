@@ -41,7 +41,7 @@ export default function FeatureBlock({
       transition={{ duration: 0.5, delay }}
     >
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid items-center gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-5 lg:gap-24">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-5 lg:gap-24">
           {previewFirst ? (
             <>
               {preview("hidden md:block")}
