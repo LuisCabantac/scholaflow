@@ -26,9 +26,7 @@ import {
   deletePrivateCommentRecord,
   deleteStreamCommentRecord,
   getAllCommentsByStreamId,
-  getAllCommentsByUserId,
   getAllPrivateCommentsByStreamId,
-  getAllPrivateCommentsByUserId,
   getStreamCommentByCommentId,
   getStreamPrivateCommentByCommentId,
 } from "@/services/comment";
@@ -57,28 +55,6 @@ export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
     return await getAllCommentsByStreamId(streamId);
   });
 
-export const getAllCommentsByUserIdFn = createServerFn({ method: "GET" })
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllCommentsByUserId(userId);
-  });
-
-export const getStreamCommentByCommentIdFn = createServerFn({ method: "GET" })
-  .validator((commentId: string) => commentId)
-  .handler(async ({ data: commentId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getStreamCommentByCommentId(commentId);
-  });
-
 export const getAllPrivateCommentsByStreamIdFn = createServerFn({
   method: "GET",
 })
@@ -105,32 +81,6 @@ export const getAllPrivateCommentsByStreamIdFn = createServerFn({
           comment.toUserId === session.user.id,
       ) ?? null
     );
-  });
-
-export const getAllPrivateCommentsByUserIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllPrivateCommentsByUserId(userId);
-  });
-
-export const getStreamPrivateCommentByCommentIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((commentId: string) => commentId)
-  .handler(async ({ data: commentId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getStreamPrivateCommentByCommentId(commentId);
   });
 
 export const addCommentToStreamFn = createServerFn({ method: "POST" })

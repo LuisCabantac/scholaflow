@@ -47,14 +47,11 @@ import {
   deleteEnrolledClassbyClassAndEnrolledClassId,
   deleteMultipleEnrolledClassRecord,
   getAllClassesByTeacherId,
-  getAllEnrolledClassesByClassAndSessionId,
   getAllEnrolledClassesByClassId,
   getAllEnrolledClassesByUserId,
   getClassByClassCode,
   getClassByClassId,
-  getClassNameByClassId,
   getEnrolledClassByClassAndSessionId,
-  getEnrolledClassByClassAndUserId,
   getEnrolledClassByEnrolledClassId,
   getEnrolledClassByUserAndClassId,
   isClassMember,
@@ -71,17 +68,6 @@ export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
     if (!session || session.user.id !== id) return null;
 
     return await getAllClassesByTeacherId(id);
-  });
-
-export const getClassNameByClassIdFn = createServerFn({ method: "GET" })
-  .validator((id: string) => id)
-  .handler(async ({ data: id }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getClassNameByClassId(id);
   });
 
 export const getClassByClassIdFn = createServerFn({ method: "GET" })
@@ -119,45 +105,6 @@ export const getEnrolledClassByClassAndSessionIdFn = createServerFn({
     return await getEnrolledClassByClassAndSessionId(userId, classId);
   });
 
-export const getEnrolledClassByEnrolledClassIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((enrolledClassId: string) => enrolledClassId)
-  .handler(async ({ data: enrolledClassId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getEnrolledClassByEnrolledClassId(enrolledClassId);
-  });
-
-export const getAllEnrolledClassesByClassAndSessionIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((classId: string) => classId)
-  .handler(async ({ data: classId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllEnrolledClassesByClassAndSessionId(classId);
-  });
-
-export const getEnrolledClassByClassAndUserIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((data: { userId: string; classId: string }) => data)
-  .handler(async ({ data: { userId, classId } }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getEnrolledClassByClassAndUserId(userId, classId);
-  });
-
 export const getAllEnrolledClassesByUserIdFn = createServerFn({ method: "GET" })
   .validator((userId: string) => userId)
   .handler(async ({ data: userId }) => {
@@ -182,19 +129,6 @@ export const getAllEnrolledClassesByClassIdFn = createServerFn({
     }
 
     return await getAllEnrolledClassesByClassId(classId);
-  });
-
-export const getEnrolledClassByUserAndClassIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((data: { userId: string; classId: string }) => data)
-  .handler(async ({ data: { userId, classId } }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getEnrolledClassByUserAndClassId(userId, classId);
   });
 
 export const createClassFn = createServerFn({ method: "POST" })

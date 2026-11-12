@@ -6,6 +6,7 @@ import { getUserByUserId } from "@/services/user";
 import { createClassworkSchema } from "@/lib/schema";
 import { uploadAttachments } from "@/services/storage";
 import { submissionsOpen } from "@/lib/classwork-rules";
+import { sendNotification } from "@/services/notification";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { arraysAreEqual, extractClassworkFilePath } from "@/lib/utils";
@@ -14,43 +15,12 @@ import {
   getEnrolledClassByUserAndClassId,
 } from "@/services/classroom";
 import {
-  deleteAllNotificationsByResourceId,
-  sendNotification,
-} from "@/services/notification";
-import {
   createClasswork,
-  deleteAllClassworksByClassAndUserIdRecord,
-  deleteAllClassworksByStreamIdRecord,
   getAllAssignedClassworksByStreamAndClassroomId,
-  getAllClassworksByClassAndUserId,
-  getAllClassworksByClassId,
-  getAllClassworksByStreamId,
   getAllClassworksByUserId,
   getClassworkByStreamAndUserId,
   updateClassworkRecord,
 } from "@/services/classwork";
-
-export const getAllClassworksByClassIdFn = createServerFn({ method: "GET" })
-  .validator((classId: string) => classId)
-  .handler(async ({ data: classId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllClassworksByClassId(classId);
-  });
-
-export const getAllClassworksByStreamIdFn = createServerFn({ method: "GET" })
-  .validator((streamId: string) => streamId)
-  .handler(async ({ data: streamId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllClassworksByStreamId(streamId);
-  });
 
 export const getAllClassworksByUserIdFn = createServerFn({ method: "GET" })
   .validator((userId: string) => userId)
@@ -61,22 +31,6 @@ export const getAllClassworksByUserIdFn = createServerFn({ method: "GET" })
     if (!session || session.user.id !== userId) return null;
 
     return await getAllClassworksByUserId(userId);
-  });
-
-export const getAllClassworksByClassAndUserIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((data: { userId: string; classId: string }) => data)
-  .handler(async ({ data: { userId, classId } }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    const classroom = await getClassByClassId(classId);
-    if (!classroom) return null;
-
-    return await getAllClassworksByClassAndUserId(userId, classId);
   });
 
 export const getClassworkByClassAndUserIdFn = createServerFn({ method: "GET" })
@@ -588,54 +542,4 @@ export const addGradeClassworkFn = createServerFn({ method: "POST" })
     }
 
     return { success: true, message: "No changes were made to the classwork." };
-  });
-
-export const deleteAllClassworkByClassAndUserIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((data: { classId: string; userId: string }) => data)
-  .handler(async ({ data: { classId, userId } }) => {
-    const classworks = await getAllClassworksByClassAndUserId(userId, classId);
-    if (!classworks || !classworks.length) return { success: true };
-
-    const attachments = classworks.flatMap((cw) => cw.attachments || []);
-    if (attachments.length) {
-      const classworkAttachmentsFilePath = attachments.map((file) =>
-        extractClassworkFilePath(file as string),
-      );
-      await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
-    }
-
-    const data = await deleteAllClassworksByClassAndUserIdRecord(
-      classId,
-      userId,
-    );
-    if (data.length) {
-      for (const cw of data) {
-        await deleteAllNotificationsByResourceId(cw.id);
-      }
-    }
-    return { success: true };
-  });
-
-export const deleteAllClassworkByStreamIdFn = createServerFn({ method: "POST" })
-  .validator((streamId: string) => streamId)
-  .handler(async ({ data: streamId }) => {
-    const classworks = await getAllClassworksByStreamId(streamId);
-    if (!classworks || !classworks.length) return { success: true };
-
-    for (const cw of classworks) {
-      await deleteAllNotificationsByResourceId(cw.id);
-    }
-
-    const attachments = classworks.flatMap((cw) => cw.attachments || []);
-    if (attachments.length) {
-      const classworkAttachmentsFilePath = attachments.map((file) =>
-        extractClassworkFilePath(file as string),
-      );
-      await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
-    }
-
-    const data = await deleteAllClassworksByStreamIdRecord(streamId);
-    return { success: true, deleted: data.length };
   });

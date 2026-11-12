@@ -38,10 +38,8 @@ import {
 import {
   createStreamPost,
   deleteClassStreamPost,
-  getAllClassesStreamByUserId,
   getAllClassStreamsByClassId,
   getAllClassworkStreamsByClassId,
-  getAllClassworkStreamsByTopicId,
   getAllEnrolledClassesClassworks,
   getClassStreamByStreamId,
   getClassworksByClassIdQuery,
@@ -76,17 +74,6 @@ export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
       session.user.id,
       classroom.teacherId,
     );
-  });
-
-export const getAllClassesStreamByUserIdFn = createServerFn({ method: "GET" })
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllClassesStreamByUserId(userId);
   });
 
 export const getClassStreamByStreamIdFn = createServerFn({ method: "GET" })
@@ -124,19 +111,6 @@ export const getAllClassworkStreamsByClassIdFn = createServerFn({
     if (!session) return null;
 
     return await getAllClassworkStreamsByClassId(classId);
-  });
-
-export const getAllClassworkStreamsByTopicIdFn = createServerFn({
-  method: "GET",
-})
-  .validator((topicId: string) => topicId)
-  .handler(async ({ data: topicId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllClassworkStreamsByTopicId(topicId);
   });
 
 export const getAllEnrolledClassesClassworksFn = createServerFn({

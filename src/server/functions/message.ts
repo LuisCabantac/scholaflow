@@ -3,20 +3,15 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { createChatSchema } from "@/lib/schema";
-import { extractMessagesFilePath } from "@/lib/utils";
 import { uploadAttachments } from "@/services/storage";
-import { deleteFilesFromBucket } from "@/services/user-management";
+import {
+  addMessageToChatRecord,
+  getAllMessagesByClassId,
+} from "@/services/message";
 import {
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
 } from "@/services/classroom";
-import {
-  addMessageToChatRecord,
-  deleteAllMessagesByClassIdRecord,
-  deleteAllMessagesByUserId,
-  getAllMessagesByClassId,
-  getAllMessagesByUserId,
-} from "@/services/message";
 
 export const getAllMessagesByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
@@ -38,17 +33,6 @@ export const getAllMessagesByClassIdFn = createServerFn({ method: "GET" })
       return null;
 
     return await getAllMessagesByClassId(classId);
-  });
-
-export const getAllMessagesByUserIdFn = createServerFn({ method: "GET" })
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return null;
-
-    return await getAllMessagesByUserId(userId);
   });
 
 export const addMessageToChatFn = createServerFn({ method: "POST" })
@@ -120,66 +104,4 @@ export const addMessageToChatFn = createServerFn({ method: "POST" })
     if (!data) return { success: false, message: "Failed to send message." };
 
     return { success: true, message: "Message sent!" };
-  });
-
-export const deleteAllMessagesByUserIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((userId: string) => userId)
-  .handler(async ({ data: userId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return { success: false, message: "Unauthorized" };
-
-    const messages = await getAllMessagesByUserId(userId);
-    if (!messages || !messages.length) {
-      return { success: true, message: "No messages to delete." };
-    }
-
-    const attachments = messages.flatMap((c) => c.attachments);
-    if (attachments.length) {
-      const chatAttachmentsFilePath = attachments.map((file) =>
-        extractMessagesFilePath(file),
-      );
-      await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
-    }
-
-    await deleteAllMessagesByUserId(userId);
-    return {
-      success: true,
-      message: "All user messages deleted successfully.",
-    };
-  });
-
-export const deleteAllMessagesByClassIdFn = createServerFn({
-  method: "POST",
-})
-  .validator((classId: string) => classId)
-  .handler(async ({ data: classId }) => {
-    const headers = getRequestHeaders();
-    const session = await auth.api.getSession({ headers });
-
-    if (!session) return { success: false, message: "Unauthorized" };
-
-    const messages = await getAllMessagesByClassId(classId);
-    if (!messages || !messages.length) {
-      return { success: true, message: "No messages to delete." };
-    }
-
-    const attachments = messages.flatMap((c) => c.attachments);
-    if (attachments.length) {
-      const chatAttachmentsFilePath = attachments.map((file) =>
-        extractMessagesFilePath(file),
-      );
-      await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
-    }
-
-    const deletedData = await deleteAllMessagesByClassIdRecord(classId);
-
-    if (!deletedData.length) {
-      return { success: false, message: "Failed to delete messages." };
-    }
-
-    return { success: true, message: "All messages deleted successfully." };
   });
