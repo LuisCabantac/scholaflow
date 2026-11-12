@@ -1,0 +1,62 @@
+{
+  "avatarAlt": "{{name}}'s photo",
+  "actions": {
+    "editProfile": "Edit Profile",
+    "saveChanges": "Save changes",
+    "uploadPhoto": "Upload photo",
+    "delete": "Delete",
+    "request": "Request",
+    "requestRole": "Request teacher role",
+    "viewRequest": "View request",
+    "close": "Close"
+  },
+  "info": {
+    "title": "Personal Information",
+    "email": "Email",
+    "school": "School",
+    "joined": "Joined",
+    "notAvailable": "N/A"
+  },
+  "role": {
+    "title": "Teacher role",
+    "dialogTitle": "Role request",
+    "description": "Become a Teacher and manage your digital classroom. Create and organize classes, assignments, and grading workflows.",
+    "pending": "Your request is currently under review. You cannot submit a new request while this is pending.",
+    "rejected": "Your previous request was declined. You can submit a new request.",
+    "failed": "Failed to submit request. Please try again."
+  },
+  "delete": {
+    "title": "Delete account",
+    "description": "Permanently delete your account and all data. This cannot be undone.",
+    "confirm": "Are you sure you want to delete your account?",
+    "confirmLabel": "Delete account"
+  },
+  "form": {
+    "title": "Edit profile",
+    "personal": "Personal Information",
+    "password": "Change password",
+    "imageAlt": "{{name}}'s image",
+    "fields": {
+      "name": "Full name",
+      "namePlaceholder": "Add your full name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "school": "School",
+      "schoolPlaceholder": "Add your school's name",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "currentPasswordNote": "Note: Leave empty if using Google/OAuth login.",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Set up your new password",
+      "confirmNewPassword": "Confirm New Password"
+    },
+    "messages": {
+      "photoTooLarge": "Profile photo must be 4MB or less.",
+      "mismatch": "Passwords do not match. Please ensure both password fields are identical.",
+      "tooShort": "Password must be between 8 and 20 characters long.",
+      "tooLong": "Password must be between 8 and 20 characters long.",
+      "currentRequired": "Current password is required to change your password.",
+      "failed": "Failed to update your profile. Please try again."
+    }
+  }
+}

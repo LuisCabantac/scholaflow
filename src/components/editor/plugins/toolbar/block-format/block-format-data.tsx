@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   CodeIcon,
   Heading1Icon,
@@ -10,44 +11,19 @@ import {
   TextIcon,
 } from "lucide-react";
 
+import type { BlockFormatKey } from "@/types/editor";
+
 export const blockTypeToBlockName: Record<
   string,
-  { label: string; icon: React.ReactNode }
+  { key: BlockFormatKey; icon: ReactNode }
 > = {
-  paragraph: {
-    label: "Normal",
-    icon: <TextIcon className="size-4" />,
-  },
-  h1: {
-    label: "Heading 1",
-    icon: <Heading1Icon className="size-4" />,
-  },
-  h2: {
-    label: "Heading 2",
-    icon: <Heading2Icon className="size-4" />,
-  },
-  h3: {
-    label: "Heading 3",
-    icon: <Heading3Icon className="size-4" />,
-  },
-  number: {
-    label: "Numbered List",
-    icon: <ListOrderedIcon className="size-4" />,
-  },
-  bullet: {
-    label: "Bulleted List",
-    icon: <ListIcon className="size-4" />,
-  },
-  check: {
-    label: "Check List",
-    icon: <ListTodoIcon className="size-4" />,
-  },
-  code: {
-    label: "Code Block",
-    icon: <CodeIcon className="size-4" />,
-  },
-  quote: {
-    label: "Quote",
-    icon: <QuoteIcon className="size-4" />,
-  },
+  paragraph: { key: "paragraph", icon: <TextIcon className="size-4" /> },
+  h1: { key: "h1", icon: <Heading1Icon className="size-4" /> },
+  h2: { key: "h2", icon: <Heading2Icon className="size-4" /> },
+  h3: { key: "h3", icon: <Heading3Icon className="size-4" /> },
+  number: { key: "number", icon: <ListOrderedIcon className="size-4" /> },
+  bullet: { key: "bullet", icon: <ListIcon className="size-4" /> },
+  check: { key: "check", icon: <ListTodoIcon className="size-4" /> },
+  code: { key: "code", icon: <CodeIcon className="size-4" /> },
+  quote: { key: "quote", icon: <QuoteIcon className="size-4" /> },
 };

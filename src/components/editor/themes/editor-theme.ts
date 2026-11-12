@@ -1,6 +1,6 @@
-import { EditorThemeClasses } from "lexical";
+import type { EditorThemeClasses } from "lexical";
 
-import "./editor-theme.css";
+import "@/components/editor/themes/editor-theme.css";
 
 export const editorTheme: EditorThemeClasses = {
   ltr: "text-left",

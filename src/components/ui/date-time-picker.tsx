@@ -1,18 +1,29 @@
-"use client";
-
-import * as React from "react";
 import { ChevronDownIcon } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { formatTimeFromDate } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { formatTimeFromDate } from "@/lib/utils";
+
+function withTimeOf(day: Date, time: Date): Date {
+  const next = new Date(day);
+  next.setHours(
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds(),
+  );
+  return next;
+}
 
 export function DateTimePicker({
   date,
@@ -26,15 +37,22 @@ export function DateTimePicker({
   disabled: boolean;
   showLabels: boolean;
   datePickerIsOpen?: boolean;
-  onSetDatePickerIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onSetDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  onSetDatePickerIsOpen: Dispatch<SetStateAction<boolean>>;
+  onSetDate: Dispatch<SetStateAction<Date | undefined>>;
 }) {
+  const { t } = useTranslation("common", { keyPrefix: "dateTime" });
+
+  const isSelectedToday =
+    date !== undefined &&
+    new Date(date.toDateString()).getTime() ===
+      new Date(new Date().toDateString()).getTime();
+
   return (
     <div className="flex gap-4">
       <div className="flex flex-col gap-3">
         {showLabels && (
           <Label htmlFor="date" className="px-1">
-            Date
+            {t("date")}
           </Label>
         )}
         <Popover
@@ -46,10 +64,10 @@ export function DateTimePicker({
             <Button
               variant="outline"
               id="date"
-              className="w-32 justify-between rounded-xl bg-foreground/10 font-normal"
+              className="bg-foreground/10 w-32 justify-between rounded-xl font-normal"
               disabled={disabled}
             >
-              {date ? date.toLocaleDateString() : "Select date"}
+              {date ? date.toLocaleDateString() : t("selectDate")}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>
@@ -63,8 +81,10 @@ export function DateTimePicker({
               selected={date}
               captionLayout="dropdown"
               disabled={{ before: new Date() }}
-              onSelect={(date) => {
-                onSetDate(date);
+              onSelect={(selected) => {
+                onSetDate(
+                  selected && date ? withTimeOf(selected, date) : selected,
+                );
                 onSetDatePickerIsOpen(false);
               }}
             />
@@ -74,7 +94,7 @@ export function DateTimePicker({
       <div className="flex flex-col gap-3">
         {showLabels && (
           <Label htmlFor="time" className="px-1">
-            Time
+            {t("time")}
           </Label>
         )}
         <Input
@@ -82,15 +102,24 @@ export function DateTimePicker({
           id="time"
           step="1"
           defaultValue={formatTimeFromDate(date)}
-          className="appearance-none bg-foreground/10 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          className="bg-foreground/10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           min={
-            date &&
-            new Date(date.toDateString()).getTime() ===
-              new Date(new Date().toDateString()).getTime()
+            isSelectedToday
               ? new Date().toLocaleTimeString("en-GB", { hour12: false })
               : undefined
           }
           disabled={!date || disabled}
+          onChange={(event) => {
+            const [hours, minutes, seconds] = event.target.value
+              .split(":")
+              .map(Number);
+            onSetDate((current) => {
+              if (!current) return current;
+              const next = new Date(current);
+              next.setHours(hours || 0, minutes || 0, seconds || 0, 0);
+              return next;
+            });
+          }}
         />
       </div>
     </div>

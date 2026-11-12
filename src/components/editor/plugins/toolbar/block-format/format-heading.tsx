@@ -1,22 +1,24 @@
-import { $createHeadingNode, HeadingTagType } from "@lexical/rich-text"
-import { $setBlocksType } from "@lexical/selection"
-import { $getSelection } from "lexical"
+import { $getSelection } from "lexical";
+import { useTranslation } from "react-i18next";
+import { $setBlocksType } from "@lexical/selection";
+import { $createHeadingNode, type HeadingTagType } from "@lexical/rich-text";
 
-import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data"
-import { SelectItem } from "@/components/ui/select"
+import { SelectItem } from "@/components/ui/select";
+import { useToolbarContext } from "@/components/editor/context/toolbar-context";
+import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data";
 
 export function FormatHeading({ levels = [] }: { levels: HeadingTagType[] }) {
-  const { activeEditor, blockType } = useToolbarContext()
+  const { t } = useTranslation("notes", { keyPrefix: "editor.blocks" });
+  const { activeEditor, blockType } = useToolbarContext();
 
   const formatHeading = (headingSize: HeadingTagType) => {
     if (blockType !== headingSize) {
       activeEditor.update(() => {
-        const selection = $getSelection()
-        $setBlocksType(selection, () => $createHeadingNode(headingSize))
-      })
+        const selection = $getSelection();
+        $setBlocksType(selection, () => $createHeadingNode(headingSize));
+      });
     }
-  }
+  };
 
   return levels.map((level) => (
     <SelectItem
@@ -26,8 +28,8 @@ export function FormatHeading({ levels = [] }: { levels: HeadingTagType[] }) {
     >
       <div className="flex items-center gap-1 font-normal">
         {blockTypeToBlockName[level].icon}
-        {blockTypeToBlockName[level].label}
+        {t(blockTypeToBlockName[level].key)}
       </div>
     </SelectItem>
-  ))
+  ));
 }

@@ -1,0 +1,93 @@
+{
+  "filters": {
+    "allClasses": "All classes",
+    "createdClasses": "Created classes",
+    "enrolledClasses": "Enrolled classes"
+  },
+  "actions": {
+    "addClass": "Add class",
+    "joinClass": "Join class",
+    "createClass": "Create class",
+    "delete": "Delete",
+    "unenroll": "Unenroll",
+    "join": "Join",
+    "create": "Create",
+    "saveChanges": "Save changes",
+    "deleteClass": "Delete class",
+    "reset": "Reset",
+    "changeColor": "Change color"
+  },
+  "todo": {
+    "title": "To-do",
+    "assigned": "Assigned",
+    "missing": "Missing",
+    "done": "Done",
+    "posted": "Posted {{when}}",
+    "today": "today",
+    "yesterday": "yesterday",
+    "dueToday": "Due today, {{time}}",
+    "dueYesterday": "Due yesterday, {{time}}",
+    "due": "Due {{date}}",
+    "noDueDate": "No due date",
+    "score": "Score: {{points}}",
+    "turnedIn": "Turned in",
+    "emptyAssigned": "No classworks have been given yet.",
+    "emptyMissing": "You're all caught up! No missing work.",
+    "emptyDone": "No work submitted yet."
+  },
+  "card": {
+    "instructor": "Instructor",
+    "avatarAlt": "{{name}}'s avatar",
+    "menu": "Class options"
+  },
+  "empty": {
+    "addClass": "Add a class to get started.",
+    "imageAlt": "no classes"
+  },
+  "sheet": {
+    "title": "Add a new class"
+  },
+  "join": {
+    "title": "Add user to class",
+    "placeholder": "Enter the class code here",
+    "notFound": "Class not found",
+    "alreadyIn": "You're already in this class."
+  },
+  "form": {
+    "createTitle": "Create class",
+    "editTitle": "Edit class",
+    "preview": "Preview",
+    "className": "Class name",
+    "section": "Section",
+    "subject": "Subject",
+    "description": "Description",
+    "classCode": "Class code",
+    "inviteLink": "Invite link",
+    "streamSettings": "Stream settings",
+    "allowPost": "Allow students to post",
+    "allowComment": "Allow students to comment",
+    "close": "Close",
+    "placeholders": {
+      "className": "Add your class name",
+      "section": "Add your subject name",
+      "subject": "Add your class subject",
+      "description": "Add your class description"
+    }
+  },
+  "confirm": {
+    "deleteClass": "Are you sure you want to delete this class?",
+    "unenrollClass": "Are you sure you want to unenroll to this class?",
+    "deleteClassShort": "Are you sure you wanna delete this class?"
+  },
+  "invite": {
+    "title": "Join Class",
+    "joined": "You've successfully joined the class!",
+    "joining": "Joining class...",
+    "join": "Join class"
+  },
+  "messages": {
+    "deleted": "Class has been successfully removed.",
+    "deletedForm": "Class deleted successfully!",
+    "deleteFailed": "Failed to delete class."
+  }
+}

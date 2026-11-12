@@ -1,30 +1,34 @@
-"use client";
-
-import { $isListNode, ListNode } from "@lexical/list";
+import { useTranslation } from "react-i18next";
 import { $isHeadingNode } from "@lexical/rich-text";
+import { $isListNode, ListNode } from "@lexical/list";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { $findMatchingParent, $getNearestNodeOfType } from "@lexical/utils";
-import { $isRangeSelection, $isRootOrShadowRoot, BaseSelection } from "lexical";
+import {
+  $isRangeSelection,
+  $isRootOrShadowRoot,
+  type BaseSelection,
+} from "lexical";
 
 import { useToolbarContext } from "@/components/editor/context/toolbar-context";
-import { useUpdateToolbarHandler } from "@/components/editor/editor-hooks/use-update-toolbar";
-import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Dispatch, SetStateAction } from "react";
+import { useUpdateToolbarHandler } from "@/components/editor/editor-hooks/use-update-toolbar";
+import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data";
 
 export function BlockFormatDropDown({
   children,
   onDropdownStateChange,
   onSafeInteraction,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onDropdownStateChange: Dispatch<SetStateAction<boolean>>;
   onSafeInteraction: (duration?: number) => void;
 }) {
+  const { t } = useTranslation("notes", { keyPrefix: "editor.blocks" });
   const { activeEditor, blockType, setBlockType } = useToolbarContext();
 
   function $updateToolbar(selection: BaseSelection) {
@@ -46,7 +50,6 @@ export function BlockFormatDropDown({
       const elementDOM = activeEditor.getElementByKey(elementKey);
 
       if (elementDOM !== null) {
-        // setSelectedElementKey(elementKey);
         if ($isListNode(element)) {
           const parentList = $getNearestNodeOfType<ListNode>(
             anchorNode,
@@ -78,24 +81,20 @@ export function BlockFormatDropDown({
       }}
       onOpenChange={(open) => {
         onDropdownStateChange?.(open);
-        if (open) {
-          onSafeInteraction?.(500);
-        } else {
-          onSafeInteraction?.(500);
-        }
+        onSafeInteraction?.(500);
       }}
     >
       <SelectTrigger
-        className="!h-8 w-min gap-1 rounded-xl"
+        className="h-8! w-min gap-1 rounded-xl"
         onClick={(e) => {
           e.stopPropagation();
           onSafeInteraction?.(500);
         }}
       >
         {blockTypeToBlockName[blockType].icon}
-        <span>{blockTypeToBlockName[blockType].label}</span>
+        <span>{t(blockTypeToBlockName[blockType].key)}</span>
       </SelectTrigger>
-      <SelectContent className="z-[9999] rounded-xl">
+      <SelectContent className="z-9999 rounded-xl">
         <SelectGroup>{children}</SelectGroup>
       </SelectContent>
     </Select>

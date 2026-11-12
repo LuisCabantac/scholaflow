@@ -1,0 +1,21 @@
+{
+  "assigned": "Assigned",
+  "missing": "Missing",
+  "done": "Done",
+  "posted": "Posted {{when}}",
+  "today": "today",
+  "yesterday": "yesterday",
+  "dueToday": "Due today, {{time}}",
+  "dueYesterday": "Due yesterday, {{time}}",
+  "due": "Due {{date}}",
+  "noDueDate": "No due date",
+  "turnedIn": "Turned in",
+  "empty": {
+    "assigned": "No classworks have been given yet.",
+    "missing": "You're all caught up! No missing work.",
+    "done": "No work submitted yet.",
+    "assignedAlt": "no assigned classworks",
+    "missingAlt": "no missing classworks",
+    "doneAlt": "no done classworks"
+  }
+}

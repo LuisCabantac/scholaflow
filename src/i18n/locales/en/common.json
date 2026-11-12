@@ -1,0 +1,45 @@
+{
+  "app": {
+    "name": "ScholaFlow"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "system": "System"
+  },
+  "profile": "Profile",
+  "footer": {
+    "copyright": "© {{year}} ScholaFlow. All rights reserved.",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy"
+  },
+  "notFound": {
+    "message": "Sorry, we could not find the page you are looking for.",
+    "goHome": "Go back home",
+    "imageAlt": "page not found"
+  },
+  "popover": {
+    "copyLink": "Copy link",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "messages": {
+    "copied": "Copied to clipboard!"
+  },
+  "loading": "Loading…",
+  "dateTime": {
+    "date": "Date",
+    "time": "Time",
+    "selectDate": "Select date"
+  },
+  "attachments": {
+    "download": "Download file",
+    "remove": "Remove attachment",
+    "open": "Open link",
+    "downloadFailed": "Failed to download file."
+  }
+}

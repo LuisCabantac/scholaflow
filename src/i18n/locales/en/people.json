@@ -1,0 +1,22 @@
+{
+  "allUsers": "All users",
+  "addUser": "Add user",
+  "teacherBadge": "TEACHER",
+  "avatarAlt": "{{name}}'s image",
+  "card": {
+    "menu": "User options",
+    "remove": "Remove user",
+    "confirmRemove": "Are you sure you want to remove this user?",
+    "removeButton": "Remove"
+  },
+  "dialog": {
+    "title": "Add user to class",
+    "close": "Close",
+    "emailPlaceholder": "Enter user's email address",
+    "cancel": "Cancel",
+    "add": "Add"
+  },
+  "messages": {
+    "removed": "User has been successfully removed."
+  }
+}

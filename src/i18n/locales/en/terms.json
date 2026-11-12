@@ -1,0 +1,118 @@
+{
+  "title": "Terms and Conditions",
+  "lastUpdated": "Last updated {{date}}",
+  "updatedAt": "November 12, 2026",
+  "sections": {
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "content": "By accessing or using this ScholaFlow deployment (\"the Service\"), you agree to these Terms and Conditions and the <privacyLink>Privacy Policy</privacyLink>. If you do not agree with these terms, please do not use the platform."
+    },
+    "description": {
+      "title": "About ScholaFlow",
+      "content": "ScholaFlow is open-source, self-hostable classroom software. It helps teachers and students organize classes, share posts and materials, hand in assignments and quizzes, grade work, comment on posts, chat as a class, keep track of due dates, and take personal notes. The copy you are using is run by the organization or person hosting this deployment, not by the people who wrote the software."
+    },
+    "eligibility": {
+      "title": "User Accounts and Access",
+      "items": [
+        "You can create an account with an email address and password, which must be verified through a link sent to that address, or by signing in with Google. The administrator of this deployment can also create, edit, and remove accounts.",
+        "Users of any educational level may participate when authorized and supervised by their educational institution, instructor, or organization. The software does not verify ages or collect parental consent; the hosting organization decides who may sign up.",
+        "You agree to provide accurate and truthful information when creating your account and when editing your profile.",
+        "You are responsible for keeping your login credentials confidential and secure.",
+        "Each account is intended for individual use; do not share your credentials with others."
+      ]
+    },
+    "roles": {
+      "title": "Teachers, Students, and Administrators",
+      "items": [
+        "Roles are per class, not per account: whoever creates a class is its teacher, and anyone who joins a class with its code or invitation link, or is added by its teacher, is a student in that class. The same account can teach one class and be a student in another.",
+        "Teachers: Can create and manage their classes, publish posts, materials, assignments, and quizzes, schedule posts or address them to selected students, grade and return submissions, add and remove class members, and delete the class.",
+        "Students: Can join classes, read what is published to them, turn in work, comment where the teacher allows it, chat with the class, and leave a class.",
+        "Classroom permissions: Teachers decide whether students can post or comment on the class stream, and can remove members who disrupt the learning environment. Removing a member or leaving a class also removes that member's submissions for the class.",
+        "Administrators: Accounts marked as admin by the deployment can view and manage all user accounts and role requests. They do not take part in classes. A \"teacher role\" request on the profile page is reviewed by an administrator but does not currently change what your account can do."
+      ]
+    },
+    "coursework": {
+      "title": "Assignments, Submissions, and Deadlines",
+      "items": [
+        "Due dates: Teachers set due dates and point values. If a teacher turns off \"accepting submissions\" or enables \"close after due date\", turning in, resubmitting, and unsubmitting are refused once the cutoff applies.",
+        "Original work: Students must turn in their own work through the classwork tab. Graded assignments can be returned with scores and private comments.",
+        "Backups: Uploaded files are stored in the file storage configured by this deployment, but no backup is guaranteed. Keep copies of your own original schoolwork."
+      ]
+    },
+    "communication": {
+      "title": "Classroom Discussions and Class Chat",
+      "items": [
+        "Respectful environment: Stream posts, comments, and the class chat are meant for constructive learning. Harassment, profanity, and offensive language are strictly prohibited.",
+        "Public vs. private: Stream comments are visible to everyone who can see the post, while private comments on an assignment are seen only by the student and the class teacher.",
+        "Targeted and scheduled posts: A teacher can address a post to selected students or schedule it for later; other students do not see it until it is published to them.",
+        "Chat etiquette: The class chat is visible to every member of the class. Do not flood, spam, or disrupt it. Messages refresh every few seconds and are not end-to-end encrypted."
+      ]
+    },
+    "notes": {
+      "title": "Personal Notes",
+      "content": "The personal notepad is a private workspace for keeping study notes and attachments. Notes are only shown to the account that created them and are not visible to classmates or teachers inside the app. Files attached to notes are stored the same way as other uploads (see \"Uploaded Files\")."
+    },
+    "acceptableUse": {
+      "title": "Acceptable Use Policy",
+      "intro": "To maintain a safe and productive educational environment, you agree not to:",
+      "items": [
+        "Violate school policies, honor codes, or applicable laws.",
+        "Plagiarize, cheat, or submit another person's work as your own.",
+        "Bully, harass, threaten, or impersonate other students, teachers, or administrators.",
+        "Upload viruses, harmful files, or malicious scripts.",
+        "Attempt to bypass access controls, read data that is not shown to you, or alter grades without authorization.",
+        "Send spam or unauthorized commercial solicitations.",
+        "Upload files containing personal information about other people that they have not agreed to share."
+      ]
+    },
+    "content": {
+      "title": "Content Ownership and Rights",
+      "items": [
+        "You retain full ownership of the original homework, notes, and study materials you create.",
+        "You grant this platform deployment permission to host, store, and display your coursework solely as needed to provide class features.",
+        "You confirm that files you upload do not infringe on others' copyright or intellectual property."
+      ]
+    },
+    "attachments": {
+      "title": "Uploaded Files",
+      "items": [
+        "Attachments on posts, submissions, comments, chat messages, notes, and profile pictures are stored in public storage buckets. Each file receives a public web address that is not listed anywhere but can be opened by anyone who has it, without signing in. Do not upload anything that must stay confidential if its link is shared.",
+        "Uploads are limited to 4 MB per request; a post, note, or submission with several files is capped on the total.",
+        "When you delete a post, note, comment, or submission, its files are removed from storage, but a content delivery network may keep serving a deleted file at its old address for a short time."
+      ]
+    },
+    "availability": {
+      "title": "Instance Availability and Maintenance",
+      "items": [
+        "The hosting organization or administrator is responsible for maintaining the server, uptime, and backups for this deployment.",
+        "Temporary downtime may occur during server maintenance or software updates.",
+        "The software is provided to assist education, but uninterrupted operation cannot be guaranteed."
+      ]
+    },
+    "liability": {
+      "title": "Limitation of Liability",
+      "content": "ScholaFlow is provided \"as is\" as open-source, self-hostable educational software, without warranty of any kind. The developers and instance administrators are not liable for any lost data, unsaved coursework, missed deadlines, exposed files, or indirect damages arising from the use of the platform."
+    },
+    "openSource": {
+      "title": "Open-Source Software",
+      "content": "The ScholaFlow source code is published on GitHub under the MIT License. Anyone can run their own copy. The developers of the software do not operate this deployment, cannot access its data, and are not a party to your relationship with the organization hosting it. If you host ScholaFlow yourself, you are responsible for how you configure it and for complying with the laws that apply to your users."
+    },
+    "termination": {
+      "title": "Account Closure and Removal",
+      "items": [
+        "You can request account closure from your profile page. A confirmation link is emailed to you and stays valid for 24 hours; following it permanently deletes your account.",
+        "Closing an account deletes your profile, personal notes, submissions and grades, comments, private comments sent to or by you, chat messages, notifications, role request, uploaded files, and every post you authored together with its comments and submissions. If you created classes, those classes are deleted with all of their content, including other members' submissions and messages.",
+        "Administrators can remove any account with the same effect, immediately and without a confirmation email. Teachers can remove members from their own classes but cannot remove or suspend accounts.",
+        "Notifications already delivered to other users keep your name, profile picture, and a snippet of the related content, and backups kept by the hosting organization may still contain your data for as long as its policies allow."
+      ]
+    },
+    "changes": {
+      "title": "Updates to Terms",
+      "content": "These terms may be updated from time to time, either by the open-source project in a new release or by the deployment administrator. Continued use of the platform indicates acceptance of any revisions."
+    },
+    "contact": {
+      "title": "Contact and Inquiries",
+      "content": "For support or questions regarding this deployment, reach out to your school administrator or contact the open-source project at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+    }
+  }
+}

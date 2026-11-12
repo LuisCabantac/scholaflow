@@ -1,0 +1,29 @@
+{
+  "name": "ScholaFlow",
+  "short_name": "ScholaFlow",
+  "description": "All your classroom tools in one place. Get organized, stay focused, and make learning click.",
+  "start_url": "/classroom",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbfcfe",
+  "theme_color": "#fbfcfe",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

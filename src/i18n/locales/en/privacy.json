@@ -1,0 +1,99 @@
+{
+  "title": "Privacy Policy",
+  "lastUpdated": "Last updated {{date}}",
+  "updatedAt": "November 12, 2026",
+  "sections": {
+    "overview": {
+      "title": "Self-Hosted Platform and Your Privacy",
+      "content": "ScholaFlow is open-source, self-hostable classroom software. When you use this instance of ScholaFlow, your account, schoolwork, and personal information are stored and managed by the organization or administrator hosting this deployment, not by the developers of the software. The software contains no analytics, advertising, or tracking code, does not sell personal information, and does not track you across external websites."
+    },
+    "infoCollect": {
+      "title": "Information Stored on This Instance",
+      "intro": "This deployment stores information you provide when using the platform:",
+      "items": [
+        "Account details: Your name, email address, profile picture, whether your email is verified, your role (user or admin), and, if you add it, your school or organization name. Your name and picture are copied onto everything you post, send, or submit and onto class rosters so they can be shown to others; profile edits update those copies.",
+        "Login and session records: A hashed password if you sign up with email, or the account identifier and tokens Google issues if you sign in with Google, plus each active login session with its IP address and browser user agent.",
+        "Verification tokens: Short-lived tokens tied to your email address for the email verification, password reset, and account closure links, valid for 24 hours.",
+        "Classes and membership: The classes you create (name, subject, section, room, description, invite code) and the classes you belong to.",
+        "Coursework and grades: Assignment and quiz submissions with their files and links, turn-in timestamps, whether work was returned, and the points assigned by the teacher.",
+        "Classroom communications: Posts and materials, stream comments, class chat messages, and their attachments.",
+        "Private comments: Feedback exchanged on an assignment between a student and the class teacher.",
+        "Personal notes: Your notes, their pinned state, and their attachments.",
+        "Notifications: In-app notifications addressed to you, each carrying the sender's name and picture and a snippet of the related post, comment, submission, or grade, together with their read state.",
+        "Role requests: If you request the teacher role, a copy of your name, email, and picture is kept with the request until it is approved or withdrawn; a rejected request stays recorded until you submit a new one."
+      ]
+    },
+    "visibility": {
+      "title": "Who Can See Your Content",
+      "intro": "Your privacy depends on the type of content you share:",
+      "items": [
+        "Personal notes: Only shown to you. No classmates or teachers can open your notes inside the app.",
+        "Coursework and grades: Visible to you and the teacher of that class. Other students cannot see what you turned in or your grades.",
+        "Private comments: Only the student and the class teacher can read them.",
+        "Class stream and chat: Posts, comments, and chat messages are visible to all members of that class. A teacher can address a post to selected students or schedule it; other students do not see it until it is published to them.",
+        "Class roster: Your name and profile picture are displayed to the other members of your classes. A teacher can add you to a class by your email address, so a teacher who knows your email can find out that you have an account.",
+        "Administrators: Admin accounts can see every user's name, email address, profile picture, role, and verification status, and every pending teacher role request.",
+        "Uploaded files: Attachments and profile pictures are stored in public storage buckets. Their addresses are not listed anywhere, but anyone who has a file's address can open it without signing in, even if they are not a member of the class."
+      ]
+    },
+    "hostResponsibility": {
+      "title": "How Your Data Is Managed",
+      "content": "Because this is a self-hosted platform, the administrator of this instance controls where data is stored, how backups are handled, which sign-in methods and email provider are configured, and how user accounts are managed. Server logs and files are held within the infrastructure configured by the hosting administrator. The developers of ScholaFlow do not receive any of this data."
+    },
+    "thirdParties": {
+      "title": "Services This Deployment Relies On",
+      "intro": "The software is built to run on services the hosting administrator sets up. Your data passes through, or is stored by, the providers chosen for this instance, typically:",
+      "items": [
+        "Supabase: The Postgres database that holds all records, the storage buckets that hold uploaded files, and, if the administrator enables it, realtime change events that refresh the class chat.",
+        "Google: If you sign in with Google, Google receives the sign-in request and shares your name, email address, and profile picture with this instance under Google's own privacy policy.",
+        "An email provider: Verification, password reset, and account closure emails are sent through the SMTP service the administrator configured.",
+        "A hosting platform: The application server runs wherever the administrator deploys it (for example Vercel), whose infrastructure may keep request logs."
+      ]
+    },
+    "storageRetention": {
+      "title": "Data Storage and Account Deletion",
+      "items": [
+        "Storage: Records are kept in the database and uploaded files in the storage buckets configured by this instance's administrator. Uploads are limited to 4 MB per request.",
+        "Deleting content: When you delete a post, note, comment, or submission, its record and files are removed. Chat messages cannot be deleted individually; they are removed with the class or with the sender's account. A content delivery network may keep serving a deleted file at its old address for a short time.",
+        "Leaving a class: Leaving or being removed from a class deletes your submissions for that class. Deleting a class removes all of its posts, submissions, comments, messages, and files.",
+        "Closing your account: You can request closure from your profile page; a confirmation link emailed to you stays valid for 24 hours. Closing your account permanently deletes your profile, sessions, notes, submissions and grades, comments, private comments sent to or by you, chat messages, notifications, role request, uploaded files, and every post you authored with its comments and submissions. Classes you created are deleted with all of their content, including other members' work. An administrator can remove an account with the same effect without a confirmation email.",
+        "What remains: Notifications already delivered to other users keep your name, picture, and a content snippet, and backups made by the hosting administrator may retain your data according to their own policies."
+      ]
+    },
+    "cookies": {
+      "title": "Cookies and Browser Storage",
+      "items": [
+        "Session cookie: After you sign in, a cookie holds your session token so the server can recognise you. It is required for the app to work and is removed when you sign out or when the session expires.",
+        "Theme preference: Your light, dark, or system theme choice is saved in your browser's local storage and never sent to the server.",
+        "No tracking: The software sets no analytics, advertising, or third-party tracking cookies."
+      ]
+    },
+    "emails": {
+      "title": "Emails We Send",
+      "items": [
+        "Email verification when you sign up with an email address, a password reset link when you request one, and a confirmation link when you request account closure.",
+        "These are the only emails the software sends. There are no marketing emails, and in-app notifications are not emailed to you."
+      ]
+    },
+    "security": {
+      "title": "Security",
+      "content": "Passwords are hashed, access to class data is checked on the server against your membership and role, and emailed links expire after 24 hours. No system is completely secure: uploaded files are reachable by anyone who has their address, chat messages are not end-to-end encrypted, and the overall security of this instance depends on how the hosting administrator configures it. If you believe something is exposed, contact your administrator or report it to the open-source project."
+    },
+    "educationalUse": {
+      "title": "Student and Youth Privacy",
+      "content": "ScholaFlow can be deployed across all educational levels—from primary schools to universities. The software itself does not verify ages or collect parental consent, and anyone can sign up unless the hosting administrator restricts it. When used by younger students, accounts and permissions must be managed and supervised by the deploying school, organization, or instructor in accordance with their institutional policies and parental consent guidelines."
+    },
+    "choices": {
+      "title": "Your Choices and Control",
+      "content": "You can update your name, email, school, photo, and password, mark notifications as read or delete them, edit or delete your posts, comments, submissions, and personal notes, leave a class, or request account closure at any time from within the app."
+    },
+    "changes": {
+      "title": "Changes to this Policy",
+      "content": "This policy may be updated periodically, either by the open-source project in a new release or by the deployment administrator, to reflect new features or organizational policies."
+    },
+    "contact": {
+      "title": "Contact and Support",
+      "content": "If you have questions about your account, data, or this platform instance, contact your classroom administrator or reach out to the open-source project at <emailLink>scholaflow@gmail.com</emailLink> or <githubLink>open an issue on GitHub.</githubLink>"
+    }
+  }
+}

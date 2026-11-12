@@ -1,0 +1,18 @@
+{
+  "empty": "No messages has been sent yet.",
+  "yesterday": "Yesterday",
+  "avatarAlt": "{{name}}'s avatar",
+  "attachments": "Attachments",
+  "toggleAttachments": "Toggle attachments",
+  "seeAttachments_one": "See {{count}} attachment",
+  "seeAttachments_other": "See {{count}} attachments",
+  "attachImages": "Attach images",
+  "placeholder": "Add a message...",
+  "pendingPlaceholder": "Adding your message...",
+  "send": "Send message",
+  "zoomImage": "Open image",
+  "messages": {
+    "sent": "Message has been sent",
+    "fileTooLarge": "File {{name}} exceeds 4MB limit"
+  }
+}

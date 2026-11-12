@@ -1,0 +1,56 @@
+{
+  "search": "Search...",
+  "createUser": "Create user",
+  "table": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "dateAdded": "Date added",
+    "verified": "Verified",
+    "verifiedYes": "Email verified",
+    "verifiedNo": "Email not verified",
+    "avatarAlt": "{{name}}'s avatar",
+    "options": "User options"
+  },
+  "notFound": {
+    "message": "User not found.",
+    "imageAlt": "no users"
+  },
+  "menu": {
+    "removeUser": "Remove user"
+  },
+  "confirmRemove": "Are you sure you want to remove this user?",
+  "remove": "Remove",
+  "messages": {
+    "userRemoved": "The user has been removed."
+  },
+  "form": {
+    "createTitle": "Create user",
+    "editTitle": "Edit user",
+    "close": "Close",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Enter the user's name",
+    "email": "Email address",
+    "emailPlaceholder": "Set up user's email",
+    "password": "Password",
+    "passwordPlaceholder": "Set up user's password",
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save changes",
+    "failed": "Failed to save the user. Please try again."
+  },
+  "roleRequests": {
+    "title": "Role requests",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "empty": "There are currently no role change requests to review.",
+    "imageAlt": "no role requests",
+    "avatarAlt": "{{name}}'s image",
+    "approve": "Approve",
+    "reject": "Reject",
+    "remove": "Remove",
+    "approved": "Role request has been successfully approved!",
+    "rejectedToast": "Role request has been rejected!",
+    "removed": "Role request has been successfully removed!"
+  }
+}

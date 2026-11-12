@@ -1,8 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 import {
   format,
-  formatDistanceToNow,
+  formatDistance,
   isSameYear,
   isThisYear,
   isToday,
@@ -11,7 +9,7 @@ import {
 } from "date-fns";
 
 export function extractImagePath(url: string): string {
-  const match = url.match(/\/([^\/]+)$/);
+  const match = url.match(/\/([^/]+)$/);
   return match ? match[1] : "";
 }
 
@@ -82,16 +80,18 @@ export function removeUUIDFromFilename(filename: string): string {
 export const generateOTP = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
-export function formatDate(createdAt: string | Date): string {
+export function formatDate(
+  createdAt: string | Date,
+  now: Date = new Date(),
+): string {
   const date = typeof createdAt === "string" ? new Date(createdAt) : createdAt;
-  const now = new Date();
 
   const differenceInDays =
     (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
   const differenceInYears = now.getFullYear() - date.getFullYear();
 
   if (differenceInDays < 1) {
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistance(date, now, { addSuffix: true });
   } else if (differenceInDays < 2) {
     return `Yesterday at ${format(date, "h:mm a")}`;
   } else if (differenceInDays < 7) {
@@ -105,7 +105,9 @@ export function formatDate(createdAt: string | Date): string {
 
 export function handleFullName(fullName: string) {
   const nameParts = fullName.trim().split(/\s+/);
-  let firstName, lastName, middleName;
+  let firstName: string;
+  let lastName: string;
+  let middleName: string;
 
   if (nameParts.length === 1) {
     firstName = nameParts[0];
@@ -189,7 +191,7 @@ export function extractFirstUuid(url: string): string | null {
 }
 
 export function extractStreamIdFromUrl(url: string): string | null {
-  const streamIdPattern = /\/stream\/([^\/]+)/;
+  const streamIdPattern = /\/stream\/([^/]+)/;
   const match = url.match(streamIdPattern);
 
   return match ? match[1] : null;
@@ -213,8 +215,4 @@ export function formatMessageDate(dateString: string | Date): string {
   } else {
     return format(date, "MMM d, yyyy");
   }
-}
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
 }

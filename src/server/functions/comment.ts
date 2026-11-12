@@ -1,0 +1,379 @@
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+
+import { auth } from "@/lib/auth";
+import { extractCommentFilePath } from "@/lib/utils";
+import { canSeeStream } from "@/lib/stream-visibility";
+import { uploadAttachments } from "@/services/storage";
+import { getClassStreamByStreamId } from "@/services/stream";
+import { deleteFileFromBucket } from "@/services/user-management";
+import {
+  createStreamCommentSchema,
+  createStreamPrivateCommentSchema,
+} from "@/lib/schema";
+import {
+  deleteAllNotificationsByResourceId,
+  sendNotification,
+} from "@/services/notification";
+import {
+  getClassByClassId,
+  getEnrolledClassByClassAndSessionId,
+  isClassMember,
+} from "@/services/classroom";
+import {
+  createPrivateComment,
+  createStreamComment,
+  deletePrivateCommentRecord,
+  deleteStreamCommentRecord,
+  getAllCommentsByStreamId,
+  getAllPrivateCommentsByStreamId,
+  getStreamCommentByCommentId,
+  getStreamPrivateCommentByCommentId,
+} from "@/services/comment";
+
+export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
+  .validator((streamId: string) => streamId)
+  .handler(async ({ data: streamId }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return null;
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    const classroom = await getClassByClassId(stream.classId);
+    if (
+      !classroom ||
+      !canSeeStream(stream, session.user.id, classroom.teacherId)
+    ) {
+      return null;
+    }
+
+    return await getAllCommentsByStreamId(streamId);
+  });
+
+export const getAllPrivateCommentsByStreamIdFn = createServerFn({
+  method: "GET",
+})
+  .validator((streamId: string) => streamId)
+  .handler(async ({ data: streamId }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return null;
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
+      return null;
+    }
+
+    const classroom = await getClassByClassId(stream.classId);
+    const comments = await getAllPrivateCommentsByStreamId(streamId);
+    if (!classroom || classroom.teacherId === session.user.id) return comments;
+
+    return (
+      comments?.filter(
+        (comment) =>
+          comment.userId === session.user.id ||
+          comment.toUserId === session.user.id,
+      ) ?? null
+    );
+  });
+
+export const addCommentToStreamFn = createServerFn({ method: "POST" })
+  .validator((data: FormData) => data)
+  .handler(async ({ data: formData }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const classroomId = formData.get("classroomId") as string;
+    const streamId = formData.get("streamId") as string;
+
+    const classroom = await getClassByClassId(classroomId);
+    if (!classroom)
+      return { success: false, message: "This class doesn't exist." };
+
+    const enrolledClass = await getEnrolledClassByClassAndSessionId(
+      session.user.id,
+      classroomId,
+    );
+
+    const isTeacher = classroom.teacherId === session.user.id;
+    if (
+      !(isTeacher || enrolledClass) ||
+      (!isTeacher && !classroom.allowUsersToComment)
+    ) {
+      return {
+        success: false,
+        message: "You don't have permission to comment on this post.",
+      };
+    }
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (
+      !stream ||
+      stream.classId !== classroomId ||
+      !canSeeStream(stream, session.user.id, classroom.teacherId)
+    ) {
+      return {
+        success: false,
+        message: "This post doesn't exist in this class.",
+      };
+    }
+
+    const attachment = formData.get("attachment");
+    const commentAttachment =
+      attachment instanceof File &&
+      attachment.name !== "undefined" &&
+      attachment.size > 0
+        ? await uploadAttachments("comments", classroomId, attachment)
+        : null;
+
+    const newComment = {
+      streamId,
+      classId: classroomId,
+      userId: session.user.id,
+      userName: session.user.name,
+      userImage: session.user.image as string,
+      content: (formData.get("comment") as string | null) || null,
+      attachment: commentAttachment,
+    };
+
+    const result = createStreamCommentSchema.safeParse(newComment);
+    if (result.error) {
+      return {
+        success: false,
+        message: "Invalid comment data provided.",
+      };
+    }
+
+    const data = await createStreamComment(result.data);
+    if (!data) return { success: false, message: "Failed to save comment." };
+
+    await sendNotification(
+      "comment",
+      classroom.teacherId,
+      data.id,
+      data.content ?? (data.attachment ? "Commented an image" : ""),
+      `/classroom/class/${data.classId}/stream/${data.streamId}?comment=${data.id}`,
+      session.user.name,
+      session.user.image as string,
+    );
+
+    return { success: true, message: "Comment added successfully!" };
+  });
+
+export const deleteStreamCommentFn = createServerFn({ method: "POST" })
+  .validator(
+    (data: { classroomId: string; streamId: string; commentId: string }) =>
+      data,
+  )
+  .handler(async ({ data: { classroomId, streamId, commentId } }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const classroom = await getClassByClassId(classroomId);
+    if (!classroom)
+      return { success: false, message: "This class doesn't exist." };
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || stream.classId !== classroomId)
+      return {
+        success: false,
+        message: "This post doesn't exist in this class.",
+      };
+
+    const comment = await getStreamCommentByCommentId(commentId);
+    if (!comment || comment.streamId !== streamId)
+      return {
+        success: false,
+        message: "This comment doesn't exist on this post.",
+      };
+
+    if (
+      !(
+        comment.userId === session.user.id ||
+        classroom.teacherId === session.user.id
+      )
+    ) {
+      return {
+        success: false,
+        message: "You're not authorized to delete this comment.",
+      };
+    }
+
+    if (comment.attachment) {
+      const filePath = extractCommentFilePath(comment.attachment);
+      await deleteFileFromBucket("comments", filePath);
+    }
+
+    const data = await deleteStreamCommentRecord(commentId, streamId);
+
+    if (data) {
+      await deleteAllNotificationsByResourceId(data.id);
+    }
+
+    return { success: true, message: "Comment deleted successfully." };
+  });
+
+export const addPrivateCommentFn = createServerFn({ method: "POST" })
+  .validator((data: FormData) => data)
+  .handler(async ({ data: formData }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const classroomId = formData.get("classroomId") as string;
+    const streamId = formData.get("streamId") as string;
+    const userId = formData.get("userId") as string;
+
+    const classroom = await getClassByClassId(classroomId);
+    if (!classroom)
+      return { success: false, message: "This class doesn't exist." };
+
+    const enrolledClass = await getEnrolledClassByClassAndSessionId(
+      session.user.id,
+      classroomId,
+    );
+
+    if (!(classroom.teacherId === session.user.id || enrolledClass)) {
+      return {
+        success: false,
+        message: "You don't have permission to comment.",
+      };
+    }
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || stream.classId !== classroomId)
+      return { success: false, message: "This stream doesn't exist." };
+
+    if (
+      !(
+        stream.announceToAll ||
+        session.user.id === classroom.teacherId ||
+        stream.announceTo.includes(session.user.id)
+      )
+    ) {
+      return {
+        success: false,
+        message: "You don't have permission to comment on this classwork.",
+      };
+    }
+
+    const attachment = formData.get("attachment");
+    const commentAttachment =
+      attachment instanceof File &&
+      attachment.name !== "undefined" &&
+      attachment.size > 0
+        ? await uploadAttachments("comments", classroomId, attachment)
+        : null;
+
+    const newPrivateComment = {
+      streamId,
+      classId: classroomId,
+      userId: session.user.id,
+      userName: session.user.name,
+      userImage: session.user.image as string,
+      content: (formData.get("comment") as string | null) || null,
+      attachment: commentAttachment,
+      toUserId:
+        session.user.id === classroom.teacherId ? userId : classroom.teacherId,
+    };
+
+    const result =
+      createStreamPrivateCommentSchema.safeParse(newPrivateComment);
+    if (result.error) {
+      return {
+        success: false,
+        message: "Invalid private comment data provided.",
+      };
+    }
+
+    const data = await createPrivateComment(result.data);
+    if (!data)
+      return {
+        success: false,
+        message: "Failed to save private comment.",
+      };
+
+    await sendNotification(
+      "comment",
+      data.toUserId,
+      data.id,
+      data.content ?? (data.attachment ? "Commented an image" : ""),
+      `/classroom/class/${data.classId}/stream/${data.streamId}/submissions?name=${data.userName.toLowerCase().replace(/\s+/g, "-")}&user=${data.userId}&comment=${data.id}`,
+      session.user.name,
+      session.user.image as string,
+    );
+
+    return { success: true, message: "Private comment added successfully!" };
+  });
+
+export const deletePrivateCommentFn = createServerFn({ method: "POST" })
+  .validator(
+    (data: { classroomId: string; streamId: string; commentId: string }) =>
+      data,
+  )
+  .handler(async ({ data: { classroomId, streamId, commentId } }) => {
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const classroom = await getClassByClassId(classroomId);
+    if (!classroom)
+      return { success: false, message: "This class doesn't exist." };
+
+    const stream = await getClassStreamByStreamId(streamId);
+    if (!stream || stream.classId !== classroomId)
+      return {
+        success: false,
+        message: "This post doesn't exist in this class.",
+      };
+
+    const comment = await getStreamPrivateCommentByCommentId(commentId);
+    if (!comment || comment.streamId !== streamId)
+      return {
+        success: false,
+        message: "This comment doesn't exist on this post.",
+      };
+
+    if (
+      !(
+        comment.userId === session.user.id ||
+        classroom.teacherId === session.user.id
+      )
+    ) {
+      return {
+        success: false,
+        message: "You're not authorized to delete this comment.",
+      };
+    }
+
+    if (comment.attachment) {
+      const filePath = extractCommentFilePath(comment.attachment);
+      await deleteFileFromBucket("comments", filePath);
+    }
+
+    const data = await deletePrivateCommentRecord(commentId, streamId);
+    if (!data)
+      return {
+        success: false,
+        message: "Failed to delete the private comment.",
+      };
+
+    await deleteAllNotificationsByResourceId(data.id);
+
+    return {
+      success: true,
+      message: "Private comment deleted successfully.",
+    };
+  });

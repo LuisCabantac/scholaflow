@@ -1,0 +1,174 @@
+{
+  "tabs": {
+    "stream": "Stream",
+    "classwork": "Classwork",
+    "people": "People",
+    "chat": "Chat"
+  },
+  "header": {
+    "student": "student",
+    "students": "students",
+    "settings": "Class settings"
+  },
+  "composer": {
+    "placeholder": "Share with your class...",
+    "avatarAlt": "user's avatar"
+  },
+  "filters": {
+    "all": "All",
+    "stream": "Post",
+    "assignment": "Assignment",
+    "quiz": "Quiz",
+    "question": "Question",
+    "material": "Material"
+  },
+  "empty": {
+    "message": "This is where you'll see updates for this class.",
+    "imageAlt": "no streams"
+  },
+  "aside": {
+    "classCode": "Class code",
+    "copy": "Copy class code",
+    "recentWork": "Recent work",
+    "noClasswork": "No classworks have been given yet."
+  },
+  "card": {
+    "posted": "Posted {{when}}",
+    "today": "today",
+    "yesterday": "yesterday",
+    "edited": "Edited",
+    "scheduledToday": "Scheduled today, {{time}}",
+    "scheduledYesterday": "Scheduled yesterday, {{time}}",
+    "scheduledAt": "Scheduled at {{date}}",
+    "seeMore": "See more",
+    "attachments": "Attachments",
+    "menu": "Post options",
+    "imageAlt": "{{name}}'s avatar",
+    "viewAllComments": "View all comments",
+    "hideAllComments": "Hide all comments",
+    "addComment": "Add class comment",
+    "addingComment": "Adding your comment...",
+    "attachImage": "Attach image",
+    "removeImage": "Remove image",
+    "send": "Send comment",
+    "zoomClose": "Close image",
+    "commentAttachmentAlt": "comment attachment",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "delete": "Delete",
+    "messages": {
+      "commentAdded": "Comment has been added!",
+      "commentDeleted": "Comment has been successfully deleted!",
+      "postDeleted": "Post has been successfully deleted!",
+      "attachmentTooLarge": "Each attachment must be 4MB or less."
+    },
+    "avatarAlt": "{{name}}'s avatar"
+  },
+  "comment": {
+    "menu": "Comment options",
+    "confirmDelete": "Are you sure you want to delete this comment?",
+    "delete": "Delete"
+  },
+  "form": {
+    "titles": {
+      "createStream": "Create post",
+      "editStream": "Edit post",
+      "createAssignment": "Create assignment",
+      "editAssignment": "Edit assignment",
+      "createQuiz": "Create quiz",
+      "editQuiz": "Edit quiz",
+      "createQuestion": "Create question",
+      "editQuestion": "Edit question",
+      "createMaterial": "Create material",
+      "editMaterial": "Edit material"
+    },
+    "close": "Close",
+    "assignTo": "Assign to",
+    "allUsers": "All users",
+    "usersSelected": "{{count}} user selected",
+    "usersSelected_other": "{{count}} users selected",
+    "done": "Done",
+    "title": "Title",
+    "titlePlaceholder": "Add a descriptive title",
+    "caption": "Caption",
+    "instructions": "Instructions",
+    "description": "Description",
+    "captionPlaceholder": "Add relevant details or instructions",
+    "schedulePost": "Schedule post",
+    "schedule": "Schedule {{type}}",
+    "files": "Files",
+    "links": "Links",
+    "points": "Points",
+    "graded": "Graded",
+    "ungraded": "Ungraded",
+    "dueDate": "Due Date",
+    "noDueDate": "No Due Date",
+    "topic": "Topic",
+    "noTopic": "No Topic",
+    "acceptingSubmissions": "Accepting submissions",
+    "closeAfterDue": "Close submissions after due date",
+    "upload": "Upload files",
+    "addLink": "Add link",
+    "urlPlaceholder": "Enter a url",
+    "add": "Add",
+    "saveChanges": "Save changes",
+    "create": "Create",
+    "messages": {
+      "fileTooLarge": "Each file must be less than 4MB.",
+      "invalidUrl": "Please enter a valid URL."
+    },
+    "avatarAlt": "{{name}}'s avatar"
+  },
+  "topic": {
+    "createTitle": "Create topic",
+    "editTitle": "Edit topic",
+    "placeholder": "Enter the topic name",
+    "add": "Add",
+    "saveChanges": "Save changes",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "close": "Close"
+  },
+  "detail": {
+    "back": "Back to class",
+    "instructions": "Instructions",
+    "submissions": "Submissions",
+    "dueToday": "Due today, {{time}}",
+    "dueYesterday": "Due yesterday, {{time}}",
+    "dueAt": "Due {{date}}",
+    "noDueDate": "No due date",
+    "points": "{{count}} points",
+    "comments": "Comments",
+    "menu": "Post options"
+  },
+  "work": {
+    "title": "Your work",
+    "graded": "{{points}} / {{total}}",
+    "turnedIn": "Turned in",
+    "doneLate": "Done late",
+    "missing": "Missing",
+    "collapse": "Collapse your work",
+    "expand": "Expand your work",
+    "seeAttachments_one": "See {{count}} attachment",
+    "seeAttachments_other": "See {{count}} attachments",
+    "noAttachments": "You have no attachments uploaded.",
+    "files": "Files",
+    "links": "Links",
+    "addWork": "Add work",
+    "uploadFiles": "Upload files",
+    "addLinks": "Add links",
+    "addLink": "Add link",
+    "urlPlaceholder": "Enter a url",
+    "add": "Add",
+    "turnIn": "Turn in",
+    "resubmit": "Resubmit",
+    "markAsDone": "Mark as done",
+    "unsubmit": "Unsubmit",
+    "privateComments": "Private comments",
+    "addPrivateComment": "Add private comment",
+    "expandComments": "Expand",
+    "minimizeComments": "Minimize",
+    "messages": {
+      "fileTooLarge": "Each file must be less than 4MB.",
+      "invalidUrl": "Please enter a valid URL."
+    }
+  }
+}

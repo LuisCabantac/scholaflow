@@ -1,16 +1,16 @@
 # ScholaFlow
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.4-black?logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.0-blue?logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![TanStack Start](https://img.shields.io/badge/TanStack_Start-1.168-orange)](https://tanstack.com/start)
+[![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-0.45-C5F74F?logo=drizzle)](https://orm.drizzle.team/)
-[![Supabase](https://img.shields.io/badge/Supabase-Realtime_%26_Storage-3ECF8E?logo=supabase)](https://supabase.com/)
-[![Better Auth](https://img.shields.io/badge/Better_Auth-1.6-purple)](https://www.better-auth.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Storage_%26_Realtime-3ECF8E?logo=supabase)](https://supabase.com/)
+[![Better Auth](https://img.shields.io/badge/Better_Auth-1.7-purple)](https://www.better-auth.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-An open-source Learning Management System (LMS) built for structured academic workflows, real-time classroom collaboration, and assignment management.
+An open-source Learning Management System (LMS) built for structured academic workflows, real-time classroom collaboration, and streamlined assignment management.
 
 ![ScholaFlow Overview](https://github.com/user-attachments/assets/413b1771-8ca9-49fb-8d79-9d446430334f)
 
@@ -18,7 +18,7 @@ An open-source Learning Management System (LMS) built for structured academic wo
 
 ## 1. Overview & Key Capabilities
 
-ScholaFlow is a self-hostable learning platform designed to streamline instructional coordination between educators and students. Built with Next.js 15, React 19, TypeScript, Drizzle ORM, and Supabase, it provides a performant alternative to traditional classroom software while keeping infrastructure requirements transparent and customizable.
+ScholaFlow is a self-hostable learning platform designed to streamline instructional coordination between educators and students. Built with TanStack Start, React 19, TypeScript, Drizzle ORM, and Supabase, it provides a performant alternative to traditional classroom software while keeping infrastructure requirements transparent and customizable.
 
 > **Live Demo Classroom**  
 > Join the live staging instance to explore ScholaFlow directly:  
@@ -30,7 +30,7 @@ ScholaFlow is a self-hostable learning platform designed to streamline instructi
 - **Course Lifecycle & Enrollment:** Teachers can provision courses with distinct color themes, metadata (subject, room, section), and unique 8-character joining codes. Students can enroll via one-click invitation links or by entering join codes.
 - **Stream & Publishing Engine:** Supports five distinct stream content categories: Announcements (`stream`), `assignment`, `quiz`, `question`, and `material`. Features include scheduled publishing, topic classification, item pinning, and granular target delivery (publish to all enrolled students or select individuals).
 - **Assignment & Submission Pipeline:** Complete student submission workflow with document attachments, hyperlinks, turn-in timestamp tracking, and late-submission cutoff toggles (`closeSubmissionsAfterDueDate`). Teachers review submissions, input rubric scores, provide feedback with embedded media, and return graded work.
-- **Real-Time Synchronous Classroom Chat:** Low-latency group communication per class powered by Supabase Realtime change-data-capture channels on PostgreSQL, coupled with TanStack Query optimistic cache invalidation.
+- **Class Chat:** Group communication per class with image attachments. Messages refresh every few seconds; when the `chat` table has row-level-security policies that allow it, Supabase Realtime change events refresh them instantly.
 - **Lexical Rich-Text Integration:** Embedded Meta Lexical editor supporting rich text styling, lists, code blocks, quote formatting, hyperlinks, and multi-file attachment management.
 - **Personal Productivity Workspace:** User-isolated personal notes engine supporting rich-text formatting, pinning, and storage uploads, alongside an automated **To-Do** dashboard that aggregates assignments across all enrolled classes by status: _Assigned_, _Missing_, and _Completed_.
 - **Granular Role-Based Access Control (RBAC):** Native `user` and `admin` roles, structured instructor verification requests, and administrative directories for user auditing and account de-provisioning.
@@ -39,60 +39,66 @@ ScholaFlow is a self-hostable learning platform designed to streamline instructi
 
 ## 2. Architecture / How it Works
 
-ScholaFlow leverages the Next.js App Router paradigm with React Server Components (RSC) for authenticated layout rendering and Server Actions for data mutations, validated against Zod contracts and persisted via Drizzle ORM. Real-time updates and binary object storage are offloaded to Supabase.
+ScholaFlow is a TanStack Start application: file-based routes guard access in `beforeLoad`, prefetch data in `loader`s into TanStack Query, and render on the server with Nitro. Mutations go through TanStack Start server functions validated against Zod contracts and persisted via Drizzle ORM. Binary object storage and (optionally) realtime change events are offloaded to Supabase, and transactional email is sent server-side with nodemailer over SMTP.
 
 ### System Architecture Flow
 
 ```mermaid
 flowchart TD
     subgraph Client ["Client Layer (Browser / PWA)"]
-        UI["React 19 UI / Radix UI / Tailwind CSS"]
+        UI["React 19 UI / Radix UI / Tailwind CSS 4"]
         TQ["TanStack Query (Client Cache & State)"]
+        Router["TanStack Router (Loaders & Guards)"]
         Lex["Lexical Rich Text Editor"]
         AuthClient["Better Auth Client"]
     end
 
-    subgraph Server ["Application Layer (Next.js 15 App Router)"]
-        RouteHandlers["API Routes (/api/auth/*)"]
-        ServerActions["Server Actions (lib/*-actions.ts)"]
-        ZodValidation["Zod Schema Validation (lib/schema)"]
-        AuthEngine["Better Auth Engine (lib/auth.ts)"]
+    subgraph Server ["Application Layer (TanStack Start on Nitro)"]
+        AuthRoute["Auth API Route (/api/auth/$)"]
+        ServerFns["Server Functions (src/server/functions)"]
+        ZodValidation["Zod Schema Validation (src/lib/schema)"]
+        Services["Data Services (src/services)"]
+        AuthEngine["Better Auth Engine (src/lib/auth.ts)"]
+        Mailer["nodemailer (SMTP)"]
     end
 
     subgraph ExternalServices ["Cloud & Transport Services"]
-        EmailJS["EmailJS (Verification & Reset Emails)"]
+        SMTP["SMTP Provider (e.g. Gmail)"]
         GoogleOAuth["Google OAuth 2.0 Provider"]
     end
 
     subgraph DataLayer ["Data & Storage Layer"]
-        Drizzle["Drizzle ORM (Postgres.js Pooler)"]
+        Drizzle["Drizzle ORM (Postgres.js)"]
         Postgres[("PostgreSQL Database")]
-        SupaRealtime["Supabase Realtime (CDC / Postgres Changes)"]
-        SupaStorage["Supabase Storage Buckets (Avatars, Work, Notes, Messages)"]
+        SupaRealtime["Supabase Realtime (postgres_changes, optional)"]
+        SupaStorage["Supabase Storage Buckets"]
     end
 
-    UI -->|"User Interactions"| ServerActions
+    Router -->|"loader: ensureQueryData"| ServerFns
+    UI -->|"Mutations"| ServerFns
     UI -->|"Session & Auth Requests"| AuthClient
-    AuthClient --> RouteHandlers
-    RouteHandlers --> AuthEngine
+    AuthClient --> AuthRoute
+    AuthRoute --> AuthEngine
     AuthEngine -->|"Validate & Issue Cookies"| Drizzle
     AuthEngine -.->|"OAuth 2.0 Handshake"| GoogleOAuth
-    ServerActions --> ZodValidation
-    ZodValidation --> Drizzle
+    ServerFns --> ZodValidation
+    ZodValidation --> Services
+    Services --> Drizzle
     Drizzle --> Postgres
-    ServerActions -->|"File Upload / Delete"| SupaStorage
-    ServerActions -.->|"Trigger Transactional Emails"| EmailJS
-    Postgres -->|"WAL Change Streaming"| SupaRealtime
-    SupaRealtime -->|"Live Chat Sync"| TQ
+    Services -->|"File Upload / Delete"| SupaStorage
+    ServerFns -->|"Verification & Reset Emails"| Mailer
+    Mailer --> SMTP
+    Postgres -.->|"WAL Change Streaming"| SupaRealtime
+    SupaRealtime -.->|"Invalidate Chat Query"| TQ
     TQ --> UI
 ```
 
 ### Data Flow Lifecycle
 
-1. **Authentication & Session Issuance:** Requests pass through Better Auth. Upon Google OAuth verification or credential sign-in, session tokens are written to PostgreSQL and stored in secure HTTP-only cookies.
-2. **Server-Side Authorization & Fetching:** Layouts and pages execute server queries directly via Drizzle ORM, validating the user's role and class membership before rendering HTML to the client.
-3. **Mutation Pipeline:** When an action occurs (e.g., submitting classwork or creating an announcement), a Server Action validates the payload with Zod, writes database rows via Drizzle, uploads any binary payloads to Supabase Storage, and issues `revalidatePath` to refresh affected route caches.
-4. **Synchronous Messaging:** When a message is posted to a class chat, the row insertion in the `chat` table triggers a PostgreSQL Change Event through Supabase Realtime (`postgres_changes`), notifying active classroom clients to invalidate their query cache.
+1. **Authentication & Session Issuance:** Requests pass through Better Auth. Upon Google OAuth verification or credential sign-in, session tokens are written to PostgreSQL and stored in secure HTTP-only cookies. The `_main` layout route reads the session once per navigation and shares it through router context.
+2. **Guards & Prefetching:** Route `beforeLoad` hooks validate the user's role and class membership (redirecting otherwise); `loader`s call `queryClient.ensureQueryData` for every query the page suspends on, so pages render on the server with data already in the TanStack Query cache.
+3. **Mutation Pipeline:** When an action occurs (e.g., submitting classwork or creating an announcement), a server function checks the session and membership, validates the payload with Zod, writes database rows via Drizzle, uploads any binary payloads to Supabase Storage, and the client invalidates the affected query keys. Deletes are optimistic with rollback.
+4. **Chat Updates:** The chat query refetches every 5 seconds while open. The browser also subscribes to `postgres_changes` on the `chat` table filtered by class; it refreshes instantly on projects whose row-level-security policies let the publishable key receive those events.
 
 ---
 
@@ -100,10 +106,11 @@ flowchart TD
 
 ### Core Framework & Runtime
 
-- **Framework:** [Next.js 15.4](https://nextjs.org/) (App Router, Server Actions, Turbopack)
-- **Frontend Library:** [React 19.0](https://react.dev/)
-- **Language:** [TypeScript 5.9](https://www.typescriptlang.org/)
-- **Runtime:** [Node.js](https://nodejs.org/) (v20+ LTS recommended) / compatible with [Bun](https://bun.sh/)
+- **Framework:** [TanStack Start 1.168](https://tanstack.com/start) with [TanStack Router 1.170](https://tanstack.com/router) (file-based routes, loaders, server functions)
+- **Build & Server:** [Vite 8](https://vite.dev/) and [Nitro 3](https://nitro.build/)
+- **Frontend Library:** [React 19.2](https://react.dev/)
+- **Language:** [TypeScript 6.0](https://www.typescriptlang.org/)
+- **Runtime:** [Node.js](https://nodejs.org/) (v22+ recommended), package manager [pnpm](https://pnpm.io/)
 
 ### Database & Data Modeling
 
@@ -115,24 +122,26 @@ flowchart TD
 ### Cloud, Storage & Real-time
 
 - **Object Storage:** [Supabase Storage](https://supabase.com/storage) (Buckets: `avatars`, `streams`, `classworks`, `messages`, `comments`, `notes`)
-- **Real-time Synchronization:** [Supabase Realtime](https://supabase.com/docs/guides/realtime) (`@supabase/supabase-js`)
-- **Email Service:** [EmailJS](https://www.emailjs.com/) (`@emailjs/browser`)
+- **Real-time Synchronization:** [Supabase Realtime](https://supabase.com/docs/guides/realtime) (`@supabase/supabase-js`), with polling as the baseline
+- **Email Service:** [nodemailer](https://nodemailer.com/) over SMTP (server-side)
 
 ### Authentication & Authorization
 
-- **Authentication Engine:** [Better Auth 1.6](https://www.better-auth.com/) with Drizzle adapter
+- **Authentication Engine:** [Better Auth 1.7](https://www.better-auth.com/) with Drizzle adapter and TanStack Start cookie integration
 - **Identity Providers:** Email & Password credentials (with verification) and Google OAuth 2.0
 
 ### UI, State & Formatting
 
-- **Styling:** [Tailwind CSS 3.4](https://tailwindcss.com/), `postcss`, `tailwindcss-animate`
-- **Primitive Components:** [Radix UI](https://www.radix-ui.com/) (`dialog`, `dropdown-menu`, `popover`, `select`, `tabs`, `tooltip`)
+- **Styling:** [Tailwind CSS 4.1](https://tailwindcss.com/) via `@tailwindcss/vite`
+- **Primitive Components:** [Radix UI](https://www.radix-ui.com/) through [shadcn/ui](https://ui.shadcn.com/)
 - **Client State Management:** [TanStack React Query v5](https://tanstack.com/query/latest)
-- **Validation:** [Zod v3/v4](https://zod.dev/)
-- **Rich Text Editing:** [Meta Lexical](https://lexical.dev/) (`@lexical/react`, rich-text, code, link, list, table)
-- **Animation & Icons:** [Motion](https://motion.dev/) (Framer Motion), [Lucide React](https://lucide.dev/)
+- **Validation:** [Zod v4](https://zod.dev/)
+- **Rich Text Editing:** [Meta Lexical 0.32](https://lexical.dev/) (`@lexical/react`, rich-text, link, list, table)
+- **Internationalization:** [i18next](https://www.i18next.com/) / [react-i18next](https://react.i18next.com/) (English locale files under `src/i18n/locales`)
+- **Animation & Icons:** [Motion](https://motion.dev/), [Lucide React](https://lucide.dev/)
 - **Notifications / Toast:** [Sonner](https://sonner.emilkowal.ski/)
-- **Date Utilities:** [Date-fns 4.4](https://date-fns.org/)
+- **Date Utilities:** [date-fns 4](https://date-fns.org/)
+- **Tooling:** [Biome](https://biomejs.dev/) (lint + format), [Vitest](https://vitest.dev/), an import-group sorter (`scripts/sort-imports.mjs`)
 
 ---
 
@@ -140,67 +149,51 @@ flowchart TD
 
 ```text
 scholaflow/
-├── app/                                # Next.js App Router root
-│   ├── (auth)/                         # Unauthenticated route group
-│   │   ├── close-account/              # Account deletion confirmation
-│   │   ├── error/                      # Authentication error fallback
-│   │   ├── forget-password/            # Password reset request flow
-│   │   ├── reset-password/             # Token-based password modification
-│   │   ├── signin/                     # Credential & OAuth sign-in
-│   │   ├── signup/                     # User registration
-│   │   └── verify/                     # Email verification handler
-│   ├── (main)/                         # Authenticated application layout & routes
-│   │   ├── classroom/                  # Classroom dashboard & detail pages
-│   │   │   └── class/[classId]/        # Class space: stream, classwork, chat, people
-│   │   ├── notes/                      # Personal scratchpad & document store
-│   │   ├── notifications/              # Activity and submission alerts
-│   │   ├── profile/                    # User profile settings & role escalation
-│   │   ├── to-do/                      # Aggregated student assignment tracker
-│   │   └── user-management/            # Administrator panel for user moderation
-│   ├── api/                            # API endpoints
-│   │   └── auth/[...all]/              # Better Auth dynamic API route handler
-│   ├── join-class/[code]/              # Direct link enrollment route
-│   ├── layout.tsx                      # Root HTML layout and theme providers
-│   ├── page.tsx                        # Public landing page
-│   └── Provider.tsx                    # Top-level client providers (QueryClient, Theme)
-├── components/                         # Application UI layer
-│   ├── blocks/                         # Composed interface sections
-│   ├── editor/                         # Lexical rich-text editor components and plugins
-│   ├── ui/                             # Reusable Radix UI & shadcn design primitives
-│   ├── ClassChatSection.tsx            # Real-time classroom message thread
-│   ├── ClassworksSection.tsx           # Teacher and student classwork index
-│   ├── LandingPage.tsx                 # Public marketing view
-│   ├── StreamCard.tsx                  # Stream item card (posts, assignments, quizzes)
-│   ├── StreamDetailSection.tsx         # Detailed assignment view & submission dock
-│   └── UserManagementSection.tsx       # Admin user table and role approval
-├── contexts/                           # React context definitions
-│   ├── NavContext.tsx                  # Header navigation state
-│   ├── QueryProvider.tsx               # TanStack React Query client instantiation
-│   └── SidebarContext.tsx              # Responsive navigation drawer state
-├── drizzle/                            # Database definitions & connection
-│   ├── index.tsx                       # Postgres.js client & Drizzle db instance
-│   └── schema.tsx                      # PostgreSQL schema, enums, tables, and relations
-├── hooks/                              # Custom React hooks
-│   └── use-mobile.tsx                  # Viewport breakpoint observer
-├── lib/                                # Domain logic and integrations
-│   ├── schema/                         # Zod validation schemas and TypeScript types
-│   ├── auth.ts                         # Better Auth server configuration
-│   ├── auth-actions.ts                 # Credential registration & password actions
-│   ├── auth-client.ts                  # Better Auth React client export
-│   ├── classroom-actions.ts            # Server actions for classes, streams, & grading
-│   ├── classroom-service.ts            # Database query services for classrooms
-│   ├── classwork-service.ts            # Assignment submission queries
-│   ├── notification-service.ts         # User activity notification services
-│   ├── supabase.js                     # Supabase client instantiation
-│   ├── user-management-actions.ts      # User deletion, avatar mutations, role toggles
-│   └── utils.ts                        # File path parsers, class code generator, helpers
-├── public/                             # Static public assets (icons, illustrations)
-├── generate-assetlinks.js              # Script generating Android assetlinks.json
-├── middleware.ts                       # Next.js edge route protection & redirection
-├── next.config.mjs                     # Next.js configuration and image domains
-├── package.json                        # Project dependencies and script declarations
-├── tailwind.config.ts                  # Tailwind theme, plugins, and color scales
-└── tsconfig.json                       # TypeScript compiler options and path aliases
+├── src/
+│   ├── routes/                         # File-based routes (TanStack Router)
+│   │   ├── __root.tsx                  # HTML shell, providers, head defaults
+│   │   ├── index.tsx                   # Public landing page
+│   │   ├── _auth/                      # Sign-in, sign-up, verify, forget/reset password
+│   │   ├── _main/                      # Authenticated layout: sidebar, header, session context
+│   │   │   ├── classroom/              # Dashboard and class pages
+│   │   │   │   └── class/              # $classId layout (tabs) + stream/classwork/people/chat,
+│   │   │   │                           #   $classId_.stream.$streamId (detail, submissions)
+│   │   │   ├── notes.tsx               # Personal notes with the Lexical editor
+│   │   │   ├── notifications.tsx       # Activity feed
+│   │   │   ├── profile.tsx             # Profile, avatar, password, role request
+│   │   │   ├── to-do.tsx               # Assigned / Missing / Done across classes
+│   │   │   └── user-management.tsx     # Admin user table and role requests
+│   │   ├── api/auth/$.ts               # Better Auth handler
+│   │   ├── join-class/$classCode.tsx   # Invitation links
+│   │   ├── close-account.tsx           # Account closure via emailed token
+│   │   ├── error.tsx                   # Auth error page
+│   │   ├── privacy.tsx, terms.tsx      # Legal pages
+│   │   └── signin.tsx, signup.tsx, terms-of-use.tsx   # 301 redirects from the old slugs
+│   ├── components/                     # UI grouped by domain
+│   │   ├── auth/ landing/ layout/ shared/
+│   │   ├── classroom/ stream/ classwork/ people/ chat/
+│   │   ├── notes/ todo/ notifications/ profile/ user-management/
+│   │   ├── editor/                     # Lexical editor (client-only, lazy loaded)
+│   │   └── ui/                         # shadcn/ui primitives
+│   ├── server/functions/               # Server functions (createServerFn): auth, classroom, stream,
+│   │                                   #   classwork, comment, class-topic, message, notes,
+│   │                                   #   notification, user, user-management
+│   ├── services/                       # Drizzle queries, storage, email, account deletion
+│   ├── queries/                        # TanStack Query key and queryOptions factories
+│   ├── lib/                            # Pure logic: auth config, schema (Zod), rules, formatting
+│   ├── db/                             # Drizzle client and PostgreSQL schema
+│   ├── i18n/                           # i18next setup and English locale namespaces
+│   ├── types/                          # Shared TypeScript types by domain
+│   ├── hooks/ providers/ integrations/ # Hooks, app providers, QueryClient
+│   └── styles.css                      # Tailwind 4 theme tokens
+├── tests/                              # Vitest suites mirroring src/ (lib rules, scripts)
+├── scripts/                            # sort-imports.mjs, generate-assetlinks.mjs
+├── public/                             # Static assets (icons, illustrations)
+├── drizzle.config.ts                   # Drizzle Kit configuration
+├── vite.config.ts                      # Vite + TanStack Start + Nitro + Tailwind plugins
+├── biome.json                          # Lint and format rules
+├── vitest.config.ts                    # Test configuration
+└── package.json                        # Dependencies and scripts
 ```
 
 ---
@@ -209,15 +202,11 @@ scholaflow/
 
 ### Prerequisites
 
-Ensure you have the following installed on your development workstation:
-
-- **Node.js:** v20.x or higher
-- **Package Manager:** `npm`, `pnpm`, or `bun`
+- **Node.js:** v22.x or higher
+- **Package Manager:** `pnpm` (lockfile is pnpm's)
 - **PostgreSQL Database:** A running PostgreSQL instance (or a managed [Supabase](https://supabase.com/) project)
 - **Google Cloud Console Credentials:** For OAuth 2.0 authentication
-- **EmailJS Account:** For email verification and password reset delivery
-
----
+- **SMTP credentials:** For verification, password reset and account-closure emails (a Gmail account with an app password works)
 
 ### Step-by-Step Installation
 
@@ -231,14 +220,12 @@ cd scholaflow
 #### 2. Install Dependencies
 
 ```bash
-npm install
-# or
-bun install
+pnpm install
 ```
 
 #### 3. Provision Supabase Storage Buckets
 
-If using Supabase, navigate to the **Storage** section in your dashboard and create the following six buckets (set public or configure read policies according to your deployment strategy):
+In the Supabase dashboard under **Storage**, create six buckets with public reads. Set `SUPABASE_SECRET_KEY` so the server performs uploads and deletes with the secret key and the publishable key needs no write policy; without it, the publishable key must be allowed to `INSERT` and `DELETE` on the buckets, which also lets anyone holding that key write to them:
 
 - `avatars`
 - `streams`
@@ -249,42 +236,43 @@ If using Supabase, navigate to the **Storage** section in your dashboard and cre
 
 #### 4. Configure Environment Variables
 
-Create a `.env.local` file in the root directory by copying the configuration below:
+Copy the example file and fill in your values:
 
 ```bash
-touch .env.local
+cp .env.example .env
 ```
 
-Populate `.env.local` with your target credentials:
-
-| Variable                                        | Type   |  Required  | Description                                                                                    | Example / Default                                               |
-| :---------------------------------------------- | :----- | :--------: | :--------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| `DATABASE_URL`                                  | String |  **Yes**   | PostgreSQL connection URI                                                                      | `postgresql://postgres:[password]@db.example.com:5432/postgres` |
-| `NEXT_PUBLIC_SUPABASE_URL`                      | String |  **Yes**   | Supabase project URL                                                                           | `https://[project-id].supabase.co`                              |
-| `NEXT_PUBLIC_SUPABASE_KEY`                      | String |  **Yes**   | Supabase anonymous / public API key                                                            | `eyJhbGciOi...`                                                 |
-| `BETTER_AUTH_SECRET`                            | String |  **Yes**   | Secret used by Better Auth to sign session tokens                                              | Random 32+ character string                                     |
-| `BETTER_AUTH_URL`                               | String |  **Yes**   | Base URL for Better Auth routing                                                               | `http://localhost:3000`                                         |
-| `NEXT_PUBLIC_APP_URL`                           | String |  **Yes**   | Canonical client application URL                                                               | `http://localhost:3000`                                         |
-| `GOOGLE_CLIENT_ID`                              | String |  **Yes**   | Google Cloud OAuth 2.0 Client ID                                                               | `xxx.apps.googleusercontent.com`                                |
-| `GOOGLE_CLIENT_SECRET`                          | String |  **Yes**   | Google Cloud OAuth 2.0 Client Secret                                                           | `GOCSPX-xxxxxx`                                                 |
-| `NEXT_PUBLIC_EMAILJS_SERVICE_ID`                | String |  **Yes**   | EmailJS service identifier                                                                     | `service_xxxx`                                                  |
-| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`               | String |  **Yes**   | EmailJS verification template ID                                                               | `template_xxxx`                                                 |
-| `NEXT_PUBLIC_EMAILJS_CLOSE_ACCOUNT_TEMPLATE_ID` | String |  **Yes**   | EmailJS account deletion template ID                                                           | `template_yyyy`                                                 |
-| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`                | String |  **Yes**   | EmailJS account public key                                                                     | `user_xxxx`                                                     |
-| `SHA256_FINGERPRINT`                            | String | Optional\* | SHA-256 Android certificate fingerprint (\*required for production `npm run build` assetlinks) | `14:6D:E8:...`                                                  |
+| Variable                        | Required | Description                                                                 | Example / Default                        |
+| :------------------------------ | :------: | :-------------------------------------------------------------------------- | :--------------------------------------- |
+| `DATABASE_URL`                  | **Yes**  | PostgreSQL connection URI                                                   | `postgresql://postgres:[password]@...`   |
+| `VITE_SUPABASE_URL`             | **Yes**  | Supabase project URL (also exposed to the browser)                          | `https://[project-id].supabase.co`       |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | **Yes**  | Supabase publishable (anon) key, exposed to the browser for realtime        | `sb_publishable_...`                     |
+| `SUPABASE_SECRET_KEY`           |    No    | Server-only Supabase secret (service role) key for storage uploads and deletes; falls back to the publishable key when unset | `sb_secret_...`                          |
+| `BETTER_AUTH_SECRET`            | **Yes**  | Secret used by Better Auth to sign session tokens                           | Random 32+ character string              |
+| `BETTER_AUTH_URL`               | **Yes**  | Origin the app is served from (sign-in requests from other origins fail)    | `http://localhost:3000`                  |
+| `APP_URL`                       | **Yes**  | Base URL used in emailed links                                              | `http://localhost:3000`                  |
+| `VITE_SITE_URL`                 |    No    | Public origin used for canonical links, Open Graph URLs, robots.txt and the sitemap | `https://scholaflow.vercel.app`          |
+| `GOOGLE_CLIENT_ID`              | **Yes**  | Google Cloud OAuth 2.0 Client ID                                            | `xxx.apps.googleusercontent.com`         |
+| `GOOGLE_CLIENT_SECRET`          | **Yes**  | Google Cloud OAuth 2.0 Client Secret                                        | `GOCSPX-xxxxxx`                          |
+| `SMTP_EMAIL`                    | **Yes**  | SMTP user (also the default sender)                                         | `you@gmail.com`                          |
+| `SMTP_PASSWORD`                 | **Yes**  | SMTP password or app password                                               |                                          |
+| `SMTP_HOST`                     |    No    | SMTP host                                                                   | `smtp.gmail.com`                         |
+| `SMTP_PORT`                     |    No    | SMTP port (465 uses TLS)                                                    | `465`                                    |
+| `SMTP_FROM`                     |    No    | Sender shown on emails                                                      | `ScholaFlow <SMTP_EMAIL>`                |
+| `SHA256_FINGERPRINT`            |    No    | SHA-256 Android certificate fingerprint; when set, the build writes `public/.well-known/assetlinks.json` | `14:6D:E8:...` |
 
 #### 5. Initialize the Database Schema
 
-Push the Drizzle schema to your PostgreSQL database:
+Push the Drizzle schema to a fresh PostgreSQL database:
 
 ```bash
-npx drizzle-kit push
+pnpm db:push
 ```
 
 #### 6. Launch the Development Server
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -292,10 +280,26 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 #### 7. Building for Production
 
 ```bash
-# Ensure SHA256_FINGERPRINT is defined in your environment or .env.local
-npm run build
-npm run start
+pnpm build
+pnpm preview
 ```
+
+The build output under `.output/` is a Nitro server; on Vercel it deploys as serverless functions with no extra configuration.
+
+### Scripts
+
+| Script                         | Purpose                                                        |
+| :----------------------------- | :------------------------------------------------------------- |
+| `pnpm dev`                     | Vite dev server with HMR on port 3000                          |
+| `pnpm build` / `pnpm preview`  | Production build (Nitro) and local preview                     |
+| `pnpm check`                   | Biome lint + format check and import-group order check         |
+| `pnpm check:fix`               | Apply Biome fixes and sort import groups                       |
+| `pnpm lint` / `pnpm format`    | Biome lint only / format only                                  |
+| `pnpm generate-routes`         | Regenerate `src/routeTree.gen.ts`                              |
+| `pnpm imports:fix`             | Sort import groups by line length                              |
+| `pnpm typecheck`               | `tsc --noEmit`                                                 |
+| `pnpm test`                    | Vitest suites under `tests/`                                   |
+| `pnpm db:generate` / `db:migrate` / `db:push` / `db:pull` / `db:studio` | Drizzle Kit |
 
 ---
 
@@ -306,7 +310,7 @@ npm run start
 #### Creating a Classroom
 
 1. Navigate to the Classroom dashboard (`/classroom`).
-2. Click the **+** (Create Class) action in the navigation bar.
+2. Click **Add class** and choose **Create class**.
 3. Supply the course name, subject, section, and room details.
 4. ScholaFlow generates a unique 8-character join code (e.g., `ebeqdca9`).
 
@@ -315,117 +319,110 @@ npm run start
 Students can enroll using either:
 
 - **Direct Invitation Link:** `http://localhost:3000/join-class/{code}`
-- **Join Modal:** Open `/classroom`, select **Join Class**, and input the 8-character alphanumeric code.
+- **Join Dialog:** Open `/classroom`, choose **Add class** then **Join class**, and input the 8-character code.
 
 ```typescript
-// Example: Programmatic enrollment verification via Server Action
-import { enrollClass } from "@/lib/classroom-actions";
+// Example: enrollment through the server functions used by the join dialog
+import {
+  getClassByClassCodeFn,
+  joinClassFn,
+} from "@/server/functions/classroom";
 
-const formData = new FormData();
-formData.append("code", "ebeqdca9");
-
-const response = await enrollClass(formData);
-// Redirects to /classroom/class/{classId} on success
+const classroom = await getClassByClassCodeFn({ data: "ebeqdca9" });
+const result = await joinClassFn({ data: classroom.id });
+// { success: true, message: "You've successfully joined the class!" }; the UI then navigates to /classroom/class/{classId}
 ```
-
----
 
 ### 2. Stream Publishing (Announcements & Assignments)
 
-Educators publish structured course items via `/classroom/class/[classId]`:
+Educators publish posts from the Stream tab (`/classroom/class/{classId}`) and classwork (assignments, quizzes, materials, topics) from the Classwork tab (`/classroom/class/{classId}/classwork`):
 
-- **Item Types:**
-  - `stream`: General updates and syllabus notices.
-  - `assignment`: Tasks requiring student deliverables with due dates and rubric point allocations.
-  - `quiz`: Formative or summative evaluation links.
-  - `question`: Discussion prompts with threaded responses.
-  - `material`: Reference documents, lecture slides, or reading lists.
+- `stream`: General updates and syllabus notices.
+- `assignment`: Tasks requiring student deliverables with due dates and point allocations.
+- `quiz`: Formative or summative evaluation links.
+- `question`: Discussion prompts with threaded responses.
+- `material`: Reference documents, lecture slides, or reading lists.
 
-```typescript
-// Structure of a stream payload validated by createStreamSchema
-const assignmentPayload = {
-  classId: "6b5832ea-f489-4099-a9a2-a140f7d5c7c2",
-  className: "Computer Science 101",
-  title: "Problem Set 1: Data Structures",
-  content: "Implement a balanced binary search tree in TypeScript.",
-  type: "assignment",
-  points: 100,
-  dueDate: new Date("2026-10-15T23:59:59Z"),
-  closeSubmissionsAfterDueDate: true,
-  announceToAll: true,
-  announceTo: [],
-  attachments: [
-    "https://[project-id].supabase.co/storage/v1/object/public/streams/...",
-  ],
-  links: ["https://en.wikipedia.org/wiki/Binary_search_tree"],
-};
-```
-
----
+Form fields travel as `FormData` to `createStreamFn` / `updateStreamFn` (`src/server/functions/stream.ts`): `type`, `classroomId`, `title`, `description`, `topicId`, `isAssignToAll`, `announceTo[]`, `points`, `dueDate` and `scheduledAt` (ISO strings), `acceptingSubmissions`, `closeSubmissionsAfterDueDate`, `links[]`, `attachments[]`, and on edit `curUrlLinks[]` / `curAttachments[]`.
 
 ### 3. Assignment Submission and Grading Workflow
 
-1. **Student Submission:** Students open `/classroom/class/[classId]/stream/[streamId]` to view instructions, upload files to Supabase Storage, attach external URLs, and click **Turn In**.
-2. **Teacher Grading View:** Educators navigate to the **Submissions** tab (`/stream/[streamId]/submissions`).
-3. **Score & Feedback:** Teachers inspect student attachments, assign points, input private feedback, and mark the assignment as **Returned**.
+1. **Student Submission:** Students open `/classroom/class/{classId}/stream/{streamId}` to view instructions, add files or links in the **Your work** panel, and click **Turn in** (or unsubmit while submissions are open).
+2. **Teacher Grading View:** Educators open the **Submissions** tab (`/stream/{streamId}/submissions`), see turned-in and assigned students, open a student's work and exchange private comments.
+3. **Score:** Teachers enter points in the grade dialog; students see the grade on their work panel and in the to-do Done tab.
 
----
+### 4. Class Chat
 
-### 4. Real-time Classroom Chat
-
-Each course contains an isolated real-time channel (`/classroom/class/[classId]/chat`):
+Each course has a chat at `/classroom/class/{classId}/chat`. The messages query refetches every 5 seconds while the page is open, and the browser subscribes to inserts on the `chat` table for the class:
 
 ```typescript
-// Subscription hook in ClassChatSection.tsx
-useEffect(() => {
-  const channel = supabase
-    .channel("chat-db-changes")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "chat" },
-      () => refetch(),
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, [refetch]);
+// src/components/chat/ClassChatSection.tsx (abridged)
+const channel = supabase
+  .channel(`chat-${classroom.id}`)
+  .on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "chat", filter: `class_id=eq.${classroom.id}` },
+    () => queryClient.invalidateQueries({ queryKey: messageKeys.byClass(classroom.id) }),
+  )
+  .subscribe();
 ```
 
 ---
 
-## 7. Troubleshooting / Error Handling
+## 7. Intentional differences from the Next.js version
 
-### Common Issues & Diagnostic Steps
+The rewrite keeps main's features and markup, with these deliberate changes:
+
+- **Routes:** `/sign-in`, `/sign-up` and `/terms` replace `/signin`, `/signup` and `/terms-of-use` (the old paths redirect with 301). Signed-in users are redirected away from the auth pages; non-admins are redirected away from `/user-management`; `/close-account` without a valid token goes to the landing page.
+- **Email:** verification, password-reset and account-closure emails are sent server-side with nodemailer over SMTP instead of EmailJS from the browser.
+- **Uploads:** the per-request cap is 4 MB (Vercel's body limit) instead of 5 MB; a note or post with several files is capped on the total.
+- **Authorization moved server-side:** scheduled and targeted posts are filtered on the server for students; classwork, grades, comments, private comments, topics, roster changes and chat are bound to the caller's class and role; users can read only their own classwork, profile row and private threads; admin functions return nothing to non-admins.
+- **Submissions:** turning in, resubmitting and unsubmitting are refused once the teacher turns off "accepting submissions" or the due date passes with "close after due date" on (main only disabled the button). Turning in again after an unsubmit counts as a change.
+- **Account deletion:** closing an account (self-service or admin) deletes the user's classes, posts, comments, classworks, notes, notifications and messages in one transaction and then removes their files from storage.
+- **Profile edits:** name, avatar and email changes propagate to the user's posts, comments, roster rows and role request; the header updates without a reload.
+- **Auth tokens and CSRF:** verification, password-reset and account-closure tokens are bound to their purpose (a verification link cannot close an account); server functions sit behind an explicit CSRF middleware (`src/start.ts`) that rejects cross-site calls.
+- **Server functions:** only functions the app calls are exported (TanStack Start serves every export as an endpoint); class-scoped reads require membership, scheduled and targeted classwork is filtered server-side, students do not receive the invite code, joining resolves the code on the server, and attachment edits can only keep or drop files the server stored under the record's own folder.
+- **Avatars:** every profile picture renders through one component that shows a local default avatar when the stored image is empty, points at the bucket's missing `default-avatar.jpg`, or fails to load (main rendered a broken image).
+- **Chat:** polling every 5 seconds is the baseline; Realtime delivers nothing when the `chat` table has row-level security without policies (as on the reference deployment).
+- **Dates and times:** the date-time picker stores the chosen time (main stored midnight); choosing "No due date" on edit clears the date; dates that depend on the viewer's timezone render client-side; scheduled, due and submission states are computed from the server's render time until hydration completes, then from the browser clock.
+- **Lists:** searches on the classwork tab, notes and admin users are debounced or client-side instead of one query per keystroke; the grade dialog starts from the selected student's grade; the classwork tab and notes are cached per class and per user.
+- **Fixes of main bugs:** posts and edits that main's own schema rejected (`className`, `updatedAt`), notifications sent to the class id instead of the roster, the notification "read" toggle, private-comment notifications to the addressee, a rejected role request that could not be re-submitted, admin user creation that never created a login, the mobile add-class button overlapping the open sidebar, the unread-notification dot keeping its grey color while the sidebar link is hovered, and several stale-state issues.
+- **SEO:** every public page sets a canonical link, per-page Open Graph and Twitter tags and a description; the landing page carries JSON-LD; signed-in pages and token pages are `noindex`; `/robots.txt`, `/sitemap.xml` and `/site.webmanifest` are served by the app.
+- **Tooling:** pnpm, Biome, Vitest and an import-group sorter; English UI strings live in `src/i18n/locales/en`.
+
+---
+
+## 8. Troubleshooting / Error Handling
 
 #### 1. Database Connection Timeout or SSL Rejection
 
 - **Symptom:** `error: connection to server at "..." failed: Connection refused` or `SSL connection has been closed unexpectedly`.
-- **Resolution:** Ensure your `DATABASE_URL` matches your PostgreSQL hosting environment. If connecting to Supabase or AWS RDS, append `?sslmode=require` or ensure connection pooler port `6543` (transaction mode) or `5432` (session mode) is configured appropriately.
+- **Resolution:** Ensure `DATABASE_URL` matches your PostgreSQL hosting environment. If connecting to Supabase, use the pooler port `6543` (transaction mode) or `5432` (session mode) as appropriate and append `?sslmode=require` when needed.
 
-#### 2. Build Failure: `SHA256_FINGERPRINT environment variable is not set`
+#### 2. Sign-in returns `403 INVALID_ORIGIN`
 
-- **Symptom:** Running `npm run build` exits immediately with status code `1` in `generate-assetlinks.js`.
-- **Resolution:** ScholaFlow includes an automated Android App Links generator script before `next build`. Add a placeholder SHA-256 fingerprint in your `.env.local` during development:
-  ```env
-  SHA256_FINGERPRINT="14:6D:E8:D2:C3:57:EC:D5:78:E5:60:44:8D:19:D4:58:65:21:54:8B:11:01:46:1D:64:8A:27:EB:FE:A9:72:91"
-  ```
+- **Symptom:** Credential sign-in fails from the browser or from scripts with an invalid-origin error.
+- **Resolution:** `BETTER_AUTH_URL` must equal the origin the app is served from, including protocol and port (for example `http://localhost:3000` in development, or your deployment URL).
 
 #### 3. Session Cookies Not Retained Across Navigations
 
-- **Symptom:** User is redirected to `/signin` immediately after completing authentication.
-- **Resolution:** Verify that `BETTER_AUTH_URL` matches the exact protocol and port of your browser session (e.g., `http://localhost:3000` in development). Ensure `BETTER_AUTH_SECRET` is defined with a secure string.
+- **Symptom:** User is redirected to `/sign-in` immediately after completing authentication.
+- **Resolution:** Verify `BETTER_AUTH_URL` and `BETTER_AUTH_SECRET`; the cookie integration for TanStack Start is configured in `src/lib/auth.ts`.
 
-#### 4. Supabase Storage 403 Forbidden on File Upload
+#### 4. Supabase Storage 403 Forbidden on File Upload or Delete
 
-- **Symptom:** Uploading attachments or avatars throws an error: `new row violates row-level security policy for table "objects"`.
-- **Resolution:** In your Supabase Dashboard under **Storage > Policies**, configure Row Level Security (RLS) policies allowing authenticated users to `INSERT` and `SELECT` from the `avatars`, `streams`, `classworks`, `messages`, `comments`, and `notes` buckets, or set the buckets to public for read-only asset resolution.
+- **Symptom:** Uploading attachments or avatars fails with `new row violates row-level security policy for table "objects"`, or removed files stay in the bucket.
+- **Resolution:** Set `SUPABASE_SECRET_KEY` (recommended) so server-side storage calls bypass bucket policies, or in **Storage > Policies** allow `INSERT` and `DELETE` for the publishable key on the six buckets. Reads need a public bucket or a `SELECT` policy. Note that public URLs may keep serving a deleted file from the CDN for a while.
 
-#### 5. Email Verification Links Not Delivering
+#### 5. Emails Not Delivering
 
-- **Symptom:** No verification email arrives upon registration.
-- **Resolution:** Verify that `NEXT_PUBLIC_EMAILJS_SERVICE_ID`, `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`, and `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` are accurately populated and that the email template contains the `{{message}}` placeholder variable as expected by `SignUpForm.tsx`.
+- **Symptom:** No verification, reset or account-closure email arrives.
+- **Resolution:** Check `SMTP_EMAIL`, `SMTP_PASSWORD`, `SMTP_HOST` and `SMTP_PORT`; Gmail requires an app password. Server logs show nodemailer errors.
+
+#### 6. Chat Messages Do Not Appear Instantly
+
+- **Symptom:** New messages show up only after a few seconds.
+- **Resolution:** That is the polling baseline. For instant updates, add the `chat` table to the `supabase_realtime` publication and define row-level-security policies that let the publishable key read the rows (or expose a members-only policy through your own JWT); the subscription is already in place.
 
 ---
 
