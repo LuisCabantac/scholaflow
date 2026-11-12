@@ -109,6 +109,18 @@ export const passkey = pgTable("passkey", {
   aaguid: text("aaguid"),
 });
 
+export const jwks = pgTable("jwks", {
+  id: text("id").primaryKey(),
+  publicKey: text("public_key").notNull(),
+  privateKey: text("private_key").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  expiresAt: timestamp("expires_at"),
+  alg: text("alg"),
+  crv: text("crv"),
+});
+
 export const notification = pgTable("notification", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: text("user_id")
@@ -354,18 +366,6 @@ export const streamPrivateComment = pgTable("stream_private_comment", {
   toUserId: text("to_user_id")
     .notNull()
     .references(() => user.id),
-});
-
-export const jwks = pgTable("jwks", {
-  id: text("id").primaryKey(),
-  publicKey: text("public_key").notNull(),
-  privateKey: text("private_key").notNull(),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => new Date())
-    .notNull(),
-  expiresAt: timestamp("expires_at"),
-  alg: text("alg"),
-  crv: text("crv"),
 });
 
 export const schema = {
