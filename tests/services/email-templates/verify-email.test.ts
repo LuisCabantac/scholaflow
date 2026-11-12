@@ -29,4 +29,13 @@ describe("renderVerifyEmail", () => {
     expect(email.html).not.toContain("<b>x</b>");
     expect(email.html).toContain("&lt;b&gt;x&lt;/b&gt;");
   });
+
+  it("tells uninvited recipients to ignore it and repeats the link as text", () => {
+    const email = renderVerifyEmail(params);
+
+    expect(email.html).toContain("you can safely ignore this email");
+    expect(email.html).toContain("This link will expire in 1 day.");
+    expect(email.html.split(params.verifyUrl).length).toBeGreaterThan(2);
+    expect(email.text).toContain("you can safely ignore this email");
+  });
 });

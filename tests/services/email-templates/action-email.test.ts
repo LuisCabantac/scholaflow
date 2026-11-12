@@ -41,4 +41,11 @@ describe("renderActionEmail", () => {
     expect(withWarning.html).toContain("data-warning");
     expect(withWarning.html).toContain("&lt;undone&gt;");
   });
+
+  it("repeats the action link as copyable text", () => {
+    const email = renderActionEmail(reset);
+
+    expect(email.html.split(reset.actionUrl).length).toBeGreaterThan(2);
+    expect(email.html).toContain("copy this link into your browser");
+  });
 });

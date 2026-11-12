@@ -2,6 +2,7 @@ import { escapeHtml } from "@/services/email-templates/escape-html";
 import type { ActionEmailParams, RenderedEmail } from "@/types/email";
 import {
   actionButton,
+  fallbackLink,
   signOff,
   wrapEmailHtml,
 } from "@/services/email-templates/layout";
@@ -18,6 +19,7 @@ export function renderActionEmail(params: ActionEmailParams): RenderedEmail {
 ${actionButton(url, escapeHtml(params.buttonText), params.buttonColor)}
 ${warning}
 <p>${escapeHtml(params.footerMessage)}</p>
+${fallbackLink(url)}
 ${signOff}`;
 
   const text = [

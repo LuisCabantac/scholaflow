@@ -29,5 +29,9 @@ export function actionButton(
   return `<a style="display: inline-block; background-color: ${color}; color: ${textColor}; text-decoration: none; font-weight: 500; font-size: 16px; text-align: center; padding: 10px 20px; border-radius: 9999px; margin-top: 10px;" href="${url}">${label}</a>`;
 }
 
+export function fallbackLink(url: string): string {
+  return `<p style="font-size: 12px; color: #6b7280; word-break: break-all;">If the button doesn't work, copy this link into your browser:<br />${url}</p>`;
+}
+
 export const signOff = `<p><span>Happy learning!</span></p>
 <p><span>The ScholaFlow Team</span></p>`;

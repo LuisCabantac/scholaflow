@@ -125,7 +125,7 @@ export const requestPasswordResetFn = createServerFn({ method: "POST" })
       renderActionEmail({
         toName: existingUser.name.split(" ")[0] ?? existingUser.name,
         subject: "Reset Your ScholaFlow Password",
-        title: "Password Reset Request",
+        title: "Let's reset your password",
         description:
           "We received a request to reset your ScholaFlow account password. If this was you, please click the button below to reset your password:",
         buttonColor: "#2563eb",
@@ -160,7 +160,7 @@ export const requestAccountClosureFn = createServerFn({ method: "POST" })
       renderActionEmail({
         toName: session.user.name.split(" ")[0] ?? session.user.name,
         subject: "Confirm Your ScholaFlow Account Deletion",
-        title: "Account Closure Request",
+        title: "Sorry to see you go",
         description:
           "We received a request to close your ScholaFlow account. If this was you, please click the button below to confirm and permanently delete your account:",
         buttonColor: "#dc2626",
@@ -169,7 +169,7 @@ export const requestAccountClosureFn = createServerFn({ method: "POST" })
           "This action cannot be undone. All your data will be permanently deleted.",
         actionUrl: buildAppUrl(`/close-account?token=${token.value}`),
         footerMessage:
-          "If you didn't request this account closure, please ignore this email or contact our support team.",
+          "If you didn't request this account closure, please ignore this email or contact our support team. This link will expire in 1 day.",
       }),
     );
   });
