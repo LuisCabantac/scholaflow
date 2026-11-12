@@ -37,7 +37,7 @@ export default function ClassStreamMock() {
         </div>
       </div>
       <div className="text-foreground mt-2 flex items-center gap-2 rounded-xl border px-2 py-2 text-xs shadow-sm">
-        <MockAvatar file="comment-5-avatar.jpg" name={t("people.lori")} />
+        <MockAvatar file="comment-5-avatar.webp" name={t("people.lori")} />
         <p className="text-foreground/70">{t("classroom.share")}</p>
       </div>
       {itemKeys.map((key) => (

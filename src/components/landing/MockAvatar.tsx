@@ -12,8 +12,10 @@ export default function MockAvatar({
   return (
     <img
       src={`/landing_page/${file}`}
-      width={24}
-      height={24}
+      width={96}
+      height={96}
+      loading="lazy"
+      decoding="async"
       className="h-6 w-6 shrink-0 rounded-full select-none"
       alt={t("avatarAlt", { name })}
     />

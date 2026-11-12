@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 
+const HERO_SIZES =
+  "(min-width: 1024px) min(100vw, 1280px), (min-width: 768px) min(100vw, 1152px), 81vw";
+
 export default function HeroSection({
   onViewFeatures,
 }: {
@@ -55,25 +58,41 @@ export default function HeroSection({
         transition={{ duration: 0.5, delay: 0.8 }}
       >
         <div className="w-[90%] md:w-full">
-          <img
-            src="/landing_page/hero-light.png"
-            width={1400}
-            height={900}
-            loading="eager"
-            fetchPriority="high"
-            className="block w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
-            alt={t("imageAlt.light")}
-            onDragStart={(e) => e.preventDefault()}
-          />
-          <img
-            src="/landing_page/hero-dark.png"
-            width={1400}
-            height={900}
-            loading="eager"
-            className="hidden w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
-            alt={t("imageAlt.dark")}
-            onDragStart={(e) => e.preventDefault()}
-          />
+          <picture className="contents">
+            <source
+              type="image/webp"
+              srcSet="/landing_page/hero-light-960.webp 960w, /landing_page/hero-light.webp 1920w"
+              sizes={HERO_SIZES}
+            />
+            <img
+              src="/landing_page/hero-light.png"
+              width={1920}
+              height={1080}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="block w-full rounded-2xl object-cover select-none md:shadow-2xl dark:hidden"
+              alt={t("imageAlt.light")}
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </picture>
+          <picture className="contents">
+            <source
+              type="image/webp"
+              srcSet="/landing_page/hero-dark-960.webp 960w, /landing_page/hero-dark.webp 1920w"
+              sizes={HERO_SIZES}
+            />
+            <img
+              src="/landing_page/hero-dark.png"
+              width={1920}
+              height={1080}
+              loading="lazy"
+              decoding="async"
+              className="hidden w-full rounded-2xl object-cover select-none md:shadow-2xl dark:block"
+              alt={t("imageAlt.dark")}
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </picture>
         </div>
       </motion.div>
     </section>

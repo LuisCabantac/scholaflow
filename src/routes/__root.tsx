@@ -3,15 +3,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import "@fontsource/be-vietnam-pro/100.css";
-import "@fontsource/be-vietnam-pro/200.css";
-import "@fontsource/be-vietnam-pro/300.css";
 import "@fontsource/be-vietnam-pro/400.css";
 import "@fontsource/be-vietnam-pro/500.css";
 import "@fontsource/be-vietnam-pro/600.css";
 import "@fontsource/be-vietnam-pro/700.css";
 import "@fontsource/be-vietnam-pro/800.css";
-import "@fontsource/be-vietnam-pro/900.css";
 import "@fontsource-variable/quicksand/wght.css";
 
 import appCss from "@/styles.css?url";

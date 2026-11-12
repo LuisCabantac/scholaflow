@@ -34,7 +34,7 @@ export default function ChatMock() {
     <>
       <Bubble
         name={t("people.gerald")}
-        file="comment-4-avatar.jpg"
+        file="comment-4-avatar.webp"
         text={t("chat.transform")}
       />
       <div className="mt-3 ml-3 grid gap-0.5">
@@ -43,7 +43,7 @@ export default function ChatMock() {
           <p className="mb-0.5 text-xs font-medium">{t("people.lori")}</p>
         </div>
         <div className="flex gap-1">
-          <MockAvatar file="comment-3-avatar.jpg" name={t("people.lori")} />
+          <MockAvatar file="comment-3-avatar.webp" name={t("people.lori")} />
           <p className="rounded-xl border px-2 py-1 text-xs">
             {t("chat.exactly")}
           </p>
@@ -51,10 +51,12 @@ export default function ChatMock() {
         <div className="mt-0.5 flex">
           <div className="h-1 w-7" />
           <img
-            src="/landing_page/chat-1-image.jpg"
+            src="/landing_page/chat-1-image.webp"
             alt={t("chat.imageAlt")}
-            width={150}
-            height={150}
+            width={480}
+            height={282}
+            loading="lazy"
+            decoding="async"
             className="w-[12rem] rounded-xl object-cover"
           />
         </div>
@@ -99,13 +101,13 @@ export default function ChatMock() {
         </div>
         <Bubble
           name={t("people.gerald")}
-          file="comment-4-avatar.jpg"
+          file="comment-4-avatar.webp"
           text={t("chat.stepByStep")}
           className="mt-3"
         />
         <Bubble
           name={t("people.zachariah")}
-          file="comment-2-avatar.jpg"
+          file="comment-2-avatar.webp"
           text={t("chat.excited")}
         />
       </div>

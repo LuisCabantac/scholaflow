@@ -9,7 +9,6 @@ import {
 
 import type { Classroom } from "@/lib/schema";
 import type { SessionUser } from "@/types/auth";
-import { createClient } from "@/lib/supabase/client";
 import { addMessageToChatFn } from "@/server/functions/message";
 import { messageKeys, messageQueries } from "@/queries/message";
 import { groupMessages, sortMessages } from "@/lib/chat-messages";
@@ -56,27 +55,21 @@ export default function ClassChatSection({
   });
 
   useEffect(() => {
-    const supabase = createClient();
-    const channel = supabase
-      .channel(`chat-${classroom.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "chat",
-          filter: `class_id=eq.${classroom.id}`,
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: messageKeys.byClass(classroom.id),
-          });
-        },
-      )
-      .subscribe();
+    let active = true;
+    let unsubscribe: (() => void) | undefined;
+
+    import("@/lib/supabase/chat-channel").then(({ subscribeToChatInserts }) => {
+      if (!active) return;
+      unsubscribe = subscribeToChatInserts(classroom.id, () => {
+        queryClient.invalidateQueries({
+          queryKey: messageKeys.byClass(classroom.id),
+        });
+      });
+    });
 
     return () => {
-      supabase.removeChannel(channel);
+      active = false;
+      unsubscribe?.();
     };
   }, [classroom.id, queryClient]);
 
