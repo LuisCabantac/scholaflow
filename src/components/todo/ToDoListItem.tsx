@@ -92,7 +92,7 @@ export default function ToDoListItem(props: ToDoItemProps) {
         params={{ classId: props.item.classId, streamId }}
         className="group bg-card flex w-full items-center justify-between gap-2 rounded-md border p-3 shadow-sm md:p-4"
       >
-        <div className="flex gap-2">
+        <div className="flex min-w-0 gap-2">
           <svg
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
@@ -104,11 +104,13 @@ export default function ToDoListItem(props: ToDoItemProps) {
           >
             {icons[props.kind].path}
           </svg>
-          <div>
-            <p className="text-foreground font-medium group-hover:underline">
+          <div className="min-w-0">
+            <p className="text-foreground font-medium [overflow-wrap:anywhere] group-hover:underline">
               {props.item.title}
             </p>
-            <p className="text-foreground/70">{props.item.className}</p>
+            <p className="text-foreground/70 [overflow-wrap:anywhere]">
+              {props.item.className}
+            </p>
             <ClientOnly fallback={<div className="mt-2 h-8" />}>
               <div className="text-foreground/70 mt-2 grid gap-1 text-xs">
                 <p>{t("posted", { when: relativeDay(postedAt, dayLabels) })}</p>
@@ -121,7 +123,11 @@ export default function ToDoListItem(props: ToDoItemProps) {
         </div>
         <ClientOnly fallback={<p className="hidden md:block" />}>
           {sideText !== null && (
-            <p className={`hidden ${sideClass} md:block`}>{sideText}</p>
+            <p
+              className={`hidden shrink-0 whitespace-nowrap ${sideClass} md:block`}
+            >
+              {sideText}
+            </p>
           )}
         </ClientOnly>
       </Link>
