@@ -80,7 +80,9 @@ export default function ProfileSection({ user }: { user: SessionUser }) {
               <h4 className="text-foreground/70 text-xs font-semibold">
                 {t("info.email")}
               </h4>
-              <p className="text-foreground mt-1 font-medium">{email}</p>
+              <p className="text-foreground mt-1 font-medium [overflow-wrap:anywhere]">
+                {email}
+              </p>
             </div>
             <div className="bg-card flex flex-col rounded-xl border p-4 shadow-sm transition-all hover:shadow-md">
               <h4 className="text-foreground/70 text-xs font-semibold">
