@@ -11,6 +11,7 @@ import { requestAccountClosureFn } from "@/server/functions/auth";
 import { userManagementQueries } from "@/queries/user-management";
 
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/shared/UserAvatar";
 import ProfileForm from "@/components/profile/ProfileForm";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 import RoleRequestDialog from "@/components/profile/RoleRequestDialog";
@@ -54,7 +55,7 @@ export default function ProfileSection({ user }: { user: SessionUser }) {
     <section className="grid gap-4">
       <div className="mx-auto">
         <div className="flex flex-col items-center gap-y-4">
-          <img
+          <UserAvatar
             src={image}
             alt={t("avatarAlt", { name })}
             width={48}

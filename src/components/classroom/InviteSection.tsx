@@ -12,6 +12,7 @@ import { classworkKeys } from "@/queries/classwork";
 import { joinClassFn } from "@/server/functions/classroom";
 
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 export default function InviteSection({
   classroom,
@@ -64,7 +65,7 @@ export default function InviteSection({
         </p>
       </div>
       <div className="bg-card text-foreground/70 flex gap-2 rounded-xl border p-3">
-        <img
+        <UserAvatar
           src={user.image ?? ""}
           alt={tClassroom("card.avatarAlt", { name: user.name })}
           width={32}

@@ -12,6 +12,7 @@ import type {
   StreamPrivateComment,
 } from "@/lib/schema";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import ZoomedImage from "@/components/stream/ZoomedImage";
 import LinkifiedText from "@/components/stream/LinkifiedText";
 import EllipsisPopover from "@/components/shared/EllipsisPopover";
@@ -54,7 +55,7 @@ export default function CommentCard({
   return (
     <li className="relative flex items-center justify-between break-all">
       <div className="grid grid-cols-[2rem_1fr] gap-2">
-        <img
+        <UserAvatar
           src={comment.userImage}
           width={32}
           height={32}

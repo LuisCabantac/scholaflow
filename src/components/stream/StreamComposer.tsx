@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 
 import type { SessionUser } from "@/types/auth";
 
+import UserAvatar from "@/components/shared/UserAvatar";
+
 export default function StreamComposer({
   user,
   onOpen,
@@ -17,7 +19,7 @@ export default function StreamComposer({
       className="border-border bg-card flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left shadow-sm md:p-4"
       onClick={onOpen}
     >
-      <img
+      <UserAvatar
         src={user.image ?? ""}
         alt={t("avatarAlt")}
         width={40}

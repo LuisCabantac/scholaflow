@@ -18,6 +18,7 @@ import { deleteEnrolledClassbyClassAndEnrolledClassIdFn } from "@/server/functio
 
 import { Button } from "@/components/ui/button";
 import PeopleCard from "@/components/people/PeopleCard";
+import UserAvatar from "@/components/shared/UserAvatar";
 import AddUserToClassDialog from "@/components/people/AddUserToClassDialog";
 
 export default function PeopleSection({
@@ -93,7 +94,7 @@ export default function PeopleSection({
         <ul className="rounded-xl">
           <li className="flex items-center justify-between py-2">
             <div className="flex items-center gap-2">
-              <img
+              <UserAvatar
                 src={classroom.teacherImage}
                 alt={t("avatarAlt", { name: classroom.teacherName })}
                 width={32}

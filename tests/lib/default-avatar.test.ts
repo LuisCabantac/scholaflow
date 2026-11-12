@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  FALLBACK_AVATAR_SRC,
   defaultAvatarUrl,
   isDefaultAvatarUrl,
   isUploadedAvatarUrl,
+  resolveAvatarSrc,
 } from "@/lib/default-avatar";
 
 describe("defaultAvatarUrl", () => {
@@ -78,5 +80,33 @@ describe("isUploadedAvatarUrl", () => {
     );
     expect(isUploadedAvatarUrl("")).toBe(false);
     expect(isUploadedAvatarUrl(undefined)).toBe(false);
+  });
+});
+
+describe("resolveAvatarSrc", () => {
+  const uploaded =
+    "https://proj.supabase.co/storage/v1/object/public/avatars/u/a.jpg";
+
+  it("keeps a real avatar url", () => {
+    expect(resolveAvatarSrc(uploaded)).toBe(uploaded);
+  });
+
+  it("falls back for empty, null and undefined", () => {
+    expect(resolveAvatarSrc("")).toBe(FALLBACK_AVATAR_SRC);
+    expect(resolveAvatarSrc(null)).toBe(FALLBACK_AVATAR_SRC);
+    expect(resolveAvatarSrc(undefined)).toBe(FALLBACK_AVATAR_SRC);
+  });
+
+  it("falls back for the bucket's default avatar url", () => {
+    expect(
+      resolveAvatarSrc(
+        "https://proj.supabase.co/storage/v1/object/public/avatars//default-avatar.jpg",
+      ),
+    ).toBe(FALLBACK_AVATAR_SRC);
+  });
+
+  it("falls back once the url is known to have failed to load", () => {
+    expect(resolveAvatarSrc(uploaded, uploaded)).toBe(FALLBACK_AVATAR_SRC);
+    expect(resolveAvatarSrc(uploaded, "other")).toBe(uploaded);
   });
 });

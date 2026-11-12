@@ -9,6 +9,7 @@ import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/providers/ThemeProvider";
 
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/shared/UserAvatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,7 +45,7 @@ export default function UserMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full" asChild>
-          <img
+          <UserAvatar
             src={avatar}
             alt="profile"
             width={40}
@@ -56,7 +57,7 @@ export default function UserMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mt-2 w-52" align="end">
         <DropdownMenuLabel className="flex items-center gap-2">
-          <img
+          <UserAvatar
             src={avatar}
             alt="profile"
             width={20}

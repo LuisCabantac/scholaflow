@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import UserAvatar from "@/components/shared/UserAvatar";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import AttachmentFileCard from "@/components/shared/AttachmentFileCard";
@@ -376,7 +377,7 @@ export default function StreamForm({
                                             )
                                           }
                                         />
-                                        <img
+                                        <UserAvatar
                                           src={enrolled.userImage}
                                           alt={t("stream:form.avatarAlt", {
                                             name: enrolled.userName,

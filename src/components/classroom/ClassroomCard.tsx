@@ -6,6 +6,7 @@ import { useClickOutside } from "@/hooks/use-click-outside";
 import type { Classroom, EnrolledClass } from "@/lib/schema";
 import { classIllustration } from "@/lib/class-illustrations";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
 export default function ClassroomCard({
@@ -62,7 +63,7 @@ export default function ClassroomCard({
           </p>
         </div>
         <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
-          <img
+          <UserAvatar
             src={classData.teacherImage}
             width={24}
             height={24}

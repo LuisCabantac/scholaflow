@@ -4,6 +4,8 @@ import { ClientOnly } from "@tanstack/react-router";
 import type { Notification } from "@/lib/schema";
 import { notificationTitleKey, notificationWhen } from "@/lib/notifications";
 
+import UserAvatar from "@/components/shared/UserAvatar";
+
 export default function NotificationItem({
   notification,
   onOpen,
@@ -34,7 +36,7 @@ export default function NotificationItem({
         onClick={() => onOpen(notification)}
       >
         <div className="flex w-full items-center gap-2 overflow-hidden">
-          <img
+          <UserAvatar
             src={notification.fromUserImage}
             alt={t("imageAlt", { name: notification.fromUserName })}
             width={40}

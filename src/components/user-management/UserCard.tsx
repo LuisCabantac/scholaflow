@@ -6,6 +6,7 @@ import { ClientOnly } from "@tanstack/react-router";
 import type { User } from "@/lib/schema";
 import { useClickOutside } from "@/hooks/use-click-outside";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import UserForm from "@/components/user-management/UserForm";
 import EllipsisPopover from "@/components/shared/EllipsisPopover";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
@@ -37,7 +38,7 @@ export default function UserCard({
         data-cell={`${t("table.name")}:`}
         className="flex items-center gap-2 px-4 py-2"
       >
-        <img
+        <UserAvatar
           src={user.image}
           alt={t("table.avatarAlt", { name: user.name })}
           width={30}

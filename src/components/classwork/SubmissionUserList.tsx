@@ -5,6 +5,8 @@ import { useNow } from "@/hooks/use-now";
 import { workStatus } from "@/lib/classwork-rules";
 import type { Classwork, EnrolledClass, Stream } from "@/lib/schema";
 
+import UserAvatar from "@/components/shared/UserAvatar";
+
 function slug(name: string) {
   return name.split(" ").join("-").toLowerCase();
 }
@@ -44,7 +46,7 @@ export default function SubmissionUserList({
 
   const avatar = (image: string, name: string) => (
     <div className="flex items-center gap-2">
-      <img
+      <UserAvatar
         src={image}
         alt={t("avatarAlt", { name })}
         width={30}

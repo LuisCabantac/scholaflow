@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import UserAvatar from "@/components/shared/UserAvatar";
 import { ColorPicker } from "@/components/ui/color-picker";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
@@ -211,7 +212,7 @@ export default function ClassForm({
                         </p>
                       </div>
                       <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
-                        <img
+                        <UserAvatar
                           src={user.image ?? ""}
                           width={24}
                           height={24}

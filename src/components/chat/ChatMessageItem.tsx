@@ -5,6 +5,7 @@ import type { MessageRow } from "@/types/chat";
 import { getFileNameFromAttachments } from "@/lib/utils";
 import { isImageAttachment, messageDateLabel } from "@/lib/chat-messages";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import LinkifiedText from "@/components/stream/LinkifiedText";
 import AttachmentFileCard from "@/components/shared/AttachmentFileCard";
 
@@ -26,7 +27,7 @@ export default function ChatMessageItem({
     >
       <div className="flex max-w-full items-end gap-2">
         {!isOwn && showAvatar ? (
-          <img
+          <UserAvatar
             src={message.userImage}
             alt={t("avatarAlt", { name: message.userName })}
             width={32}

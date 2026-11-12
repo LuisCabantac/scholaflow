@@ -4,6 +4,7 @@ import type { RoleRequest } from "@/lib/schema";
 import type { RoleRequestStatus } from "@/types/user-management";
 
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/shared/UserAvatar";
 import SpinnerMini from "@/components/shared/SpinnerMini";
 
 export default function RoleRequestsCard({
@@ -34,7 +35,7 @@ export default function RoleRequestsCard({
   return (
     <li className="bg-card flex w-full flex-col items-start justify-between gap-2 p-2 md:flex-row md:items-center">
       <div className="flex items-center gap-2">
-        <img
+        <UserAvatar
           src={request.userImage}
           alt={t("avatarAlt", { name: request.userName })}
           width={32}

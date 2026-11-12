@@ -10,6 +10,7 @@ import {
   timeOfDay,
 } from "@/lib/stream-dates";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import StreamTypeIcon from "@/components/stream/StreamTypeIcon";
 
 function EditedIcon({ title }: { title: string }) {
@@ -73,7 +74,7 @@ export default function StreamDetailHeader({ stream }: { stream: Stream }) {
   if (stream.type === "stream") {
     return (
       <div className="mb-2 flex gap-2">
-        <img
+        <UserAvatar
           src={stream.userImage}
           alt={t("avatarAlt", { name: stream.userName })}
           width={40}

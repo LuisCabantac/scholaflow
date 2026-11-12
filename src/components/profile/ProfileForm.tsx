@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/shared/UserAvatar";
 
 const passwordWrapperClass =
   "group flex items-center gap-2 rounded-xl border bg-foreground/10 text-sm focus-within:border-ring group-disabled:cursor-not-allowed group-disabled:opacity-50";
@@ -180,7 +181,7 @@ export default function ProfileForm({
               <input type="text" name="userId" defaultValue={user.id} hidden />
               <div className="grid gap-2">
                 <div className="flex items-center gap-4">
-                  <img
+                  <UserAvatar
                     src={attachmentPreview}
                     alt={t("form.imageAlt", { name })}
                     width={48}

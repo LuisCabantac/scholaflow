@@ -14,6 +14,7 @@ import type {
 } from "@/lib/schema";
 
 import StreamForm from "@/components/stream/StreamForm";
+import UserAvatar from "@/components/shared/UserAvatar";
 import LinkifiedText from "@/components/stream/LinkifiedText";
 import StreamComments from "@/components/stream/StreamComments";
 import StreamTypeIcon from "@/components/stream/StreamTypeIcon";
@@ -108,7 +109,7 @@ export default function StreamCard({
               params={{ classId: classroom.id, streamId: stream.id }}
             >
               <div className="flex gap-2 pb-2">
-                <img
+                <UserAvatar
                   src={stream.userImage}
                   alt={t("imageAlt", { name: stream.userName })}
                   width={40}

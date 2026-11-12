@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import type { Classroom, EnrolledClass } from "@/lib/schema";
 
+import UserAvatar from "@/components/shared/UserAvatar";
 import EllipsisPopover from "@/components/shared/EllipsisPopover";
 import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
@@ -31,7 +32,7 @@ export default function PeopleCard({
   return (
     <li className="flex items-center justify-between py-2">
       <div className="flex items-center gap-2">
-        <img
+        <UserAvatar
           src={user.userImage}
           alt={t("avatarAlt", { name: user.userName })}
           width={32}
