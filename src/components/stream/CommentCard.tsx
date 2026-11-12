@@ -82,7 +82,6 @@ export default function CommentCard({
               <li>
                 <button
                   type="button"
-                  className="cursor-pointer"
                   onClick={() => setZoomedImage(comment.attachment)}
                 >
                   <img

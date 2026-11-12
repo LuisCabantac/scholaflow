@@ -147,7 +147,6 @@ export default function ClassForm({
                     : t("form.createTitle")}
                 </h3>
                 <button
-                  className="disabled:cursor-not-allowed"
                   type="button"
                   aria-label={t("form.close")}
                   disabled={isLoading}
@@ -320,7 +319,7 @@ export default function ClassForm({
                       <div className="flex items-center justify-between">
                         <button
                           type="button"
-                          className="text-sidebar-ring cursor-pointer text-lg"
+                          className="text-sidebar-ring text-lg"
                           onClick={() => copyToClipboard(classroom?.code ?? "")}
                         >
                           {classroom?.code}
@@ -341,7 +340,7 @@ export default function ClassForm({
                       <div className="flex items-center justify-between">
                         <button
                           type="button"
-                          className="text-sidebar-ring cursor-pointer text-lg"
+                          className="text-sidebar-ring text-lg"
                           onClick={() => copyToClipboard(inviteLink)}
                         >
                           {inviteLink}

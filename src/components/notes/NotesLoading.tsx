@@ -33,7 +33,7 @@ export default function NotesLoading({
               <div className="bg-muted-foreground/20 h-4 w-20 rounded" />
             </div>
           </div>
-          <div className="bg-primary text-primary-foreground flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full px-4 font-medium shadow-sm">
+          <div className="bg-primary text-primary-foreground flex h-9 cursor-wait items-center justify-center gap-2 rounded-full px-4 font-medium shadow-sm">
             <Pen className="h-4 w-4" />
             {t("notes:newNote")}
           </div>

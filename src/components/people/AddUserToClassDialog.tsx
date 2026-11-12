@@ -72,7 +72,7 @@ export default function AddUserToClassDialog({
                 {t("title")}
               </h3>
               <Button
-                className="hover:bg-transparent disabled:cursor-not-allowed"
+                className="hover:bg-transparent"
                 variant="ghost"
                 type="button"
                 size="icon"

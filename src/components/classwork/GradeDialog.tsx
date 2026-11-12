@@ -115,7 +115,7 @@ export default function GradeDialog({
           </form>
           <button
             type="button"
-            className="absolute top-4 right-4 disabled:cursor-not-allowed"
+            className="absolute top-4 right-4"
             disabled={isLoading}
             aria-label={t("close")}
             onClick={onClose}

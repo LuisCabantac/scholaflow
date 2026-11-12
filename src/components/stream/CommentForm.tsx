@@ -78,7 +78,7 @@ export default function CommentForm({
           placeholder={isPending ? pendingPlaceholder : placeholder}
         />
         {!attachmentImage && !isPending && (
-          <label className="cursor-pointer px-4 py-2">
+          <label className="px-4 py-2">
             <span className="sr-only">{t("attachImage")}</span>
             <input
               type="file"
@@ -114,13 +114,13 @@ export default function CommentForm({
               alt={t("commentAttachmentAlt")}
               width={150}
               height={150}
-              className="mt-2 cursor-pointer rounded-xl"
+              className="mt-2 rounded-xl"
               onDragStart={(e) => e.preventDefault()}
             />
           </button>
           <button
             type="button"
-            className="absolute top-1 left-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+            className="absolute top-1 left-1 rounded-full bg-black/70 p-1"
             aria-label={t("removeImage")}
             onClick={() => {
               setAttachmentImage(null);

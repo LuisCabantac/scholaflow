@@ -17,7 +17,7 @@ export default function Nav({ showButton }: { showButton: boolean }) {
   if (!showButton)
     return (
       <nav className="flex items-center justify-between px-4 py-4 md:px-10 md:pt-[1.6rem] md:pb-5 lg:px-12">
-        <Link to="/" className="cursor-pointer">
+        <Link to="/">
           <Logo />
         </Link>
       </nav>
@@ -30,7 +30,7 @@ export default function Nav({ showButton }: { showButton: boolean }) {
         isSticky && "border-border bg-background/80 backdrop-blur-3xl",
       )}
     >
-      <Link to="/" className="cursor-pointer select-none">
+      <Link to="/" className="select-none">
         <Logo />
       </Link>
       {data ? (

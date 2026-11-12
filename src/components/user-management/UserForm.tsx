@@ -90,7 +90,6 @@ export default function UserForm({
                 {type === "edit" ? t("editTitle") : t("createTitle")}
               </h3>
               <button
-                className="disabled:cursor-not-allowed"
                 type="button"
                 aria-label={t("close")}
                 disabled={isLoading}

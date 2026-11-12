@@ -81,7 +81,7 @@ export default function ChatComposer({
           {!expandAttachments && (
             <button
               type="button"
-              className="flex w-full cursor-pointer items-center gap-1 rounded-xl border p-3 shadow-sm md:p-4"
+              className="flex w-full items-center gap-1 rounded-xl border p-3 shadow-sm md:p-4"
               onClick={toggleExpandAttachments}
             >
               <svg
@@ -119,14 +119,12 @@ export default function ChatComposer({
       ) : null}
       <div className="flex items-center gap-2">
         <form className="flex w-full items-end gap-2" onSubmit={handleSubmit}>
-          <label
-            className={`py-[0.65rem] ${isPending ? "disabled:cursor-not-allowed" : "cursor-pointer"}`}
-          >
+          <label className="py-[0.65rem]">
             <span className="sr-only">{t("attachImages")}</span>
             <input
               type="file"
               multiple
-              className="input__file hidden disabled:cursor-not-allowed"
+              className="input__file hidden"
               accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
               disabled={isPending}
               onChange={handlePickFiles}

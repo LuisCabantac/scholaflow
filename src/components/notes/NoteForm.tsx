@@ -234,7 +234,7 @@ export default function NoteForm({
             onSubmit={handleSubmit}
           >
             <button
-              className="absolute top-4 right-4 disabled:cursor-not-allowed md:top-8 md:right-8"
+              className="absolute top-4 right-4 md:top-8 md:right-8"
               type="button"
               disabled={isLoading}
               onClick={onClose}
@@ -253,7 +253,7 @@ export default function NoteForm({
                       <button
                         type="button"
                         disabled={isLoading}
-                        className="absolute top-1 left-1 rounded-full bg-black/70 p-1 disabled:cursor-not-allowed"
+                        className="absolute top-1 left-1 rounded-full bg-black/70 p-1"
                         onClick={preview.remove}
                         aria-label={t("form.removeImage")}
                       >
@@ -270,7 +270,7 @@ export default function NoteForm({
                         alt={preview.url}
                         width={500}
                         height={500}
-                        className="w-auto cursor-pointer rounded-md object-cover select-none"
+                        className="w-auto rounded-md object-cover select-none"
                         onDragStart={(e) => e.preventDefault()}
                       />
                     </button>
@@ -318,14 +318,7 @@ export default function NoteForm({
                   className="p-0 hover:bg-transparent"
                   asChild
                 >
-                  <label
-                    className={
-                      isLoading
-                        ? "disabled:cursor-not-allowed"
-                        : "cursor-pointer"
-                    }
-                    aria-label={t("form.addImages")}
-                  >
+                  <label aria-label={t("form.addImages")}>
                     <input
                       type="file"
                       className="hidden"

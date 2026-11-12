@@ -13,7 +13,7 @@ export default function NotificationsLoading() {
           <div className="bg-muted-foreground/20 h-6 w-16 animate-pulse rounded-full" />
           <div className="bg-muted-foreground/20 h-6 w-20 animate-pulse rounded-full" />
         </div>
-        <div className="bg-primary text-primary-foreground flex h-9 cursor-not-allowed items-center justify-center gap-2 rounded-full px-4 font-medium shadow-sm">
+        <div className="bg-primary text-primary-foreground flex h-9 cursor-wait items-center justify-center gap-2 rounded-full px-4 font-medium shadow-sm">
           {t("notifications:markAllRead")}
         </div>
       </div>

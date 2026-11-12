@@ -14,7 +14,7 @@ export default function StreamComposer({
   return (
     <button
       type="button"
-      className="border-border bg-card flex w-full cursor-pointer items-center gap-3 rounded-xl border p-3 text-left shadow-sm md:p-4"
+      className="border-border bg-card flex w-full items-center gap-3 rounded-xl border p-3 text-left shadow-sm md:p-4"
       onClick={onOpen}
     >
       <img

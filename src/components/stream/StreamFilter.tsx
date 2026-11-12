@@ -52,7 +52,7 @@ export default function StreamFilter({
                 params={{ classId }}
                 search={{ sort: option }}
                 resetScroll={false}
-                className={`${sort === option ? "font-medium" : ""} hover:bg-foreground/20 flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl p-2 text-left text-nowrap`}
+                className={`${sort === option ? "font-medium" : ""} hover:bg-foreground/20 flex w-full items-center justify-between gap-2 rounded-xl p-2 text-left text-nowrap`}
               >
                 <span>{t(option)}</span>
                 {sort === option && (
