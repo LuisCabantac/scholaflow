@@ -377,7 +377,7 @@ export const updateStreamFn = createServerFn({ method: "POST" })
               ) {
                 return await uploadAttachments(
                   "streams",
-                  classroomId,
+                  currentStream.classId,
                   attachment,
                 );
               }

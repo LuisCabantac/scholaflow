@@ -103,7 +103,6 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
       };
     }
 
-    const classroomId = formData.get("classroomId") as string;
     const streamId = formData.get("streamId") as string;
 
     const currentClasswork = await getClassworkByStreamAndUserId(
@@ -177,7 +176,7 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
               ) {
                 return await uploadAttachments(
                   "classworks",
-                  classroomId,
+                  currentClasswork.classId,
                   attachment,
                 );
               }
