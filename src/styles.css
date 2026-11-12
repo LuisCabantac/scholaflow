@@ -90,30 +90,32 @@
         }
     }
 
-    .profile__icon:hover > div {
-        border-color: #5c7cfa;
-    }
+    @media (hover: hover) {
+        .profile__icon:hover > div {
+            border-color: #5c7cfa;
+        }
 
-    .sidebar__links:hover > svg {
-        stroke: hsl(var(--sidebar-ring));
-        fill: hsl(var(--sidebar-accent));
-    }
+        .sidebar__links:hover > svg {
+            stroke: hsl(var(--sidebar-ring));
+            fill: hsl(var(--sidebar-accent));
+        }
 
-    .sidebar__links:hover > div > svg {
-        stroke: hsl(var(--sidebar-ring));
-        fill: hsl(var(--sidebar-accent));
-    }
+        .sidebar__links:hover > div > svg {
+            stroke: hsl(var(--sidebar-ring));
+            fill: hsl(var(--sidebar-accent));
+        }
 
-    .sidebar__links:hover > span {
-        color: hsl(var(--sidebar-accent-foreground));
-    }
+        .sidebar__links:hover > span {
+            color: hsl(var(--sidebar-accent-foreground));
+        }
 
-    .sidebar__links:hover > div > span {
-        color: hsl(var(--sidebar-accent-foreground));
-    }
+        .sidebar__links:hover > div > span {
+            color: hsl(var(--sidebar-accent-foreground));
+        }
 
-    .signout__button:hover > svg {
-        fill: #c7d2f1;
+        .signout__button:hover > svg {
+            fill: #c7d2f1;
+        }
     }
 
     .ellipsis__popover {
@@ -275,9 +277,11 @@
         border-color: hsl(var(--primary));
     }
 
-    .underline__container:hover .underline__text {
-        text-decoration: underline;
-        color: #474c50;
+    @media (hover: hover) {
+        .underline__container:hover .underline__text {
+            text-decoration: underline;
+            color: #474c50;
+        }
     }
 }
 
