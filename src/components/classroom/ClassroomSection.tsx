@@ -152,24 +152,8 @@ export default function ClassroomSection({
   async function handleJoinClass(code: string) {
     setIsJoining(true);
     try {
-      const classroom = await queryClient.fetchQuery(
-        classroomQueries.byCode(code),
-      );
-      if (!classroom) {
-        toast.error(t("join.notFound"));
-        return;
-      }
-
-      const enrolled = await queryClient.fetchQuery(
-        classroomQueries.enrolledByClassAndSession(user.id, classroom.id),
-      );
-      if (classroom.teacherId === user.id || enrolled) {
-        toast.error(t("join.alreadyIn"));
-        return;
-      }
-
-      const result = await joinClassFn({ data: classroom.id });
-      if (!result.success) {
+      const result = await joinClassFn({ data: code });
+      if (!result.success || !result.classId) {
         toast.error(result.message);
         return;
       }
@@ -183,7 +167,7 @@ export default function ClassroomSection({
       setShowJoinClass(false);
       await navigate({
         to: "/classroom/class/$classId",
-        params: { classId: classroom.id },
+        params: { classId: result.classId },
       });
     } finally {
       setIsJoining(false);

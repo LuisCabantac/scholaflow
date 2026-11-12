@@ -78,7 +78,10 @@ export const getClassByClassIdFn = createServerFn({ method: "GET" })
 
     if (!session) return null;
 
-    return await getClassByClassId(id);
+    const classroom = await getClassByClassId(id);
+    if (!classroom || classroom.teacherId === session.user.id) return classroom;
+
+    return { ...classroom, code: "" };
   });
 
 export const getClassByClassCodeFn = createServerFn({ method: "GET" })
@@ -278,8 +281,8 @@ export const updateClassFn = createServerFn({ method: "POST" })
   });
 
 export const joinClassFn = createServerFn({ method: "POST" })
-  .validator((classId: string) => classId)
-  .handler(async ({ data: classId }) => {
+  .validator((code: string) => code)
+  .handler(async ({ data: code }) => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
@@ -292,10 +295,9 @@ export const joinClassFn = createServerFn({ method: "POST" })
       };
     }
 
-    const classroom = await getClassByClassId(classId);
+    const classroom = await getClassByClassCode(code.trim());
 
-    if (!classroom)
-      return { success: false, message: "This class doesn't exist" };
+    if (!classroom) return { success: false, message: "Class not found" };
 
     const existingEnrollment = await getEnrolledClassByClassAndSessionId(
       session.user.id,
@@ -345,7 +347,11 @@ export const joinClassFn = createServerFn({ method: "POST" })
       session.user.image as string,
     );
 
-    return { success: true, message: "You've successfully joined the class!" };
+    return {
+      success: true,
+      message: "You've successfully joined the class!",
+      classId: classroom.id,
+    };
   });
 
 export const deleteMultipleEnrolledClassFn = createServerFn({ method: "POST" })

@@ -27,7 +27,7 @@ export default function InviteSection({
   const { t } = useTranslation("classroom", { keyPrefix: "invite" });
 
   const join = useMutation({
-    mutationFn: () => joinClassFn({ data: classroom.id }),
+    mutationFn: () => joinClassFn({ data: classroom.code }),
     onSuccess: async (result) => {
       if (!result.success) {
         toast.error(result.message);
