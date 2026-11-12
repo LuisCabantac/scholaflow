@@ -3,3 +3,5 @@ allowBuilds:
   lightningcss: true
   better-sqlite3: true
   '@parcel/watcher': true
+overrides:
+  esbuild@<0.25.0: '>=0.25.0'
