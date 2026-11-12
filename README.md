@@ -252,6 +252,7 @@ cp .env.example .env
 | `BETTER_AUTH_URL`               | **Yes**  | Origin the app is served from (sign-in requests from other origins fail)    | `http://localhost:3000`                  |
 | `APP_URL`                       | **Yes**  | Base URL used in emailed links                                              | `http://localhost:3000`                  |
 | `AUTH_TRUSTED_ORIGINS`          |    No    | Extra origins Better Auth accepts, comma-separated, e.g. the mobile app's scheme | `scholaflow://`                          |
+| `API_ALLOWED_ORIGINS`           |    No    | Browser origins allowed to call `/api/v1`, comma-separated; empty disables CORS | `wails://wails.localhost`                |
 | `VITE_SITE_URL`                 |    No    | Public origin used for canonical links, Open Graph URLs, robots.txt and the sitemap | `https://scholaflow.vercel.app`          |
 | `GOOGLE_CLIENT_ID`              | **Yes**  | Google Cloud OAuth 2.0 Client ID                                            | `xxx.apps.googleusercontent.com`         |
 | `GOOGLE_CLIENT_SECRET`          | **Yes**  | Google Cloud OAuth 2.0 Client Secret                                        | `GOCSPX-xxxxxx`                          |

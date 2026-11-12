@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { handle, ok } from "@/server/api/respond";
 import { requireApiUser } from "@/server/api/auth";
 import { registerRoute } from "@/server/api/openapi";
+import { handle, noContent, ok } from "@/server/api/respond";
 
 const meSchema = z.object({
   id: z.string(),
@@ -27,6 +27,7 @@ registerRoute({
 export const Route = createFileRoute("/api/v1/me")({
   server: {
     handlers: {
+      OPTIONS: handle(async () => noContent()),
       GET: handle(async ({ request }) => {
         const user = await requireApiUser(request);
         return ok({

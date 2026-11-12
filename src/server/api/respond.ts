@@ -1,4 +1,5 @@
 import type { ApiErrorBody } from "@/types/api";
+import { allowedOrigins, corsHeaders } from "@/server/api/cors";
 import { API_ERROR_STATUS, toApiError } from "@/server/api/errors";
 
 export type HandlerContext = {
@@ -39,12 +40,23 @@ export function fail(error: unknown): Response {
   });
 }
 
-export function handle(fn: Handler): Handler {
+function withCors(response: Response, cors: Headers): Response {
+  if (![...cors.keys()].length) return response;
+
+  const headers = new Headers(response.headers);
+  for (const [key, value] of cors.entries()) headers.set(key, value);
+  return new Response(response.body, { status: response.status, headers });
+}
+
+export function handle(fn: Handler, origins = allowedOrigins()): Handler {
   return async (ctx) => {
+    const cors = corsHeaders(ctx.request, origins);
+    if (ctx.request.method === "OPTIONS") return withCors(noContent(), cors);
+
     try {
-      return await fn(ctx);
+      return withCors(await fn(ctx), cors);
     } catch (error) {
-      return fail(error);
+      return withCors(fail(error), cors);
     }
   };
 }
