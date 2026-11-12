@@ -421,5 +421,6 @@
     }
     body {
         @apply bg-background text-foreground;
+        padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
     }
 }

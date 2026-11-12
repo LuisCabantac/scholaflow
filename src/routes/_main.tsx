@@ -42,11 +42,11 @@ function MainLayout() {
   const { user } = Route.useRouteContext();
 
   return (
-    <div className="flex h-dvh overflow-hidden">
+    <div className="flex h-dvh overflow-hidden pt-[env(safe-area-inset-top)]">
       <Sidebar user={user} />
       <main className="h-full w-full overflow-auto">
         <Header user={user} />
-        <div className="px-4 pb-4 md:px-8">
+        <div className="px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] md:px-8">
           <Outlet />
         </div>
       </main>

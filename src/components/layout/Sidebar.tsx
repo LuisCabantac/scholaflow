@@ -21,7 +21,7 @@ export default function Sidebar({ user }: { user: SessionUser }) {
         />
       )}
       <div
-        className={`fixed h-dvh overflow-y-auto ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} border-sidebar-border bg-sidebar top-0 left-0 z-30 py-5 transition-all duration-300 ease-in-out md:static md:rounded-r-md md:border-r`}
+        className={`fixed h-dvh overflow-y-auto ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} border-sidebar-border bg-sidebar top-0 left-0 z-30 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5 transition-all md:pt-5 duration-300 ease-in-out md:static md:rounded-r-md md:border-r`}
       >
         <div className="flex items-center justify-between pl-3">
           <Logo showText={sidebarExpand} />

@@ -322,7 +322,7 @@ export default function ClassroomSection({
           </div>
         </SheetContent>
       </Sheet>
-      <div className="fixed right-6 bottom-8 z-10 block md:hidden">
+      <div className="fixed right-6 bottom-[calc(2rem+env(safe-area-inset-bottom))] z-10 block md:hidden">
         <Button
           onClick={handleToggleShowFab}
           className="flex items-center justify-center p-8"
