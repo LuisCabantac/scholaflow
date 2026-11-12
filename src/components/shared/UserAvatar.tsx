@@ -46,7 +46,7 @@ export default function UserAvatar({
       ref={ref}
       {...props}
       alt={alt}
-      className={className}
+      className={className ? `object-cover ${className}` : "object-cover"}
       width={width}
       height={height}
       src={resolved}
