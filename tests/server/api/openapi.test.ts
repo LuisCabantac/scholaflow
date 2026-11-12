@@ -71,6 +71,42 @@ describe("buildOpenApi", () => {
     );
   });
 
+  it("emits 3.1 schemas where nullable fields allow null", () => {
+    registerRoute({
+      method: "GET",
+      path: "/me",
+      summary: "Current user",
+      auth: "bearer",
+      response: z.object({ image: z.string().nullable() }),
+      errors: [],
+    });
+    const doc = buildOpenApi() as {
+      paths: Record<
+        string,
+        Record<
+          string,
+          {
+            responses: Record<
+              string,
+              {
+                content: Record<
+                  string,
+                  { schema: { properties: Record<string, unknown> } }
+                >;
+              }
+            >;
+          }
+        >
+      >;
+    };
+    const image = JSON.stringify(
+      doc.paths["/me"].get.responses["200"].content["application/json"].schema
+        .properties.image,
+    );
+    expect(image).toContain('"null"');
+    expect(image).not.toContain("nullable");
+  });
+
   it("lists registered routes", () => {
     registerRoute({
       method: "GET",

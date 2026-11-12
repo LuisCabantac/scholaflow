@@ -39,7 +39,7 @@ export function resetRoutes(): void {
 }
 
 function schemaOf(schema: z.ZodType) {
-  return z.toJSONSchema(schema, { target: "openapi-3.0" });
+  return z.toJSONSchema(schema);
 }
 
 function parameters(doc: RouteDoc) {

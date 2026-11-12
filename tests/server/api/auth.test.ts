@@ -1,3 +1,4 @@
+import { APIError } from "better-auth/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { readBearer, requireApiUser } from "@/server/api/auth";
@@ -93,10 +94,42 @@ describe("requireApiUser", () => {
     });
   });
 
-  it("rejects when the session lookup itself throws", async () => {
-    getSession.mockRejectedValue(new Error("db"));
+  it("passes only the bearer header to the session lookup, never cookies", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1", role: "user" } });
+    const request = new Request("http://localhost/api/v1/me", {
+      headers: {
+        authorization: "Bearer tok",
+        cookie: "better-auth.session_token=stolen",
+      },
+    });
+    await requireApiUser(request);
+    const headers = getSession.mock.calls[0][0].headers as Headers;
+    expect(headers.get("cookie")).toBeNull();
+    expect(headers.get("authorization")).toBe("Bearer tok");
+  });
+
+  it("treats a better-auth api error from the session lookup as unauthorized", async () => {
+    getSession.mockRejectedValue(
+      new APIError("UNAUTHORIZED", { message: "bad" }),
+    );
     await expect(requireApiUser(withAuth("Bearer tok"))).rejects.toMatchObject({
       code: "unauthorized",
     });
+  });
+
+  it("lets an infrastructure failure in the session lookup propagate", async () => {
+    getSession.mockRejectedValue(new Error("db down"));
+    await expect(requireApiUser(withAuth("Bearer tok"))).rejects.toThrow(
+      "db down",
+    );
+  });
+
+  it("lets an infrastructure failure in the user lookup propagate", async () => {
+    getSession.mockResolvedValue(null);
+    verifyJWT.mockResolvedValue({ payload: { sub: "u2" } });
+    getUserByUserId.mockRejectedValue(new Error("db down"));
+    await expect(requireApiUser(withAuth("Bearer jwt"))).rejects.toThrow(
+      "db down",
+    );
   });
 });

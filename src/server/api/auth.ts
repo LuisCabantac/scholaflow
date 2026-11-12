@@ -1,3 +1,5 @@
+import { APIError } from "better-auth/api";
+
 import { auth } from "@/lib/auth";
 import { ApiError } from "@/server/api/errors";
 import type { SessionUser } from "@/types/auth";
@@ -14,33 +16,42 @@ export function readBearer(request: Request): string | null {
   return token.length ? token : null;
 }
 
-async function sessionUser(request: Request): Promise<SessionUser | null> {
+async function sessionUser(authorization: string): Promise<SessionUser | null> {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
+    const session = await auth.api.getSession({
+      headers: new Headers({ authorization }),
+    });
     return session?.user ?? null;
+  } catch (error) {
+    if (error instanceof APIError) return null;
+    throw error;
+  }
+}
+
+async function jwtSubject(token: string): Promise<string | null> {
+  try {
+    const result = await auth.api.verifyJWT({ body: { token } });
+    return result?.payload?.sub ?? null;
   } catch {
     return null;
   }
 }
 
 async function jwtUser(token: string): Promise<SessionUser | null> {
-  try {
-    const result = await auth.api.verifyJWT({ body: { token } });
-    const subject = result?.payload?.sub;
-    if (!subject) return null;
+  const subject = await jwtSubject(token);
+  if (!subject) return null;
 
-    const user = await getUserByUserId(subject);
-    return user ? (user as unknown as SessionUser) : null;
-  } catch {
-    return null;
-  }
+  const user = await getUserByUserId(subject);
+  return user ? (user as unknown as SessionUser) : null;
 }
 
 export async function requireApiUser(request: Request): Promise<SessionUser> {
   const token = readBearer(request);
   if (!token) throw new ApiError("unauthorized", "Authentication required.");
 
-  const user = (await sessionUser(request)) ?? (await jwtUser(token));
+  const user =
+    (await sessionUser(request.headers.get("authorization") ?? "")) ??
+    (await jwtUser(token));
   if (!user) throw new ApiError("unauthorized", "Invalid or expired token.");
 
   return user;
