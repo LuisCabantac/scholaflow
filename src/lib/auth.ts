@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins/jwt";
+import { bearer } from "better-auth/plugins/bearer";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { inferAdditionalFields } from "better-auth/client/plugins";
@@ -8,7 +9,13 @@ import { db } from "@/db";
 import { schema } from "@/db/schema";
 import { defaultAvatarUrl } from "@/lib/default-avatar";
 
+const trustedOrigins = (process.env.AUTH_TRUSTED_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 export const auth = betterAuth({
+  trustedOrigins,
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: schema,
@@ -63,6 +70,7 @@ export const auth = betterAuth({
         },
       },
     }),
+    bearer(),
     jwt(),
     tanstackStartCookies(),
   ],
