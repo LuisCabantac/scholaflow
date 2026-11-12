@@ -371,7 +371,21 @@ const channel = supabase
 
 ---
 
-## 7. Intentional differences from the Next.js version
+## 7. API (`/api/v1`)
+
+The app also serves a JSON API for native clients (the planned Expo app, later desktop or Kotlin clients). The website does not use it; it keeps calling its server functions. Both paths call the same service code, so authorization rules exist once.
+
+- **Sign in:** `POST /api/auth/sign-in/email` with `{ "email", "password" }` and an `Origin` header equal to `BETTER_AUTH_URL`. The response carries the session token in the `set-auth-token` header; send it back as `Authorization: Bearer <token>` on every API call. JWTs from `/api/auth/token` are accepted too. Google sign-in for native apps is wired in a later step.
+- **Document:** `GET /api/v1/openapi.json` (OpenAPI 3.1, generated from the route registry; a test fails if a route file is not registered).
+- **Public endpoints:** `GET /api/v1/health`, `POST /api/v1/auth/verification-email` and `POST /api/v1/auth/password-reset` (`{ "email" }`, 202 on success; same behaviour as the website's forms).
+- **Errors:** `{ "error": { "code", "message", "details"? } }` with `unauthorized` 401, `forbidden` 403, `not_found` 404, `validation_failed` 400, `conflict` 409, `payload_too_large` 413, `rate_limited` 429, `internal` 500.
+- **Environment:** `AUTH_TRUSTED_ORIGINS` for the mobile app scheme, `API_ALLOWED_ORIGINS` for browser-like clients that need CORS (empty disables it).
+
+Contract check: `BASE=... TEST_EMAIL=... TEST_PASSWORD=... node docs/checks/api-01-foundation-check.mjs` (local only).
+
+---
+
+## 8. Intentional differences from the Next.js version
 
 The rewrite keeps main's features and markup, with these deliberate changes:
 
@@ -394,7 +408,7 @@ The rewrite keeps main's features and markup, with these deliberate changes:
 
 ---
 
-## 8. Troubleshooting / Error Handling
+## 9. Troubleshooting / Error Handling
 
 #### 1. Database Connection Timeout or SSL Rejection
 
