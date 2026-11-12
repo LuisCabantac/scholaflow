@@ -2,6 +2,8 @@ import type { getSession } from "@/server/functions/auth";
 
 export type TokenType = "uuid" | "nanoid";
 
+export type TokenPurpose = "verify" | "reset" | "close";
+
 export type SessionUser = NonNullable<
   Awaited<ReturnType<typeof getSession>>
 >["user"];

@@ -18,6 +18,7 @@ import {
 import {
   getClassByClassId,
   getEnrolledClassByUserAndClassId,
+  isClassMember,
 } from "@/services/classroom";
 import {
   createClasswork,
@@ -102,7 +103,6 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
       };
     }
 
-    const classroomId = formData.get("classroomId") as string;
     const streamId = formData.get("streamId") as string;
 
     const currentClasswork = await getClassworkByStreamAndUserId(
@@ -176,7 +176,7 @@ export const updateClassworkFn = createServerFn({ method: "POST" })
               ) {
                 return await uploadAttachments(
                   "classworks",
-                  classroomId,
+                  currentClasswork.classId,
                   attachment,
                 );
               }
@@ -240,6 +240,12 @@ export const submitClassworkFn = createServerFn({ method: "POST" })
     const stream = await getClassStreamByStreamId(streamId);
     if (!stream)
       return { success: false, message: "This stream does not exist." };
+    if (stream.classId !== classId)
+      return { success: false, message: "This stream does not exist." };
+
+    if (!(await isClassMember(session.user.id, classId))) {
+      return { success: false, message: "You are not a member of this class." };
+    }
 
     if (!stream.announceToAll && !stream.announceTo.includes(session.user.id)) {
       return {

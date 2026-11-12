@@ -6,11 +6,10 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { user } from "@/db/schema";
 import { sendEmail } from "@/services/email";
-import type { AuthResult, TokenType } from "@/types/auth";
 import { deleteFilesFromBucket } from "@/services/user-management";
+import type { AuthResult, TokenPurpose, TokenType } from "@/types/auth";
 import { renderActionEmail } from "@/services/email-templates/action-email";
 import { renderVerifyEmail } from "@/services/email-templates/verify-email";
-import { buildAppUrl, isExpired, matchesTokenType } from "@/lib/auth-tokens";
 import {
   collectUserFiles,
   deleteUserCascade,
@@ -20,6 +19,12 @@ import {
   getUserByEmail,
   getUserIdById,
 } from "@/services/user";
+import {
+  buildAppUrl,
+  isExpired,
+  matchesTokenType,
+  parseTokenIdentifier,
+} from "@/lib/auth-tokens";
 import {
   deleteVerificationToken,
   generateVerificationToken,
@@ -49,8 +54,12 @@ export const ensureSession = createServerFn({ method: "GET" }).handler(
   },
 );
 
-async function hasUnexpiredToken(email: string, type: TokenType) {
-  const existing = await getVerificationToken(email);
+async function hasUnexpiredToken(
+  email: string,
+  purpose: TokenPurpose,
+  type: TokenType,
+) {
+  const existing = await getVerificationToken(email, purpose);
 
   return (
     existing !== null &&
@@ -61,12 +70,13 @@ async function hasUnexpiredToken(email: string, type: TokenType) {
 
 async function deliver(
   to: string,
+  purpose: TokenPurpose,
   rendered: { subject: string; html: string; text: string },
 ): Promise<AuthResult> {
   try {
     await sendEmail({ to, ...rendered });
   } catch {
-    await deleteVerificationToken(to);
+    await deleteVerificationToken(to, purpose);
     return { success: false, code: "emailSendFailed" };
   }
 
@@ -82,16 +92,17 @@ export const sendVerificationEmailFn = createServerFn({ method: "POST" })
     if (existingUser.emailVerified) {
       return { success: false, code: "alreadyVerified" };
     }
-    if (await hasUnexpiredToken(email, "uuid")) {
+    if (await hasUnexpiredToken(email, "verify", "uuid")) {
       return { success: false, code: "alreadySent" };
     }
 
-    const token = await generateVerificationToken(email, "uuid");
+    const token = await generateVerificationToken(email, "verify", "uuid");
 
     if (!token) return { success: false, code: "tokenGenerationFailed" };
 
     return deliver(
       email,
+      "verify",
       renderVerifyEmail({
         toName: existingUser.name.split(" ")[0] ?? existingUser.name,
         verifyUrl: buildAppUrl(`/verify?token=${token.value}`),
@@ -102,7 +113,7 @@ export const sendVerificationEmailFn = createServerFn({ method: "POST" })
 export const requestPasswordResetFn = createServerFn({ method: "POST" })
   .validator((email: string) => email)
   .handler(async ({ data: email }): Promise<AuthResult> => {
-    if (await hasUnexpiredToken(email, "nanoid")) {
+    if (await hasUnexpiredToken(email, "reset", "nanoid")) {
       return { success: false, code: "alreadySent" };
     }
 
@@ -116,12 +127,13 @@ export const requestPasswordResetFn = createServerFn({ method: "POST" })
       return { success: false, code: "googleAccount" };
     }
 
-    const token = await generateVerificationToken(email, "nanoid");
+    const token = await generateVerificationToken(email, "reset", "nanoid");
 
     if (!token) return { success: false, code: "tokenGenerationFailed" };
 
     return deliver(
       email,
+      "reset",
       renderActionEmail({
         toName: existingUser.name.split(" ")[0] ?? existingUser.name,
         subject: "Reset Your ScholaFlow Password",
@@ -147,16 +159,17 @@ export const requestAccountClosureFn = createServerFn({ method: "POST" })
       return { success: false, code: "noAccount" };
     }
 
-    if (await hasUnexpiredToken(email, "uuid")) {
+    if (await hasUnexpiredToken(email, "close", "uuid")) {
       return { success: false, code: "alreadySent" };
     }
 
-    const token = await generateVerificationToken(email, "uuid");
+    const token = await generateVerificationToken(email, "close", "uuid");
 
     if (!token) return { success: false, code: "tokenGenerationFailed" };
 
     return deliver(
       email,
+      "close",
       renderActionEmail({
         toName: session.user.name.split(" ")[0] ?? session.user.name,
         subject: "Confirm Your ScholaFlow Account Deletion",
@@ -181,12 +194,18 @@ export const verifyEmailVerificationFn = createServerFn({ method: "POST" })
 
     if (!tokenData) return { success: false, code: "invalidLink" };
 
+    const parsed = parseTokenIdentifier(tokenData.identifier);
+
+    if (!parsed || parsed.purpose !== "verify") {
+      return { success: false, code: "invalidLink" };
+    }
+
     if (isExpired(tokenData.expiresAt)) {
-      await deleteVerificationToken(tokenData.identifier);
+      await deleteVerificationToken(parsed.email, "verify");
       return { success: false, code: "linkExpired" };
     }
 
-    const existingUser = await getUserIdById(tokenData.identifier);
+    const existingUser = await getUserIdById(parsed.email);
 
     if (!existingUser) return { success: false, code: "noAccount" };
 
@@ -198,7 +217,7 @@ export const verifyEmailVerificationFn = createServerFn({ method: "POST" })
 
     if (!updatedUser) return { success: false, code: "verifyFailed" };
 
-    await deleteVerificationToken(tokenData.identifier);
+    await deleteVerificationToken(parsed.email, "verify");
 
     return { success: true, code: "emailVerified" };
   });
@@ -210,12 +229,18 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
 
     if (!tokenData) return { success: false, code: "invalidLink" };
 
+    const parsed = parseTokenIdentifier(tokenData.identifier);
+
+    if (!parsed || parsed.purpose !== "close") {
+      return { success: false, code: "invalidLink" };
+    }
+
     if (isExpired(tokenData.expiresAt)) {
-      await deleteVerificationToken(tokenData.identifier);
+      await deleteVerificationToken(parsed.email, "close");
       return { success: false, code: "linkExpired" };
     }
 
-    const existingUser = await getUserByEmail(tokenData.identifier);
+    const existingUser = await getUserByEmail(parsed.email);
 
     if (!existingUser) return { success: false, code: "noAccount" };
 
@@ -228,7 +253,7 @@ export const closeUserAccountFn = createServerFn({ method: "POST" })
       await deleteFilesFromBucket(group.bucket, group.paths).catch(() => null);
     }
 
-    await deleteVerificationToken(tokenData.identifier);
+    await deleteVerificationToken(parsed.email, "close");
 
     return { success: true, code: "accountClosed" };
   });
@@ -244,12 +269,18 @@ export const updateUserPasswordFn = createServerFn({ method: "POST" })
       return { success: false, code: "invalidTokenFormat" };
     }
 
+    const parsed = parseTokenIdentifier(tokenData.identifier);
+
+    if (!parsed || parsed.purpose !== "reset") {
+      return { success: false, code: "invalidLink" };
+    }
+
     if (isExpired(tokenData.expiresAt)) {
-      await deleteVerificationToken(tokenData.identifier);
+      await deleteVerificationToken(parsed.email, "reset");
       return { success: false, code: "linkExpired" };
     }
 
-    const existingUser = await getUserByEmail(tokenData.identifier);
+    const existingUser = await getUserByEmail(parsed.email);
 
     if (!existingUser) return { success: false, code: "noAccount" };
 
@@ -271,7 +302,7 @@ export const updateUserPasswordFn = createServerFn({ method: "POST" })
     const hash = await ctx.password.hash(newPassword);
 
     await ctx.internalAdapter.updatePassword(existingUser.id, hash);
-    await deleteVerificationToken(tokenData.identifier);
+    await deleteVerificationToken(parsed.email, "reset");
 
     return { success: true, code: "passwordUpdated" };
   });
