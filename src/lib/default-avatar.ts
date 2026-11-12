@@ -26,13 +26,10 @@ export function isUploadedAvatarUrl(url: string | null | undefined): boolean {
   );
 }
 
-export const FALLBACK_AVATAR_SRC = "/app/default-avatar.svg";
-
 export function resolveAvatarSrc(
   src: string | null | undefined,
   failedSrc: string | null = null,
-): string {
-  if (!src || isDefaultAvatarUrl(src) || src === failedSrc)
-    return FALLBACK_AVATAR_SRC;
+): string | null {
+  if (!src || isDefaultAvatarUrl(src) || src === failedSrc) return null;
   return src;
 }

@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
-  FALLBACK_AVATAR_SRC,
   defaultAvatarUrl,
   isDefaultAvatarUrl,
   isUploadedAvatarUrl,
@@ -91,22 +90,22 @@ describe("resolveAvatarSrc", () => {
     expect(resolveAvatarSrc(uploaded)).toBe(uploaded);
   });
 
-  it("falls back for empty, null and undefined", () => {
-    expect(resolveAvatarSrc("")).toBe(FALLBACK_AVATAR_SRC);
-    expect(resolveAvatarSrc(null)).toBe(FALLBACK_AVATAR_SRC);
-    expect(resolveAvatarSrc(undefined)).toBe(FALLBACK_AVATAR_SRC);
+  it("returns null (fallback) for empty, null and undefined", () => {
+    expect(resolveAvatarSrc("")).toBeNull();
+    expect(resolveAvatarSrc(null)).toBeNull();
+    expect(resolveAvatarSrc(undefined)).toBeNull();
   });
 
-  it("falls back for the bucket's default avatar url", () => {
+  it("returns null for the bucket's default avatar url", () => {
     expect(
       resolveAvatarSrc(
         "https://proj.supabase.co/storage/v1/object/public/avatars//default-avatar.jpg",
       ),
-    ).toBe(FALLBACK_AVATAR_SRC);
+    ).toBeNull();
   });
 
-  it("falls back once the url is known to have failed to load", () => {
-    expect(resolveAvatarSrc(uploaded, uploaded)).toBe(FALLBACK_AVATAR_SRC);
+  it("returns null once the url is known to have failed to load", () => {
+    expect(resolveAvatarSrc(uploaded, uploaded)).toBeNull();
     expect(resolveAvatarSrc(uploaded, "other")).toBe(uploaded);
   });
 });
