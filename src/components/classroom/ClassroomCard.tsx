@@ -62,7 +62,7 @@ export default function ClassroomCard({
             {classData.section}
           </p>
         </div>
-        <div className="absolute bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:bottom-4 md:left-4">
+        <div className="absolute right-3 bottom-3 left-3 flex items-center gap-2 text-balance drop-shadow-sm md:right-4 md:bottom-4 md:left-4">
           <UserAvatar
             src={classData.teacherImage}
             width={24}
@@ -70,8 +70,8 @@ export default function ClassroomCard({
             alt={t("card.avatarAlt", { name: classData.teacherName })}
             className="h-6 w-6 shrink-0 rounded-full md:h-8 md:w-8"
           />
-          <div>
-            <p>{classData.teacherName}</p>
+          <div className="min-w-0">
+            <p className="truncate">{classData.teacherName}</p>
             <p className="text-xs font-medium">{t("card.instructor")}</p>
           </div>
         </div>

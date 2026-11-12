@@ -61,7 +61,7 @@ export default function ToDoItem(props: ToDoItemProps) {
         params={{ classId: props.item.classId, streamId }}
         className="group bg-card flex w-full items-center justify-between gap-2 rounded-xl border p-4 shadow-sm"
       >
-        <div className="flex gap-2">
+        <div className="flex min-w-0 gap-2">
           <svg
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
@@ -73,11 +73,13 @@ export default function ToDoItem(props: ToDoItemProps) {
           >
             {icons[props.kind]}
           </svg>
-          <div>
-            <p className="font-medium group-hover:underline">
+          <div className="min-w-0">
+            <p className="font-medium [overflow-wrap:anywhere] group-hover:underline">
               {props.item.title}
             </p>
-            <p className="text-xs">{props.item.className}</p>
+            <p className="text-xs [overflow-wrap:anywhere]">
+              {props.item.className}
+            </p>
             <ClientOnly fallback={<div className="mt-2 h-8" />}>
               <div className="mt-2 grid items-center gap-1 text-xs">
                 <p>{t("posted", { when: postedWhen(postedAt, t) })}</p>
