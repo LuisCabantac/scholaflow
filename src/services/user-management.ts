@@ -4,7 +4,7 @@ import { validate as validateUUID } from "uuid";
 import { db } from "@/db";
 import { roleRequest } from "@/db/schema";
 import type { RoleRequest } from "@/lib/schema";
-import { createClient } from "@/lib/supabase/server";
+import { createStorageClient } from "@/lib/supabase/server";
 
 export async function getRoleRequest(
   userId: string,
@@ -35,7 +35,7 @@ export async function deleteFileFromBucket(
   bucketName: string,
   filePath: string,
 ): Promise<void> {
-  const supabase = createClient();
+  const supabase = createStorageClient();
   const { error } = await supabase.storage.from(bucketName).remove([filePath]);
 
   if (error) {
@@ -49,7 +49,7 @@ export async function deleteFilesFromBucket(
   bucketName: string,
   filePaths: string[],
 ): Promise<void> {
-  const supabase = createClient();
+  const supabase = createStorageClient();
   const { error } = await supabase.storage.from(bucketName).remove(filePaths);
 
   if (error) {

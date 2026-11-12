@@ -225,7 +225,7 @@ pnpm install
 
 #### 3. Provision Supabase Storage Buckets
 
-In the Supabase dashboard under **Storage**, create six buckets and allow reads plus inserts and deletes for the key you configure:
+In the Supabase dashboard under **Storage**, create six buckets with public reads. Set `SUPABASE_SECRET_KEY` so the server performs uploads and deletes with the secret key and the publishable key needs no write policy; without it, the publishable key must be allowed to `INSERT` and `DELETE` on the buckets, which also lets anyone holding that key write to them:
 
 - `avatars`
 - `streams`
@@ -246,7 +246,8 @@ cp .env.example .env
 | :------------------------------ | :------: | :-------------------------------------------------------------------------- | :--------------------------------------- |
 | `DATABASE_URL`                  | **Yes**  | PostgreSQL connection URI                                                   | `postgresql://postgres:[password]@...`   |
 | `VITE_SUPABASE_URL`             | **Yes**  | Supabase project URL (also exposed to the browser)                          | `https://[project-id].supabase.co`       |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | **Yes**  | Supabase publishable (anon) key, used for storage and realtime              | `sb_publishable_...`                     |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | **Yes**  | Supabase publishable (anon) key, exposed to the browser for realtime        | `sb_publishable_...`                     |
+| `SUPABASE_SECRET_KEY`           |    No    | Server-only Supabase secret (service role) key for storage uploads and deletes; falls back to the publishable key when unset | `sb_secret_...`                          |
 | `BETTER_AUTH_SECRET`            | **Yes**  | Secret used by Better Auth to sign session tokens                           | Random 32+ character string              |
 | `BETTER_AUTH_URL`               | **Yes**  | Origin the app is served from (sign-in requests from other origins fail)    | `http://localhost:3000`                  |
 | `APP_URL`                       | **Yes**  | Base URL used in emailed links                                              | `http://localhost:3000`                  |
@@ -379,6 +380,7 @@ The rewrite keeps main's features and markup, with these deliberate changes:
 - **Submissions:** turning in, resubmitting and unsubmitting are refused once the teacher turns off "accepting submissions" or the due date passes with "close after due date" on (main only disabled the button). Turning in again after an unsubmit counts as a change.
 - **Account deletion:** closing an account (self-service or admin) deletes the user's classes, posts, comments, classworks, notes, notifications and messages in one transaction and then removes their files from storage.
 - **Profile edits:** name, avatar and email changes propagate to the user's posts, comments, roster rows and role request; the header updates without a reload.
+- **Server functions:** only functions the app calls are exported (TanStack Start serves every export as an endpoint); class-scoped reads require membership, scheduled and targeted classwork is filtered server-side, students do not receive the invite code, joining resolves the code on the server, and attachment edits can only keep or drop files the server stored under the record's own folder.
 - **Avatars:** every profile picture renders through one component that shows a local default avatar when the stored image is empty, points at the bucket's missing `default-avatar.jpg`, or fails to load (main rendered a broken image).
 - **Chat:** polling every 5 seconds is the baseline; Realtime delivers nothing when the `chat` table has row-level security without policies (as on the reference deployment).
 - **Dates and times:** the date-time picker stores the chosen time (main stored midnight); choosing "No due date" on edit clears the date; dates that depend on the viewer's timezone render client-side; scheduled, due and submission states are computed from the server's render time until hydration completes, then from the browser clock.
@@ -409,7 +411,7 @@ The rewrite keeps main's features and markup, with these deliberate changes:
 #### 4. Supabase Storage 403 Forbidden on File Upload or Delete
 
 - **Symptom:** Uploading attachments or avatars fails with `new row violates row-level security policy for table "objects"`, or removed files stay in the bucket.
-- **Resolution:** In **Storage > Policies**, allow `SELECT`, `INSERT` and `DELETE` for the publishable key on the six buckets, or make them public for reads. Note that public URLs may keep serving a deleted file from the CDN for a while.
+- **Resolution:** Set `SUPABASE_SECRET_KEY` (recommended) so server-side storage calls bypass bucket policies, or in **Storage > Policies** allow `INSERT` and `DELETE` for the publishable key on the six buckets. Reads need a public bucket or a `SELECT` policy. Note that public URLs may keep serving a deleted file from the CDN for a while.
 
 #### 5. Emails Not Delivering
 

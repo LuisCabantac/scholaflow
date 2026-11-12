@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { createClient } from "@/lib/supabase/server";
+import { createStorageClient } from "@/lib/supabase/server";
 
 export async function uploadAttachments(
   bucketName: string,
@@ -8,7 +8,7 @@ export async function uploadAttachments(
   file: File,
 ): Promise<string | null> {
   if (file.name !== "undefined") {
-    const supabase = createClient();
+    const supabase = createStorageClient();
 
     const sanitizedFileName = file.name.replace(/~/g, "").replace(/\s+/g, "_");
     const [name, extension] = sanitizedFileName.split(/\.(?=[^.]+$)/);

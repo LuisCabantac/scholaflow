@@ -1,32 +1,10 @@
-import { createServerClient } from "@supabase/ssr";
-import {
-  getCookies,
-  setCookie,
-  setResponseHeader,
-} from "@tanstack/react-start/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-export function createClient() {
-  return createServerClient(
+export function createStorageClient() {
+  return createSupabaseClient(
     process.env.VITE_SUPABASE_URL!,
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return Object.entries(getCookies()).map(([name, value]) => ({
-            name,
-            value,
-          }));
-        },
-        setAll(cookies, headers) {
-          cookies.forEach(({ name, value, options }) => {
-            setCookie(name, value, options);
-          });
-
-          Object.entries(headers).forEach(([name, value]) => {
-            setResponseHeader(name, value);
-          });
-        },
-      },
-    },
+    process.env.SUPABASE_SECRET_KEY ||
+      process.env.VITE_SUPABASE_PUBLISHABLE_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } },
   );
 }
