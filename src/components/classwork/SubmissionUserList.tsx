@@ -38,22 +38,24 @@ export default function SubmissionUserList({
       to="/classroom/class/$classId/stream/$streamId/submissions"
       params={{ classId: stream.classId, streamId: stream.id }}
       search={{ name: slug(userName), user: userId }}
-      className="group flex items-center justify-between"
+      className="group flex items-center justify-between gap-2"
     >
       {children}
     </Link>
   );
 
   const avatar = (image: string, name: string) => (
-    <div className="flex items-center gap-2">
+    <div className="flex min-w-0 flex-1 items-center gap-2">
       <UserAvatar
         src={image}
         alt={t("avatarAlt", { name })}
         width={30}
         height={30}
-        className="rounded-full"
+        className="h-[30px] w-[30px] shrink-0 rounded-full"
       />
-      <p className="group-hover:underline">{name}</p>
+      <p className="min-w-0 [overflow-wrap:anywhere] group-hover:underline">
+        {name}
+      </p>
     </div>
   );
 
@@ -76,7 +78,7 @@ export default function SubmissionUserList({
                   <>
                     {avatar(work.userImage, work.userName)}
                     {stream.points && (
-                      <p>
+                      <p className="shrink-0 whitespace-nowrap tabular-nums">
                         {work.isGraded
                           ? t("score", {
                               points: work.points,
@@ -116,7 +118,7 @@ export default function SubmissionUserList({
                     <>
                       {avatar(user.userImage, user.userName)}
                       <ClientOnly fallback={<div />}>
-                        <div>
+                        <div className="shrink-0">
                           {submitted ? (
                             <p className="text-foreground font-medium">
                               {status === "doneLate"
