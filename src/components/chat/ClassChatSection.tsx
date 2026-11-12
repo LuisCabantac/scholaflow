@@ -82,7 +82,7 @@ export default function ClassChatSection({
     <section className="relative">
       <div className="md:bg-card flex w-full flex-col rounded-md md:border md:p-4">
         <div className={`relative ${isLong ? "pb-40" : "pb-16"}`}>
-          <ul className="flex h-[75dvh] flex-col gap-2 overflow-y-auto rounded-md md:h-[75dvh]">
+          <ul className="flex h-[75dvh] flex-col gap-2 overflow-y-auto overscroll-contain rounded-md md:h-[75dvh]">
             {rows.length ? (
               rows.map((row) => (
                 <ChatMessageItem
