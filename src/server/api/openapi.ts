@@ -12,6 +12,7 @@ export type RouteDoc = {
   request?: z.ZodType;
   query?: z.ZodType;
   params?: z.ZodType;
+  files?: Record<string, "one" | "many">;
   response: z.ZodType;
   errors: ApiErrorCode[];
 };
@@ -91,6 +92,32 @@ function parameters(doc: RouteDoc) {
   return list;
 }
 
+const binary = { type: "string", format: "binary" };
+
+function requestBody(
+  request: z.ZodType,
+  files: RouteDoc["files"],
+): Record<string, unknown> {
+  const schema = schemaOf(request, false, "input") as {
+    properties?: Record<string, unknown>;
+  };
+  if (!files) {
+    return { required: true, content: { "application/json": { schema } } };
+  }
+
+  const properties = { ...(schema.properties ?? {}) };
+  for (const [name, count] of Object.entries(files)) {
+    properties[name] =
+      count === "many" ? { type: "array", items: binary } : binary;
+  }
+  return {
+    required: true,
+    content: {
+      "multipart/form-data": { schema: { ...schema, properties } },
+    },
+  };
+}
+
 function operation(doc: RouteDoc) {
   const status = doc.status ?? 200;
   const responses: Record<string, unknown> = {
@@ -116,16 +143,7 @@ function operation(doc: RouteDoc) {
     ...(doc.auth === "bearer" ? { security: [{ bearerAuth: [] }] } : {}),
     ...(parameters(doc).length ? { parameters: parameters(doc) } : {}),
     ...(doc.request
-      ? {
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: schemaOf(doc.request, false, "input"),
-              },
-            },
-          },
-        }
+      ? { requestBody: requestBody(doc.request, doc.files) }
       : {}),
     responses,
   };

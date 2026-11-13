@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { readStreamFormFields } from "@/lib/stream-form";
+import { announceToList, readStreamFormFields } from "@/lib/stream-form";
 
 function form(entries: Record<string, string | string[]>) {
   const data = new FormData();
@@ -87,5 +87,20 @@ describe("readStreamFormFields", () => {
     );
     expect(fields.type).toBe("stream");
     expect(fields.dueDate).toBeNull();
+  });
+});
+
+describe("announceToList", () => {
+  it("expands a single JSON array entry", () => {
+    expect(announceToList(['["a"]'])).toEqual(["a"]);
+  });
+
+  it("keeps plain entries as they are", () => {
+    expect(announceToList(["a", "b"])).toEqual(["a", "b"]);
+  });
+
+  it("drops non-string items of a JSON entry and ignores broken JSON", () => {
+    expect(announceToList(['["a", 1, null]'])).toEqual(["a"]);
+    expect(announceToList(["[not json"])).toEqual([]);
   });
 });

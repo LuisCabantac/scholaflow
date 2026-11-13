@@ -27,8 +27,7 @@ function flag(formData: FormData, key: string): boolean {
   return formData.get(key) === "true";
 }
 
-function announceTo(formData: FormData): string[] {
-  const entries = list(formData, "announceTo");
+export function announceToList(entries: string[]): string[] {
   if (entries.length === 1 && entries[0]?.startsWith("[")) {
     try {
       const parsed: unknown = JSON.parse(entries[0]);
@@ -62,7 +61,7 @@ export function readStreamFormFields(formData: FormData): StreamFormFields {
       "closeSubmissionsAfterDueDate",
     ),
     isAssignToAll: flag(formData, "isAssignToAll"),
-    announceTo: announceTo(formData),
+    announceTo: announceToList(list(formData, "announceTo")),
     links: list(formData, "links"),
     currentLinks: list(formData, "curUrlLinks"),
     currentAttachments: list(formData, "curAttachments"),

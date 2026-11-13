@@ -29,6 +29,22 @@ export type StreamFormFields = {
   currentAttachments: string[];
 };
 
+export type StreamRef = { classId: string; streamId: string };
+
+export type StreamCreateInput = Omit<
+  StreamFormFields,
+  "classroomId" | "streamId" | "currentLinks" | "currentAttachments"
+> & { files: File[] };
+
+export type StreamUpdateInput = Omit<
+  StreamFormFields,
+  "classroomId" | "streamId" | "type"
+> & { files: File[] };
+
+export type StreamPatch = Partial<Omit<StreamUpdateInput, "files">> & {
+  files: File[];
+};
+
 export type AttachmentLocation = "form" | "stream";
 
 export type AttachmentFileKind = "curFile" | "newFile";

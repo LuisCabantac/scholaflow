@@ -48,12 +48,19 @@ import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_mai
 import { Route as MainClassroomClassClassIdClassworkRouteImport } from './routes/_main/classroom/class/$classId.classwork'
 import { Route as MainClassroomClassClassIdPeopleRouteImport } from './routes/_main/classroom/class/$classId.people'
 import { Route as ApiV1ClassroomsClassIdIndexRouteImport } from './routes/api/v1/classrooms/$classId/index'
+import { Route as ApiV1ClassroomsClassIdClassworkStreamsRouteImport } from './routes/api/v1/classrooms/$classId/classwork-streams'
 import { Route as ApiV1ClassroomsClassIdLeaveRouteImport } from './routes/api/v1/classrooms/$classId/leave'
 import { Route as ApiV1ClassroomsClassIdMembersRouteImport } from './routes/api/v1/classrooms/$classId/members'
+import { Route as ApiV1ClassroomsClassIdStreamsRouteImport } from './routes/api/v1/classrooms/$classId/streams'
 import { Route as ApiV1ClassroomsClassIdTopicsRouteImport } from './routes/api/v1/classrooms/$classId/topics'
 import { Route as ApiV1ClassroomsByCodeCodeRouteImport } from './routes/api/v1/classrooms/by-code/$code'
+import { Route as ApiV1StreamsStreamIdIndexRouteImport } from './routes/api/v1/streams/$streamId/index'
+import { Route as ApiV1StreamsStreamIdCommentsRouteImport } from './routes/api/v1/streams/$streamId/comments'
+import { Route as ApiV1StreamsStreamIdPrivateCommentsRouteImport } from './routes/api/v1/streams/$streamId/private-comments'
 import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId'
 import { Route as ApiV1ClassroomsClassIdMembersEnrollmentIdRouteImport } from './routes/api/v1/classrooms/$classId/members/$enrollmentId'
+import { Route as ApiV1StreamsStreamIdCommentsCommentIdRouteImport } from './routes/api/v1/streams/$streamId/comments/$commentId'
+import { Route as ApiV1StreamsStreamIdPrivateCommentsCommentIdRouteImport } from './routes/api/v1/streams/$streamId/private-comments/$commentId'
 import { Route as MainClassroomClassClassIdStreamStreamIdIndexRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.index'
 import { Route as MainClassroomClassClassIdStreamStreamIdSubmissionsRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.submissions'
 
@@ -257,6 +264,12 @@ const ApiV1ClassroomsClassIdIndexRoute =
     path: '/api/v1/classrooms/$classId/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1ClassroomsClassIdClassworkStreamsRoute =
+  ApiV1ClassroomsClassIdClassworkStreamsRouteImport.update({
+    id: '/api/v1/classrooms/$classId/classwork-streams',
+    path: '/api/v1/classrooms/$classId/classwork-streams',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1ClassroomsClassIdLeaveRoute =
   ApiV1ClassroomsClassIdLeaveRouteImport.update({
     id: '/api/v1/classrooms/$classId/leave',
@@ -267,6 +280,12 @@ const ApiV1ClassroomsClassIdMembersRoute =
   ApiV1ClassroomsClassIdMembersRouteImport.update({
     id: '/api/v1/classrooms/$classId/members',
     path: '/api/v1/classrooms/$classId/members',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1ClassroomsClassIdStreamsRoute =
+  ApiV1ClassroomsClassIdStreamsRouteImport.update({
+    id: '/api/v1/classrooms/$classId/streams',
+    path: '/api/v1/classrooms/$classId/streams',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiV1ClassroomsClassIdTopicsRoute =
@@ -281,6 +300,24 @@ const ApiV1ClassroomsByCodeCodeRoute =
     path: '/api/v1/classrooms/by-code/$code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1StreamsStreamIdIndexRoute =
+  ApiV1StreamsStreamIdIndexRouteImport.update({
+    id: '/api/v1/streams/$streamId/',
+    path: '/api/v1/streams/$streamId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1StreamsStreamIdCommentsRoute =
+  ApiV1StreamsStreamIdCommentsRouteImport.update({
+    id: '/api/v1/streams/$streamId/comments',
+    path: '/api/v1/streams/$streamId/comments',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1StreamsStreamIdPrivateCommentsRoute =
+  ApiV1StreamsStreamIdPrivateCommentsRouteImport.update({
+    id: '/api/v1/streams/$streamId/private-comments',
+    path: '/api/v1/streams/$streamId/private-comments',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MainClassroomClassClassIdStreamStreamIdRoute =
   MainClassroomClassClassIdStreamStreamIdRouteImport.update({
     id: '/classroom/class/$classId_/stream/$streamId',
@@ -292,6 +329,18 @@ const ApiV1ClassroomsClassIdMembersEnrollmentIdRoute =
     id: '/$enrollmentId',
     path: '/$enrollmentId',
     getParentRoute: () => ApiV1ClassroomsClassIdMembersRoute,
+  } as any)
+const ApiV1StreamsStreamIdCommentsCommentIdRoute =
+  ApiV1StreamsStreamIdCommentsCommentIdRouteImport.update({
+    id: '/$commentId',
+    path: '/$commentId',
+    getParentRoute: () => ApiV1StreamsStreamIdCommentsRoute,
+  } as any)
+const ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute =
+  ApiV1StreamsStreamIdPrivateCommentsCommentIdRouteImport.update({
+    id: '/$commentId',
+    path: '/$commentId',
+    getParentRoute: () => ApiV1StreamsStreamIdPrivateCommentsRoute,
   } as any)
 const MainClassroomClassClassIdStreamStreamIdIndexRoute =
   MainClassroomClassClassIdStreamStreamIdIndexRouteImport.update({
@@ -342,14 +391,21 @@ export interface FileRoutesByFullPath {
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/classwork-streams': typeof ApiV1ClassroomsClassIdClassworkStreamsRoute
   '/api/v1/classrooms/$classId/leave': typeof ApiV1ClassroomsClassIdLeaveRoute
   '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRouteWithChildren
+  '/api/v1/classrooms/$classId/streams': typeof ApiV1ClassroomsClassIdStreamsRoute
   '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
   '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
+  '/api/v1/streams/$streamId/comments': typeof ApiV1StreamsStreamIdCommentsRouteWithChildren
+  '/api/v1/streams/$streamId/private-comments': typeof ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren
   '/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
   '/api/v1/classrooms/$classId/': typeof ApiV1ClassroomsClassIdIndexRoute
+  '/api/v1/streams/$streamId/': typeof ApiV1StreamsStreamIdIndexRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
   '/api/v1/classrooms/$classId/members/$enrollmentId': typeof ApiV1ClassroomsClassIdMembersEnrollmentIdRoute
+  '/api/v1/streams/$streamId/comments/$commentId': typeof ApiV1StreamsStreamIdCommentsCommentIdRoute
+  '/api/v1/streams/$streamId/private-comments/$commentId': typeof ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute
   '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/classroom/class/$classId/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
@@ -388,13 +444,20 @@ export interface FileRoutesByTo {
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/classwork-streams': typeof ApiV1ClassroomsClassIdClassworkStreamsRoute
   '/api/v1/classrooms/$classId/leave': typeof ApiV1ClassroomsClassIdLeaveRoute
   '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRouteWithChildren
+  '/api/v1/classrooms/$classId/streams': typeof ApiV1ClassroomsClassIdStreamsRoute
   '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
   '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
+  '/api/v1/streams/$streamId/comments': typeof ApiV1StreamsStreamIdCommentsRouteWithChildren
+  '/api/v1/streams/$streamId/private-comments': typeof ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren
   '/classroom/class/$classId': typeof MainClassroomClassClassIdIndexRoute
   '/api/v1/classrooms/$classId': typeof ApiV1ClassroomsClassIdIndexRoute
+  '/api/v1/streams/$streamId': typeof ApiV1StreamsStreamIdIndexRoute
   '/api/v1/classrooms/$classId/members/$enrollmentId': typeof ApiV1ClassroomsClassIdMembersEnrollmentIdRoute
+  '/api/v1/streams/$streamId/comments/$commentId': typeof ApiV1StreamsStreamIdCommentsCommentIdRoute
+  '/api/v1/streams/$streamId/private-comments/$commentId': typeof ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute
   '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
@@ -437,14 +500,21 @@ export interface FileRoutesById {
   '/_main/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/_main/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/_main/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/classwork-streams': typeof ApiV1ClassroomsClassIdClassworkStreamsRoute
   '/api/v1/classrooms/$classId/leave': typeof ApiV1ClassroomsClassIdLeaveRoute
   '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRouteWithChildren
+  '/api/v1/classrooms/$classId/streams': typeof ApiV1ClassroomsClassIdStreamsRoute
   '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
   '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
+  '/api/v1/streams/$streamId/comments': typeof ApiV1StreamsStreamIdCommentsRouteWithChildren
+  '/api/v1/streams/$streamId/private-comments': typeof ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren
   '/_main/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
   '/api/v1/classrooms/$classId/': typeof ApiV1ClassroomsClassIdIndexRoute
+  '/api/v1/streams/$streamId/': typeof ApiV1StreamsStreamIdIndexRoute
   '/_main/classroom/class/$classId_/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
   '/api/v1/classrooms/$classId/members/$enrollmentId': typeof ApiV1ClassroomsClassIdMembersEnrollmentIdRoute
+  '/api/v1/streams/$streamId/comments/$commentId': typeof ApiV1StreamsStreamIdCommentsCommentIdRoute
+  '/api/v1/streams/$streamId/private-comments/$commentId': typeof ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute
   '/_main/classroom/class/$classId_/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/_main/classroom/class/$classId_/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
@@ -486,14 +556,21 @@ export interface FileRouteTypes {
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
     | '/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/classwork-streams'
     | '/api/v1/classrooms/$classId/leave'
     | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/streams'
     | '/api/v1/classrooms/$classId/topics'
     | '/api/v1/classrooms/by-code/$code'
+    | '/api/v1/streams/$streamId/comments'
+    | '/api/v1/streams/$streamId/private-comments'
     | '/classroom/class/$classId/'
     | '/api/v1/classrooms/$classId/'
+    | '/api/v1/streams/$streamId/'
     | '/classroom/class/$classId/stream/$streamId'
     | '/api/v1/classrooms/$classId/members/$enrollmentId'
+    | '/api/v1/streams/$streamId/comments/$commentId'
+    | '/api/v1/streams/$streamId/private-comments/$commentId'
     | '/classroom/class/$classId/stream/$streamId/submissions'
     | '/classroom/class/$classId/stream/$streamId/'
   fileRoutesByTo: FileRoutesByTo
@@ -532,13 +609,20 @@ export interface FileRouteTypes {
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
     | '/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/classwork-streams'
     | '/api/v1/classrooms/$classId/leave'
     | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/streams'
     | '/api/v1/classrooms/$classId/topics'
     | '/api/v1/classrooms/by-code/$code'
+    | '/api/v1/streams/$streamId/comments'
+    | '/api/v1/streams/$streamId/private-comments'
     | '/classroom/class/$classId'
     | '/api/v1/classrooms/$classId'
+    | '/api/v1/streams/$streamId'
     | '/api/v1/classrooms/$classId/members/$enrollmentId'
+    | '/api/v1/streams/$streamId/comments/$commentId'
+    | '/api/v1/streams/$streamId/private-comments/$commentId'
     | '/classroom/class/$classId/stream/$streamId/submissions'
     | '/classroom/class/$classId/stream/$streamId'
   id:
@@ -580,14 +664,21 @@ export interface FileRouteTypes {
     | '/_main/classroom/class/$classId/chat'
     | '/_main/classroom/class/$classId/classwork'
     | '/_main/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/classwork-streams'
     | '/api/v1/classrooms/$classId/leave'
     | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/streams'
     | '/api/v1/classrooms/$classId/topics'
     | '/api/v1/classrooms/by-code/$code'
+    | '/api/v1/streams/$streamId/comments'
+    | '/api/v1/streams/$streamId/private-comments'
     | '/_main/classroom/class/$classId/'
     | '/api/v1/classrooms/$classId/'
+    | '/api/v1/streams/$streamId/'
     | '/_main/classroom/class/$classId_/stream/$streamId'
     | '/api/v1/classrooms/$classId/members/$enrollmentId'
+    | '/api/v1/streams/$streamId/comments/$commentId'
+    | '/api/v1/streams/$streamId/private-comments/$commentId'
     | '/_main/classroom/class/$classId_/stream/$streamId/submissions'
     | '/_main/classroom/class/$classId_/stream/$streamId/'
   fileRoutesById: FileRoutesById
@@ -615,11 +706,16 @@ export interface RootRouteChildren {
   ApiV1ClassroomsJoinRoute: typeof ApiV1ClassroomsJoinRoute
   ApiV1TopicsTopicIdRoute: typeof ApiV1TopicsTopicIdRoute
   ApiV1ClassroomsIndexRoute: typeof ApiV1ClassroomsIndexRoute
+  ApiV1ClassroomsClassIdClassworkStreamsRoute: typeof ApiV1ClassroomsClassIdClassworkStreamsRoute
   ApiV1ClassroomsClassIdLeaveRoute: typeof ApiV1ClassroomsClassIdLeaveRoute
   ApiV1ClassroomsClassIdMembersRoute: typeof ApiV1ClassroomsClassIdMembersRouteWithChildren
+  ApiV1ClassroomsClassIdStreamsRoute: typeof ApiV1ClassroomsClassIdStreamsRoute
   ApiV1ClassroomsClassIdTopicsRoute: typeof ApiV1ClassroomsClassIdTopicsRoute
   ApiV1ClassroomsByCodeCodeRoute: typeof ApiV1ClassroomsByCodeCodeRoute
+  ApiV1StreamsStreamIdCommentsRoute: typeof ApiV1StreamsStreamIdCommentsRouteWithChildren
+  ApiV1StreamsStreamIdPrivateCommentsRoute: typeof ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren
   ApiV1ClassroomsClassIdIndexRoute: typeof ApiV1ClassroomsClassIdIndexRoute
+  ApiV1StreamsStreamIdIndexRoute: typeof ApiV1StreamsStreamIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -897,6 +993,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1ClassroomsClassIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/classrooms/$classId/classwork-streams': {
+      id: '/api/v1/classrooms/$classId/classwork-streams'
+      path: '/api/v1/classrooms/$classId/classwork-streams'
+      fullPath: '/api/v1/classrooms/$classId/classwork-streams'
+      preLoaderRoute: typeof ApiV1ClassroomsClassIdClassworkStreamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/classrooms/$classId/leave': {
       id: '/api/v1/classrooms/$classId/leave'
       path: '/api/v1/classrooms/$classId/leave'
@@ -909,6 +1012,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/classrooms/$classId/members'
       fullPath: '/api/v1/classrooms/$classId/members'
       preLoaderRoute: typeof ApiV1ClassroomsClassIdMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/classrooms/$classId/streams': {
+      id: '/api/v1/classrooms/$classId/streams'
+      path: '/api/v1/classrooms/$classId/streams'
+      fullPath: '/api/v1/classrooms/$classId/streams'
+      preLoaderRoute: typeof ApiV1ClassroomsClassIdStreamsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/classrooms/$classId/topics': {
@@ -925,6 +1035,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1ClassroomsByCodeCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/streams/$streamId/': {
+      id: '/api/v1/streams/$streamId/'
+      path: '/api/v1/streams/$streamId'
+      fullPath: '/api/v1/streams/$streamId/'
+      preLoaderRoute: typeof ApiV1StreamsStreamIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/streams/$streamId/comments': {
+      id: '/api/v1/streams/$streamId/comments'
+      path: '/api/v1/streams/$streamId/comments'
+      fullPath: '/api/v1/streams/$streamId/comments'
+      preLoaderRoute: typeof ApiV1StreamsStreamIdCommentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/streams/$streamId/private-comments': {
+      id: '/api/v1/streams/$streamId/private-comments'
+      path: '/api/v1/streams/$streamId/private-comments'
+      fullPath: '/api/v1/streams/$streamId/private-comments'
+      preLoaderRoute: typeof ApiV1StreamsStreamIdPrivateCommentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/classroom/class/$classId_/stream/$streamId': {
       id: '/_main/classroom/class/$classId_/stream/$streamId'
       path: '/classroom/class/$classId/stream/$streamId'
@@ -938,6 +1069,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/v1/classrooms/$classId/members/$enrollmentId'
       preLoaderRoute: typeof ApiV1ClassroomsClassIdMembersEnrollmentIdRouteImport
       parentRoute: typeof ApiV1ClassroomsClassIdMembersRoute
+    }
+    '/api/v1/streams/$streamId/comments/$commentId': {
+      id: '/api/v1/streams/$streamId/comments/$commentId'
+      path: '/$commentId'
+      fullPath: '/api/v1/streams/$streamId/comments/$commentId'
+      preLoaderRoute: typeof ApiV1StreamsStreamIdCommentsCommentIdRouteImport
+      parentRoute: typeof ApiV1StreamsStreamIdCommentsRoute
+    }
+    '/api/v1/streams/$streamId/private-comments/$commentId': {
+      id: '/api/v1/streams/$streamId/private-comments/$commentId'
+      path: '/$commentId'
+      fullPath: '/api/v1/streams/$streamId/private-comments/$commentId'
+      preLoaderRoute: typeof ApiV1StreamsStreamIdPrivateCommentsCommentIdRouteImport
+      parentRoute: typeof ApiV1StreamsStreamIdPrivateCommentsRoute
     }
     '/_main/classroom/class/$classId_/stream/$streamId/': {
       id: '/_main/classroom/class/$classId_/stream/$streamId/'
@@ -1053,6 +1198,36 @@ const ApiV1ClassroomsClassIdMembersRouteWithChildren =
     ApiV1ClassroomsClassIdMembersRouteChildren,
   )
 
+interface ApiV1StreamsStreamIdCommentsRouteChildren {
+  ApiV1StreamsStreamIdCommentsCommentIdRoute: typeof ApiV1StreamsStreamIdCommentsCommentIdRoute
+}
+
+const ApiV1StreamsStreamIdCommentsRouteChildren: ApiV1StreamsStreamIdCommentsRouteChildren =
+  {
+    ApiV1StreamsStreamIdCommentsCommentIdRoute:
+      ApiV1StreamsStreamIdCommentsCommentIdRoute,
+  }
+
+const ApiV1StreamsStreamIdCommentsRouteWithChildren =
+  ApiV1StreamsStreamIdCommentsRoute._addFileChildren(
+    ApiV1StreamsStreamIdCommentsRouteChildren,
+  )
+
+interface ApiV1StreamsStreamIdPrivateCommentsRouteChildren {
+  ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute: typeof ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute
+}
+
+const ApiV1StreamsStreamIdPrivateCommentsRouteChildren: ApiV1StreamsStreamIdPrivateCommentsRouteChildren =
+  {
+    ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute:
+      ApiV1StreamsStreamIdPrivateCommentsCommentIdRoute,
+  }
+
+const ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren =
+  ApiV1StreamsStreamIdPrivateCommentsRoute._addFileChildren(
+    ApiV1StreamsStreamIdPrivateCommentsRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
@@ -1076,12 +1251,20 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1ClassroomsJoinRoute: ApiV1ClassroomsJoinRoute,
   ApiV1TopicsTopicIdRoute: ApiV1TopicsTopicIdRoute,
   ApiV1ClassroomsIndexRoute: ApiV1ClassroomsIndexRoute,
+  ApiV1ClassroomsClassIdClassworkStreamsRoute:
+    ApiV1ClassroomsClassIdClassworkStreamsRoute,
   ApiV1ClassroomsClassIdLeaveRoute: ApiV1ClassroomsClassIdLeaveRoute,
   ApiV1ClassroomsClassIdMembersRoute:
     ApiV1ClassroomsClassIdMembersRouteWithChildren,
+  ApiV1ClassroomsClassIdStreamsRoute: ApiV1ClassroomsClassIdStreamsRoute,
   ApiV1ClassroomsClassIdTopicsRoute: ApiV1ClassroomsClassIdTopicsRoute,
   ApiV1ClassroomsByCodeCodeRoute: ApiV1ClassroomsByCodeCodeRoute,
+  ApiV1StreamsStreamIdCommentsRoute:
+    ApiV1StreamsStreamIdCommentsRouteWithChildren,
+  ApiV1StreamsStreamIdPrivateCommentsRoute:
+    ApiV1StreamsStreamIdPrivateCommentsRouteWithChildren,
   ApiV1ClassroomsClassIdIndexRoute: ApiV1ClassroomsClassIdIndexRoute,
+  ApiV1StreamsStreamIdIndexRoute: ApiV1StreamsStreamIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
