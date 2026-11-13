@@ -143,15 +143,6 @@ export default function StreamComments({
             </button>
           </>
         )}
-        {!hasComments && !showClassComments && (
-          <button
-            type="button"
-            onClick={toggleComments}
-            className="mt-2 hidden font-medium md:block"
-          >
-            {t("viewAllComments")}
-          </button>
-        )}
         <ul className="hidden max-h-[20rem] gap-2 overflow-y-auto md:grid">
           {showClassComments && (
             <>
