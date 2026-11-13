@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import type { Classroom } from "@/lib/schema";
-import { classChanges, newClassRecord } from "@/services/classroom-flows";
+import {
+  classChanges,
+  mergeClassUpdate,
+  newClassRecord,
+} from "@/services/classroom-flows";
 
 const teacher = {
   id: "t1",
@@ -95,5 +99,38 @@ describe("classChanges", () => {
     expect(
       classChanges(current, same, { ...teacher, name: "Renamed" }),
     ).not.toBeNull();
+  });
+});
+
+describe("mergeClassUpdate", () => {
+  const current = {
+    id: "c1",
+    name: "Math",
+    subject: "Algebra",
+    section: "A",
+    description: "Desc",
+    cardBackground: "#112233",
+    allowUsersToComment: true,
+    allowUsersToPost: false,
+  } as Classroom;
+
+  it("keeps every field a partial update leaves out", () => {
+    expect(mergeClassUpdate(current, { name: "Maths" })).toEqual({
+      name: "Maths",
+      subject: "Algebra",
+      section: "A",
+      description: "Desc",
+      color: "#112233",
+      allowUsersToComment: true,
+      allowUsersToPost: false,
+      regenerateCode: false,
+    });
+  });
+
+  it("lets an explicit null clear a nullable field", () => {
+    expect(mergeClassUpdate(current, { subject: null }).subject).toBeNull();
+    expect(
+      mergeClassUpdate(current, { regenerateCode: true }).regenerateCode,
+    ).toBe(true);
   });
 });

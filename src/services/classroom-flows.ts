@@ -215,10 +215,28 @@ export async function createClassFlow(
   return { ok: true, value: { id: data.id } };
 }
 
+export function mergeClassUpdate(
+  current: Classroom,
+  input: Partial<ClassUpdateInput>,
+): ClassUpdateInput {
+  return {
+    name: input.name ?? current.name,
+    subject: input.subject === undefined ? current.subject : input.subject,
+    section: input.section === undefined ? current.section : input.section,
+    description:
+      input.description === undefined ? current.description : input.description,
+    color: input.color ?? current.cardBackground,
+    allowUsersToComment:
+      input.allowUsersToComment ?? current.allowUsersToComment,
+    allowUsersToPost: input.allowUsersToPost ?? current.allowUsersToPost,
+    regenerateCode: input.regenerateCode ?? false,
+  };
+}
+
 export async function updateClassFlow(
   user: Actor,
   classId: string,
-  input: ClassUpdateInput,
+  input: Partial<ClassUpdateInput>,
 ): Promise<Outcome<{ changed: boolean }>> {
   const current = await getClassByClassId(classId);
   if (!current) return notFound;
@@ -226,7 +244,7 @@ export async function updateClassFlow(
     return failure("forbidden", "Only the creator can edit this.");
   }
 
-  const changes = classChanges(current, input, user);
+  const changes = classChanges(current, mergeClassUpdate(current, input), user);
   if (!changes) return { ok: true, value: { changed: false } };
 
   const enrolledClasses = await getAllEnrolledClassesByClassId(classId);
@@ -243,7 +261,7 @@ export async function joinClassFlow(
   code: string,
 ): Promise<Outcome<{ classId: string }>> {
   if (user.role === "admin") {
-    return failure("conflict", "Only teachers and students can join classes.");
+    return failure("forbidden", "Only teachers and students can join classes.");
   }
 
   const classroom = await getClassByClassCode(code.trim());
@@ -437,7 +455,7 @@ export async function addMemberFlow(
   email: string,
 ): Promise<Outcome<{ enrollmentId: string }>> {
   if (user.role === "admin") {
-    return failure("conflict", "Only teachers can add users to this class.");
+    return failure("forbidden", "Only teachers can add users to this class.");
   }
 
   const classroom = await getClassByClassId(classId);
@@ -479,7 +497,7 @@ export async function addMemberFlow(
   if (!data) return failure("conflict", "Failed to add user to class.");
 
   await sendNotification(
-    "addToClass" as never,
+    "addToClass",
     data.userId,
     data.id,
     data.name,

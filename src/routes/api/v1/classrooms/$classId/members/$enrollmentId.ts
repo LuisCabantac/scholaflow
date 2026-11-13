@@ -17,7 +17,13 @@ registerRoute({
   status: 204,
   params: enrollmentParams,
   response: z.undefined(),
-  errors: ["unauthorized", "validation_failed", "forbidden", "not_found"],
+  errors: [
+    "unauthorized",
+    "validation_failed",
+    "forbidden",
+    "not_found",
+    "conflict",
+  ],
 });
 
 export const Route = createFileRoute(

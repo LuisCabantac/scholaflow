@@ -47,9 +47,12 @@ export async function renameTopicFlow(
   user: Actor,
   topicId: string,
   name: string,
+  expectedClassId?: string,
 ): Promise<Outcome<{ changed: boolean }>> {
   const topic = await getClassTopicByTopicId(topicId);
-  if (!topic) return topicMissing;
+  if (!topic || (expectedClassId && topic.classId !== expectedClassId)) {
+    return topicMissing;
+  }
 
   const classroom = await classroomForTeacher(user.id, topic.classId);
   if (!classroom.ok) return classroom;

@@ -4,6 +4,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import type { Outcome } from "@/types/api";
 import { isClassMember } from "@/services/classroom";
+import { classroomForTeacher } from "@/server/authorize/classroom";
 import { getAllClassTopicsByClassId } from "@/services/class-topic";
 import {
   createTopicFlow,
@@ -20,7 +21,11 @@ function reply<T>(
     return { success: false, message: copy.forbidden };
   }
   if (outcome.code === "not_found") {
-    return { success: false, message: copy.not_found };
+    const classMissing = outcome.message === "This class doesn't exist.";
+    return {
+      success: false,
+      message: classMissing ? "This class does not exist." : copy.not_found,
+    };
   }
   return { success: false, message: outcome.message };
 }
@@ -64,21 +69,31 @@ export const updateTopicFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
+    const classroomId = formData.get("classroomId") as string;
     const topicId = formData.get("topicId") as string;
     const name = (formData.get("topicName") as string) || "";
-    if (topicId === "no-topic") {
-      return { success: false, message: "This topic doesn't exist." };
-    }
-
-    const outcome = await renameTopicFlow(session.user, topicId, name);
-    if (outcome.ok && !outcome.value.changed) {
-      return { success: true, message: "No changes were made to the topic." };
-    }
-    return reply(outcome, {
+    const copy = {
       success: "Topic updated successfully!",
       forbidden: "Only the creator of this class can edit topics.",
       not_found: "This topic doesn't exist.",
-    });
+    };
+
+    const classroom = await classroomForTeacher(session.user.id, classroomId);
+    if (!classroom.ok) return reply(classroom, copy);
+    if (topicId === "no-topic") {
+      return { success: false, message: copy.not_found };
+    }
+
+    const outcome = await renameTopicFlow(
+      session.user,
+      topicId,
+      name,
+      classroomId,
+    );
+    if (outcome.ok && !outcome.value.changed) {
+      return { success: true, message: "No changes were made to the topic." };
+    }
+    return reply(outcome, copy);
   });
 
 export const deleteTopicFn = createServerFn({ method: "POST" })

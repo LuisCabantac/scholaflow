@@ -50,8 +50,13 @@ function stripAdditional(node: unknown): unknown {
   return copy;
 }
 
-function schemaOf(schema: z.ZodType, loose = false) {
+function schemaOf(
+  schema: z.ZodType,
+  loose = false,
+  io: "input" | "output" = "output",
+) {
   const json = z.toJSONSchema(schema, {
+    io,
     unrepresentable: "any",
     override: ({ zodSchema, jsonSchema }) => {
       if (zodSchema._zod.def.type === "date") {
@@ -70,7 +75,7 @@ function parameters(doc: RouteDoc) {
     ["query", doc.query],
   ] as const) {
     if (!schema) continue;
-    const json = schemaOf(schema) as {
+    const json = schemaOf(schema, false, "input") as {
       properties?: Record<string, unknown>;
       required?: string[];
     };
@@ -114,7 +119,11 @@ function operation(doc: RouteDoc) {
       ? {
           requestBody: {
             required: true,
-            content: { "application/json": { schema: schemaOf(doc.request) } },
+            content: {
+              "application/json": {
+                schema: schemaOf(doc.request, false, "input"),
+              },
+            },
           },
         }
       : {}),

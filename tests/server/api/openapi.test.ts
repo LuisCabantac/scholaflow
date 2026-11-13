@@ -114,7 +114,7 @@ describe("buildOpenApi", () => {
       summary: "Create",
       auth: "bearer",
       status: 201,
-      request: z.object({ name: z.string() }),
+      request: z.object({ name: z.string(), note: z.string().default("") }),
       response: z.object({ id: z.string(), createdAt: z.date() }),
       errors: [],
     });
@@ -152,9 +152,9 @@ describe("buildOpenApi", () => {
       format: "date-time",
     });
     expect(response.additionalProperties).toBeUndefined();
-    expect(
-      op.requestBody.content["application/json"].schema.additionalProperties,
-    ).toBe(false);
+    const request = op.requestBody.content["application/json"].schema;
+    expect(request.additionalProperties).toBeUndefined();
+    expect(request.required ?? []).not.toContain("note");
   });
 
   it("lists registered routes", () => {

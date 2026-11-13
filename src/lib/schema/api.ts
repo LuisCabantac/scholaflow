@@ -8,33 +8,35 @@ import {
 
 const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 
+const blankToNull = (value: string | null | undefined) => value || null;
+
 export const createClassBody = z.object({
   name: z.string().trim().min(1),
-  subject: z.string().trim().nullable().default(null),
+  subject: z.string().trim().nullable().default(null).transform(blankToNull),
   section: z.string().trim().default(""),
-  room: z.string().trim().nullable().default(null),
+  room: z.string().trim().nullable().default(null).transform(blankToNull),
   color: hexColor,
 });
 
 export const updateClassBody = z.object({
-  name: z.string().trim().min(1),
-  subject: z.string().trim().nullable().default(null),
-  section: z.string().trim().default(""),
-  description: z.string().trim().nullable().default(null),
-  color: hexColor,
-  allowUsersToComment: z.boolean(),
-  allowUsersToPost: z.boolean(),
-  regenerateCode: z.boolean().default(false),
+  name: z.string().trim().min(1).optional(),
+  subject: z.string().trim().nullable().optional(),
+  section: z.string().trim().optional(),
+  description: z.string().trim().nullable().optional(),
+  color: hexColor.optional(),
+  allowUsersToComment: z.boolean().optional(),
+  allowUsersToPost: z.boolean().optional(),
+  regenerateCode: z.boolean().optional(),
 });
 
 export const joinClassBody = z.object({ code: z.string().trim().min(1) });
 export const addMemberBody = z.object({ email: z.email() });
 export const topicBody = z.object({ name: z.string().trim().min(1) });
 
-export const classIdParams = z.object({ classId: z.uuidv4() });
-export const topicIdParams = z.object({ topicId: z.uuidv4() });
+export const classIdParams = z.object({ classId: z.uuid() });
+export const topicIdParams = z.object({ topicId: z.uuid() });
 export const enrollmentParams = classIdParams.extend({
-  enrollmentId: z.uuidv4(),
+  enrollmentId: z.uuid(),
 });
 export const codeParams = z.object({ code: z.string().trim().min(1) });
 

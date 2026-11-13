@@ -28,15 +28,29 @@ describe("createClassBody", () => {
 });
 
 describe("updateClassBody", () => {
-  it("defaults regenerateCode to false", () => {
-    const parsed = updateClassBody.parse({
+  it("treats every field as optional so a patch keeps what it omits", () => {
+    const parsed = updateClassBody.parse({ name: "Math" });
+    expect(parsed).toEqual({ name: "Math" });
+    expect(parsed.regenerateCode).toBeUndefined();
+  });
+
+  it("still rejects an empty name and a bad color", () => {
+    expect(updateClassBody.safeParse({ name: " " }).success).toBe(false);
+    expect(updateClassBody.safeParse({ color: "blue" }).success).toBe(false);
+  });
+});
+
+describe("createClassBody", () => {
+  it("stores blank subject and room as null like the website", () => {
+    const parsed = createClassBody.parse({
       name: "Math",
+      subject: "  ",
+      room: "",
       color: "#112233",
-      allowUsersToComment: true,
-      allowUsersToPost: false,
     });
-    expect(parsed.regenerateCode).toBe(false);
-    expect(parsed.description).toBeNull();
+    expect(parsed.subject).toBeNull();
+    expect(parsed.room).toBeNull();
+    expect(parsed.section).toBe("");
   });
 });
 
