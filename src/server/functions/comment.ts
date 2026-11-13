@@ -7,19 +7,20 @@ import { canSeeStream } from "@/lib/stream-visibility";
 import { uploadAttachments } from "@/services/storage";
 import { getClassStreamByStreamId } from "@/services/stream";
 import { deleteFileFromBucket } from "@/services/user-management";
+import { visiblePrivateComments } from "@/server/authorize/comment";
+import { streamForMember, streamForViewer } from "@/server/authorize/stream";
 import {
   createStreamCommentSchema,
   createStreamPrivateCommentSchema,
 } from "@/lib/schema";
 import {
+  getClassByClassId,
+  getEnrolledClassByClassAndSessionId,
+} from "@/services/classroom";
+import {
   deleteAllNotificationsByResourceId,
   sendNotification,
 } from "@/services/notification";
-import {
-  getClassByClassId,
-  getEnrolledClassByClassAndSessionId,
-  isClassMember,
-} from "@/services/classroom";
 import {
   createPrivateComment,
   createStreamComment,
@@ -39,18 +40,8 @@ export const getAllCommentsByStreamIdFn = createServerFn({ method: "GET" })
 
     if (!session) return null;
 
-    const stream = await getClassStreamByStreamId(streamId);
-    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
-      return null;
-    }
-
-    const classroom = await getClassByClassId(stream.classId);
-    if (
-      !classroom ||
-      !canSeeStream(stream, session.user.id, classroom.teacherId)
-    ) {
-      return null;
-    }
+    const outcome = await streamForViewer(session.user.id, streamId);
+    if (!outcome.ok) return null;
 
     return await getAllCommentsByStreamId(streamId);
   });
@@ -65,22 +56,16 @@ export const getAllPrivateCommentsByStreamIdFn = createServerFn({
 
     if (!session) return null;
 
-    const stream = await getClassStreamByStreamId(streamId);
-    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
-      return null;
-    }
+    const outcome = await streamForMember(session.user.id, streamId);
+    if (!outcome.ok) return null;
 
-    const classroom = await getClassByClassId(stream.classId);
+    const { classroom } = outcome.value;
     const comments = await getAllPrivateCommentsByStreamId(streamId);
-    if (!classroom || classroom.teacherId === session.user.id) return comments;
+    if (classroom.teacherId === session.user.id) return comments;
 
-    return (
-      comments?.filter(
-        (comment) =>
-          comment.userId === session.user.id ||
-          comment.toUserId === session.user.id,
-      ) ?? null
-    );
+    return comments
+      ? visiblePrivateComments(comments, session.user.id, classroom.teacherId)
+      : null;
   });
 
 export const addCommentToStreamFn = createServerFn({ method: "POST" })

@@ -8,7 +8,10 @@ import { readStreamFormFields } from "@/lib/stream-form";
 import { getClassTopicByTopicId } from "@/services/class-topic";
 import { deleteFilesFromBucket } from "@/services/user-management";
 import { createStreamSchema, editStreamSchema } from "@/lib/schema";
-import { canSeeStream, visibleStreams } from "@/lib/stream-visibility";
+import {
+  streamForViewer,
+  visibleClassStreams,
+} from "@/server/authorize/stream";
 import {
   keptAttachments,
   pathsInFolder,
@@ -67,18 +70,14 @@ export const getAllClassStreamsByClassIdFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session || !(await isClassMember(session.user.id, classId))) {
-      return null;
-    }
+    if (!session) return null;
 
-    const classroom = await getClassByClassId(classId);
-    if (!classroom) return null;
-
-    return visibleStreams(
-      await getAllClassStreamsByClassId(classId),
+    const outcome = await visibleClassStreams(
       session.user.id,
-      classroom.teacherId,
+      classId,
+      getAllClassStreamsByClassId,
     );
+    return outcome.ok ? outcome.value : null;
   });
 
 export const getClassStreamByStreamIdFn = createServerFn({ method: "GET" })
@@ -89,20 +88,8 @@ export const getClassStreamByStreamIdFn = createServerFn({ method: "GET" })
 
     if (!session) return null;
 
-    const stream = await getClassStreamByStreamId(streamId);
-    if (!stream || !(await isClassMember(session.user.id, stream.classId))) {
-      return null;
-    }
-
-    const classroom = await getClassByClassId(stream.classId);
-    if (
-      !classroom ||
-      !canSeeStream(stream, session.user.id, classroom.teacherId)
-    ) {
-      return null;
-    }
-
-    return stream;
+    const outcome = await streamForViewer(session.user.id, streamId);
+    return outcome.ok ? outcome.value.stream : null;
   });
 
 export const getAllClassworkStreamsByClassIdFn = createServerFn({
@@ -113,18 +100,14 @@ export const getAllClassworkStreamsByClassIdFn = createServerFn({
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session || !(await isClassMember(session.user.id, classId))) {
-      return null;
-    }
+    if (!session) return null;
 
-    const classroom = await getClassByClassId(classId);
-    if (!classroom) return null;
-
-    return visibleStreams(
-      await getAllClassworkStreamsByClassId(classId),
+    const outcome = await visibleClassStreams(
       session.user.id,
-      classroom.teacherId,
+      classId,
+      getAllClassworkStreamsByClassId,
     );
+    return outcome.ok ? outcome.value : null;
   });
 
 export const getAllEnrolledClassesClassworksFn = createServerFn({
@@ -144,18 +127,12 @@ export const getClassworksByClassIdQueryFn = createServerFn({ method: "GET" })
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session || !(await isClassMember(session.user.id, classId))) {
-      return null;
-    }
+    if (!session) return null;
 
-    const classroom = await getClassByClassId(classId);
-    if (!classroom) return null;
-
-    return visibleStreams(
-      await getClassworksByClassIdQuery(classId, query),
-      session.user.id,
-      classroom.teacherId,
+    const outcome = await visibleClassStreams(session.user.id, classId, (id) =>
+      getClassworksByClassIdQuery(id, query),
     );
+    return outcome.ok ? outcome.value : null;
   });
 
 function streamLabel(type: StreamType, capitalized: boolean): string {
