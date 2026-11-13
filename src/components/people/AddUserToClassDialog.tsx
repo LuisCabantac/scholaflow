@@ -1,10 +1,10 @@
 import { toast } from "sonner";
 import { useRef } from "react";
 import { X } from "lucide-react";
-import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { useDismiss } from "@/hooks/use-dismiss";
 import { classroomKeys } from "@/queries/classroom";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { addUserToClassFn } from "@/server/functions/classroom";
@@ -48,23 +48,12 @@ export default function AddUserToClassDialog({
     addUser.mutate(new FormData(event.currentTarget));
   }
 
-  useClickOutside(wrapperRef, onClose, addUser.isPending);
+  const { phase, close } = useDismiss(onClose, addUser.isPending);
+  useClickOutside(wrapperRef, close, addUser.isPending);
 
   return (
-    <motion.div
-      className="modal__container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.1 }}
-    >
-      <motion.div
-        className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+    <div className="modal__container" data-phase={phase}>
+      <div className="animate-in fade-in-0 zoom-in-95 duration-200 ease-out flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
         <Card className="md:w-[25rem]" ref={wrapperRef}>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -77,7 +66,7 @@ export default function AddUserToClassDialog({
                 type="button"
                 size="icon"
                 disabled={addUser.isPending}
-                onClick={onClose}
+                onClick={close}
                 aria-label={t("close")}
               >
                 <X className="stroke-foreground size-5" />
@@ -104,7 +93,7 @@ export default function AddUserToClassDialog({
               />
               <div className="flex items-center justify-end gap-2">
                 {!addUser.isPending && (
-                  <Button type="button" variant="secondary" onClick={onClose}>
+                  <Button type="button" variant="secondary" onClick={close}>
                     {t("cancel")}
                   </Button>
                 )}
@@ -115,7 +104,7 @@ export default function AddUserToClassDialog({
             </form>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

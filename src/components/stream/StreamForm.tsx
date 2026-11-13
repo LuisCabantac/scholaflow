@@ -1,8 +1,7 @@
 import { toast } from "sonner";
-import { motion } from "motion/react";
-import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LinkIcon, Upload, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { isWebUrl } from "@/lib/links";
@@ -247,6 +246,17 @@ export default function StreamForm({
     isLoading,
   );
   useClickOutside(addLinkRef, () => setShowAddLinkModal(false), isLoading);
+
+  useEffect(() => {
+    if (!showAddLinkModal) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setShowAddLinkModal(false);
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showAddLinkModal]);
 
   const dropdownTrigger = (label: string) => (
     <DropdownMenuTrigger asChild>
@@ -758,20 +768,8 @@ export default function StreamForm({
                 <LinkIcon className="stroke-foreground size-4 md:size-5" />
               </Button>
               {showAddLinkModal && (
-                <motion.div
-                  className="modal__container"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                >
-                  <motion.div
-                    className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.95, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                <div className="modal__container">
+                  <div className="animate-in fade-in-0 zoom-in-95 duration-200 ease-out flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
                     <Card className="md:w-[25rem]" ref={addLinkRef}>
                       <CardHeader className="text-lg font-medium tracking-tight">
                         {t("stream:form.addLink")}
@@ -801,8 +799,8 @@ export default function StreamForm({
                         </div>
                       </CardContent>
                     </Card>
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               )}
             </div>
             {!isLoading && (

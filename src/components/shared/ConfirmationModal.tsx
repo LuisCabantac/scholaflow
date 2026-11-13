@@ -1,8 +1,8 @@
-import { motion } from "motion/react";
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { type ReactNode, startTransition, useRef } from "react";
 
+import { useDismiss } from "@/hooks/use-dismiss";
 import { useClickOutside } from "@/hooks/use-click-outside";
 
 import { Button } from "@/components/ui/button";
@@ -33,23 +33,12 @@ export default function ConfirmationModal({
     });
   }
 
-  useClickOutside(wrapperRef, handleCancel, isLoading);
+  const { phase, close } = useDismiss(handleCancel, isLoading);
+  useClickOutside(wrapperRef, close, isLoading);
 
   return (
-    <motion.div
-      className="modal__container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.1 }}
-    >
-      <motion.div
-        className="flex h-[40%] max-w-[78%] items-center justify-center md:h-[60%] md:max-w-[40%]"
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+    <div className="modal__container" data-phase={phase}>
+      <div className="animate-in fade-in-0 zoom-in-95 duration-200 ease-out flex h-[40%] max-w-[78%] items-center justify-center md:h-[60%] md:max-w-[40%]">
         <Card ref={wrapperRef}>
           <CardContent className="pt-4">
             <div className="mb-4 flex gap-2">
@@ -58,7 +47,7 @@ export default function ConfirmationModal({
             </div>
             <div className="flex items-center justify-end gap-2">
               {!isLoading && (
-                <Button variant="secondary" onClick={handleCancel}>
+                <Button variant="secondary" onClick={close}>
                   {t("actions.cancel")}
                 </Button>
               )}
@@ -72,7 +61,7 @@ export default function ConfirmationModal({
             </div>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
