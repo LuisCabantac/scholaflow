@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -8,12 +7,7 @@ export default function CtaSection() {
   const { t } = useTranslation("landing", { keyPrefix: "cta" });
 
   return (
-    <motion.section
-      className="py-16"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-    >
+    <section className="py-16">
       <div className="mx-auto max-w-5xl px-6 py-12">
         <div className="text-center">
           <h2 className="text-foreground text-4xl font-medium text-balance md:text-5xl">
@@ -27,6 +21,6 @@ export default function CtaSection() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

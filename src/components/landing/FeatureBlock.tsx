@@ -1,5 +1,4 @@
 import { cn } from "cn";
-import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 export default function FeatureBlock({
@@ -7,7 +6,6 @@ export default function FeatureBlock({
   title,
   description,
   preview,
-  delay,
   previewFirst = false,
   className = "py-16",
 }: {
@@ -15,7 +13,6 @@ export default function FeatureBlock({
   title: string;
   description: string;
   preview: (className: string) => ReactNode;
-  delay: number;
   previewFirst?: boolean;
   className?: string;
 }) {
@@ -34,12 +31,7 @@ export default function FeatureBlock({
   );
 
   return (
-    <motion.div
-      className={cn(className)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-    >
+    <div className={cn(className)}>
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-12 lg:grid-cols-5 lg:gap-24">
           {previewFirst ? (
@@ -56,6 +48,6 @@ export default function FeatureBlock({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
