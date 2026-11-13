@@ -378,10 +378,11 @@ The app also serves a JSON API for native clients (the planned Expo app, later d
 - **Sign in:** `POST /api/auth/sign-in/email` with `{ "email", "password" }` and an `Origin` header equal to `BETTER_AUTH_URL`. The response carries the session token in the `set-auth-token` header; send it back as `Authorization: Bearer <token>` on every API call. JWTs from `/api/auth/token` are accepted too. Google sign-in for native apps is wired in a later step.
 - **Document:** `GET /api/v1/openapi.json` (OpenAPI 3.1, generated from the route registry; a test fails if a route file is not registered).
 - **Public endpoints:** `GET /api/v1/health`, `POST /api/v1/auth/verification-email` and `POST /api/v1/auth/password-reset` (`{ "email" }`, 202 on success; same behaviour as the website's forms).
+- **Classrooms (bearer):** `GET /api/v1/classrooms` (`{ taught, enrolled }`), `POST /api/v1/classrooms` (201), `GET|PATCH|DELETE /api/v1/classrooms/{classId}`, `GET /api/v1/classrooms/by-code/{code}`, `POST /api/v1/classrooms/join` (`{ "code" }`, 201 `{ classId }`), `POST /api/v1/classrooms/{classId}/leave` (204), `GET|POST /api/v1/classrooms/{classId}/members` (POST `{ "email" }`, teacher only), `DELETE /api/v1/classrooms/{classId}/members/{enrollmentId}` (teacher or the member themselves), `GET|POST /api/v1/classrooms/{classId}/topics`, `PATCH|DELETE /api/v1/topics/{topicId}`. The invite code is blank for anyone but the teacher. Request and response shapes are in the OpenAPI document.
 - **Errors:** `{ "error": { "code", "message", "details"? } }` with `unauthorized` 401, `forbidden` 403, `not_found` 404, `validation_failed` 400, `conflict` 409, `payload_too_large` 413, `rate_limited` 429, `internal` 500.
 - **Environment:** `AUTH_TRUSTED_ORIGINS` for the mobile app scheme, `API_ALLOWED_ORIGINS` for browser-like clients that need CORS (empty disables it).
 
-Contract check: `BASE=... TEST_EMAIL=... TEST_PASSWORD=... node docs/checks/api-01-foundation-check.mjs` (local only).
+Contract checks: `BASE=... TEST_EMAIL=... TEST_PASSWORD=... node docs/checks/api-01-foundation-check.mjs` and `docs/checks/api-02-classrooms-check.mjs` (local only).
 
 ---
 
