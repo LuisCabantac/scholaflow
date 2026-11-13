@@ -207,6 +207,81 @@
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        animation: modal-overlay-in 150ms var(--ease-out);
+    }
+
+    .modal__container[data-phase="closing"] {
+        animation: modal-overlay-out 150ms var(--ease-out) forwards;
+        pointer-events: none;
+    }
+
+    .modal__drawer {
+        animation: modal-drawer-in 280ms var(--ease-drawer);
+    }
+
+    .modal__container[data-phase="closing"] .modal__drawer {
+        animation: modal-drawer-out 200ms var(--ease-drawer) forwards;
+    }
+
+    @keyframes modal-overlay-in {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes modal-overlay-out {
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes modal-drawer-in {
+        from {
+            transform: translateY(100%);
+        }
+    }
+
+    @keyframes modal-drawer-out {
+        to {
+            transform: translateY(100%);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .modal__drawer {
+            animation: modal-drawer-in-desktop 200ms var(--ease-out);
+        }
+
+        .modal__container[data-phase="closing"] .modal__drawer {
+            animation: modal-drawer-out-desktop 150ms var(--ease-out) forwards;
+        }
+
+        @keyframes modal-drawer-in-desktop {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+        }
+
+        @keyframes modal-drawer-out-desktop {
+            to {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .modal__drawer,
+        .modal__container[data-phase="closing"] .modal__drawer {
+            animation-name: modal-overlay-in;
+            animation-duration: 150ms;
+            animation-timing-function: var(--ease-out);
+        }
+
+        .modal__container[data-phase="closing"] .modal__drawer {
+            animation-name: modal-overlay-out;
+        }
     }
 
     .filter__select {

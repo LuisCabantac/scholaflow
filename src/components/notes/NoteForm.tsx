@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { ClientOnly } from "@tanstack/react-router";
 import type { SerializedEditorState } from "lexical";
-import { AnimatePresence, motion } from "motion/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImagePlus, Pin, PinOff, Trash2, X } from "lucide-react";
 import {
@@ -17,6 +16,7 @@ import { formatDate } from "@/lib/utils";
 import { useNow } from "@/hooks/use-now";
 import type { Note } from "@/lib/schema";
 import { notesKeys } from "@/queries/notes";
+import { useDismiss } from "@/hooks/use-dismiss";
 import type { NoteFormType } from "@/types/notes";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { createNoteFn, updateNoteFn } from "@/server/functions/notes";
@@ -189,10 +189,18 @@ export default function NoteForm({
     armSafeInteraction();
   }
 
+  const { phase, close } = useDismiss(
+    onClose,
+    isLoading ||
+      showConfirmation ||
+      editorDropdownIsOpen ||
+      safeInteraction ||
+      !!zoomedImage,
+  );
   useClickOutside(
     wrapperRef,
     () => {
-      if (!safeInteraction) onClose();
+      if (!safeInteraction) close();
     },
     isLoading ||
       showConfirmation ||
@@ -213,180 +221,165 @@ export default function NoteForm({
   ];
 
   return (
-    <div className="modal__container">
-      <AnimatePresence>
-        <motion.div
-          className="bg-card fixed right-0 bottom-0 left-0 z-10 h-[95%] overflow-y-scroll rounded-t-md"
-          ref={wrapperRef}
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{
-            type: "spring",
-            damping: 32,
-            stiffness: 300,
-            mass: 1,
-            duration: 0.2,
-          }}
+    <div className="modal__container" data-phase={phase}>
+      <div
+        className="modal__drawer bg-card fixed right-0 bottom-0 left-0 z-10 h-[95%] overflow-y-scroll rounded-t-md"
+        ref={wrapperRef}
+      >
+        <form
+          className="relative min-h-screen w-full rounded-t-md border-t pb-[6rem] shadow-sm"
+          onSubmit={handleSubmit}
         >
-          <form
-            className="relative min-h-screen w-full rounded-t-md border-t pb-[6rem] shadow-sm"
-            onSubmit={handleSubmit}
+          <button
+            className="absolute top-4 right-4 md:top-8 md:right-8"
+            type="button"
+            disabled={isLoading}
+            onClick={close}
+            aria-label={t("form.close")}
           >
-            <button
-              className="absolute top-4 right-4 md:top-8 md:right-8"
-              type="button"
-              disabled={isLoading}
-              onClick={onClose}
-              aria-label={t("form.close")}
-            >
-              <X
-                strokeWidth={2}
-                className="size-5 transition-all hover:stroke-foreground/70"
-              />
-            </button>
-            <div className="grid h-full gap-2 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
-              <div className="mt-6 columns-2 gap-2 md:mt-0 md:columns-4">
-                {previews.map((preview) => (
-                  <div key={preview.url} className="relative">
-                    {!isLoading && (
-                      <button
-                        type="button"
-                        disabled={isLoading}
-                        className="absolute top-1 left-1 rounded-full bg-black/70 p-1"
-                        onClick={preview.remove}
-                        aria-label={t("form.removeImage")}
-                      >
-                        <X strokeWidth={2} className="size-5 stroke-white" />
-                      </button>
-                    )}
+            <X
+              strokeWidth={2}
+              className="size-5 transition-all hover:stroke-foreground/70"
+            />
+          </button>
+          <div className="grid h-full gap-2 px-4 py-4 pb-4 md:px-24 md:py-16 md:pb-8">
+            <div className="mt-6 columns-2 gap-2 md:mt-0 md:columns-4">
+              {previews.map((preview) => (
+                <div key={preview.url} className="relative">
+                  {!isLoading && (
                     <button
                       type="button"
-                      className="mb-2 block w-full break-inside-avoid"
-                      onClick={() => openZoomedImage(preview.url)}
-                    >
-                      <img
-                        src={preview.url}
-                        alt={preview.url}
-                        width={500}
-                        height={500}
-                        className="w-auto rounded-md object-cover select-none"
-                        onDragStart={(e) => e.preventDefault()}
-                      />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div>
-                {note && (
-                  <ClientOnly fallback={<p className="h-4 text-xs" />}>
-                    <p className="text-foreground text-xs">
-                      {note.updatedAt
-                        ? t("card.updated", {
-                            date: formatDate(note.updatedAt, now),
-                          })
-                        : t("card.created", {
-                            date: formatDate(note.createdAt, now),
-                          })}
-                    </p>
-                  </ClientOnly>
-                )}
-                <input
-                  type="text"
-                  name="title"
-                  className="w-[90%] border-none bg-transparent text-3xl font-semibold focus:outline-none"
-                  placeholder={t("form.titlePlaceholder")}
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                />
-              </div>
-              <div>
-                <Editor
-                  editorSerializedState={editorState}
-                  onSerializedChange={setEditorState}
-                  onDropdownStateChange={setEditorDropdownIsOpen}
-                  onSafeInteraction={armSafeInteraction}
-                />
-              </div>
-            </div>
-            <div className="fixed right-0 bottom-0 left-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="p-0 hover:bg-transparent"
-                  asChild
-                >
-                  <label aria-label={t("form.addImages")}>
-                    <input
-                      type="file"
-                      className="hidden"
-                      multiple
-                      accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
                       disabled={isLoading}
-                      onChange={handleAddAttachments}
+                      className="absolute top-1 left-1 rounded-full bg-black/70 p-1"
+                      onClick={preview.remove}
+                      aria-label={t("form.removeImage")}
+                    >
+                      <X strokeWidth={2} className="size-5 stroke-white" />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="mb-2 block w-full break-inside-avoid"
+                    onClick={() => openZoomedImage(preview.url)}
+                  >
+                    <img
+                      src={preview.url}
+                      alt={preview.url}
+                      width={500}
+                      height={500}
+                      className="w-auto rounded-md object-cover select-none"
+                      onDragStart={(e) => e.preventDefault()}
                     />
-                    <ImagePlus className="size-5 md:size-6" />
-                  </label>
-                </Button>
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div>
+              {note && (
+                <ClientOnly fallback={<p className="h-4 text-xs" />}>
+                  <p className="text-foreground text-xs">
+                    {note.updatedAt
+                      ? t("card.updated", {
+                          date: formatDate(note.updatedAt, now),
+                        })
+                      : t("card.created", {
+                          date: formatDate(note.createdAt, now),
+                        })}
+                  </p>
+                </ClientOnly>
+              )}
+              <input
+                type="text"
+                name="title"
+                className="w-[90%] border-none bg-transparent text-3xl font-semibold focus:outline-none"
+                placeholder={t("form.titlePlaceholder")}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+              />
+            </div>
+            <div>
+              <Editor
+                editorSerializedState={editorState}
+                onSerializedChange={setEditorState}
+                onDropdownStateChange={setEditorDropdownIsOpen}
+                onSafeInteraction={armSafeInteraction}
+              />
+            </div>
+          </div>
+          <div className="fixed right-0 bottom-0 left-0 flex w-auto items-center justify-between gap-4 border-t px-4 py-4 md:px-8">
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="p-0 hover:bg-transparent"
+                asChild
+              >
+                <label aria-label={t("form.addImages")}>
+                  <input
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                    disabled={isLoading}
+                    onChange={handleAddAttachments}
+                  />
+                  <ImagePlus className="size-5 md:size-6" />
+                </label>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="p-0 hover:bg-transparent"
+                onClick={() => setIsPinned((prev) => !prev)}
+                aria-label={isPinned ? t("form.unpin") : t("form.pin")}
+                aria-pressed={isPinned}
+              >
+                {isPinned ? (
+                  <Pin className="size-5 md:size-6" />
+                ) : (
+                  <PinOff className="size-5 md:size-6" />
+                )}
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              {type === "edit" && (
                 <Button
                   type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="p-0 hover:bg-transparent"
-                  onClick={() => setIsPinned((prev) => !prev)}
-                  aria-label={isPinned ? t("form.unpin") : t("form.pin")}
-                  aria-pressed={isPinned}
+                  variant="destructive"
+                  disabled={isLoading || deleteNoteIsPending}
+                  onClick={() => setShowConfirmation(true)}
                 >
-                  {isPinned ? (
-                    <Pin className="size-5 md:size-6" />
-                  ) : (
-                    <PinOff className="size-5 md:size-6" />
-                  )}
+                  <Trash2 className="size-5 md:size-6" />
+                  {t("form.delete")}
                 </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                {type === "edit" && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    disabled={isLoading || deleteNoteIsPending}
-                    onClick={() => setShowConfirmation(true)}
-                  >
-                    <Trash2 className="size-5 md:size-6" />
-                    {t("form.delete")}
-                  </Button>
-                )}
-                <Button
-                  disabled={isLoading}
-                  type="submit"
-                  variant={type === "edit" ? "secondary" : "default"}
-                >
-                  {type === "edit" ? t("form.saveChanges") : t("form.create")}
-                </Button>
-              </div>
+              )}
+              <Button
+                disabled={isLoading}
+                type="submit"
+                variant={type === "edit" ? "secondary" : "default"}
+              >
+                {type === "edit" ? t("form.saveChanges") : t("form.create")}
+              </Button>
             </div>
-          </form>
-          {zoomedImage && (
-            <ZoomedImage
-              src={zoomedImage}
-              onClose={() => setZoomedImage(null)}
-            />
-          )}
-          {showConfirmation && (
-            <ConfirmationModal
-              type="delete"
-              btnLabel={t("form.delete")}
-              isLoading={deleteNoteIsPending}
-              handleCancel={() => setShowConfirmation(false)}
-              handleAction={() => onDeleteNote(note?.id ?? "")}
-            >
-              {t("form.confirmDelete")}
-            </ConfirmationModal>
-          )}
-        </motion.div>
-      </AnimatePresence>
+          </div>
+        </form>
+        {zoomedImage && (
+          <ZoomedImage src={zoomedImage} onClose={() => setZoomedImage(null)} />
+        )}
+        {showConfirmation && (
+          <ConfirmationModal
+            type="delete"
+            btnLabel={t("form.delete")}
+            isLoading={deleteNoteIsPending}
+            handleCancel={() => setShowConfirmation(false)}
+            handleAction={() => onDeleteNote(note?.id ?? "")}
+          >
+            {t("form.confirmDelete")}
+          </ConfirmationModal>
+        )}
+      </div>
     </div>
   );
 }
