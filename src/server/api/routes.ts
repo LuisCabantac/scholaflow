@@ -17,3 +17,5 @@ import "@/routes/api/v1/classrooms/$classId/classwork-streams";
 import "@/routes/api/v1/streams/$streamId/index";
 import "@/routes/api/v1/streams/$streamId/comments";
 import "@/routes/api/v1/streams/$streamId/private-comments";
+import "@/routes/api/v1/streams/$streamId/comments/$commentId";
+import "@/routes/api/v1/streams/$streamId/private-comments/$commentId";
