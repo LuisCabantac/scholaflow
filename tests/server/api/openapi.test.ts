@@ -157,6 +157,64 @@ describe("buildOpenApi", () => {
     expect(request.required ?? []).not.toContain("note");
   });
 
+  it("documents a route with files as multipart form data in input mode", () => {
+    registerRoute({
+      method: "POST",
+      path: "/streams",
+      summary: "Create",
+      auth: "bearer",
+      status: 201,
+      request: z
+        .object({
+          title: z.string().optional(),
+          type: z.enum(["stream", "quiz"]).default("stream"),
+        })
+        .transform((form) => ({ ...form, done: true })),
+      files: { attachments: "many", cover: "one" },
+      response: z.object({ id: z.string() }),
+      errors: ["validation_failed", "payload_too_large"],
+    });
+    const doc = buildOpenApi() as {
+      paths: Record<
+        string,
+        Record<
+          string,
+          {
+            requestBody: {
+              content: Record<
+                string,
+                {
+                  schema: {
+                    properties: Record<string, unknown>;
+                    required?: string[];
+                  };
+                }
+              >;
+            };
+            responses: Record<string, unknown>;
+          }
+        >
+      >;
+    };
+    const op = doc.paths["/streams"].post;
+    expect(Object.keys(op.requestBody.content)).toEqual([
+      "multipart/form-data",
+    ]);
+    const schema = op.requestBody.content["multipart/form-data"].schema;
+    expect(schema.properties.attachments).toEqual({
+      type: "array",
+      items: { type: "string", format: "binary" },
+    });
+    expect(schema.properties.cover).toEqual({
+      type: "string",
+      format: "binary",
+    });
+    expect(schema.properties.title).toBeDefined();
+    expect(schema.properties.done).toBeUndefined();
+    expect(schema.required ?? []).not.toContain("type");
+    expect(op.responses["413"]).toBeDefined();
+  });
+
   it("lists registered routes", () => {
     registerRoute({
       method: "GET",
