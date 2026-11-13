@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   useMutation,
   useQueryClient,
@@ -27,7 +27,7 @@ export default function ClassChatSection({
   const queryClient = useQueryClient();
   const { t } = useTranslation("chat");
 
-  const messagesEndRef = useRef<HTMLLIElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const [isLong, setIsLong] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
@@ -38,6 +38,12 @@ export default function ClassChatSection({
   });
 
   const rows = groupMessages(sortMessages(messages), user.id);
+
+  const lastMessage = rows.at(-1)?.message;
+  const lastMessageId = lastMessage?.id;
+  const lastMessageUserId = lastMessage?.userId;
+  const seenLastMessageId = useRef<string | undefined>(undefined);
+  const pinnedToBottom = useRef(true);
 
   const sendMessage = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -74,15 +80,61 @@ export default function ClassChatSection({
   }, [classroom.id, queryClient]);
 
   useEffect(() => {
-    if (!messages?.length) return;
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const list = listRef.current;
+    if (!list) return;
+
+    const handleScroll = () => {
+      pinnedToBottom.current =
+        list.scrollHeight - list.scrollTop - list.clientHeight <= 80;
+    };
+
+    const handleLoad = () => {
+      if (pinnedToBottom.current) list.scrollTop = list.scrollHeight;
+    };
+
+    list.addEventListener("scroll", handleScroll);
+    list.addEventListener("load", handleLoad, true);
+    return () => {
+      list.removeEventListener("scroll", handleScroll);
+      list.removeEventListener("load", handleLoad, true);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list || !lastMessageId) return;
+
+    if (seenLastMessageId.current === undefined) {
+      list.scrollTop = list.scrollHeight;
+      seenLastMessageId.current = lastMessageId;
+      return;
+    }
+
+    if (seenLastMessageId.current === lastMessageId) return;
+    seenLastMessageId.current = lastMessageId;
+
+    const distanceFromBottom =
+      list.scrollHeight - list.scrollTop - list.clientHeight;
+    const isOwn = lastMessageUserId === user.id;
+    if (distanceFromBottom > 80 && !isOwn) return;
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    list.scrollTo({
+      top: list.scrollHeight,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [lastMessageId, lastMessageUserId, user.id]);
 
   return (
     <section className="relative">
       <div className="md:bg-card flex w-full flex-col rounded-md md:border md:p-4">
         <div className={`relative ${isLong ? "pb-40" : "pb-16"}`}>
-          <ul className="flex h-[75dvh] flex-col gap-2 overflow-y-auto overscroll-contain rounded-md md:h-[75dvh]">
+          <ul
+            ref={listRef}
+            className="flex h-[75dvh] flex-col gap-2 overflow-y-auto overscroll-contain rounded-md md:h-[75dvh]"
+          >
             {rows.length ? (
               rows.map((row) => (
                 <ChatMessageItem
@@ -94,7 +146,6 @@ export default function ClassChatSection({
             ) : (
               <li className="flex items-center justify-center">{t("empty")}</li>
             )}
-            <li ref={messagesEndRef} className="h-0 w-0" />
           </ul>
           <ChatComposer
             classroomId={classroom.id}
