@@ -107,6 +107,56 @@ describe("buildOpenApi", () => {
     expect(image).not.toContain("nullable");
   });
 
+  it("documents date fields as date-time strings and lets responses carry extra fields", () => {
+    registerRoute({
+      method: "POST",
+      path: "/things",
+      summary: "Create",
+      auth: "bearer",
+      status: 201,
+      request: z.object({ name: z.string() }),
+      response: z.object({ id: z.string(), createdAt: z.date() }),
+      errors: [],
+    });
+    const doc = buildOpenApi() as {
+      paths: Record<
+        string,
+        Record<
+          string,
+          {
+            requestBody: {
+              content: Record<string, { schema: Record<string, unknown> }>;
+            };
+            responses: Record<
+              string,
+              {
+                content: Record<
+                  string,
+                  {
+                    schema: {
+                      properties: Record<string, unknown>;
+                      additionalProperties?: unknown;
+                    };
+                  }
+                >;
+              }
+            >;
+          }
+        >
+      >;
+    };
+    const op = doc.paths["/things"].post;
+    const response = op.responses["201"].content["application/json"].schema;
+    expect(response.properties.createdAt).toEqual({
+      type: "string",
+      format: "date-time",
+    });
+    expect(response.additionalProperties).toBeUndefined();
+    expect(
+      op.requestBody.content["application/json"].schema.additionalProperties,
+    ).toBe(false);
+  });
+
   it("lists registered routes", () => {
     registerRoute({
       method: "GET",

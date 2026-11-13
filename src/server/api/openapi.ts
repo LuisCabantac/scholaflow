@@ -38,8 +38,29 @@ export function resetRoutes(): void {
   routes.length = 0;
 }
 
-function schemaOf(schema: z.ZodType) {
-  return z.toJSONSchema(schema);
+function stripAdditional(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(stripAdditional);
+  if (!node || typeof node !== "object") return node;
+
+  const copy: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+    if (key === "additionalProperties" && value === false) continue;
+    copy[key] = stripAdditional(value);
+  }
+  return copy;
+}
+
+function schemaOf(schema: z.ZodType, loose = false) {
+  const json = z.toJSONSchema(schema, {
+    unrepresentable: "any",
+    override: ({ zodSchema, jsonSchema }) => {
+      if (zodSchema._zod.def.type === "date") {
+        jsonSchema.type = "string";
+        jsonSchema.format = "date-time";
+      }
+    },
+  });
+  return loose ? stripAdditional(json) : json;
 }
 
 function parameters(doc: RouteDoc) {
@@ -69,7 +90,9 @@ function operation(doc: RouteDoc) {
   const responses: Record<string, unknown> = {
     [String(doc.status ?? 200)]: {
       description: "Success",
-      content: { "application/json": { schema: schemaOf(doc.response) } },
+      content: {
+        "application/json": { schema: schemaOf(doc.response, true) },
+      },
     },
   };
   for (const code of doc.errors) {
