@@ -328,7 +328,7 @@ export async function removeMemberFlow(
   return done;
 }
 
-async function deleteStreamContent(streamId: string): Promise<void> {
+export async function deleteStreamContent(streamId: string): Promise<void> {
   const comments = await getAllCommentsByStreamId(streamId);
   if (comments?.length) {
     const files = comments.map((c) => c.attachment).filter(Boolean) as string[];
