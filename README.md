@@ -383,7 +383,7 @@ The app also serves a JSON API for native clients (the planned Expo app, later d
 - **Errors:** `{ "error": { "code", "message", "details"? } }` with `unauthorized` 401, `forbidden` 403, `not_found` 404, `validation_failed` 400, `conflict` 409, `payload_too_large` 413, `rate_limited` 429, `internal` 500.
 - **Environment:** `AUTH_TRUSTED_ORIGINS` for the mobile app scheme, `API_ALLOWED_ORIGINS` for browser-like clients that need CORS (empty disables it).
 
-Contract checks: `BASE=... TEST_EMAIL=... TEST_PASSWORD=... node docs/checks/api-01-foundation-check.mjs` and `docs/checks/api-02-classrooms-check.mjs` (local only).
+Contract checks: `BASE=... TEST_EMAIL=... TEST_PASSWORD=... node docs/checks/api-01-foundation-check.mjs`, `docs/checks/api-02-classrooms-check.mjs` and `docs/checks/api-03-streams-check.mjs` (local only).
 
 ---
 
