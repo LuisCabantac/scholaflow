@@ -3,3 +3,8 @@ import "@/routes/api/v1/health";
 import "@/routes/api/v1/openapi[.]json";
 import "@/routes/api/v1/auth/password-reset";
 import "@/routes/api/v1/auth/verification-email";
+import "@/routes/api/v1/classrooms/index";
+import "@/routes/api/v1/classrooms/by-code/$code";
+import "@/routes/api/v1/classrooms/$classId/index";
+import "@/routes/api/v1/classrooms/$classId/members";
+import "@/routes/api/v1/classrooms/$classId/topics";

@@ -40,10 +40,15 @@ import { Route as ApiV1OpenapiDotjsonRouteImport } from './routes/api/v1/openapi
 import { Route as MainClassroomClassClassIdRouteImport } from './routes/_main/classroom/class/$classId'
 import { Route as ApiV1AuthPasswordResetRouteImport } from './routes/api/v1/auth/password-reset'
 import { Route as ApiV1AuthVerificationEmailRouteImport } from './routes/api/v1/auth/verification-email'
+import { Route as ApiV1ClassroomsIndexRouteImport } from './routes/api/v1/classrooms/index'
 import { Route as MainClassroomClassClassIdIndexRouteImport } from './routes/_main/classroom/class/$classId.index'
 import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_main/classroom/class/$classId.chat'
 import { Route as MainClassroomClassClassIdClassworkRouteImport } from './routes/_main/classroom/class/$classId.classwork'
 import { Route as MainClassroomClassClassIdPeopleRouteImport } from './routes/_main/classroom/class/$classId.people'
+import { Route as ApiV1ClassroomsClassIdIndexRouteImport } from './routes/api/v1/classrooms/$classId/index'
+import { Route as ApiV1ClassroomsClassIdMembersRouteImport } from './routes/api/v1/classrooms/$classId/members'
+import { Route as ApiV1ClassroomsClassIdTopicsRouteImport } from './routes/api/v1/classrooms/$classId/topics'
+import { Route as ApiV1ClassroomsByCodeCodeRouteImport } from './routes/api/v1/classrooms/by-code/$code'
 import { Route as MainClassroomClassClassIdStreamStreamIdRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId'
 import { Route as MainClassroomClassClassIdStreamStreamIdIndexRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.index'
 import { Route as MainClassroomClassClassIdStreamStreamIdSubmissionsRouteImport } from './routes/_main/classroom/class/$classId_.stream.$streamId.submissions'
@@ -203,6 +208,11 @@ const ApiV1AuthVerificationEmailRoute =
     path: '/api/v1/auth/verification-email',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1ClassroomsIndexRoute = ApiV1ClassroomsIndexRouteImport.update({
+  id: '/api/v1/classrooms/',
+  path: '/api/v1/classrooms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainClassroomClassClassIdIndexRoute =
   MainClassroomClassClassIdIndexRouteImport.update({
     id: '/',
@@ -226,6 +236,30 @@ const MainClassroomClassClassIdPeopleRoute =
     id: '/people',
     path: '/people',
     getParentRoute: () => MainClassroomClassClassIdRoute,
+  } as any)
+const ApiV1ClassroomsClassIdIndexRoute =
+  ApiV1ClassroomsClassIdIndexRouteImport.update({
+    id: '/api/v1/classrooms/$classId/',
+    path: '/api/v1/classrooms/$classId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1ClassroomsClassIdMembersRoute =
+  ApiV1ClassroomsClassIdMembersRouteImport.update({
+    id: '/api/v1/classrooms/$classId/members',
+    path: '/api/v1/classrooms/$classId/members',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1ClassroomsClassIdTopicsRoute =
+  ApiV1ClassroomsClassIdTopicsRouteImport.update({
+    id: '/api/v1/classrooms/$classId/topics',
+    path: '/api/v1/classrooms/$classId/topics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1ClassroomsByCodeCodeRoute =
+  ApiV1ClassroomsByCodeCodeRouteImport.update({
+    id: '/api/v1/classrooms/by-code/$code',
+    path: '/api/v1/classrooms/by-code/$code',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const MainClassroomClassClassIdStreamStreamIdRoute =
   MainClassroomClassClassIdStreamStreamIdRouteImport.update({
@@ -276,10 +310,15 @@ export interface FileRoutesByFullPath {
   '/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
+  '/api/v1/classrooms/': typeof ApiV1ClassroomsIndexRoute
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRoute
+  '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
+  '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
   '/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
+  '/api/v1/classrooms/$classId/': typeof ApiV1ClassroomsClassIdIndexRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
   '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/classroom/class/$classId/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
@@ -313,10 +352,15 @@ export interface FileRoutesByTo {
   '/classroom': typeof MainClassroomIndexRoute
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
+  '/api/v1/classrooms': typeof ApiV1ClassroomsIndexRoute
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRoute
+  '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
+  '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
   '/classroom/class/$classId': typeof MainClassroomClassClassIdIndexRoute
+  '/api/v1/classrooms/$classId': typeof ApiV1ClassroomsClassIdIndexRoute
   '/classroom/class/$classId/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/classroom/class/$classId/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
 }
@@ -353,10 +397,15 @@ export interface FileRoutesById {
   '/_main/classroom/class/$classId': typeof MainClassroomClassClassIdRouteWithChildren
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
+  '/api/v1/classrooms/': typeof ApiV1ClassroomsIndexRoute
   '/_main/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/_main/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
   '/_main/classroom/class/$classId/people': typeof MainClassroomClassClassIdPeopleRoute
+  '/api/v1/classrooms/$classId/members': typeof ApiV1ClassroomsClassIdMembersRoute
+  '/api/v1/classrooms/$classId/topics': typeof ApiV1ClassroomsClassIdTopicsRoute
+  '/api/v1/classrooms/by-code/$code': typeof ApiV1ClassroomsByCodeCodeRoute
   '/_main/classroom/class/$classId/': typeof MainClassroomClassClassIdIndexRoute
+  '/api/v1/classrooms/$classId/': typeof ApiV1ClassroomsClassIdIndexRoute
   '/_main/classroom/class/$classId_/stream/$streamId': typeof MainClassroomClassClassIdStreamStreamIdRouteWithChildren
   '/_main/classroom/class/$classId_/stream/$streamId/submissions': typeof MainClassroomClassClassIdStreamStreamIdSubmissionsRoute
   '/_main/classroom/class/$classId_/stream/$streamId/': typeof MainClassroomClassClassIdStreamStreamIdIndexRoute
@@ -393,10 +442,15 @@ export interface FileRouteTypes {
     | '/classroom/class/$classId'
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
+    | '/api/v1/classrooms/'
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
     | '/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/topics'
+    | '/api/v1/classrooms/by-code/$code'
     | '/classroom/class/$classId/'
+    | '/api/v1/classrooms/$classId/'
     | '/classroom/class/$classId/stream/$streamId'
     | '/classroom/class/$classId/stream/$streamId/submissions'
     | '/classroom/class/$classId/stream/$streamId/'
@@ -430,10 +484,15 @@ export interface FileRouteTypes {
     | '/classroom'
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
+    | '/api/v1/classrooms'
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
     | '/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/topics'
+    | '/api/v1/classrooms/by-code/$code'
     | '/classroom/class/$classId'
+    | '/api/v1/classrooms/$classId'
     | '/classroom/class/$classId/stream/$streamId/submissions'
     | '/classroom/class/$classId/stream/$streamId'
   id:
@@ -469,10 +528,15 @@ export interface FileRouteTypes {
     | '/_main/classroom/class/$classId'
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
+    | '/api/v1/classrooms/'
     | '/_main/classroom/class/$classId/chat'
     | '/_main/classroom/class/$classId/classwork'
     | '/_main/classroom/class/$classId/people'
+    | '/api/v1/classrooms/$classId/members'
+    | '/api/v1/classrooms/$classId/topics'
+    | '/api/v1/classrooms/by-code/$code'
     | '/_main/classroom/class/$classId/'
+    | '/api/v1/classrooms/$classId/'
     | '/_main/classroom/class/$classId_/stream/$streamId'
     | '/_main/classroom/class/$classId_/stream/$streamId/submissions'
     | '/_main/classroom/class/$classId_/stream/$streamId/'
@@ -498,6 +562,11 @@ export interface RootRouteChildren {
   ApiV1OpenapiDotjsonRoute: typeof ApiV1OpenapiDotjsonRoute
   ApiV1AuthPasswordResetRoute: typeof ApiV1AuthPasswordResetRoute
   ApiV1AuthVerificationEmailRoute: typeof ApiV1AuthVerificationEmailRoute
+  ApiV1ClassroomsIndexRoute: typeof ApiV1ClassroomsIndexRoute
+  ApiV1ClassroomsClassIdMembersRoute: typeof ApiV1ClassroomsClassIdMembersRoute
+  ApiV1ClassroomsClassIdTopicsRoute: typeof ApiV1ClassroomsClassIdTopicsRoute
+  ApiV1ClassroomsByCodeCodeRoute: typeof ApiV1ClassroomsByCodeCodeRoute
+  ApiV1ClassroomsClassIdIndexRoute: typeof ApiV1ClassroomsClassIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -719,6 +788,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1AuthVerificationEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/classrooms/': {
+      id: '/api/v1/classrooms/'
+      path: '/api/v1/classrooms'
+      fullPath: '/api/v1/classrooms/'
+      preLoaderRoute: typeof ApiV1ClassroomsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/classroom/class/$classId/': {
       id: '/_main/classroom/class/$classId/'
       path: '/'
@@ -746,6 +822,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/classroom/class/$classId/people'
       preLoaderRoute: typeof MainClassroomClassClassIdPeopleRouteImport
       parentRoute: typeof MainClassroomClassClassIdRoute
+    }
+    '/api/v1/classrooms/$classId/': {
+      id: '/api/v1/classrooms/$classId/'
+      path: '/api/v1/classrooms/$classId'
+      fullPath: '/api/v1/classrooms/$classId/'
+      preLoaderRoute: typeof ApiV1ClassroomsClassIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/classrooms/$classId/members': {
+      id: '/api/v1/classrooms/$classId/members'
+      path: '/api/v1/classrooms/$classId/members'
+      fullPath: '/api/v1/classrooms/$classId/members'
+      preLoaderRoute: typeof ApiV1ClassroomsClassIdMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/classrooms/$classId/topics': {
+      id: '/api/v1/classrooms/$classId/topics'
+      path: '/api/v1/classrooms/$classId/topics'
+      fullPath: '/api/v1/classrooms/$classId/topics'
+      preLoaderRoute: typeof ApiV1ClassroomsClassIdTopicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/classrooms/by-code/$code': {
+      id: '/api/v1/classrooms/by-code/$code'
+      path: '/api/v1/classrooms/by-code/$code'
+      fullPath: '/api/v1/classrooms/by-code/$code'
+      preLoaderRoute: typeof ApiV1ClassroomsByCodeCodeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_main/classroom/class/$classId_/stream/$streamId': {
       id: '/_main/classroom/class/$classId_/stream/$streamId'
@@ -873,6 +977,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1OpenapiDotjsonRoute: ApiV1OpenapiDotjsonRoute,
   ApiV1AuthPasswordResetRoute: ApiV1AuthPasswordResetRoute,
   ApiV1AuthVerificationEmailRoute: ApiV1AuthVerificationEmailRoute,
+  ApiV1ClassroomsIndexRoute: ApiV1ClassroomsIndexRoute,
+  ApiV1ClassroomsClassIdMembersRoute: ApiV1ClassroomsClassIdMembersRoute,
+  ApiV1ClassroomsClassIdTopicsRoute: ApiV1ClassroomsClassIdTopicsRoute,
+  ApiV1ClassroomsByCodeCodeRoute: ApiV1ClassroomsByCodeCodeRoute,
+  ApiV1ClassroomsClassIdIndexRoute: ApiV1ClassroomsClassIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
