@@ -87,13 +87,17 @@ function parameters(doc: RouteDoc) {
 }
 
 function operation(doc: RouteDoc) {
+  const status = doc.status ?? 200;
   const responses: Record<string, unknown> = {
-    [String(doc.status ?? 200)]: {
-      description: "Success",
-      content: {
-        "application/json": { schema: schemaOf(doc.response, true) },
-      },
-    },
+    [String(status)]:
+      status === 204
+        ? { description: "Success" }
+        : {
+            description: "Success",
+            content: {
+              "application/json": { schema: schemaOf(doc.response, true) },
+            },
+          },
   };
   for (const code of doc.errors) {
     responses[String(API_ERROR_STATUS[code])] = {

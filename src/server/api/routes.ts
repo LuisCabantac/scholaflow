@@ -8,3 +8,6 @@ import "@/routes/api/v1/classrooms/by-code/$code";
 import "@/routes/api/v1/classrooms/$classId/index";
 import "@/routes/api/v1/classrooms/$classId/members";
 import "@/routes/api/v1/classrooms/$classId/topics";
+import "@/routes/api/v1/classrooms/join";
+import "@/routes/api/v1/classrooms/$classId/leave";
+import "@/routes/api/v1/classrooms/$classId/members/$enrollmentId";
