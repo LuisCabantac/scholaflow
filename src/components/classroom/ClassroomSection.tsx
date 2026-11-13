@@ -330,7 +330,7 @@ export default function ClassroomSection({
           aria-label={t("actions.addClass")}
         >
           <PlusIcon
-            className={`transform transition-transform duration-300 ease-in-out ${fabIsOpen ? "rotate-45" : "rotate-0"}`}
+            className={`transform motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out ${fabIsOpen ? "rotate-45" : "rotate-0"}`}
             style={{ scale: 2 }}
           />
         </Button>
