@@ -403,7 +403,8 @@ export default function StreamUserWork({
           classworkId={classwork?.id}
         />
         <div
-          className={`${showAddWork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} bg-card absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-xl border p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
+          inert={!showAddWork}
+          className={`${showAddWork ? "translate-y-0 scale-100 opacity-100 duration-150" : "-translate-y-1 scale-95 opacity-0 duration-100"} bg-card absolute -top-24 right-0 z-20 grid w-full origin-bottom-right gap-2 rounded-xl border p-2 text-sm shadow-md transition-[opacity,translate,scale] ease-out motion-reduce:transition-none md:top-12 md:origin-top-right`}
         >
           <label className="hover:bg-card/89 flex items-center gap-2 rounded-md p-2">
             <input

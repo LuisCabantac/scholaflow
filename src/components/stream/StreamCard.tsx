@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ClientOnly, Link } from "@tanstack/react-router";
 
 import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
-import { useClickOutside } from "@/hooks/use-click-outside";
 import { longDateTime, relativeDay, timeOfDay } from "@/lib/stream-dates";
 import type {
   Classroom,
@@ -45,9 +44,6 @@ export default function StreamCard({
   const { t } = useTranslation("stream", { keyPrefix: "card" });
   const now = useNow();
 
-  const ellipsisRef = useRef<HTMLDivElement>(null);
-
-  const [ellipsis, setEllipsis] = useState(false);
   const [hasComments, setHasComments] = useState(false);
   const [showStreamForm, setShowStreamForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -65,8 +61,6 @@ export default function StreamCard({
       return t("scheduledYesterday", { time: timeOfDay(date) });
     return t("scheduledAt", { date: longDateTime(date) });
   }
-
-  useClickOutside(ellipsisRef, () => setEllipsis(false), false);
 
   const meta = (
     <ClientOnly fallback={<p className="text-foreground/70 h-4 text-xs" />}>
@@ -189,39 +183,34 @@ export default function StreamCard({
           </div>
         )}
         <div className="absolute top-0 right-0">
-          <div className="relative" ref={ellipsisRef}>
-            <button
-              onClick={() => setEllipsis(!ellipsis)}
-              type="button"
-              aria-label={t("menu")}
-            >
-              <svg
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                />
-              </svg>
-            </button>
+          <div className="relative">
             <EllipsisPopover
               showEdit={user.id === stream.userId}
               clipboardUrl={clipboardUrl}
-              showEllipsis={ellipsis}
               showDelete={
                 user.id === stream.userId || user.id === classroom.teacherId
               }
-              onToggleEllipsis={() => setEllipsis(!ellipsis)}
               onShowEditForm={() => setShowStreamForm(true)}
               onShowConfirmationModal={() => setShowConfirmation(true)}
-            />
+            >
+              <button type="button" aria-label={t("menu")}>
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                  />
+                </svg>
+              </button>
+            </EllipsisPopover>
             {showConfirmation && (
               <ConfirmationModal
                 type="delete"

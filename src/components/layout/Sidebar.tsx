@@ -16,12 +16,12 @@ export default function Sidebar({ user }: { user: SessionUser }) {
         <button
           type="button"
           aria-label={t("toggle")}
-          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+          className="fixed inset-0 z-20 bg-black/50 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-150 motion-safe:ease-out md:hidden"
           onClick={handleSidebarExpand}
         />
       )}
       <div
-        className={`fixed h-dvh overflow-y-auto overscroll-contain ${sidebarExpand ? "w-64 px-3 md:w-64" : "w-0 md:w-20 md:px-3"} border-sidebar-border bg-sidebar top-0 left-0 z-30 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5 transition-all md:pt-5 duration-300 ease-in-out md:static md:rounded-r-md md:border-r`}
+        className={`fixed h-dvh w-64 overflow-y-auto overscroll-contain px-3 ${sidebarExpand ? "translate-x-0 md:w-64 motion-safe:duration-300" : "-translate-x-full md:w-20 md:translate-x-0 motion-safe:duration-200"} border-sidebar-border bg-sidebar top-0 left-0 z-30 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5 motion-safe:transition-[translate,width,padding] motion-safe:ease-[var(--ease-drawer)] md:pt-5 md:static md:rounded-r-md md:border-r md:motion-safe:duration-200 md:motion-safe:ease-out`}
       >
         <div className="flex items-center justify-between pl-3">
           <Logo showText={sidebarExpand} />

@@ -1,10 +1,9 @@
+import { useState } from "react";
 import { format } from "date-fns";
-import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ClientOnly } from "@tanstack/react-router";
 
 import type { User } from "@/lib/schema";
-import { useClickOutside } from "@/hooks/use-click-outside";
 
 import UserAvatar from "@/components/shared/UserAvatar";
 import UserForm from "@/components/user-management/UserForm";
@@ -24,13 +23,8 @@ export default function UserCard({
 }) {
   const { t } = useTranslation("userManagement");
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const [ellipsis, setEllipsis] = useState(false);
   const [showUserForm, setShowUserForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-
-  useClickOutside(wrapperRef, () => setEllipsis(false), false);
 
   return (
     <tr className="bg-card">
@@ -98,40 +92,32 @@ export default function UserCard({
         )}
       </td>
       <td className="relative px-4 py-2">
-        <div
-          className="absolute -top-[11.5rem] right-2 md:top-3 md:right-4 md:left-0"
-          ref={wrapperRef}
-        >
-          <button
-            type="button"
-            aria-label={t("table.options")}
-            onClick={() => setEllipsis(!ellipsis)}
-          >
-            <svg
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-              />
-            </svg>
-          </button>
+        <div className="absolute -top-[11.5rem] right-2 md:top-3 md:right-4 md:left-0">
           <EllipsisPopover
             showEdit
             showDelete={!isSelf}
             deleteLabel={t("menu.removeUser")}
-            showEllipsis={ellipsis}
             onShowEditForm={() => setShowUserForm(true)}
-            onToggleEllipsis={() => setEllipsis(!ellipsis)}
             onShowConfirmationModal={() => setShowConfirmation(true)}
-          />
+          >
+            <button type="button" aria-label={t("table.options")}>
+              <svg
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                />
+              </svg>
+            </button>
+          </EllipsisPopover>
         </div>
         {showConfirmation && (
           <ConfirmationModal

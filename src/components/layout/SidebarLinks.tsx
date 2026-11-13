@@ -40,7 +40,7 @@ export default function SidebarLinks({
     if (!isMobile) handleSidebarExpand();
   }
 
-  const labelClass = `text-base transition-all ${sidebarExpand ? "" : "md:hidden"}`;
+  const labelClass = `text-base ${sidebarExpand ? "" : "md:hidden"}`;
 
   return (
     <div className="mt-8 grid gap-32 font-medium md:mt-6">
