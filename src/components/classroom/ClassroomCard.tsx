@@ -116,7 +116,8 @@ export default function ClassroomCard({
             </svg>
           </button>
           <div
-            className={`${ellipsis ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} ellipsis__popover border-border bg-card absolute right-2 z-20 grid w-[10rem] gap-2 rounded-xl border p-3 font-medium shadow-md transition-all ease-in-out`}
+            inert={!ellipsis}
+            className={`${ellipsis ? "translate-y-0 scale-100 opacity-100 duration-150" : "-translate-y-1 scale-95 opacity-0 duration-100"} ellipsis__popover border-border bg-card absolute right-2 z-20 grid w-[10rem] origin-top-right gap-2 rounded-xl border p-3 font-medium shadow-md transition-[opacity,translate,scale] ease-out motion-reduce:transition-none`}
           >
             <button
               type="button"

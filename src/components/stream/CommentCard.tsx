@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatDate } from "@/lib/utils";
 import { useNow } from "@/hooks/use-now";
 import type { SessionUser } from "@/types/auth";
-import { useClickOutside } from "@/hooks/use-click-outside";
 import type {
   Classroom,
   Stream,
@@ -41,16 +40,11 @@ export default function CommentCard({
   const now = useNow();
   const { t: tCard } = useTranslation("stream", { keyPrefix: "card" });
 
-  const ellipsisRef = useRef<HTMLDivElement>(null);
-
-  const [ellipsis, setEllipsis] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const canDelete =
     user.id === comment.userId || user.id === classroom.teacherId;
-
-  useClickOutside(ellipsisRef, () => setEllipsis(false), false);
 
   return (
     <li className="relative flex items-center justify-between break-all">
@@ -100,35 +94,30 @@ export default function CommentCard({
       </div>
       {canDelete && (
         <div className="absolute top-0 right-0">
-          <div className="relative" ref={ellipsisRef}>
-            <button
-              onClick={() => setEllipsis(!ellipsis)}
-              type="button"
-              aria-label={t("menu")}
-            >
-              <svg
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                />
-              </svg>
-            </button>
+          <div className="relative">
             <EllipsisPopover
               showEdit={false}
               showDelete={canDelete}
-              onToggleEllipsis={() => setEllipsis(!ellipsis)}
-              showEllipsis={ellipsis}
               onShowConfirmationModal={() => setShowConfirmation(true)}
-            />
+            >
+              <button type="button" aria-label={t("menu")}>
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                  />
+                </svg>
+              </button>
+            </EllipsisPopover>
             {showConfirmation && (
               <ConfirmationModal
                 type="delete"

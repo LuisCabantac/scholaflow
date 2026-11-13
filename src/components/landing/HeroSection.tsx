@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -19,28 +18,19 @@ export default function HeroSection({
       <div className="flex items-center justify-center gap-4 px-3 pt-20 pb-10 text-center md:px-48 md:pt-20 md:pb-10">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-8">
           <div className="grid gap-3 md:gap-6">
-            <motion.h1
-              className="text-foreground text-4xl font-medium tracking-tighter md:text-6xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+            <h1 className="hero-enter text-foreground text-4xl font-medium tracking-tighter md:text-6xl">
               {t("title")}
-            </motion.h1>
-            <motion.p
-              className="text-foreground/70 px-8 text-center md:text-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+            </h1>
+            <p
+              className="hero-enter text-foreground/70 px-8 text-center md:text-lg"
+              style={{ "--hero-delay": "40ms" } as React.CSSProperties}
             >
               {t("description")}
-            </motion.p>
+            </p>
           </div>
-          <motion.div
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+          <div
+            className="hero-enter flex items-center gap-2"
+            style={{ "--hero-delay": "80ms" } as React.CSSProperties}
           >
             <Button asChild>
               <Link to="/classroom">{t("getStarted")}</Link>
@@ -48,14 +38,12 @@ export default function HeroSection({
             <Button variant="outline" onClick={onViewFeatures}>
               {t("viewFeatures")}
             </Button>
-          </motion.div>
+          </div>
         </div>
       </div>
-      <motion.div
-        className="flex w-full max-w-4xl items-center justify-center rounded-2xl md:max-w-6xl lg:max-w-7xl"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.8 }}
+      <div
+        className="hero-enter flex w-full max-w-4xl items-center justify-center rounded-2xl md:max-w-6xl lg:max-w-7xl"
+        style={{ "--hero-delay": "80ms" } as React.CSSProperties}
       >
         <div className="w-[90%] md:w-full">
           <picture className="contents">
@@ -94,7 +82,7 @@ export default function HeroSection({
             />
           </picture>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

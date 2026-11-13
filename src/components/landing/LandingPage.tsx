@@ -19,7 +19,9 @@ export default function LandingPage() {
   function scrollToFeatures() {
     featuresSectionRef.current?.scrollIntoView({
       block: "start",
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
     });
   }
 
@@ -42,7 +44,15 @@ export default function LandingPage() {
           <button
             type="button"
             aria-label={t("backToTop")}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                  .matches
+                  ? "auto"
+                  : "smooth",
+              })
+            }
             className="bg-card hover:bg-muted flex h-10 w-10 items-center justify-center rounded-full border shadow-md transition-colors"
           >
             <ChevronUp className="h-5 w-5" />

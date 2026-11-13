@@ -59,7 +59,6 @@
     "lexical": "^0.32.1",
     "linkify-it": "6.1.0",
     "lucide-react": "^0.577.0",
-    "motion": "^12.43.0",
     "nanoid": "^6.0.2",
     "next-themes": "^0.4.6",
     "nitro": "3.0.260610-beta",

@@ -25,7 +25,6 @@ export default function FeaturesSection({
           eyebrow={t("feedback.eyebrow")}
           title={t("feedback.title")}
           description={t("feedback.description")}
-          delay={0.2}
           preview={(className) => (
             <FeaturePreview className={className}>
               <CommentsMock />
@@ -36,7 +35,6 @@ export default function FeaturesSection({
           eyebrow={t("chat.eyebrow")}
           title={t("chat.title")}
           description={t("chat.description")}
-          delay={0.4}
           previewFirst
           preview={(className) => (
             <FeaturePreview className={className} innerClassName="pr-3">
@@ -48,7 +46,6 @@ export default function FeaturesSection({
           eyebrow={t("notes.eyebrow")}
           title={t("notes.title")}
           description={t("notes.description")}
-          delay={0.6}
           preview={(className) => (
             <FeaturePreview className={className}>
               <NoteMock />
@@ -59,7 +56,6 @@ export default function FeaturesSection({
           eyebrow={t("classroom.eyebrow")}
           title={t("classroom.title")}
           description={t("classroom.description")}
-          delay={0.8}
           previewFirst
           className="pt-16"
           preview={(className) => (

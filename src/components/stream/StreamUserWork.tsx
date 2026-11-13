@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Plus } from "lucide-react";
 import { ClientOnly } from "@tanstack/react-router";
@@ -91,6 +90,17 @@ export default function StreamUserWork({
 
   useClickOutside(addWorkRef, () => setShowAddWork(false), isLoading);
   useClickOutside(addLinkRef, () => setShowAddLink(false), isLoading);
+
+  useEffect(() => {
+    if (!showAddLink) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setShowAddLink(false);
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showAddLink]);
 
   async function invalidate() {
     await Promise.all([
@@ -393,7 +403,8 @@ export default function StreamUserWork({
           classworkId={classwork?.id}
         />
         <div
-          className={`${showAddWork ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-10px] opacity-0"} bg-card absolute -top-24 right-0 z-20 grid w-full gap-2 rounded-xl border p-2 text-sm shadow-md transition-all ease-in-out md:top-12`}
+          inert={!showAddWork}
+          className={`${showAddWork ? "translate-y-0 scale-100 opacity-100 duration-150" : "-translate-y-1 scale-95 opacity-0 duration-100"} bg-card absolute -top-24 right-0 z-20 grid w-full origin-bottom-right gap-2 rounded-xl border p-2 text-sm shadow-md transition-[opacity,translate,scale] ease-out motion-reduce:transition-none md:top-12 md:origin-top-right`}
         >
           <label className="hover:bg-card/89 flex items-center gap-2 rounded-md p-2">
             <input
@@ -447,20 +458,8 @@ export default function StreamUserWork({
         </div>
       </div>
       {showAddLink && (
-        <motion.div
-          className="modal__container"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.1 }}
-        >
-          <motion.div
-            className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
+        <div className="modal__container">
+          <div className="animate-in fade-in-0 zoom-in-95 duration-200 ease-out flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
             <Card className="md:w-[25rem]" ref={addLinkRef}>
               <CardHeader className="text-lg font-medium tracking-tight">
                 {t("addLink")}
@@ -488,8 +487,8 @@ export default function StreamUserWork({
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
     </article>
   );

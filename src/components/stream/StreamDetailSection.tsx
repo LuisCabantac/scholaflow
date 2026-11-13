@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useRouter } from "@tanstack/react-router";
 import {
@@ -11,7 +11,6 @@ import {
 import { streamKeys } from "@/queries/stream";
 import type { SessionUser } from "@/types/auth";
 import { classworkKeys } from "@/queries/classwork";
-import { useClickOutside } from "@/hooks/use-click-outside";
 import { commentKeys, commentQueries } from "@/queries/comment";
 import { deleteClassStreamFn } from "@/server/functions/stream";
 import {
@@ -61,9 +60,6 @@ export default function StreamDetailSection({
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const ellipsisRef = useRef<HTMLDivElement>(null);
-
-  const [ellipsis, setEllipsis] = useState(false);
   const [showStreamForm, setShowStreamForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -79,8 +75,6 @@ export default function StreamDetailSection({
   const { data: comments, isPending: commentsIsPending } = useSuspenseQuery(
     commentQueries.byStream(stream.id),
   );
-
-  useClickOutside(ellipsisRef, () => setEllipsis(false), false);
 
   const deleteStream = useMutation({
     mutationFn: async () => {
@@ -260,37 +254,32 @@ export default function StreamDetailSection({
             </ul>
           </div>
           <div className="absolute top-0 right-0">
-            <div className="relative" ref={ellipsisRef}>
-              <button
-                type="button"
-                aria-label={t("menu")}
-                onClick={() => setEllipsis((current) => !current)}
-              >
-                <svg
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                  />
-                </svg>
-              </button>
+            <div className="relative">
               <EllipsisPopover
                 showEdit={canManage}
                 showDelete={canManage}
                 clipboardUrl={clipboardUrl}
-                showEllipsis={ellipsis}
-                onToggleEllipsis={() => setEllipsis((current) => !current)}
                 onShowEditForm={() => setShowStreamForm(true)}
                 onShowConfirmationModal={() => setShowConfirmation(true)}
-              />
+              >
+                <button type="button" aria-label={t("menu")}>
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                    />
+                  </svg>
+                </button>
+              </EllipsisPopover>
               {showConfirmation && (
                 <ConfirmationModal
                   type="delete"

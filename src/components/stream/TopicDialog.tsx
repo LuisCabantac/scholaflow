@@ -1,10 +1,10 @@
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { useDismiss } from "@/hooks/use-dismiss";
 import { classTopicKeys } from "@/queries/class-topic";
 import type { Classroom, ClassTopic } from "@/lib/schema";
 import { useClickOutside } from "@/hooks/use-click-outside";
@@ -56,23 +56,12 @@ export default function TopicDialog({
     }
   }
 
-  useClickOutside(wrapperRef, onClose, isLoading);
+  const { phase, close } = useDismiss(onClose, isLoading);
+  useClickOutside(wrapperRef, close, isLoading);
 
   return (
-    <motion.div
-      className="modal__container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.1 }}
-    >
-      <motion.div
-        className="flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]"
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+    <div className="modal__container" data-phase={phase}>
+      <div className="animate-in fade-in-0 zoom-in-95 duration-200 ease-out flex h-[40%] w-[80%] items-center justify-center md:h-[60%] md:w-[30%]">
         <Card className="md:w-[25rem]" ref={wrapperRef}>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -87,7 +76,7 @@ export default function TopicDialog({
                 type="button"
                 size="icon"
                 disabled={isLoading}
-                onClick={onClose}
+                onClick={close}
                 aria-label={t("stream:topic.close")}
               >
                 <X className="stroke-foreground size-5" />
@@ -118,7 +107,7 @@ export default function TopicDialog({
               />
               <div className="flex items-center justify-end gap-2">
                 {!isLoading && (
-                  <Button variant="secondary" type="button" onClick={onClose}>
+                  <Button variant="secondary" type="button" onClick={close}>
                     {t("common:actions.cancel")}
                   </Button>
                 )}
@@ -131,7 +120,7 @@ export default function TopicDialog({
             </form>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
