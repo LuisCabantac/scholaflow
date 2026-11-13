@@ -2,61 +2,23 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { getUserByEmail } from "@/services/user";
-import { deleteFilesFromBucket } from "@/services/user-management";
-import { createClassroomSchema, createEnrolledClassSchema } from "@/lib/schema";
 import {
-  deleteClassStreamPost,
-  getAllClassStreamsByClassId,
-} from "@/services/stream";
+  addMemberFlow,
+  createClassFlow,
+  deleteClassFlow,
+  joinClassFlow,
+  leaveClassFlow,
+  removeMemberFlow,
+  updateClassFlow,
+} from "@/services/classroom-flows";
 import {
-  deleteClassTopicRecord,
-  getAllClassTopicsByClassId,
-} from "@/services/class-topic";
-import {
-  deleteAllMessagesByClassIdRecord,
-  getAllMessagesByClassId,
-} from "@/services/message";
-import {
-  deleteAllNotificationsByResourceId,
-  sendNotification,
-} from "@/services/notification";
-import {
-  extractClassworkFilePath,
-  extractCommentFilePath,
-  extractMessagesFilePath,
-  extractStreamFilePath,
-  generateClassCode,
-} from "@/lib/utils";
-import {
-  deleteAllClassworksByClassAndUserIdRecord,
-  deleteAllClassworksByStreamIdRecord,
-  getAllClassworksByClassAndUserId,
-  getAllClassworksByStreamId,
-} from "@/services/classwork";
-import {
-  deleteAllClassStreamCommentsByStreamIdRecord,
-  deleteAllPrivateStreamCommentsByStreamIdRecord,
-  getAllCommentsByStreamId,
-  getAllPrivateCommentsByStreamId,
-} from "@/services/comment";
-import {
-  createClassroom,
-  createEnrolledClass,
-  deleteClass,
-  deleteEnrolledClassbyClassAndEnrolledClassId,
-  deleteMultipleEnrolledClassRecord,
   getAllClassesByTeacherId,
   getAllEnrolledClassesByClassId,
   getAllEnrolledClassesByUserId,
   getClassByClassCode,
   getClassByClassId,
   getEnrolledClassByClassAndSessionId,
-  getEnrolledClassByEnrolledClassId,
-  getEnrolledClassByUserAndClassId,
   isClassMember,
-  updateClassroom,
-  updateEnrolledClass,
 } from "@/services/classroom";
 
 export const getAllClassesByTeacherIdFn = createServerFn({ method: "GET" })
@@ -143,46 +105,21 @@ export const createClassFn = createServerFn({ method: "POST" })
     if (!session)
       return { success: false, message: "Unauthorized", classUrl: "" };
 
-    const newClass = {
+    const outcome = await createClassFlow(session.user, {
       name: (formData.get("className") as string) || "",
       subject: (formData.get("subject") as string | null) || null,
       section: (formData.get("section") as string) || "",
       room: (formData.get("room") as string | null) || null,
-      cardBackground: (formData.get("color") as string) || "",
-      illustrationIndex: Math.floor(Math.random() * 5),
-      code: generateClassCode(),
-      teacherId: session.user.id,
-      teacherName: session.user.name,
-      teacherImage: session.user.image as string,
-    };
-
-    const result = createClassroomSchema.safeParse(newClass);
-    if (result.error) {
-      return {
-        success: false,
-        message: "Invalid class information provided.",
-        classUrl: "",
-      };
-    }
-
-    const data = await createClassroom({
-      ...result.data,
-      description: null,
-      allowUsersToComment: false,
-      allowUsersToPost: false,
+      color: (formData.get("color") as string) || "",
     });
 
-    if (!data)
-      return {
-        success: false,
-        message: "Failed to create class",
-        classUrl: "",
-      };
+    if (!outcome.ok)
+      return { success: false, message: outcome.message, classUrl: "" };
 
     return {
       success: true,
       message: "Class created successfully!",
-      classUrl: `/classroom/class/${data.id}`,
+      classUrl: `/classroom/class/${outcome.value.id}`,
     };
   });
 
@@ -196,87 +133,31 @@ export const updateClassFn = createServerFn({ method: "POST" })
       return { success: false, message: "Unauthorized", classUrl: "" };
 
     const classroomId = formData.get("classroomId") as string;
-    const updateClassCode = formData.get("updateClassCode") === "true";
+    const outcome = await updateClassFlow(session.user, classroomId, {
+      name: formData.get("className") as string,
+      subject: formData.get("subject") as string,
+      section: formData.get("section") as string | null,
+      description: formData.get("classDescription") as string | null,
+      color: formData.get("color") as string,
+      allowUsersToComment: formData.get("allowStudentsToComment") === "true",
+      allowUsersToPost: formData.get("allowStudentsToPost") === "true",
+      regenerateCode: formData.get("updateClassCode") === "true",
+    });
 
-    const currentClassroom = await getClassByClassId(classroomId);
-    if (!currentClassroom)
-      return {
-        success: false,
-        message: "This class doesn't exist.",
-        classUrl: "",
-      };
-    if (session.user.id !== currentClassroom.teacherId)
-      return {
-        success: false,
-        message: "Only the creator can edit this.",
-        classUrl: "",
-      };
+    if (!outcome.ok)
+      return { success: false, message: outcome.message, classUrl: "" };
 
-    const newClassName = formData.get("className") as string;
-    const newSubject = formData.get("subject") as string;
-    const newSection = formData.get("section") as string | null;
-    const newClassDescription = formData.get("classDescription") as
-      | string
-      | null;
-    const newAllowStudentsToComment =
-      formData.get("allowStudentsToComment") === "true";
-    const newClassCardBackgroundColor = formData.get("color") as string;
-    const newAllowStudentsToPost =
-      formData.get("allowStudentsToPost") === "true";
-
-    if (
-      updateClassCode ||
-      currentClassroom.name !== newClassName ||
-      currentClassroom.subject !== newSubject ||
-      currentClassroom.teacherName !== session.user.name ||
-      currentClassroom.teacherImage !== session.user.image ||
-      currentClassroom.description !== newClassDescription ||
-      currentClassroom.section !== newSection ||
-      currentClassroom.cardBackground !== newClassCardBackgroundColor ||
-      currentClassroom.allowUsersToComment !== newAllowStudentsToComment ||
-      currentClassroom.allowUsersToPost !== newAllowStudentsToPost
-    ) {
-      const updatedClass = {
-        name: newClassName,
-        subject: newSubject,
-        section: newSection ?? "",
-        description: newClassDescription ?? "",
-        teacherName: session.user.name,
-        teacherImage: session.user.image as string,
-        allowUsersToComment: newAllowStudentsToComment,
-        allowUsersToPost: newAllowStudentsToPost,
-        cardBackground: newClassCardBackgroundColor,
-        code: updateClassCode ? generateClassCode() : currentClassroom.code,
-      };
-
-      const enrolledClasses = await getAllEnrolledClassesByClassId(classroomId);
-
-      if (enrolledClasses?.length) {
-        for (const enrolledClass of enrolledClasses) {
-          await updateEnrolledClass(enrolledClass.id, {
-            teacherName: session.user.name,
-            teacherImage: session.user.image ?? "",
-            name: newClassName,
-            subject: newSubject,
-            section: newSection ?? "",
-            cardBackground: newClassCardBackgroundColor,
-          });
-        }
-      }
-
-      await updateClassroom(classroomId, updatedClass);
-
+    if (!outcome.value.changed)
       return {
         success: true,
-        message: "Class updated successfully!",
-        classUrl: `/classroom/class/${classroomId}`,
+        message: "No changes were made to the class.",
+        classUrl: "",
       };
-    }
 
     return {
       success: true,
-      message: "No changes were made to the class.",
-      classUrl: "",
+      message: "Class updated successfully!",
+      classUrl: `/classroom/class/${classroomId}`,
     };
   });
 
@@ -288,69 +169,13 @@ export const joinClassFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    if (session.user.role === "admin") {
-      return {
-        success: false,
-        message: "Only teachers and students can join classes.",
-      };
-    }
-
-    const classroom = await getClassByClassCode(code.trim());
-
-    if (!classroom) return { success: false, message: "Class not found" };
-
-    const existingEnrollment = await getEnrolledClassByClassAndSessionId(
-      session.user.id,
-      classroom.id,
-    );
-
-    if (classroom.teacherId === session.user.id || existingEnrollment)
-      return { success: false, message: "You're already in this class." };
-
-    const newEnrolledClass = {
-      classId: classroom.id,
-      userId: session.user.id,
-      userName: session.user.name,
-      userImage: session.user.image as string,
-      name: classroom.name,
-      subject: classroom.subject,
-      section: classroom.section,
-      teacherName: classroom.teacherName,
-      teacherImage: classroom.teacherImage,
-      cardBackground: classroom.cardBackground,
-      illustrationIndex: classroom.illustrationIndex,
-    };
-
-    const result = createEnrolledClassSchema.safeParse(newEnrolledClass);
-    if (result.error) {
-      return {
-        success: false,
-        message: "Invalid enrollment data.",
-      };
-    }
-
-    const data = await createEnrolledClass(result.data);
-
-    if (!data)
-      return {
-        success: false,
-        message: "Failed to join the class. Please try again.",
-      };
-
-    await sendNotification(
-      "join",
-      classroom.teacherId,
-      data.id,
-      data.name,
-      `/classroom/class/${data.classId}`,
-      session.user.name,
-      session.user.image as string,
-    );
+    const outcome = await joinClassFlow(session.user, code);
+    if (!outcome.ok) return { success: false, message: outcome.message };
 
     return {
       success: true,
       message: "You've successfully joined the class!",
-      classId: classroom.id,
+      classId: outcome.value.classId,
     };
   });
 
@@ -358,66 +183,18 @@ export const deleteEnrolledClassbyClassAndEnrolledClassIdFn = createServerFn({
   method: "POST",
 })
   .validator((data: { enrolledClassId: string; classId: string }) => data)
-  .handler(async ({ data: { enrolledClassId, classId } }) => {
+  .handler(async ({ data: { classId, enrolledClassId } }) => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const currentEnrolledClass =
-      await getEnrolledClassByEnrolledClassId(enrolledClassId);
-    if (!currentEnrolledClass || currentEnrolledClass.classId !== classId)
-      return {
-        success: false,
-        message: "You are not a member of this class.",
-      };
-
-    const classroom = await getClassByClassId(classId);
-    if (!classroom)
-      return { success: false, message: "This class doesn't exist." };
-
-    if (
-      !(
-        classroom.teacherId === session.user.id ||
-        currentEnrolledClass.userId === session.user.id
-      )
-    ) {
-      return {
-        success: false,
-        message: "You're not authorized to remove this user.",
-      };
-    }
-
-    const classworks = await getAllClassworksByClassAndUserId(
-      currentEnrolledClass.userId,
-      currentEnrolledClass.classId,
-    );
-
-    if (classworks?.length) {
-      const attachments = classworks.flatMap((cw) => cw.attachments || []);
-      if (attachments.length) {
-        const classworkAttachmentsFilePath = attachments.map((file) =>
-          extractClassworkFilePath(file as string),
-        );
-        await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
-      }
-      for (const cw of classworks) {
-        await deleteAllNotificationsByResourceId(cw.id);
-      }
-      await deleteAllClassworksByClassAndUserIdRecord(
-        currentEnrolledClass.classId,
-        currentEnrolledClass.userId,
-      );
-    }
-
-    const data = await deleteEnrolledClassbyClassAndEnrolledClassId(
-      enrolledClassId,
+    const outcome = await removeMemberFlow(
+      session.user,
       classId,
+      enrolledClassId,
     );
-
-    if (!data) return { success: false, message: "Failed to remove member." };
-
-    await deleteAllNotificationsByResourceId(data.id);
+    if (!outcome.ok) return { success: false, message: outcome.message };
 
     return { success: true, message: "Member removed from class." };
   });
@@ -430,148 +207,18 @@ export const deleteClassFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const currentClassroom = await getClassByClassId(classId);
-    if (!currentClassroom)
+    const classroom = await getClassByClassId(classId);
+    if (!classroom)
       return { success: false, message: "This class doesn't exist." };
 
-    if (currentClassroom.teacherId === session.user.id) {
-      const classes = await getAllEnrolledClassesByClassId(classId);
-      if (classes?.length) {
-        const enrolledIds = classes.map((curClass) => curClass.id);
-        for (const rowId of enrolledIds) {
-          await deleteAllNotificationsByResourceId(rowId);
-        }
-        await deleteMultipleEnrolledClassRecord(enrolledIds);
-      }
-
-      const messages = await getAllMessagesByClassId(classId);
-      if (messages?.length) {
-        const attachments = messages.flatMap((chat) => chat.attachments || []);
-        if (attachments.length) {
-          const chatAttachmentsFilePath = attachments.map((file) =>
-            extractMessagesFilePath(file as string),
-          );
-          await deleteFilesFromBucket("messages", chatAttachmentsFilePath);
-        }
-        await deleteAllMessagesByClassIdRecord(classId);
-      }
-
-      const streams = await getAllClassStreamsByClassId(classId);
-      if (streams?.length) {
-        for (const str of streams) {
-          const comments = await getAllCommentsByStreamId(str.id);
-          if (comments?.length) {
-            const commentAttachments = comments
-              .map((c) => c.attachment)
-              .filter(Boolean) as string[];
-            if (commentAttachments.length) {
-              const commentFiles = commentAttachments.map(
-                extractCommentFilePath,
-              );
-              await deleteFilesFromBucket("comments", commentFiles);
-            }
-            for (const c of comments) {
-              await deleteAllNotificationsByResourceId(c.id);
-            }
-            await deleteAllClassStreamCommentsByStreamIdRecord(str.id);
-          }
-
-          const privateComments = await getAllPrivateCommentsByStreamId(str.id);
-          if (privateComments?.length) {
-            const privAttachments = privateComments
-              .map((c) => c.attachment)
-              .filter(Boolean) as string[];
-            if (privAttachments.length) {
-              const privFiles = privAttachments.map(extractCommentFilePath);
-              await deleteFilesFromBucket("comments", privFiles);
-            }
-            for (const c of privateComments) {
-              await deleteAllNotificationsByResourceId(c.id);
-            }
-            await deleteAllPrivateStreamCommentsByStreamIdRecord(str.id);
-          }
-
-          const classworks = await getAllClassworksByStreamId(str.id);
-          if (classworks?.length) {
-            const cwAttachments = classworks.flatMap(
-              (cw) => cw.attachments || [],
-            );
-            if (cwAttachments.length) {
-              const cwFiles = cwAttachments.map((file) =>
-                extractClassworkFilePath(file as string),
-              );
-              await deleteFilesFromBucket("classworks", cwFiles);
-            }
-            for (const cw of classworks) {
-              await deleteAllNotificationsByResourceId(cw.id);
-            }
-            await deleteAllClassworksByStreamIdRecord(str.id);
-          }
-
-          if (str.attachments?.length) {
-            const streamFiles = str.attachments.map((file) =>
-              extractStreamFilePath(file as string),
-            );
-            await deleteFilesFromBucket("streams", streamFiles);
-          }
-
-          await deleteAllNotificationsByResourceId(str.id);
-
-          await deleteClassStreamPost(str.id);
-        }
-      }
-
-      const topics = await getAllClassTopicsByClassId(classId);
-      if (topics?.length) {
-        for (const topic of topics) {
-          await deleteClassTopicRecord(topic.id);
-        }
-      }
-
-      await deleteClass(classId);
-
+    if (classroom.teacherId === session.user.id) {
+      const outcome = await deleteClassFlow(session.user, classId);
+      if (!outcome.ok) return { success: false, message: outcome.message };
       return { success: true, message: "Class deleted successfully." };
     }
 
-    const currentEnrolledClass = await getEnrolledClassByClassAndSessionId(
-      session.user.id,
-      classId,
-    );
-
-    if (!currentEnrolledClass) {
-      return {
-        success: false,
-        message: "You are not enrolled in this class.",
-      };
-    }
-
-    const classworks = await getAllClassworksByClassAndUserId(
-      session.user.id,
-      classId,
-    );
-
-    if (classworks?.length) {
-      const attachments = classworks.flatMap((cw) => cw.attachments || []);
-      if (attachments.length) {
-        const classworkAttachmentsFilePath = attachments.map((file) =>
-          extractClassworkFilePath(file as string),
-        );
-        await deleteFilesFromBucket("classworks", classworkAttachmentsFilePath);
-      }
-      for (const cw of classworks) {
-        await deleteAllNotificationsByResourceId(cw.id);
-      }
-      await deleteAllClassworksByClassAndUserIdRecord(classId, session.user.id);
-    }
-
-    const data = await deleteEnrolledClassbyClassAndEnrolledClassId(
-      currentEnrolledClass.id,
-      classId,
-    );
-
-    if (data) {
-      await deleteAllNotificationsByResourceId(data.id);
-    }
+    const outcome = await leaveClassFlow(session.user, classId);
+    if (!outcome.ok) return { success: false, message: outcome.message };
 
     return {
       success: true,
@@ -587,96 +234,12 @@ export const addUserToClassFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    if (session.user.role === "admin") {
-      return {
-        success: false,
-        message: "Only teachers can add users to this class.",
-      };
-    }
-
-    const classroomId = formData.get("classroomId") as string;
-    const userEmail = formData.get("email") as string;
-
-    const classroom = await getClassByClassId(classroomId);
-
-    if (!classroom)
-      return { success: false, message: "This class doesn't exist." };
-
-    if (session.user.id !== classroom.teacherId) {
-      return {
-        success: false,
-        message: "Only the creator of this class can add users.",
-      };
-    }
-
-    const user = await getUserByEmail(userEmail);
-
-    if (!user)
-      return {
-        success: false,
-        message: "No account found for this email address.",
-      };
-
-    if (classroom.teacherId === user.id)
-      return {
-        success: false,
-        message: "This user is already a member of this class.",
-      };
-
-    if (user.role === "admin") {
-      return {
-        success: false,
-        message: "This class can only include students and teachers.",
-      };
-    }
-
-    const currentEnrolledClass = await getEnrolledClassByUserAndClassId(
-      user.id,
-      classroomId,
+    const outcome = await addMemberFlow(
+      session.user,
+      formData.get("classroomId") as string,
+      formData.get("email") as string,
     );
-
-    if (currentEnrolledClass)
-      return {
-        success: false,
-        message: "This user is already a member of this class.",
-      };
-
-    const newEnrolledClass = {
-      classId: classroom.id,
-      userId: user.id,
-      userName: user.name,
-      userImage: user.image as string,
-      name: classroom.name,
-      subject: classroom.subject,
-      section: classroom.section,
-      teacherName: classroom.teacherName,
-      teacherImage: classroom.teacherImage,
-      cardBackground: classroom.cardBackground,
-      illustrationIndex: classroom.illustrationIndex,
-    };
-
-    const result = createEnrolledClassSchema.safeParse(newEnrolledClass);
-    if (result.error) {
-      return {
-        success: false,
-        message: "Invalid user data provided.",
-      };
-    }
-
-    const data = await createEnrolledClass(result.data);
-
-    if (!data)
-      return { success: false, message: "Failed to add user to class." };
-
-    await sendNotification(
-      "addToClass" as any,
-      data.userId,
-      data.id,
-      data.name,
-      `/classroom/class/${data.classId}`,
-      session.user.name,
-      session.user.image as string,
-    );
+    if (!outcome.ok) return { success: false, message: outcome.message };
 
     return { success: true, message: "User successfully added to class!" };
   });

@@ -10,7 +10,7 @@ export type ApiErrorCode =
 
 export type OutcomeErrorCode = Exclude<
   ApiErrorCode,
-  "validation_failed" | "payload_too_large" | "rate_limited" | "internal"
+  "payload_too_large" | "rate_limited" | "internal"
 >;
 
 export type ApiErrorBody = {
