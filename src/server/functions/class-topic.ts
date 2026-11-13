@@ -2,19 +2,28 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
-import { getClassByClassId, isClassMember } from "@/services/classroom";
-import { createClassTopicSchema, editClassTopicSchema } from "@/lib/schema";
+import type { Outcome } from "@/types/api";
+import { isClassMember } from "@/services/classroom";
+import { getAllClassTopicsByClassId } from "@/services/class-topic";
 import {
-  getAllClassworkStreamsByTopicId,
-  updateClassStreamPostTopic,
-} from "@/services/stream";
-import {
-  createClassTopicRecord,
-  deleteClassTopicRecord,
-  getAllClassTopicsByClassId,
-  getClassTopicByTopicId,
-  updateClassTopicRecord,
-} from "@/services/class-topic";
+  createTopicFlow,
+  deleteTopicFlow,
+  renameTopicFlow,
+} from "@/services/class-topic-flows";
+
+function reply<T>(
+  outcome: Outcome<T>,
+  copy: { success: string; forbidden: string; not_found: string },
+) {
+  if (outcome.ok) return { success: true, message: copy.success };
+  if (outcome.code === "forbidden") {
+    return { success: false, message: copy.forbidden };
+  }
+  if (outcome.code === "not_found") {
+    return { success: false, message: copy.not_found };
+  }
+  return { success: false, message: outcome.message };
+}
 
 export const getAllClassTopicsByClassIdFn = createServerFn({ method: "GET" })
   .validator((classId: string) => classId)
@@ -38,34 +47,13 @@ export const createTopicFn = createServerFn({ method: "POST" })
     if (!session) return { success: false, message: "Unauthorized" };
 
     const classroomId = formData.get("classroomId") as string;
-    const classroom = await getClassByClassId(classroomId);
+    const name = (formData.get("topicName") as string) || "";
 
-    if (!classroom)
-      return { success: false, message: "This class does not exist." };
-    if (session.user.id !== classroom.teacherId) {
-      return {
-        success: false,
-        message: "Only the creator of this class can create topics.",
-      };
-    }
-
-    const newTopic = {
-      name: (formData.get("topicName") as string) || "",
-      classId: classroomId,
-    };
-
-    const result = createClassTopicSchema.safeParse(newTopic);
-    if (result.error) {
-      return {
-        success: false,
-        message: "Invalid topic data provided.",
-      };
-    }
-
-    const data = await createClassTopicRecord(result.data);
-    if (!data) return { success: false, message: "Failed to create topic." };
-
-    return { success: true, message: "Topic created successfully!" };
+    return reply(await createTopicFlow(session.user, classroomId, name), {
+      success: "Topic created successfully!",
+      forbidden: "Only the creator of this class can create topics.",
+      not_found: "This class does not exist.",
+    });
   });
 
 export const updateTopicFn = createServerFn({ method: "POST" })
@@ -76,53 +64,21 @@ export const updateTopicFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const classroomId = formData.get("classroomId") as string;
-    const classroom = await getClassByClassId(classroomId);
-
-    if (!classroom)
-      return { success: false, message: "This class does not exist." };
-    if (session.user.id !== classroom.teacherId) {
-      return {
-        success: false,
-        message: "Only the creator of this class can edit topics.",
-      };
-    }
-
     const topicId = formData.get("topicId") as string;
-    const currentTopic =
-      topicId !== "no-topic" ? await getClassTopicByTopicId(topicId) : null;
-
-    if (!currentTopic || currentTopic.classId !== classroomId)
+    const name = (formData.get("topicName") as string) || "";
+    if (topicId === "no-topic") {
       return { success: false, message: "This topic doesn't exist." };
-
-    const newTopicName = (formData.get("topicName") as string) || "";
-
-    if (newTopicName !== currentTopic.name) {
-      const result = editClassTopicSchema.safeParse({ name: newTopicName });
-      if (result.error) {
-        return {
-          success: false,
-          message: "Invalid topic data provided.",
-        };
-      }
-
-      const classworkStream = await getAllClassworkStreamsByTopicId(
-        currentTopic.id,
-      );
-
-      if (classworkStream?.length) {
-        for (const stream of classworkStream) {
-          await updateClassStreamPostTopic("edit", stream, newTopicName);
-        }
-      }
-
-      const data = await updateClassTopicRecord(currentTopic.id, result.data);
-      if (!data) return { success: false, message: "Failed to update topic." };
-
-      return { success: true, message: "Topic updated successfully!" };
     }
 
-    return { success: true, message: "No changes were made to the topic." };
+    const outcome = await renameTopicFlow(session.user, topicId, name);
+    if (outcome.ok && !outcome.value.changed) {
+      return { success: true, message: "No changes were made to the topic." };
+    }
+    return reply(outcome, {
+      success: "Topic updated successfully!",
+      forbidden: "Only the creator of this class can edit topics.",
+      not_found: "This topic doesn't exist.",
+    });
   });
 
 export const deleteTopicFn = createServerFn({ method: "POST" })
@@ -133,31 +89,9 @@ export const deleteTopicFn = createServerFn({ method: "POST" })
 
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const topic = await getClassTopicByTopicId(topicId);
-    if (!topic)
-      return { success: false, message: "This topic does not exist." };
-
-    const classroom = await getClassByClassId(topic.classId);
-    if (!classroom)
-      return { success: false, message: "This class does not exist." };
-
-    if (session.user.id !== classroom.teacherId) {
-      return {
-        success: false,
-        message: "Only the creator of this class can delete topics.",
-      };
-    }
-
-    const classworkStream = await getAllClassworkStreamsByTopicId(topicId);
-
-    if (classworkStream?.length) {
-      for (const stream of classworkStream) {
-        await updateClassStreamPostTopic("delete", stream);
-      }
-    }
-
-    const data = await deleteClassTopicRecord(topicId);
-    if (!data) return { success: false, message: "Failed to delete topic." };
-
-    return { success: true, message: "Topic deleted successfully." };
+    return reply(await deleteTopicFlow(session.user, topicId), {
+      success: "Topic deleted successfully.",
+      forbidden: "Only the creator of this class can delete topics.",
+      not_found: "This topic does not exist.",
+    });
   });

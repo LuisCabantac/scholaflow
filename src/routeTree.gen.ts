@@ -42,6 +42,7 @@ import { Route as ApiV1AuthPasswordResetRouteImport } from './routes/api/v1/auth
 import { Route as ApiV1AuthVerificationEmailRouteImport } from './routes/api/v1/auth/verification-email'
 import { Route as ApiV1ClassroomsIndexRouteImport } from './routes/api/v1/classrooms/index'
 import { Route as ApiV1ClassroomsJoinRouteImport } from './routes/api/v1/classrooms/join'
+import { Route as ApiV1TopicsTopicIdRouteImport } from './routes/api/v1/topics/$topicId'
 import { Route as MainClassroomClassClassIdIndexRouteImport } from './routes/_main/classroom/class/$classId.index'
 import { Route as MainClassroomClassClassIdChatRouteImport } from './routes/_main/classroom/class/$classId.chat'
 import { Route as MainClassroomClassClassIdClassworkRouteImport } from './routes/_main/classroom/class/$classId.classwork'
@@ -221,6 +222,11 @@ const ApiV1ClassroomsJoinRoute = ApiV1ClassroomsJoinRouteImport.update({
   path: '/api/v1/classrooms/join',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1TopicsTopicIdRoute = ApiV1TopicsTopicIdRouteImport.update({
+  id: '/api/v1/topics/$topicId',
+  path: '/api/v1/topics/$topicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MainClassroomClassClassIdIndexRoute =
   MainClassroomClassClassIdIndexRouteImport.update({
     id: '/',
@@ -331,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
   '/api/v1/classrooms/join': typeof ApiV1ClassroomsJoinRoute
+  '/api/v1/topics/$topicId': typeof ApiV1TopicsTopicIdRoute
   '/api/v1/classrooms/': typeof ApiV1ClassroomsIndexRoute
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
@@ -376,6 +383,7 @@ export interface FileRoutesByTo {
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
   '/api/v1/classrooms/join': typeof ApiV1ClassroomsJoinRoute
+  '/api/v1/topics/$topicId': typeof ApiV1TopicsTopicIdRoute
   '/api/v1/classrooms': typeof ApiV1ClassroomsIndexRoute
   '/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   '/api/v1/auth/password-reset': typeof ApiV1AuthPasswordResetRoute
   '/api/v1/auth/verification-email': typeof ApiV1AuthVerificationEmailRoute
   '/api/v1/classrooms/join': typeof ApiV1ClassroomsJoinRoute
+  '/api/v1/topics/$topicId': typeof ApiV1TopicsTopicIdRoute
   '/api/v1/classrooms/': typeof ApiV1ClassroomsIndexRoute
   '/_main/classroom/class/$classId/chat': typeof MainClassroomClassClassIdChatRoute
   '/_main/classroom/class/$classId/classwork': typeof MainClassroomClassClassIdClassworkRoute
@@ -472,6 +481,7 @@ export interface FileRouteTypes {
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
     | '/api/v1/classrooms/join'
+    | '/api/v1/topics/$topicId'
     | '/api/v1/classrooms/'
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
     | '/api/v1/classrooms/join'
+    | '/api/v1/topics/$topicId'
     | '/api/v1/classrooms'
     | '/classroom/class/$classId/chat'
     | '/classroom/class/$classId/classwork'
@@ -564,6 +575,7 @@ export interface FileRouteTypes {
     | '/api/v1/auth/password-reset'
     | '/api/v1/auth/verification-email'
     | '/api/v1/classrooms/join'
+    | '/api/v1/topics/$topicId'
     | '/api/v1/classrooms/'
     | '/_main/classroom/class/$classId/chat'
     | '/_main/classroom/class/$classId/classwork'
@@ -601,6 +613,7 @@ export interface RootRouteChildren {
   ApiV1AuthPasswordResetRoute: typeof ApiV1AuthPasswordResetRoute
   ApiV1AuthVerificationEmailRoute: typeof ApiV1AuthVerificationEmailRoute
   ApiV1ClassroomsJoinRoute: typeof ApiV1ClassroomsJoinRoute
+  ApiV1TopicsTopicIdRoute: typeof ApiV1TopicsTopicIdRoute
   ApiV1ClassroomsIndexRoute: typeof ApiV1ClassroomsIndexRoute
   ApiV1ClassroomsClassIdLeaveRoute: typeof ApiV1ClassroomsClassIdLeaveRoute
   ApiV1ClassroomsClassIdMembersRoute: typeof ApiV1ClassroomsClassIdMembersRouteWithChildren
@@ -842,6 +855,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1ClassroomsJoinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/topics/$topicId': {
+      id: '/api/v1/topics/$topicId'
+      path: '/api/v1/topics/$topicId'
+      fullPath: '/api/v1/topics/$topicId'
+      preLoaderRoute: typeof ApiV1TopicsTopicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/classroom/class/$classId/': {
       id: '/_main/classroom/class/$classId/'
       path: '/'
@@ -1054,6 +1074,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1AuthPasswordResetRoute: ApiV1AuthPasswordResetRoute,
   ApiV1AuthVerificationEmailRoute: ApiV1AuthVerificationEmailRoute,
   ApiV1ClassroomsJoinRoute: ApiV1ClassroomsJoinRoute,
+  ApiV1TopicsTopicIdRoute: ApiV1TopicsTopicIdRoute,
   ApiV1ClassroomsIndexRoute: ApiV1ClassroomsIndexRoute,
   ApiV1ClassroomsClassIdLeaveRoute: ApiV1ClassroomsClassIdLeaveRoute,
   ApiV1ClassroomsClassIdMembersRoute:

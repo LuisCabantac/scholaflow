@@ -11,3 +11,4 @@ import "@/routes/api/v1/classrooms/$classId/topics";
 import "@/routes/api/v1/classrooms/join";
 import "@/routes/api/v1/classrooms/$classId/leave";
 import "@/routes/api/v1/classrooms/$classId/members/$enrollmentId";
+import "@/routes/api/v1/topics/$topicId";
