@@ -9,7 +9,7 @@ import { handle, noContent, ok } from "@/server/api/respond";
 import { addPrivateCommentFlow } from "@/services/comment-flows";
 import { visiblePrivateComments } from "@/server/authorize/comment";
 import { getAllPrivateCommentsByStreamId } from "@/services/comment";
-import { streamForMember, streamRef } from "@/server/authorize/stream";
+import { streamForViewer, streamRef } from "@/server/authorize/stream";
 import { parseForm, parseParams, readMultipart } from "@/server/api/parse";
 import {
   privateCommentForm,
@@ -59,7 +59,7 @@ export const Route = createFileRoute(
         const user = await requireApiUser(request);
         const { streamId } = parseParams(params, streamIdParams);
         const { classroom } = fromOutcome(
-          await streamForMember(user.id, streamId),
+          await streamForViewer(user.id, streamId),
         );
         const comments =
           (await getAllPrivateCommentsByStreamId(streamId)) ?? [];

@@ -435,12 +435,30 @@ describe("updateStreamFlow", () => {
     });
   });
 
-  it("is forbidden for anyone but the author", async () => {
-    await expect(updateStreamFlow(student, ref, emptyPatch)).resolves.toEqual({
+  it("is forbidden for a member who sees the post but did not write it", async () => {
+    await expect(
+      updateStreamFlow({ ...student, id: "u1" }, ref, emptyPatch),
+    ).resolves.toEqual({
       ok: false,
       code: "forbidden",
       message: "Only the original author can edit this post.",
     });
+  });
+
+  it("is not_found for a member who may not see the post", async () => {
+    await expect(updateStreamFlow(student, ref, emptyPatch)).resolves.toEqual({
+      ok: false,
+      code: "not_found",
+      message: "This post doesn't exist in this class.",
+    });
+  });
+
+  it("keeps only stored links from currentLinks", () => {
+    const merged = mergeStreamUpdate(stored, {
+      currentLinks: ["javascript:alert(1)//https://", "https://old.test"],
+      files: [],
+    });
+    expect(merged.currentLinks).toEqual(["https://old.test"]);
   });
 
   it("reports no change without touching storage or the row", async () => {
@@ -590,11 +608,22 @@ describe("deleteStreamFlow", () => {
 
   it("is forbidden for an enrolled non-author", async () => {
     await expect(
-      deleteStreamFlow(student, { classId: C1, streamId: S1 }),
+      deleteStreamFlow({ ...student, id: "u1" }, { classId: C1, streamId: S1 }),
     ).resolves.toEqual({
       ok: false,
       code: "forbidden",
       message: "You're not authorized to delete this post.",
+    });
+    expect(streams.deleteClassStreamPost).not.toHaveBeenCalled();
+  });
+
+  it("is not_found for a member who may not see the post", async () => {
+    await expect(
+      deleteStreamFlow(student, { classId: C1, streamId: S1 }),
+    ).resolves.toEqual({
+      ok: false,
+      code: "not_found",
+      message: "This post doesn't exist in this class.",
     });
     expect(streams.deleteClassStreamPost).not.toHaveBeenCalled();
   });

@@ -1,4 +1,5 @@
 import type { Outcome } from "@/types/api";
+import { canSeeStream } from "@/lib/stream-visibility";
 import { uploadAttachments } from "@/services/storage";
 import type { Actor } from "@/services/classroom-flows";
 import { getClassTopicByTopicId } from "@/services/class-topic";
@@ -156,7 +157,9 @@ export function mergeStreamUpdate(
     isAssignToAll: patch.isAssignToAll ?? current.announceToAll,
     announceTo: patch.announceTo ?? current.announceTo,
     links: patch.links ?? [],
-    currentLinks: patch.currentLinks ?? current.links,
+    currentLinks: patch.currentLinks
+      ? patch.currentLinks.filter((link) => current.links?.includes(link))
+      : current.links,
     currentAttachments: patch.currentAttachments ?? current.attachments,
     files: patch.files,
   };
@@ -275,7 +278,9 @@ export async function updateStreamFlow(
   if (!classroom) return classMissing;
 
   const current = await getClassStreamByStreamId(ref.streamId);
-  if (!current) return postMissing;
+  if (!current || !canSeeStream(current, user.id, classroom.teacherId)) {
+    return postMissing;
+  }
 
   const allowed = canEditStream(current, user.id);
   if (!allowed.ok) return allowed;
@@ -328,6 +333,7 @@ export async function deleteStreamFlow(
 
   const classroom = await getClassByClassId(stream.classId);
   if (!classroom) return classMissing;
+  if (!canSeeStream(stream, user.id, classroom.teacherId)) return postMissing;
 
   const allowed = canDeleteStream(stream, classroom, user.id);
   if (!allowed.ok) return allowed;

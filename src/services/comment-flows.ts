@@ -194,7 +194,9 @@ export async function addPrivateCommentFlow(
   }
 
   const stream = await streamInClass(ref);
-  if (!stream) return failure("not_found", "This stream doesn't exist.");
+  if (!stream || !canSeeStream(stream, user.id, classroom.teacherId)) {
+    return failure("not_found", "This stream doesn't exist.");
+  }
 
   const allowed = canPrivateComment(classroom, stream, user.id, enrolled);
   if (!allowed.ok) return allowed;

@@ -344,7 +344,26 @@ describe("addPrivateCommentFlow", () => {
     expect(comments.createPrivateComment).not.toHaveBeenCalled();
   });
 
-  it("is forbidden with the classwork message for a student outside announceTo", async () => {
+  it("is not_found for a student on a post scheduled ahead and uploads nothing", async () => {
+    streams.getClassStreamByStreamId.mockResolvedValue({
+      ...post,
+      scheduledAt: new Date(Date.now() + 60 * 60 * 1000),
+    });
+    const outcome = await addPrivateCommentFlow(student, ref, {
+      content: "hi",
+      file: file(),
+      recipientId: null,
+    });
+    expect(outcome).toEqual({
+      ok: false,
+      code: "not_found",
+      message: "This stream doesn't exist.",
+    });
+    expect(storage.uploadAttachments).not.toHaveBeenCalled();
+    expect(comments.createPrivateComment).not.toHaveBeenCalled();
+  });
+
+  it("is not_found for a student outside announceTo, hiding the post", async () => {
     streams.getClassStreamByStreamId.mockResolvedValue({
       ...post,
       announceToAll: false,
@@ -357,8 +376,8 @@ describe("addPrivateCommentFlow", () => {
     });
     expect(outcome).toEqual({
       ok: false,
-      code: "forbidden",
-      message: "You don't have permission to comment on this classwork.",
+      code: "not_found",
+      message: "This stream doesn't exist.",
     });
   });
 });

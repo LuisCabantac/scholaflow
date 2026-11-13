@@ -105,6 +105,12 @@ describe("createStreamForm", () => {
     expect(createStreamForm.safeParse({ type: "bogus" }).success).toBe(false);
     expect(createStreamForm.safeParse({ points: "1.5" }).success).toBe(false);
     expect(createStreamForm.safeParse({ points: "abc" }).success).toBe(false);
+    expect(createStreamForm.safeParse({ points: "99999999999" }).success).toBe(
+      false,
+    );
+    expect(updateStreamForm.safeParse({ points: "2147483648" }).success).toBe(
+      false,
+    );
     expect(createStreamForm.safeParse({ dueDate: "tomorrow" }).success).toBe(
       false,
     );
@@ -159,6 +165,17 @@ describe("updateStreamForm", () => {
     ).toEqual(["https://x.test"]);
     expect(updateStreamForm.parse({ topicId: "" }).topicId).toBe("no-topic");
     expect(updateStreamForm.parse({ description: "x" }).content).toBe("x");
+  });
+
+  it("treats a sent audience as not assigned to all unless isAssignToAll is sent", () => {
+    expect(updateStreamForm.parse({ announceTo: ["s1"] }).isAssignToAll).toBe(
+      false,
+    );
+    expect(
+      updateStreamForm.parse({ announceTo: ["s1"], isAssignToAll: "true" })
+        .isAssignToAll,
+    ).toBe(true);
+    expect(updateStreamForm.parse({}).isAssignToAll).toBeUndefined();
   });
 
   it("strips type instead of letting it change", () => {

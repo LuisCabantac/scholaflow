@@ -69,7 +69,11 @@ const formDate = z.union([
 ]);
 const formPoints = z.union([
   z.literal("").transform(() => null),
-  z.string().regex(/^\d+$/).transform(Number),
+  z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().max(2147483647)),
 ]);
 const formTopic = z.union([
   z.enum(["", "no-topic"]).transform(() => "no-topic" as const),
@@ -131,7 +135,9 @@ export const updateStreamForm = z
       points: form.points,
       acceptingSubmissions: form.acceptingSubmissions,
       closeSubmissionsAfterDueDate: form.closeSubmissionsAfterDueDate,
-      isAssignToAll: form.isAssignToAll,
+      isAssignToAll:
+        form.isAssignToAll ??
+        (form.announceTo === undefined ? undefined : false),
       announceTo: form.announceTo,
       links: form.links,
       currentLinks: form.curUrlLinks,

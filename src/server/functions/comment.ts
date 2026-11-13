@@ -3,8 +3,8 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 
 import { auth } from "@/lib/auth";
 import { uploadableFiles } from "@/lib/attachments";
+import { streamForViewer } from "@/server/authorize/stream";
 import { visiblePrivateComments } from "@/server/authorize/comment";
-import { streamForMember, streamForViewer } from "@/server/authorize/stream";
 import {
   getAllCommentsByStreamId,
   getAllPrivateCommentsByStreamId,
@@ -40,7 +40,7 @@ export const getAllPrivateCommentsByStreamIdFn = createServerFn({
 
     if (!session) return null;
 
-    const outcome = await streamForMember(session.user.id, streamId);
+    const outcome = await streamForViewer(session.user.id, streamId);
     if (!outcome.ok) return null;
 
     const { classroom } = outcome.value;
